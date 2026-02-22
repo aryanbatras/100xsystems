@@ -25,6 +25,7 @@ export default function Home() {
           height={20}
           priority
         />
+        <div className="flex size-32 p-32 font-bold">100x Systems</div>
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
             To get started, edit the index.tsx file.
@@ -53,6 +54,7 @@ export default function Home() {
             href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
             target="_blank"
             rel="noopener noreferrer"
+            aria-disabled={true}
           >
             <Image
               className="dark:invert"
