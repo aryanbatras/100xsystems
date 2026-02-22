@@ -71,7 +71,7 @@ export default function Home() {
                 100xsystems.dev
               </a>
               <span className="text-gray-400">|</span>
-              <a href="mailto:admin@100xsystems" className="text-black">
+              <a href="mailto:admin@100xsystems.dev" className="text-black">
                 admin@100xsystems
               </a>
               <span className="text-gray-400">|</span>
