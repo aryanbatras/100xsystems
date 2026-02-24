@@ -80,7 +80,7 @@ Can you explain about your work like a systems engineer? Why did you choose to b
 ## Contact & Links
 
 - **Domain**: https://www.100xsystems.dev
-- **Professional Email**: admin@100xsystems
+- **Professional Email**: admin@100xsystems.dev
 - **LinkedIn**: https://www.linkedin.com/company/100xsystems/
 
 ## Development
@@ -102,3 +102,84 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+100xSystems Architecture and Roadmap Plan
+This plan outlines the transformation of the static 100xSystems landing page into a dynamic, hierarchical learning platform with a black/white/yellow theme, interactive roadmap cards, and scalable content structure using Pages Router, CSS modules, and Markdown files for long-term maintenance.
+
+Current State Analysis
+Static Next.js 16 app with Pages Router, Tailwind CSS (to be replaced with CSS modules), and TypeScript
+Single landing page displaying philosophy and learning paths as text
+No interactive components or content hierarchy
+White background, black text theme
+Target Architecture
+Tech Stack
+Frontend: Next.js 16 with Pages Router, React 19, TypeScript
+Styling: Pure CSS modules for maximum scalability and design customization (replacing Tailwind)
+Data Management: Markdown files for content with integrated image handling via object storage (e.g., Cloudflare R2)
+Deployment: Vercel/Netlify for production hosting
+Security: Input validation, rate limiting, secure headers
+Performance: Next.js optimizations, CDN, lazy loading
+Content Structure (N-ary Tree)
+Root (Home)
+├── Paths (e.g., System Design, CS Fundamentals, Language Foundations)
+│   ├── Sub-paths (e.g., for Languages: Java, JavaScript, TypeScript)
+│   │   ├── Lessons (e.g., Basic Syntax, Data Structures)
+│   │   │   ├── Sub-topics (e.g., Variables, Functions)
+│   │   │   │   ├── Content (articles, videos, exercises)
+│   │   │   │   │   └── Sub-content (code examples, quizzes)
+Component Architecture
+HomePage: Interactive cards for path selection
+PathPage: Sub-path navigation
+LessonPage: Markdown content display with image support
+Navigation: Breadcrumb and sidebar for hierarchy
+ContentRenderer: Custom Markdown renderer with image handling
+Layout: Responsive layout components
+Implementation Roadmap
+Phase 1: Theme and UI Foundation (Week 1-2)
+Implement black background, white text, yellow accent theme using CSS modules
+Create reusable UI components (Card, Button, Layout) with custom CSS
+Design interactive path selection cards on home page
+Update typography and spacing for dark theme with pixel-perfect control
+Phase 2: Markdown Content System (Week 3-4)
+Set up Markdown file structure for hierarchical content
+Implement custom Markdown parser with image support (object storage integration)
+Create content loading utilities for static files
+Define frontmatter schema for metadata (titles, descriptions, order)
+Phase 3: Navigation and Routing (Week 5-6)
+Implement dynamic routing for paths/[slug]/[sub]/[lesson] in Pages Router
+Create breadcrumb navigation component
+Add sidebar for hierarchical content exploration
+Implement search and filtering capabilities
+Phase 4: Content Rendering and Interaction (Week 7-8)
+Build Markdown renderer component with syntax highlighting and image optimization
+Add interactive elements (code copy, expandable sections)
+Implement quizzes and exercises as embedded components
+Create responsive design with mobile-first approach
+Phase 5: Production Configuration and Polish (Week 9-10)
+Add comprehensive Next.js configuration for performance and security
+Implement error boundaries and fallback UI
+Add SEO optimizations and meta tag generation
+Extensive cross-browser testing and accessibility compliance
+Phase 6: Content Expansion and Optimization (Week 11-12)
+Populate initial content across major paths
+Optimize image delivery and caching strategies
+Add progressive web app features for offline access
+Deploy to production with comprehensive monitoring
+Production Quality Considerations
+Security: XSS protection, CSRF prevention, secure image handling
+Scalability: Efficient Markdown processing, CDN integration, lazy loading
+Performance: Bundle splitting, image optimization, caching layers
+Accessibility: WCAG compliance, keyboard navigation, screen reader support
+SEO: Dynamic meta tags, structured data, sitemap generation
+Maintenance: Modular CSS architecture, comprehensive documentation
+Key Challenges and Solutions
+Markdown Image Handling: Use object storage (Cloudflare R2) with CDN delivery, implement custom image component for optimization
+CSS Module Scalability: Establish design system with variables, mixins, and component-specific styles
+Static Content Management: File-based organization with build-time processing for performance
+Theme Consistency: Strict CSS variable system for black/white/yellow palette with proper contrast ratios
+Success Metrics
+Fast loading times (<2s initial page load with optimized images)
+Intuitive navigation with clear content hierarchy
+Comprehensive content coverage across defined learning paths
+High user engagement through polished, professional design
+Maintainable codebase for 10+ year lifespan with CSS module architecture

@@ -1,0 +1,248 @@
+.page {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.container {
+  max-width: var(--max-width-xl);
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+  padding-top: var(--spacing-2xl);
+  padding-bottom: var(--spacing-2xl);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  margin-bottom: var(--spacing-xl);
+}
+
+.title {
+  font-size: var(--font-size-6xl);
+  font-weight: 300;
+  margin-bottom: var(--spacing-md);
+}
+
+.subtitle {
+  font-size: var(--font-size-xl);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.description {
+  font-size: var(--font-size-lg);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.feature {
+  text-align: left;
+}
+
+.featureTitle {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+}
+
+.featureDesc {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.pathsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.pathsTitle {
+  font-size: var(--font-size-3xl);
+  font-weight: 300;
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.sectionBorder {
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: var(--spacing-xl) 0;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.sectionText {
+  font-size: var(--font-size-lg);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.contactLinks {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-md);
+  justify-content: center;
+  align-items: center;
+}
+
+.contactLink {
+  color: var(--text-primary);
+}
+
+.separator {
+  color: var(--text-secondary);
+}
+
+.footerText {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.footerSubtext {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
+}
+
+.philosophySection {
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--border-color);
+  text-align: left;
+  max-width: var(--max-width-4xl);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.philosophyTitle {
+  font-size: var(--font-size-2xl);
+  font-weight: 300;
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.philosophyText {
+  font-size: var(--font-size-lg);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.goalsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.goalSection h3 {
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  margin-bottom: var(--spacing-md);
+}
+
+.goalSection p {
+  color: var(--text-secondary);
+}
+
+.learningPathTitle {
+  font-size: var(--font-size-2xl);
+  font-weight: 300;
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.learningSteps {
+  margin-bottom: var(--spacing-xl);
+}
+
+.learningStep {
+  margin-bottom: var(--spacing-xl);
+}
+
+.stepTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+}
+
+.stepDesc {
+  color: var(--text-secondary);
+}
+
+.levelSeparator {
+  text-align: center;
+  padding: var(--spacing-md) 0;
+}
+
+.levelText {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.selfEvalSection {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--border-color);
+}
+
+.selfEvalTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  margin-bottom: var(--spacing-md);
+}
+
+.selfEvalText {
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+.content {
+  text-align: center;
+  max-width: var(--max-width-3xl);
+  width: 100%;
+}
+
+.goalSection h3 {
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  margin-bottom: var(--spacing-md);
+}
+
+.goalSection p {
+  color: var(--text-secondary);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .featuresGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .goalsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .contactLinks {
+    flex-direction: column;
+  }
+
+  .title {
+    font-size: var(--font-size-4xl);
+  }
+
+  .subtitle {
+    font-size: var(--font-size-lg);
+  }
+}
