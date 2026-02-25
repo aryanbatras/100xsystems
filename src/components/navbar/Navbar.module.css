@@ -35,7 +35,7 @@
 }
 
 .titleImage{
-  height: 2rem;
+  height: 2.75rem;
   width: auto;
   object-fit: contain;
   pointer-events: none;
@@ -52,7 +52,7 @@
 }
 
 .link {
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   text-decoration: none;
   font-family: var(--font-axle);
   color: white;
@@ -76,7 +76,7 @@
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .menuButton, .crossButton, .mobile_container {
     display: none;
   }
@@ -84,7 +84,7 @@
 
 
 /* MOBILE NAVBAR  */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .links {
     display: none;
   }
@@ -92,7 +92,7 @@
 
 .menuButton {
   color: white;
-  font-size: 2.25rem;
+  font-size: 2.75rem;
   background: none;
   border: none;
   cursor: pointer;
@@ -110,7 +110,7 @@
   display: flex;
   flex-direction: column;
   align-items: end;
-  padding: 2rem;
+  padding: 1.5rem;
   gap: 1rem;
   animation: circularReveal 0.6s ease-out forwards;
 }
@@ -147,18 +147,17 @@
   justify-content: center;
   align-items: center;
   list-style-type: none;
-  padding: 0.5rem;
   gap: 1.5rem;
 }
 
 .mobile_link {
   font-size: 2rem;
   min-width: 100vw;
-  text-align: center;
+  text-align: end;
   text-decoration: none;
   text-transform: uppercase;
   font-family: var(--font-axle);
-  padding: 1rem;
+  padding: 2rem;
   color: black;
   cursor: pointer;
   transition: color 0.2s ease;
