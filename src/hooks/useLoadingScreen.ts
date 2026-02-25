@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { LOADER_CONFIG } from "../components/Loader/constants";
+import { LOADER_CONFIG } from "../components/loader/constants";
 
 export const useLoadingScreen = () => {
   const [isLoading, setIsLoading] = useState(true);

@@ -1,8 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './Navbar.module.css';
+import { CiMenuFries } from "react-icons/ci";
+import { RxCross1 } from "react-icons/rx";
+import { useState } from 'react';
 
 export default function Navbar(){
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     return (
         <nav className={styles.nav}>
             <Link href="/" className={styles.titleLink}>
@@ -20,6 +24,22 @@ export default function Navbar(){
                 <li className={styles.link}><Link href="/about">About</Link></li>
                 <li className={styles.link}><Link href="/contact">Contact</Link></li>
             </ul>
+            {!isMenuOpen ? (
+            <button className={styles.menuButton} onClick={() => setIsMenuOpen(true)}>
+                <CiMenuFries />
+            </button>) : (
+                <div className={styles.mobile_container}>
+                    <button className={styles.crossButton} onClick={() => setIsMenuOpen(false)}>
+                        <RxCross1 />
+                    </button>
+                    <ul className={styles.mobile_links}>
+                        <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}><Link href="/">Home</Link></li>
+                        <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}><Link href="/paths">Paths</Link></li>
+                        <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}><Link href="/about">About</Link></li>
+                        <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}><Link href="/contact">Contact</Link></li>
+                    </ul>
+                </div>
+            )}
         </nav>
     )
 }

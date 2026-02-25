@@ -1,7 +1,7 @@
 .nav {
-  height: 5vh;
+  height: 8vh;
   width: 100vw;
-  opacity: 0.75;
+  /* opacity: 0.75; */
   background: black;
   display: flex;
   justify-content: space-between;
@@ -21,8 +21,8 @@
     display: block;
     width: 0;
     height: 5px;
-    background: #fff200;
-    transition: width 0.3s ease;
+    background: var(--accent-yellow);
+    transition: width 0.2s ease;
     position: absolute;
     bottom: -8px;
     left: 0;
@@ -64,12 +64,97 @@
     display: block;
     width: 0;
     height: 5px;
-    background: #fff200;
+    background: var(--accent-yellow);
     transition: width 0.3s ease;
   }
 
   &:hover {
-    color: #fff200;
+    color: var(--accent-yellow);
+    &::after {
+      width: 100%;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .menuButton, .crossButton, .mobile_container {
+    display: none;
+  }
+}
+
+
+/* MOBILE NAVBAR  */
+@media (max-width: 768px) {
+  .links {
+    display: none;
+  }
+}
+
+.menuButton {
+  color: white;
+  font-size: 1.6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.mobile_container{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: white;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  padding: 2rem;
+  gap: 1rem;
+}
+
+.crossButton {
+  color: black;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.mobile_links {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  list-style-type: none;
+  padding: 0.5rem;
+  gap: 1.5rem;
+}
+
+.mobile_link {
+  font-size: 2rem;
+  min-width: 100vw;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: var(--font-axle);
+  padding: 1rem;
+  color: black;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  
+  &::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 10px;
+    background: var(--accent-yellow);
+    transition: width 0.3s ease;
+  }
+
+  &:hover {
+    color: var(--accent-yellow);
     &::after {
       width: 100%;
     }

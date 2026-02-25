@@ -12,7 +12,7 @@ const LoaderAnimation = () => {
 const StyledWrapper = styled.div`
   .spinner {
    --size: 60px;
-   --first-block-clr: #facc15;
+   --first-block-clr: var(--accent-yellow);
    --second-block-clr: #ffffff;
    --clr: #111;
    width: 100px;
