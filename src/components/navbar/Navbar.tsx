@@ -34,10 +34,10 @@ export function Navbar(): React.ReactElement {
                         <RxCross1 />
                     </button>
                     <ul className={styles.mobile_links}>
-                        <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}><Link href="/">Home</Link></li>
-                        <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}><Link href="/paths">Paths</Link></li>
-                        <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}><Link href="/about">About</Link></li>
-                        <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}><Link href="/contact">Contact</Link></li>
+                        <Link href="/"> <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}>Home</li></Link>
+                        <Link href="/paths"> <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}>Paths</li></Link>
+                        <Link href="/about"> <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}>About</li></Link>
+                        <Link href="/contact"> <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}>Contact</li></Link>
                     </ul>
                 </div>
             )}

@@ -21,16 +21,29 @@ export default function Contact() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Simulate form submission
-    setTimeout(() => {
-      setResponseMessage('Thank you for your message. We will get back to you within 24 hours.');
-      setIsSuccess(true);
-      setFormData({ name: '', email: '', company: '', message: '' });
-      
-      setTimeout(() => {
-        setResponseMessage('');
-      }, 5000);
-    }, 1000);
+    // Create mailto link with form data
+    const subject = encodeURIComponent('Contact Form Submission from 100xSystems');
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\n` +
+      `Email: ${formData.email}\n` +
+      `Company: ${formData.company || 'Not provided'}\n\n` +
+      `Message:\n${formData.message}\n\n` +
+      `---\nSent from 100xSystems Contact Form`
+    );
+    
+    const mailtoLink = `mailto:admin@100xSystems.dev?subject=${subject}&body=${body}`;
+    
+    // Open user's default email client
+    window.location.href = mailtoLink;
+    
+    // Show success message
+    // setResponseMessage('Opening your email client...');
+    setIsSuccess(true);
+    
+    // // Clear message after 3 seconds
+    // setTimeout(() => {
+    //   setResponseMessage('');
+    // }, 3000);
   };
 
   return (
@@ -137,38 +150,6 @@ export default function Contact() {
             </form>
           </div>
         </div>
-
-        <section className={styles.officesSection}>
-          <h2 className={styles.sectionTitle}>Our Offices</h2>
-          <div className={styles.officesGrid}>
-            <div className={styles.officeCard}>
-              <h3 className={styles.officeName}>San Francisco</h3>
-              <p className={styles.officeAddress}>
-                123 Market Street<br />
-                San Francisco, CA 94105
-              </p>
-              <p className={styles.officeContact}>West Coast Headquarters</p>
-            </div>
-
-            <div className={styles.officeCard}>
-              <h3 className={styles.officeName}>New York</h3>
-              <p className={styles.officeAddress}>
-                456 Park Avenue<br />
-                New York, NY 10022
-              </p>
-              <p className={styles.officeContact}>East Coast Office</p>
-            </div>
-
-            <div className={styles.officeCard}>
-              <h3 className={styles.officeName}>London</h3>
-              <p className={styles.officeAddress}>
-                789 Oxford Street<br />
-                London W1C 1DX
-              </p>
-              <p className={styles.officeContact}>European Office</p>
-            </div>
-          </div>
-        </section>
       </div>
     </div>
   );

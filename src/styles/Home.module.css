@@ -36,21 +36,22 @@
 }
 
 .subtitle {
-  font-size: 32px;
-  color: #888888;
-  font-family: var(--font-optima);
+  font-size: 34px;
+  color: #cccccc;
+  font-family: var(--font-samsung-sharp);
   margin-bottom: 80px;
-  font-weight: 300;
+  font-weight: 200;
   letter-spacing: 0.02em;
 }
 
 .description {
-  font-size: 24px;
-  color: #888888;
+  font-size: 26px;
+  color: #bbbbbb;
   line-height: 1.8;
   max-width: 900px;
   margin: 0 auto;
-  font-weight: 300;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
 }
 
 .featuresSection {
@@ -97,10 +98,11 @@
 }
 
 .featureDescription {
-  font-size: 20px;
-  color: #888888;
+  font-size: 22px;
+  color: #aaaaaa;
   line-height: 1.8;
-  font-weight: 300;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
 }
 
 .ctaSection {
@@ -121,14 +123,15 @@
 }
 
 .ctaText {
-  font-size: 24px;
-  color: #888888;
+  font-size: 26px;
+  color: #bbbbbb;
   line-height: 1.9;
   margin-bottom: 60px;
-  font-weight: 300;
+  font-weight: 200;
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
+  font-family: var(--font-samsung-sharp);
 }
 
 .ctaButton {
@@ -176,10 +179,10 @@
 }
 
 .statLabel {
-  font-size: 20px;
-  color: #888888;
-  font-family: var(--font-optima);
-  font-weight: 300;
+  font-size: 22px;
+  color: #cccccc;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 200;
   letter-spacing: 0.01em;
 }
 

@@ -31,11 +31,11 @@
 }
 
 .subtitle {
-  font-size: 28px;
-  color: #888888;
-  font-family: var(--font-optima);
+  font-size: 30px;
+  color: #cccccc;
+  font-family: var(--font-samsung-sharp);
   margin-bottom: 60px;
-  font-weight: 300;
+  font-weight: 200;
   letter-spacing: 0.02em;
   max-width: 900px;
   margin-left: auto;
@@ -61,12 +61,13 @@
 }
 
 .overviewText {
-  font-size: 22px;
-  color: #888888;
+  font-size: 24px;
+  color: #bbbbbb;
   line-height: 1.9;
   max-width: 1000px;
   margin: 0 auto;
-  font-weight: 300;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
 }
 
 .pathsGrid {
@@ -122,11 +123,12 @@
 }
 
 .pathDescription {
-  font-size: 20px;
-  color: #888888;
+  font-size: 22px;
+  color: #aaaaaa;
   line-height: 1.8;
-  font-weight: 300;
+  font-weight: 200;
   margin-bottom: 40px;
+  font-family: var(--font-samsung-sharp);
 }
 
 .pathFeatures {
@@ -248,10 +250,11 @@
 }
 
 .timelineDescription {
-  font-size: 18px;
-  color: #888888;
+  font-size: 20px;
+  color: #aaaaaa;
   line-height: 1.7;
-  font-weight: 300;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
 }
 
 .requirementsSection {
@@ -286,13 +289,14 @@
 }
 
 .requirementItem {
-  font-size: 18px;
-  color: #888888;
+  font-size: 20px;
+  color: #aaaaaa;
   line-height: 1.7;
-  font-weight: 300;
+  font-weight: 200;
   margin-bottom: 16px;
   padding-left: 24px;
   position: relative;
+  font-family: var(--font-samsung-sharp);
 }
 
 .requirementItem::before {
@@ -320,14 +324,15 @@
 }
 
 .ctaText {
-  font-size: 24px;
-  color: #888888;
+  font-size: 26px;
+  color: #bbbbbb;
   line-height: 1.9;
   margin-bottom: 60px;
-  font-weight: 300;
+  font-weight: 200;
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
+  font-family: var(--font-samsung-sharp);
 }
 
 .ctaButtons {

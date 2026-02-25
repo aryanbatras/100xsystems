@@ -31,11 +31,11 @@
 }
 
 .subtitle {
-  font-size: 28px;
-  color: #888888;
-  font-family: var(--font-optima);
+  font-size: 30px;
+  color: #cccccc;
+  font-family: var(--font-samsung-sharp);
   margin-bottom: 60px;
-  font-weight: 300;
+  font-weight: 200;
   letter-spacing: 0.02em;
   max-width: 800px;
   margin-left: auto;
@@ -209,11 +209,12 @@
 }
 
 .officeAddress {
-  font-size: 18px;
-  color: #888888;
+  font-size: 20px;
+  color: #bbbbbb;
   line-height: 1.7;
-  font-weight: 300;
+  font-weight: 200;
   margin-bottom: 12px;
+  font-family: var(--font-samsung-sharp);
 }
 
 .officeContact {
