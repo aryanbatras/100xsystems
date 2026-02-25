@@ -6,7 +6,7 @@ import { RxCross1 } from "react-icons/rx";
 import { CgMenuHotdog } from "react-icons/cg";
 import { useState } from 'react';
 
-export default function Navbar(): React.ReactElement {
+export function Navbar(): React.ReactElement {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     return (
         <nav className={styles.nav}>

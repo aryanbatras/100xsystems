@@ -5,7 +5,7 @@ import LoaderAnimation from "./LoaderAnimation";
 import { useLoadingScreen } from "../../hooks/useLoadingScreen";
 import { LOADER_CONFIG } from "./constants";
 
-export default function Loader(): React.ReactElement | null {
+export function Loading(): React.ReactElement | null {
   const { isLoading } = useLoadingScreen();
   if (!isLoading) return null;
   return (
