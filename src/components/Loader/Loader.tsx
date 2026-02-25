@@ -1,10 +1,11 @@
+import React from 'react';
 import styles from "./Loader.module.css";
 import Image from "next/image";
 import LoaderAnimation from "./LoaderAnimation";
 import { useLoadingScreen } from "../../hooks/useLoadingScreen";
 import { LOADER_CONFIG } from "./constants";
 
-export default function Loader() {
+export default function Loader(): React.ReactElement | null {
   const { isLoading } = useLoadingScreen();
   if (!isLoading) return null;
   return (
