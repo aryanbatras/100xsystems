@@ -1,0 +1,392 @@
+.page {
+  min-height: 100vh;
+  background: #000000;
+  color: #ffffff;
+  font-family: var(--font-optima);
+  font-weight: 300;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  padding-top: 120px;
+  padding-bottom: 120px;
+  min-height: 100vh;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.heroSection {
+  text-align: center;
+  margin-bottom: 160px;
+}
+
+.logo {
+  margin-bottom: 60px;
+  opacity: 0.9;
+}
+
+.title {
+  font-size: 72px;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 24px;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.subtitle {
+  font-size: 28px;
+  color: #888888;
+  font-family: var(--font-optima);
+  margin-bottom: 60px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+.description {
+  font-size: 24px;
+  color: #888888;
+  line-height: 1.8;
+  max-width: 900px;
+  margin: 0 auto;
+  font-weight: 300;
+}
+
+.missionSection {
+  text-align: center;
+  margin-bottom: 160px;
+  padding: 80px 0;
+}
+
+.sectionTitle {
+  font-size: 48px;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 60px;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.missionText {
+  font-size: 22px;
+  color: #888888;
+  line-height: 1.9;
+  max-width: 1000px;
+  margin: 0 auto;
+  font-weight: 300;
+}
+
+.philosophySection {
+  margin-bottom: 160px;
+}
+
+.philosophyContent {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 80px;
+  margin-top: 80px;
+}
+
+.philosophyBlock {
+  text-align: left;
+}
+
+.blockTitle {
+  font-size: 24px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 20px;
+  color: #ffff00;
+  letter-spacing: 0.01em;
+}
+
+.blockText {
+  font-size: 20px;
+  color: #888888;
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+.pathwaySection {
+  margin-bottom: 160px;
+}
+
+.pathwayStages {
+  display: grid;
+  gap: 40px;
+  margin-top: 80px;
+}
+
+.stage {
+  display: flex;
+  align-items: flex-start;
+  gap: 60px;
+  padding: 60px 0;
+}
+
+.stageNumber {
+  font-size: 64px;
+  font-weight: 100;
+  font-family: var(--font-samsung-sharp);
+  color: #ffff00;
+  min-width: 80px;
+  text-align: left;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.stageContent {
+  flex: 1;
+}
+
+.stageTitle {
+  font-size: 32px;
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 16px;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.stageDesc {
+  font-size: 20px;
+  color: #888888;
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+.differenceSection {
+  margin-bottom: 160px;
+}
+
+.differenceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px;
+  margin-top: 80px;
+}
+
+.differenceItem {
+  text-align: center;
+}
+
+.differenceTitle {
+  font-size: 20px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 16px;
+  color: #ffff00;
+  letter-spacing: 0.01em;
+}
+
+.differenceText {
+  font-size: 18px;
+  color: #888888;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.ctaSection {
+  margin-bottom: 160px;
+  padding: 80px;
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.08) 0%, rgba(0, 0, 0, 0) 100%);
+  text-align: center;
+}
+
+.ctaContent {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.ctaTitle {
+  font-size: 48px;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 40px;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.ctaText {
+  font-size: 22px;
+  color: #888888;
+  line-height: 1.9;
+  margin-bottom: 60px;
+  font-weight: 300;
+}
+
+.contactLinks {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+}
+
+.contactLink {
+  color: #ffffff;
+  font-family: var(--font-axle);
+  font-size: 18px;
+  font-weight: 400;
+  transition: color 0.4s ease;
+  letter-spacing: 0.02em;
+}
+
+.contactLink:hover {
+  color: #ffff00;
+}
+
+.separator {
+  color: #444444;
+  font-size: 24px;
+  font-weight: 200;
+}
+
+.footer {
+  text-align: center;
+  padding-top: 80px;
+}
+
+.footerText {
+  font-size: 18px;
+  color: #666666;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+
+.footerSubtext {
+  font-size: 14px;
+  color: #555555;
+  font-family: var(--font-optima);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 32px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+  }
+
+  .philosophyContent {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+
+  .differenceGrid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .stage {
+    gap: 40px;
+    padding: 40px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 24px;
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+
+  .title {
+    font-size: 48px;
+  }
+
+  .subtitle {
+    font-size: 22px;
+  }
+
+  .sectionTitle {
+    font-size: 36px;
+  }
+
+  .missionText {
+    font-size: 20px;
+  }
+
+  .description {
+    font-size: 20px;
+  }
+
+  .stage {
+    flex-direction: column;
+    text-align: center;
+    gap: 24px;
+    padding: 32px 0;
+  }
+
+  .stageNumber {
+    text-align: center;
+    font-size: 48px;
+  }
+
+  .contactLinks {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ctaSection {
+    padding: 60px 32px;
+  }
+
+  .ctaTitle {
+    font-size: 36px;
+  }
+
+  .ctaText {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 36px;
+  }
+
+  .subtitle {
+    font-size: 18px;
+  }
+
+  .sectionTitle {
+    font-size: 28px;
+  }
+
+  .stageTitle {
+    font-size: 24px;
+  }
+
+  .ctaTitle {
+    font-size: 28px;
+  }
+
+  .container {
+    padding: 0 16px;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .heroSection {
+    margin-bottom: 100px;
+  }
+
+  .missionSection,
+  .philosophySection,
+  .pathwaySection,
+  .differenceSection,
+  .ctaSection {
+    margin-bottom: 100px;
+  }
+}

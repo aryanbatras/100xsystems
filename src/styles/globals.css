@@ -1,3 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Axle+BC:wght@400;700&display=swap');
+
+/* Local Fonts */
+@font-face {
+  font-family: 'Gabriola';
+  src: url('/fonts/gabriola Font Download.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Museo';
+  src: url('/fonts/museo/Museo300-Regular.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Museo';
+  src: url('/fonts/museo/Museo700-Regular.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Optima';
+  src: url('/fonts/optima/OPTIMA.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Optima';
+  src: url('/fonts/optima/OPTIMA_B.TTF') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Optima';
+  src: url('/fonts/optima/Optima Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Optima';
+  src: url('/fonts/optima/Optima_Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Samsung Sharp Sans';
+  src: url('/fonts/samsung-sharp-sans/samsungsharpsans.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Samsung Sharp Sans';
+  src: url('/fonts/samsung-sharp-sans/samsungsharpsans-medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Samsung Sharp Sans';
+  src: url('/fonts/samsung-sharp-sans/samsungsharpsans-bold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
 :root {
   /* Color Palette */
   --bg-primary: #000000;
@@ -10,6 +83,11 @@
   /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-axle: 'Axle BC', system-ui, -apple-system, sans-serif;
+  --font-gabriola: 'Gabriola', serif;
+  --font-museo: 'Museo', sans-serif;
+  --font-optima: 'Optima', serif;
+  --font-samsung-sharp: 'Samsung Sharp Sans', sans-serif;
 
   /* Spacing */
   --spacing-xs: 0.25rem;
