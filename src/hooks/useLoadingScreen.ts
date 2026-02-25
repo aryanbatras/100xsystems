@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { LOADER_CONFIG } from "@/components/loader/constants";
 
 export const useLoadingScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -9,7 +8,7 @@ export const useLoadingScreen = () => {
   const hideLoader = () => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, LOADER_CONFIG.DURATION_MS);
+    }, 2000);
     return timer;
   };
 
