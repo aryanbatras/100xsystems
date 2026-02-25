@@ -27,6 +27,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "src/components/loader/LoaderAnimation.jsx"  ],
+, "src/components/loading/LoaderAnimation.jsx"  ],
   "exclude": ["node_modules"]
 }
