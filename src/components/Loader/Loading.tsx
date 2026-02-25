@@ -3,7 +3,6 @@ import styles from "./Loader.module.css";
 import Image from "next/image";
 import LoaderAnimation from "./LoaderAnimation";
 import { useLoadingScreen } from "../../hooks/useLoadingScreen";
-import { LOADER_CONFIG } from "./constants";
 
 export function Loading(): React.ReactElement | null {
   const { isLoading } = useLoadingScreen();
@@ -13,10 +12,10 @@ export function Loading(): React.ReactElement | null {
       <div className={styles.contentContainer}>
         <LoaderAnimation />
         <Image
-          src={LOADER_CONFIG.LOGO.SRC}
-          alt={LOADER_CONFIG.LOGO.ALT}
-          width={LOADER_CONFIG.LOGO.WIDTH}
-          height={LOADER_CONFIG.LOGO.HEIGHT}
+          src="/100xsystemsonlytitle.png"
+          alt="100x Systems"
+          width={800}
+          height={800}
           className={styles.logo}
           priority
         />
