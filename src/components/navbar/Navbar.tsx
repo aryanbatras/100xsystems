@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './Navbar.module.css';
-import { CiMenuFries } from "react-icons/ci";
 import { RxCross1 } from "react-icons/rx";
+import { CgMenuHotdog } from "react-icons/cg";
 import { useState } from 'react';
 
 export default function Navbar(){
@@ -26,7 +26,7 @@ export default function Navbar(){
             </ul>
             {!isMenuOpen ? (
             <button className={styles.menuButton} onClick={() => setIsMenuOpen(true)}>
-                <CiMenuFries />
+                <CgMenuHotdog />
             </button>) : (
                 <div className={styles.mobile_container}>
                     <button className={styles.crossButton} onClick={() => setIsMenuOpen(false)}>
