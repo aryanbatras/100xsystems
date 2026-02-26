@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from '../../styles/Paths.module.css';
 
 export default function Paths() {
@@ -14,12 +15,25 @@ export default function Paths() {
         </section>
 
         <section className={styles.pathsOverview}>
-          <h2 className={styles.overviewTitle}>Three Paths to Excellence</h2>
-          <p className={styles.overviewText}>
-            Each path is carefully crafted to build expertise progressively, 
-            from foundational concepts to advanced system design. Whether you're starting 
-            your journey or looking to specialize, we have a path that fits your ambitions.
-          </p>
+          <div className={styles.overviewContent}>
+            <div className={styles.overviewLeft}>
+              <Image
+                src="/assets/illustrations/undraw_road-sign_kncb.svg"
+                alt="Path Selection"
+                width={350}
+                height={280}
+                className={styles.overviewImage}
+              />
+            </div>
+            <div className={styles.overviewRight}>
+              <h2 className={styles.overviewTitle}>Three Paths to Excellence</h2>
+              <p className={styles.overviewText}>
+                Each path is carefully crafted to build expertise progressively, 
+                from foundational concepts to advanced system design. Whether you're starting 
+                your journey or looking to specialize, we have a path that fits your ambitions.
+              </p>
+            </div>
+          </div>
         </section>
 
         <section className={styles.pathsGrid}>
@@ -168,6 +182,42 @@ export default function Paths() {
             <Link href="/about" className={styles.secondaryButton}>
               Learn More
             </Link>
+          </div>
+        </section>
+
+        <section className={styles.wallpaperSection}>
+          <div className={styles.wallpaperContent}>
+            <div className={styles.wallpaperText}>
+              <h2 className={styles.wallpaperTitle}>Your Engineering Evolution</h2>
+              <p className={styles.wallpaperDescription}>
+                Each path represents a stage in your evolution from developer to engineer. 
+                Through hands-on projects, mentorship, and real-world challenges, you'll build 
+                the skills and mindset needed to excel in today's complex technological landscape.
+              </p>
+              <div className={styles.evolutionPoints}>
+                <div className={styles.evolutionPoint}>
+                  <span className={styles.evolutionNumber}>01</span>
+                  <span className={styles.evolutionText}>Technical Foundation</span>
+                </div>
+                <div className={styles.evolutionPoint}>
+                  <span className={styles.evolutionNumber}>02</span>
+                  <span className={styles.evolutionText}>System Architecture</span>
+                </div>
+                <div className={styles.evolutionPoint}>
+                  <span className={styles.evolutionNumber}>03</span>
+                  <span className={styles.evolutionText}>Engineering Leadership</span>
+                </div>
+              </div>
+            </div>
+            <div className={styles.wallpaperImageWrapper}>
+              <Image
+                src="/assets/wallpaper/rubik-cube-portrait-right-side-getting-broken-in-pieces-on-left-side.jpg"
+                alt="Engineering Evolution"
+                width={400}
+                height={600}
+                className={styles.wallpaperImage}
+              />
+            </div>
           </div>
         </section>
       </div>

@@ -135,6 +135,24 @@ body {
 body {
   color: var(--text-primary);
   background: var(--bg-primary);
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/assets/wallpaper/rubik-cube-right-side-bg-black-main-wallpaper.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  z-index: 1;
+  opacity: 0.30;
+  pointer-events: none;
 }
 
 a {

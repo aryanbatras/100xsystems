@@ -38,12 +38,25 @@ export default function About() {
           </div>
 
           <div className={styles.missionSection}>
-            <h2 className={styles.sectionTitle}>Our Mission</h2>
-            <p className={styles.missionText}>
-              We bridge the gap between coding tutorials and engineering excellence. 
-              In a world of endless tutorials and quick fixes, we focus on what truly matters: 
-              building engineers who understand systems, think critically, and solve complex problems.
-            </p>
+            <div className={styles.missionContent}>
+              <div className={styles.missionLeft}>
+                <Image
+                  src="/assets/illustrations/undraw_deep-thinker-avatar_6xg6.svg"
+                  alt="Deep Thinker"
+                  width={300}
+                  height={300}
+                  className={styles.missionImage}
+                />
+              </div>
+              <div className={styles.missionRight}>
+                <h2 className={styles.sectionTitle}>Our Mission</h2>
+                <p className={styles.missionText}>
+                  We bridge the gap between coding tutorials and engineering excellence. 
+                  In a world of endless tutorials and quick fixes, we focus on what truly matters: 
+                  building engineers who understand systems, think critically, and solve complex problems.
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className={styles.philosophySection}>
@@ -174,6 +187,90 @@ export default function About() {
                 <a href="https://www.linkedin.com/company/100xsystems/" className={styles.contactLink}>
                   LinkedIn
                 </a>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.wallpaperSection}>
+            <div className={styles.wallpaperContent}>
+              <div className={styles.wallpaperText}>
+                <h2 className={styles.wallpaperTitle}>The Engineering Mindset</h2>
+                <p className={styles.wallpaperDescription}>
+                  Engineering is not just about writing code—it's about understanding systems at their core. 
+                  It's about seeing patterns where others see complexity, about building solutions that scale 
+                  not just technically, but also in their impact on users and businesses.
+                </p>
+                <div className={styles.wallpaperPoints}>
+                  <div className={styles.wallpaperPoint}>
+                    <span className={styles.pointIcon}>🔧</span>
+                    <span className={styles.pointLabel}>Systematic Thinking</span>
+                  </div>
+                  <div className={styles.wallpaperPoint}>
+                    <span className={styles.pointIcon}>⚡</span>
+                    <span className={styles.pointLabel}>Performance First</span>
+                  </div>
+                  <div className={styles.wallpaperPoint}>
+                    <span className={styles.pointIcon}>🛡️</span>
+                    <span className={styles.pointLabel}>Security Mindful</span>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.wallpaperImageWrapper}>
+                <Image
+                  src="/assets/wallpaper/portrait-small-cubes-connected-by-lines-3d-closer-look-red-color.jpg"
+                  alt="Connected Systems"
+                  width={400}
+                  height={500}
+                  className={styles.wallpaperImage}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.valuesSection}>
+            <h2 className={styles.sectionTitle}>Core Values</h2>
+            <div className={styles.valuesGrid}>
+              <div className={styles.valueCard}>
+                <div className={styles.valueIcon}>
+                  <Image
+                    src="/assets/illustrations/undraw_continuous-learning_a1ld.svg"
+                    alt="Continuous Learning"
+                    width={100}
+                    height={100}
+                  />
+                </div>
+                <h3 className={styles.valueTitle}>Continuous Learning</h3>
+                <p className={styles.valueDescription}>
+                  Technology evolves constantly. We embrace lifelong learning as the cornerstone of engineering excellence.
+                </p>
+              </div>
+              <div className={styles.valueCard}>
+                <div className={styles.valueIcon}>
+                  <Image
+                    src="/assets/illustrations/undraw_collaboration_8i6a.svg"
+                    alt="Collaboration"
+                    width={100}
+                    height={100}
+                  />
+                </div>
+                <h3 className={styles.valueTitle}>Collaborative Excellence</h3>
+                <p className={styles.valueDescription}>
+                  Great systems are built by teams. We foster collaboration, code reviews, and collective ownership.
+                </p>
+              </div>
+              <div className={styles.valueCard}>
+                <div className={styles.valueIcon}>
+                  <Image
+                    src="/assets/illustrations/undraw_innovation_9q9p.svg"
+                    alt="Innovation"
+                    width={100}
+                    height={100}
+                  />
+                </div>
+                <h3 className={styles.valueTitle}>Innovation & Pragmatism</h3>
+                <p className={styles.valueDescription}>
+                  We balance cutting-edge innovation with practical solutions that solve real problems effectively.
+                </p>
               </div>
             </div>
           </div>

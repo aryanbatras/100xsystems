@@ -4,6 +4,24 @@
   color: #ffffff;
   font-family: var(--font-optima);
   font-weight: 300;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/assets/wallpaper/black-web-like-lines-white-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  z-index: -1;
+  opacity: 0.1;
 }
 
 .container {
@@ -382,7 +400,115 @@
   transform: translateY(-2px);
 }
 
-/* Responsive design */
+/* New Sections Styles */
+
+.overviewContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.overviewLeft {
+  display: flex;
+  justify-content: center;
+}
+
+.overviewImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.overviewRight {
+  text-align: left;
+}
+
+.wallpaperSection {
+  margin-bottom: 120px;
+  padding: 100px 0;
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.03) 0%, rgba(0, 0, 0, 0) 100%);
+  border-radius: 16px;
+}
+
+.wallpaperContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.wallpaperTitle {
+  font-size: 42px;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 30px;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.wallpaperDescription {
+  font-size: 20px;
+  color: #bbbbbb;
+  line-height: 1.8;
+  margin-bottom: 40px;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+}
+
+.evolutionPoints {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.evolutionPoint {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.evolutionNumber {
+  font-size: 32px;
+  font-weight: 100;
+  font-family: var(--font-samsung-sharp);
+  color: #ffff00;
+  opacity: 0.8;
+  min-width: 40px;
+}
+
+.evolutionText {
+  font-size: 20px;
+  color: #ffffff;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+.wallpaperImageWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.wallpaperImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+}
+
+/* Enhanced Responsive Design */
+@media (max-width: 1024px) {
+  .overviewContent,
+  .wallpaperContent {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+
+  .overviewRight {
+    text-align: center;
+  }
+}
 @media (max-width: 1024px) {
   .container {
     padding: 0 32px;
