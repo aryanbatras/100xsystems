@@ -89,12 +89,13 @@ const RubikVideoShowcase = () => {
       
       <div className={styles.rubikVideoContent}>
         <div ref={titleRef} className={styles.rubikVideoTitle}>
-          <Image
+          <img
             src="/100xsystemsonlytitle.png"
             alt="100x Systems"
             width={400}
             height={80}
             className={styles.titleLogo}
+            loading="eager" 
           />
         </div>
         <p ref={subtitleRef} className={styles.rubikVideoSubtitle}>

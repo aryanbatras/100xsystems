@@ -1,168 +1,48 @@
-import styled from 'styled-components';
+import styles from './CubeHover.module.css';
 
 const CubeHover = () => {
   return (
-    <StyledWrapper>
-      <div className="cube-container">
-        <div className="cube">
-          <div className="face front">
-            <div className="face-content">
-              <img src="/100xsystemsonlytitle.png" alt="100x Systems" className="logo" />
-              <span className="tech-text"></span>
-            </div>
+    <div className={styles.cubeContainer}>
+      <div className={styles.cube}>
+        <div className={styles.front}>
+          <div className={styles.faceContent}>
+            <img src="/100xsystemsonlytitle.png" alt="100x Systems" className={styles.logo} />
+            <span className={styles.techText}></span>
           </div>
-          <div className="face back">
-            <div className="face-content">
-              <img src="/100xsystemsonlytitle.png" alt="100x Systems" className="logo" />
-              <span className="tech-text"></span>
-            </div>
+        </div>
+        <div className={styles.back}>
+          <div className={styles.faceContent}>
+            <img src="/100xsystemsonlytitle.png" alt="100x Systems" className={styles.logo} />
+            <span className={styles.techText}></span>
           </div>
-          <div className="face right">
-            <div className="face-content">
-              <img src="/100xsystemsonlytitle.png" alt="100x Systems" className="logo" />
-              <span className="tech-text"></span>
-            </div>
+        </div>
+        <div className={styles.right}>
+          <div className={styles.faceContent}>
+            <img src="/100xsystemsonlytitle.png" alt="100x Systems" className={styles.logo} />
+            <span className={styles.techText}></span>
           </div>
-          <div className="face left">
-            <div className="face-content">
-              <img src="/100xsystemsonlytitle.png" alt="100x Systems" className="logo" />
-              <span className="tech-text"></span>
-            </div>
+        </div>
+        <div className={styles.left}>
+          <div className={styles.faceContent}>
+            <img src="/100xsystemsonlytitle.png" alt="100x Systems" className={styles.logo} />
+            <span className={styles.techText}></span>
           </div>
-          <div className="face top">
-            <div className="face-content">
-              <img src="/100xsystemsonlytitle.png" alt="100x Systems" className="logo" />
-              <span className="tech-text"></span>
-            </div>
+        </div>
+        <div className={styles.top}>
+          <div className={styles.faceContent}>
+            <img src="/100xsystemsonlytitle.png" alt="100x Systems" className={styles.logo} />
+            <span className={styles.techText}></span>
           </div>
-          <div className="face bottom">
-            <div className="face-content">
-              <img src="/100xsystemsonlytitle.png" alt="100x Systems" className="logo" />
-              <span className="tech-text"></span>
-            </div>
+        </div>
+        <div className={styles.bottom}>
+          <div className={styles.faceContent}>
+            <img src="/100xsystemsonlytitle.png" alt="100x Systems" className={styles.logo} />
+            <span className={styles.techText}></span>
           </div>
         </div>
       </div>
-    </StyledWrapper>
+    </div>
   );
-}
-
-const StyledWrapper = styled.div`
-  .cube-container {
-    width: 180px;
-    height: 180px;
-    padding: 50px;
-    perspective: 400px;
-    margin: 30px auto;
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: scale(1) rotateX(5deg) rotateY(5deg);
-    animation-play-state: running;
-    filter: brightness(0.75) contrast(2);
-  }
-
-  .cube {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transform-style: preserve-3d;
-    animation: rotateCube 30s infinite linear;
-    transition: transform 0.8s ease;
-    animation-play-state: running;
-  }
-
-  .face {
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(30, 30, 30, 0.4));
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(0,0,0, 1);
-    box-shadow: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    transition: all 0.6s ease;
-  }
-
-  .face::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: transparent;
-  }
-
-
-  .face-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    z-index: 2;
-    position: relative;
-  }
-
-  .logo {
-    width: 100px;
-    height: auto;
-    filter: brightness(1.2) contrast(1.2);
-    transition: filter 0.4s ease;
-  }
-
-  .tech-text {
-    color: #b0b0b0; 
-    font-size: 16px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    transition: color 0.3s ease;
-  }
-
-
-  .front {
-    transform: translateZ(90px);
-  }
-
-  .back {
-    transform: rotateY(180deg) translateZ(90px);
-  }
-
-  .right {
-    transform: rotateY(90deg) translateZ(90px);
-  }
-
-  .left {
-    transform: rotateY(-90deg) translateZ(90px);
-  }
-
-  .top {
-    transform: rotateX(90deg) translateZ(90px);
-  }
-
-  .bottom {
-    transform: rotateX(-90deg) translateZ(90px);
-  }
-
-  @keyframes rotateCube {
-    0% {
-      transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
-    }
-    25% {
-      transform: rotateX(0deg) rotateY(90deg) rotateZ(0deg);
-    }
-    50% {
-      transform: rotateX(0deg) rotateY(180deg) rotateZ(0deg);
-    }
-    75% {
-      transform: rotateX(0deg) rotateY(270deg) rotateZ(0deg);
-    }
-    100% {
-      transform: rotateX(0deg) rotateY(360deg) rotateZ(0deg);
-    }
-  }`;
+};
 
 export default CubeHover;

@@ -186,28 +186,25 @@ const VideoShowcase = () => {
 
       {/* Title 1 */}
       <div ref={title1Ref} className={styles.videoShowcaseContent}>
-        <h2 className={styles.videoShowcaseTitle}>Visualizing System Architecture</h2>
+        <h2 className={styles.videoShowcaseTitle}>From Developer to Systems Engineer</h2>
         <p className={styles.videoShowcaseDescription}>
-          Most developers just write code. We teach you to see the complete system - how components connect, 
-          interact, and form the living architecture that powers real applications.
+          Most developers learn technologies quickly but miss the systems perspective. We teach you to understand the complete software lifecycle - from frontend architecture to deployment patterns. Transform how you think about code and become the engineer who builds scalable, maintainable systems that stand the test of time.
         </p>
       </div>
 
       {/* Title 2 */}
       <div ref={title2Ref} className={styles.videoShowcaseContent}>
-        <h2 className={styles.videoShowcaseTitle}>Understanding Task Orchestration</h2>
+        <h2 className={styles.videoShowcaseTitle}>Depth Over Breadth Learning</h2>
         <p className={styles.videoShowcaseDescription}>
-          Beyond individual functions lies the art of workflow design. Learn how systems manage 
-          complex processes, coordinate resources, and maintain order in chaos.
+          Stop collecting certificates and start building real expertise. Our structured learning paths focus on mastering fundamentals that never become obsolete. Learn one language deeply, understand systems architecture, and gain the engineering judgment that separates senior engineers from junior developers.
         </p>
       </div>
 
       {/* Title 3 */}
       <div ref={title3Ref} className={styles.videoShowcaseContent}>
-        <h2 className={styles.videoShowcaseTitle}>Intelligent System Connections</h2>
+        <h2 className={styles.videoShowcaseTitle}>Build Systems That Matter</h2>
         <p className={styles.videoShowcaseDescription}>
-          Modern engineering isn't about coding features - it's about designing intelligent connections. 
-          Master how AI, data flows, and components create systems that think and adapt.
+          AI can generate code, but only engineers understand systems. Learn to make architectural decisions, solve complex problems, and lead technical teams. Join the 100xEngineer cohort where we build real projects, understand constraints, and develop the engineering mindset that creates career opportunities.
         </p>
       </div>
     </div>

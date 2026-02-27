@@ -12,12 +12,13 @@ export function Navbar(): React.ReactElement {
         <>
             <nav className={styles.nav}>
                 <Link href="/" className={styles.titleLink}>
-                    <Image 
+                    <img 
                         src="/100xsystemsonlytitle.png" 
                         alt="100X Systems" 
                         className={styles.titleImage}
                         width={200}
                         height={50}
+                        loading="eager"
                     />
                 </Link>
                 <ul className={styles.links}>

@@ -11,13 +11,13 @@ export function Loading(): React.ReactElement | null {
     <div className={styles.loadingScreen}>
       <div className={styles.contentContainer}>
         <LoaderAnimation />
-        <Image
+        <img
           src="/100xsystemsonlytitle.png"
           alt="100x Systems"
           width={800}
           height={800}
           className={styles.logo}
-          priority
+          loading="eager"
         />
       </div>
     </div>
