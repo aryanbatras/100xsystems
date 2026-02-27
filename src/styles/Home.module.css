@@ -1,6 +1,6 @@
 .page {
   min-height: 100vh;
-  background: #000000;
+  background: transparent;
   color: #ffffff;
   font-family: var(--font-optima);
   font-weight: 300;
@@ -73,15 +73,11 @@
   text-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
   text-align: left;
   max-width: 600px;
-  background: linear-gradient(135deg, #ffffff 0%, #ffff00 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .subtitle {
   font-size: 28px;
-  color: #ffff00;
+  color: #ffffff;
   font-family: var(--font-samsung-sharp);
   margin-bottom: 0px;
   font-weight: 200;
@@ -119,22 +115,17 @@
 .featureCard {
   text-align: center;
   padding: 60px 40px;
-  background: linear-gradient(135deg, rgba(250, 204, 21, 0.05) 0%, rgba(0, 0, 0, 0) 100%);
-  border: 1px solid rgba(250, 204, 21, 0.1);
-  border-radius: 8px;
-  transition: all 0.4s ease;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0px;
 }
 
-.featureCard:hover {
-  border-color: rgba(250, 204, 21, 0.3);
-  transform: translateY(-4px);
-}
 
 .featureNumber {
   font-size: 48px;
   font-weight: 100;
   font-family: var(--font-samsung-sharp);
-  color: #ffff00;
+  color: #ffffff;
   margin-bottom: 24px;
   opacity: 0.8;
 }
@@ -159,8 +150,8 @@
 .ctaSection {
   text-align: center;
   padding: 100px 0;
-  background: linear-gradient(135deg, rgba(250, 204, 21, 0.08) 0%, rgba(0, 0, 0, 0) 100%);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 0px;
   margin-bottom: 80px;
 }
 
@@ -188,54 +179,17 @@
 .ctaButton {
   display: inline-block;
   padding: 20px 48px;
-  background: #ffff00;
+  background: #ffffff;
   color: #000000;
   font-family: var(--font-axle);
   font-size: 18px;
   font-weight: 600;
   letter-spacing: 0.02em;
   text-decoration: none;
-  border-radius: 4px;
-  transition: all 0.3s ease;
+  border-radius: 0px;
 }
 
-.ctaButton:hover {
-  background: #ffed4e;
-  transform: translateY(-2px);
-}
 
-.statsSection {
-  margin-bottom: 160px;
-}
-
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 60px;
-  margin-top: 80px;
-}
-
-.statItem {
-  text-align: center;
-}
-
-.statNumber {
-  font-size: 64px;
-  font-weight: 100;
-  font-family: var(--font-samsung-sharp);
-  color: #ffff00;
-  margin-bottom: 16px;
-  line-height: 1;
-  opacity: 0.9;
-}
-
-.statLabel {
-  font-size: 22px;
-  color: #cccccc;
-  font-family: var(--font-samsung-sharp);
-  font-weight: 200;
-  letter-spacing: 0.01em;
-}
 
 .sectionTitle {
   font-size: 48px;
@@ -269,7 +223,7 @@
 .illustrationImage {
   max-width: 100%;
   height: auto;
-  border-radius: 12px;
+  border-radius: 0px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
@@ -302,7 +256,7 @@
   font-size: 32px;
   font-weight: 100;
   font-family: var(--font-samsung-sharp);
-  color: #ffff00;
+  color: #ffffff;
   opacity: 0.8;
   min-width: 40px;
 }
@@ -317,8 +271,8 @@
 .wallpaperSection {
   margin-bottom: 200px;
   padding: 100px 0;
-  background: linear-gradient(135deg, rgba(250, 204, 21, 0.03) 0%, rgba(0, 0, 0, 0) 100%);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 0px;
 }
 
 .wallpaperContent {
@@ -353,7 +307,7 @@
 .wallpaperImage {
   max-width: 100%;
   height: auto;
-  border-radius: 12px;
+  border-radius: 0px;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
 }
 
@@ -371,16 +325,11 @@
 .processCard {
   text-align: center;
   padding: 60px 40px;
-  background: linear-gradient(135deg, rgba(250, 204, 21, 0.05) 0%, rgba(0, 0, 0, 0) 100%);
-  border: 1px solid rgba(250, 204, 21, 0.1);
-  border-radius: 12px;
-  transition: all 0.4s ease;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0px;
 }
 
-.processCard:hover {
-  border-color: rgba(250, 204, 21, 0.3);
-  transform: translateY(-6px);
-}
 
 .processIcon {
   margin-bottom: 30px;
@@ -425,7 +374,7 @@
 .modernImage {
   max-width: 100%;
   height: auto;
-  border-radius: 12px;
+  border-radius: 0px;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
 }
 
@@ -455,27 +404,22 @@
 
 .techItem {
   padding: 12px 20px;
-  background: rgba(250, 204, 21, 0.1);
-  border: 1px solid rgba(250, 204, 21, 0.2);
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0px;
   font-size: 16px;
-  color: #ffff00;
+  color: #ffffff;
   font-family: var(--font-samsung-sharp);
   font-weight: 300;
   text-align: center;
-  transition: all 0.3s ease;
 }
 
-.techItem:hover {
-  background: rgba(250, 204, 21, 0.15);
-  border-color: rgba(250, 204, 21, 0.4);
-}
 
 .finalCtaSection {
   margin-bottom: 100px;
   padding: 100px 0;
-  background: linear-gradient(135deg, rgba(250, 204, 21, 0.08) 0%, rgba(0, 0, 0, 0) 100%);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 0px;
 }
 
 .finalCtaContent {
@@ -488,7 +432,7 @@
 .finalCtaImage {
   max-width: 100%;
   height: auto;
-  border-radius: 12px;
+  border-radius: 0px;
   box-shadow: 0 35px 70px rgba(0, 0, 0, 0.6);
 }
 
@@ -518,21 +462,16 @@
 .primaryButton {
   display: inline-block;
   padding: 16px 40px;
-  background: #ffff00;
+  background: #ffffff;
   color: #000000;
   font-family: var(--font-axle);
   font-size: 16px;
   font-weight: 600;
   letter-spacing: 0.02em;
   text-decoration: none;
-  border-radius: 4px;
-  transition: all 0.3s ease;
+  border-radius: 0px;
 }
 
-.primaryButton:hover {
-  background: #ffed4e;
-  transform: translateY(-2px);
-}
 
 .secondaryButton {
   display: inline-block;
@@ -544,15 +483,10 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   text-decoration: none;
-  border: 2px solid rgba(250, 204, 21, 0.3);
-  border-radius: 4px;
-  transition: all 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0px;
 }
 
-.secondaryButton:hover {
-  border-color: rgba(250, 204, 21, 0.6);
-  transform: translateY(-2px);
-}
 
 /* Enhanced Responsive Design */
 @media (max-width: 1024px) {

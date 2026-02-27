@@ -1,27 +1,11 @@
 .page {
   min-height: 100vh;
-  background: #000000;
+  background: transparent;
   color: #ffffff;
   font-family: var(--font-optima);
   font-weight: 300;
   position: relative;
   overflow-x: hidden;
-}
-
-.page::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-image: url('/assets/wallpaper/eye-with-code-reflection.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  z-index: -1;
-  opacity: 0.15;
 }
 
 .container {
@@ -41,6 +25,53 @@
 .heroSection {
   text-align: center;
   margin-bottom: 160px;
+}
+
+.heroContent {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.heroLeft {
+  display: flex;
+  justify-content: center;
+}
+
+.heroRight {
+  text-align: left;
+}
+
+.heroPoints {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.heroPoint {
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0px;
+}
+
+.pointTitle {
+  font-size: 24px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 16px;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+
+.pointText {
+  font-size: 18px;
+  color: #bbbbbb;
+  line-height: 1.7;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
 }
 
 .logo {
@@ -73,6 +104,120 @@
   line-height: 1.8;
   max-width: 900px;
   margin: 0 auto;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+}
+
+.innovationSection {
+  margin-bottom: 160px;
+  padding: 80px 0;
+}
+
+.innovationContent {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px;
+  margin-top: 80px;
+}
+
+.innovationBlock {
+  text-align: center;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0px;
+}
+
+.innovationIcon {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.systemsSection {
+  margin-bottom: 160px;
+  padding: 80px 0;
+}
+
+.systemsContent {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px;
+  margin-top: 80px;
+}
+
+.systemsBlock {
+  text-align: center;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0px;
+}
+
+.systemsIcon {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.founderSection {
+  margin-bottom: 160px;
+  padding: 80px 0;
+}
+
+.founderContent {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.founderLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.founderImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.founderLinks {
+  display: flex;
+  justify-content: center;
+}
+
+.founderLink {
+  color: #ffffff;
+  font-family: var(--font-axle);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0px;
+  transition: all 0.3s ease;
+}
+
+.founderLink:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.founderRight {
+  text-align: left;
+}
+
+.founderText {
+  font-size: 22px;
+  color: #bbbbbb;
+  line-height: 1.8;
+  margin-bottom: 24px;
   font-weight: 200;
   font-family: var(--font-samsung-sharp);
 }
@@ -122,7 +267,7 @@
   font-weight: 400;
   font-family: var(--font-samsung-sharp);
   margin-bottom: 20px;
-  color: #ffff00;
+  color: #ffffff;
   letter-spacing: 0.01em;
 }
 
@@ -155,7 +300,7 @@
   font-size: 64px;
   font-weight: 100;
   font-family: var(--font-samsung-sharp);
-  color: #ffff00;
+  color: #ffffff;
   min-width: 80px;
   text-align: left;
   line-height: 1;
@@ -203,7 +348,7 @@
   font-weight: 400;
   font-family: var(--font-samsung-sharp);
   margin-bottom: 16px;
-  color: #ffff00;
+  color: #ffffff;
   letter-spacing: 0.01em;
 }
 
@@ -262,7 +407,7 @@
 }
 
 .contactLink:hover {
-  color: #ffff00;
+  color: #ffffff;
 }
 
 .separator {
@@ -294,7 +439,63 @@
   letter-spacing: 0.01em;
 }
 
-/* New Sections Styles */
+/* New Section Header Styles */
+
+.philosophyHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 80px;
+}
+
+.philosophyIllustration {
+  display: flex;
+  justify-content: center;
+}
+
+.pathwayHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 80px;
+}
+
+.pathwayIllustration {
+  display: flex;
+  justify-content: center;
+}
+
+.differenceHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 80px;
+}
+
+.differenceIllustration {
+  display: flex;
+  justify-content: center;
+}
+
+.sectionIllustration {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  opacity: 0.8;
+}
+
+.heroVisual {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.heroImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
 
 .missionContent {
   display: grid;
@@ -437,18 +638,32 @@
 
 /* Enhanced Responsive Design */
 @media (max-width: 1024px) {
+  .philosophyHeader,
+  .pathwayHeader,
+  .differenceHeader {
+    flex-direction: column;
+    gap: 40px;
+    text-align: center;
+  }
+
   .missionContent,
-  .wallpaperContent {
+  .wallpaperContent,
+  .founderContent,
+  .heroContent {
     grid-template-columns: 1fr;
     gap: 60px;
   }
 
-  .valuesGrid {
+  .valuesGrid,
+  .innovationContent,
+  .systemsContent {
     grid-template-columns: 1fr;
     gap: 40px;
   }
 
-  .missionRight {
+  .missionRight,
+  .founderRight,
+  .heroRight {
     text-align: center;
   }
 }
@@ -567,7 +782,8 @@
   .philosophySection,
   .pathwaySection,
   .differenceSection,
-  .ctaSection {
+  .ctaSection,
+  .founderSection {
     margin-bottom: 100px;
   }
 }

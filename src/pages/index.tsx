@@ -8,7 +8,7 @@ export default function Home() {
       <div className={styles.container}>
         <section className={styles.heroSection}>
           <h1 className={styles.title}>100x Systems</h1>
-          <p className={styles.subtitle}>Master Engineering Excellence</p>
+          <p className={styles.subtitle}>Advanced Engineering Education Platform</p>
         </section>
 
         <section className={styles.featuresSection}>
@@ -38,27 +38,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section className={styles.statsSection}>
-          <h2 className={styles.sectionTitle}>By The Numbers</h2>
-          <div className={styles.statsGrid}>
-            <div className={styles.statItem}>
-              <div className={styles.statNumber}>1000+</div>
-              <div className={styles.statLabel}>Engineers Trained</div>
-            </div>
-            <div className={styles.statItem}>
-              <div className={styles.statNumber}>95%</div>
-              <div className={styles.statLabel}>Career Success Rate</div>
-            </div>
-            <div className={styles.statItem}>
-              <div className={styles.statNumber}>50+</div>
-              <div className={styles.statLabel}>Industry Projects</div>
-            </div>
-            <div className={styles.statItem}>
-              <div className={styles.statNumber}>24/7</div>
-              <div className={styles.statLabel}>Community Support</div>
-            </div>
-          </div>
-        </section>
 
         <section className={styles.ctaSection}>
           <h2 className={styles.ctaTitle}>Ready to Become an Engineer?</h2>
