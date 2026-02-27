@@ -1,6 +1,8 @@
 import CubeAnimation from '../components/animation/CubeAnimation';
 import CubeSmall from '../components/animation/CubeSmall';
 import CubeHover from '../components/animation/CubeHover';
+import VideoShowcase from '../components/video/VideoShowcase';
+import RubikVideoShowcase from '../components/video/RubikVideoShowcase';
 import styles from '../styles/Home.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -9,10 +11,7 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <section className={styles.heroSection}>
-          <h1 className={styles.title}>100x Systems</h1>
-          <p className={styles.subtitle}>Master the Rubik's Cube of Software Engineering</p>
-        </section>
+        <RubikVideoShowcase />
         
         <section className={styles.rubiksSection}>
           <div className={styles.container}>
@@ -85,6 +84,8 @@ export default function Home() {
           </div>
         </section>
 
+        <VideoShowcase />
+
         <section className={styles.featuresSection}>
           <h2 className={styles.sectionTitle}>What You'll Master</h2>
           <div className={styles.featuresGrid}>
@@ -124,17 +125,13 @@ export default function Home() {
         </section>
 
         <section className={styles.illustrationSection}>
-          <div className={styles.illustrationContent}>
-            <div className={styles.illustrationLeft}>
-              <Image
-                src="/assets/illustrations/undraw_programming_j1zw.svg"
-                alt="Programming Illustration"
-                width={400}
-                height={300}
-                className={styles.illustrationImage}
-              />
+          <div className={styles.videoSideBySide}>
+            <div className={styles.videoLeft}>
+              <video autoPlay muted loop playsInline className={styles.videoCard}>
+                <source src="/videos/abstract-light-color-animation-shapes-laptop-google-deepmind.mp4" type="video/mp4" />
+              </video>
             </div>
-            <div className={styles.illustrationRight}>
+            <div className={styles.videoRight}>
               <h2 className={styles.sectionTitle}>Beyond Code, Into Engineering</h2>
               <p className={styles.illustrationText}>
                 While others teach you to write code, we teach you to think like engineers. 
@@ -235,13 +232,11 @@ export default function Home() {
         <section className={styles.modernSection}>
           <div className={styles.modernContent}>
             <div className={styles.modernImageWrapper}>
-              <Image
-                src="/assets/wallpaper/modern-dotted-sphere-with-red-glowing-ring-within-bg-black.jpg"
-                alt="Modern Technology"
-                width={450}
-                height={350}
-                className={styles.modernImage}
-              />
+              <div className={styles.videoLeft}>
+                <video autoPlay muted loop playsInline className={styles.videoCard}>
+                  <source src="/videos/black-glasses-how-does-llm-work-text-thought-video-google-deepmind.mp4" type="video/mp4" />
+                </video>
+              </div>
             </div>
             <div className={styles.modernText}>
               <h2 className={styles.modernTitle}>Modern Engineering Stack</h2>
