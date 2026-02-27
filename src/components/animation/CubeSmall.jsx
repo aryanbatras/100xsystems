@@ -63,7 +63,7 @@ const StyledWrapper = styled.div`
     right: 32%;
     bottom: -32px;
     /* change the back groung color on switching from light to dark mood */
-    background: linear-gradient(0deg, #d000ff 25%, rgb(183, 0, 255) 75%, rgba(183, 0, 255, 0.8) 100%);
+    background: transparent;
     transform: translateZ(200px) rotate(var(--r));
     -webkit-animation: mask var(--duration) linear forwards infinite;
     animation: mask var(--duration) linear forwards infinite;
@@ -309,10 +309,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 
@@ -327,10 +329,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 
@@ -365,10 +369,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 
@@ -383,10 +389,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 
@@ -421,10 +429,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 
@@ -439,10 +449,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 
@@ -477,10 +489,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 
@@ -495,10 +509,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 
@@ -533,10 +549,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 
@@ -551,10 +569,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 
@@ -589,10 +609,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 
@@ -607,10 +629,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 
@@ -645,10 +669,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 
@@ -663,10 +689,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 
@@ -701,10 +729,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 
@@ -719,10 +749,12 @@ const StyledWrapper = styled.div`
 
     80% {
       transform: translate(0, -32px);
+      opacity: 1;
     }
 
     90%, 100% {
       transform: translate(0, 216px);
+      opacity: 0;
     }
   }
 

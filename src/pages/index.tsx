@@ -1,5 +1,6 @@
 import CubeAnimation from '../components/animation/CubeAnimation';
 import CubeSmall from '../components/animation/CubeSmall';
+import CubeHover from '../components/animation/CubeHover';
 import styles from '../styles/Home.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,7 +13,7 @@ export default function Home() {
           <h1 className={styles.title}>100x Systems</h1>
           <p className={styles.subtitle}>Master the Rubik's Cube of Software Engineering</p>
         </section>
-
+        
         <section className={styles.rubiksSection}>
           <div className={styles.container}>
             <h2 className={styles.sectionTitle}>Systems Thinking in Engineering</h2>

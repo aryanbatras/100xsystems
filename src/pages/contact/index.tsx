@@ -1,45 +1,50 @@
-import { useState } from 'react';
-import styles from '../../styles/Contact.module.css';
+import { useState } from "react";
+import styles from "../../styles/Contact.module.css";
+import CubeHover from "../../components/animation/CubeHover";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    message: ''
+    name: "",
+    email: "",
+    company: "",
+    message: "",
   });
-  const [responseMessage, setResponseMessage] = useState('');
+  const [responseMessage, setResponseMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Create mailto link with form data
-    const subject = encodeURIComponent('Contact Form Submission from 100xSystems');
+    const subject = encodeURIComponent(
+      "Contact Form Submission from 100xSystems",
+    );
     const body = encodeURIComponent(
       `Name: ${formData.name}\n` +
-      `Email: ${formData.email}\n` +
-      `Company: ${formData.company || 'Not provided'}\n\n` +
-      `Message:\n${formData.message}\n\n` +
-      `---\nSent from 100xSystems Contact Form`
+        `Email: ${formData.email}\n` +
+        `Company: ${formData.company || "Not provided"}\n\n` +
+        `Message:\n${formData.message}\n\n` +
+        `---\nSent from 100xSystems Contact Form`,
     );
-    
+
     const mailtoLink = `mailto:admin@100xSystems.dev?subject=${subject}&body=${body}`;
-    
+
     // Open user's default email client
     window.location.href = mailtoLink;
-    
+
     // Show success message
     // setResponseMessage('Opening your email client...');
     setIsSuccess(true);
-    
+
     // // Clear message after 3 seconds
     // setTimeout(() => {
     //   setResponseMessage('');
@@ -52,18 +57,22 @@ export default function Contact() {
         <section className={styles.heroSection}>
           <h1 className={styles.title}>Get in Touch</h1>
           <p className={styles.subtitle}>
-            Ready to transform your coding skills into engineering excellence? Let's start your journey.
+            Ready to transform your coding skills into engineering excellence?
+            Let's start your journey.
           </p>
         </section>
 
         <div className={styles.contactContent}>
           <div className={styles.contactInfo}>
             <h2 className={styles.infoTitle}>Contact Information</h2>
-            
+
             <div className={styles.infoItem}>
               <div className={styles.infoLabel}>Email</div>
               <div className={styles.infoValue}>
-                <a href="mailto:admin@100xSystems.dev" className={styles.infoLink}>
+                <a
+                  href="mailto:admin@100xSystems.dev"
+                  className={styles.infoLink}
+                >
                   admin@100xSystems.dev
                 </a>
               </div>
@@ -72,7 +81,8 @@ export default function Contact() {
             <div className={styles.infoItem}>
               <div className={styles.infoLabel}>Business Hours</div>
               <div className={styles.infoValue}>
-                Monday - Friday: 9:00 AM - 6:00 PM EST<br />
+                Monday - Friday: 9:00 AM - 6:00 PM EST
+                <br />
                 Saturday - Sunday: Closed
               </div>
             </div>
@@ -83,13 +93,20 @@ export default function Contact() {
                 We typically respond within 24 hours during business days.
               </div>
             </div>
+            <section className={styles.cubeShowcase}>
+              <div className={styles.cubeContainer}>
+                <CubeHover />
+              </div>
+            </section>
           </div>
 
           <div className={styles.formSection}>
             <h2 className={styles.formTitle}>Send us a Message</h2>
             <form onSubmit={handleSubmit}>
               <div className={styles.formGroup}>
-                <label htmlFor="name" className={styles.formLabel}>Name</label>
+                <label htmlFor="name" className={styles.formLabel}>
+                  Name
+                </label>
                 <input
                   type="text"
                   id="name"
@@ -102,7 +119,9 @@ export default function Contact() {
               </div>
 
               <div className={styles.formGroup}>
-                <label htmlFor="email" className={styles.formLabel}>Email</label>
+                <label htmlFor="email" className={styles.formLabel}>
+                  Email
+                </label>
                 <input
                   type="email"
                   id="email"
@@ -115,7 +134,9 @@ export default function Contact() {
               </div>
 
               <div className={styles.formGroup}>
-                <label htmlFor="company" className={styles.formLabel}>Company</label>
+                <label htmlFor="company" className={styles.formLabel}>
+                  Company
+                </label>
                 <input
                   type="text"
                   id="company"
@@ -127,7 +148,9 @@ export default function Contact() {
               </div>
 
               <div className={styles.formGroup}>
-                <label htmlFor="message" className={styles.formLabel}>Message</label>
+                <label htmlFor="message" className={styles.formLabel}>
+                  Message
+                </label>
                 <textarea
                   id="message"
                   name="message"
@@ -143,7 +166,9 @@ export default function Contact() {
               </button>
 
               {responseMessage && (
-                <div className={`${styles.responseMessage} ${isSuccess ? styles.success : styles.error}`}>
+                <div
+                  className={`${styles.responseMessage} ${isSuccess ? styles.success : styles.error}`}
+                >
                   {responseMessage}
                 </div>
               )}
