@@ -52,12 +52,12 @@ const StyledWrapper = styled.div`
     width: 180px;
     height: 180px;
     padding: 50px;
-    perspective: 1000px;
+    perspective: 400px;
     margin: 30px auto;
     transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: scale(1.1) rotateX(5deg) rotateY(5deg);
+    transform: scale(1) rotateX(5deg) rotateY(5deg);
     animation-play-state: running;
-    filter: brightness(1.2) contrast(1);
+    filter: brightness(0.75) contrast(2);
   }
 
   .cube {
@@ -76,7 +76,7 @@ const StyledWrapper = styled.div`
     height: 180px;
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(30, 30, 30, 0.4));
     backdrop-filter: blur(20px);
-    border: none;
+    border: 1px solid rgba(0,0,0, 1);
     box-shadow: none;
     display: flex;
     align-items: center;
@@ -149,19 +149,19 @@ const StyledWrapper = styled.div`
 
   @keyframes rotateCube {
     0% {
-      transform: rotateX(30deg) rotateY(0deg) rotateZ(45deg);
+      transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
     }
     25% {
-      transform: rotateX(30deg) rotateY(90deg) rotateZ(45deg);
+      transform: rotateX(0deg) rotateY(90deg) rotateZ(0deg);
     }
     50% {
-      transform: rotateX(30deg) rotateY(180deg) rotateZ(45deg);
+      transform: rotateX(0deg) rotateY(180deg) rotateZ(0deg);
     }
     75% {
-      transform: rotateX(30deg) rotateY(270deg) rotateZ(45deg);
+      transform: rotateX(0deg) rotateY(270deg) rotateZ(0deg);
     }
     100% {
-      transform: rotateX(30deg) rotateY(360deg) rotateZ(45deg);
+      transform: rotateX(0deg) rotateY(360deg) rotateZ(0deg);
     }
   }`;
 

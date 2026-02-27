@@ -98,7 +98,7 @@ const StyledWrapper = styled.div`
     --rx: 90deg;
     --ry: 0deg;
     --x: 44px;
-    --y: 162px;
+    --y: 161px;
     --z: -50px;
     content: "";
     width: 156px;
@@ -215,7 +215,7 @@ const StyledWrapper = styled.div`
     --x: -240px;
     --y: 200px;
     left: 58px;
-    top: 87px;
+    top: 88px;
   }
 
   .loader .box0 {
@@ -308,7 +308,7 @@ const StyledWrapper = styled.div`
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
@@ -328,7 +328,7 @@ const StyledWrapper = styled.div`
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
@@ -368,7 +368,7 @@ const StyledWrapper = styled.div`
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
@@ -388,7 +388,7 @@ const StyledWrapper = styled.div`
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
@@ -428,7 +428,7 @@ const StyledWrapper = styled.div`
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
@@ -448,7 +448,7 @@ const StyledWrapper = styled.div`
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
@@ -488,7 +488,7 @@ const StyledWrapper = styled.div`
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
@@ -508,7 +508,7 @@ const StyledWrapper = styled.div`
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
@@ -548,7 +548,7 @@ const StyledWrapper = styled.div`
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
@@ -568,7 +568,7 @@ const StyledWrapper = styled.div`
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
@@ -608,7 +608,7 @@ const StyledWrapper = styled.div`
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
@@ -628,7 +628,7 @@ const StyledWrapper = styled.div`
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
@@ -668,7 +668,7 @@ const StyledWrapper = styled.div`
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
@@ -688,7 +688,7 @@ const StyledWrapper = styled.div`
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
@@ -723,12 +723,12 @@ const StyledWrapper = styled.div`
       transform: translate(var(--x), var(--y));
     }
 
-    53%, 52% {
+    52% {
       transform: translate(0, 0);
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
@@ -743,12 +743,12 @@ const StyledWrapper = styled.div`
       transform: translate(var(--x), var(--y));
     }
 
-    53%, 52% {
+    52% {
       transform: translate(0, 0);
     }
 
     80% {
-      transform: translate(0, -32px);
+      transform: translate(0, 32px);
       opacity: 1;
     }
 
