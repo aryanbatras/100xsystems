@@ -2,6 +2,7 @@
   height: 6vh;
   width: 100vw;
   background: transparent;
+  backdrop-filter: blur(5px);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -15,7 +16,7 @@
   align-items: center;
   text-decoration: none;
   position: relative;
-  transition: color 0.2s ease;
+  transition: color 0.3s ease;
   
   &::after {
     content: '';
@@ -23,7 +24,7 @@
     width: 0;
     height: 5px;
     background: var(--accent-yellow);
-    transition: width 0.2s ease;
+    transition: width 0.3s ease;
     position: absolute;
     bottom: -8px;
     left: 0;

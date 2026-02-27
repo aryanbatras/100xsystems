@@ -146,14 +146,21 @@ body::before {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-image: url('/assets/wallpaper/rubik-cube-right-side-bg-black-main-wallpaper.jpg');
-  background-size: cover;
-  background-position: center;
+  background-image: url('/assets/wallpaper/rubik-cube-right-side-bg-black-main-wallpaper-pure-black-bg.png');
+  background-size: cover 200%;
+  background-position: center 41%;
   background-repeat: no-repeat;
   background-attachment: fixed;
   z-index: 0;
   opacity: 0.40;
   pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  body::before {
+    background-size: cover;
+    opacity: 0.20;
+  }
 }
 
 a {

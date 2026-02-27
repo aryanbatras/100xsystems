@@ -8,7 +8,71 @@ export default function Home() {
       <div className={styles.container}>
         <section className={styles.heroSection}>
           <h1 className={styles.title}>100x Systems</h1>
-          <p className={styles.subtitle}>Advanced Engineering Education Platform</p>
+          <p className={styles.subtitle}>Master the Rubik's Cube of Software Engineering</p>
+        </section>
+
+        <section className={styles.rubiksSection}>
+          <div className={styles.container}>
+            <h2 className={styles.sectionTitle}>Systems Thinking in Engineering</h2>
+            <p className={styles.description}>
+              Like a Rubik's Cube, software systems appear simple but hide immense complexity. 
+              Most developers focus on one aspect—building features—without understanding how 
+              all components work together to create robust, scalable solutions.
+            </p>
+            
+            <div className={styles.rubiksInsights}>
+              <div className={styles.insightItem}>
+                <div className={styles.insightNumber}>01</div>
+                <div className={styles.insightContent}>
+                  <h4 className={styles.insightTitle}>Pattern Recognition</h4>
+                  <p className={styles.insightText}>
+                    Expert engineers recognize architectural patterns instantly, applying proven solutions 
+                    to complex problems rather than reinventing approaches.
+                  </p>
+                </div>
+              </div>
+              <div className={styles.insightItem}>
+                <div className={styles.insightNumber}>02</div>
+                <div className={styles.insightContent}>
+                  <h4 className={styles.insightTitle}>System Interconnections</h4>
+                  <p className={styles.insightText}>
+                    Understanding how changes in one component affect others. Frontend decisions impact 
+                    backend design, which influences deployment and monitoring strategies.
+                  </p>
+                </div>
+              </div>
+              <div className={styles.insightItem}>
+                <div className={styles.insightNumber}>03</div>
+                <div className={styles.insightContent}>
+                  <h4 className={styles.insightTitle}>Algorithmic Thinking</h4>
+                  <p className={styles.insightText}>
+                    Every system needs well-defined algorithms for data flow, state management, 
+                    and decision logic. Clear processes lead to predictable, maintainable systems.
+                  </p>
+                </div>
+              </div>
+              <div className={styles.insightItem}>
+                <div className={styles.insightNumber}>04</div>
+                <div className={styles.insightContent}>
+                  <h4 className={styles.insightTitle}>Practice Over Theory</h4>
+                  <p className={styles.insightText}>
+                    Systems thinking is developed through hands-on experience. Building, breaking, 
+                    and fixing real systems teaches what theory alone cannot.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.rubiksConclusion}>
+              <h3 className={styles.conclusionTitle}>From Complexity to Clarity</h3>
+              <p className={styles.description}>
+                100xEngineers learn to see the complete system—understanding trade-offs, 
+                anticipating consequences, and architecting solutions that scale. 
+                They don't just solve problems; they understand the underlying principles 
+                that make systems work reliably.
+              </p>
+            </div>
+          </div>
         </section>
 
         <section className={styles.featuresSection}>
@@ -191,7 +255,7 @@ export default function Home() {
           <div className={styles.finalCtaContent}>
             <Image
               src="/assets/wallpaper/3d-granular-cube-gray-bg-center.jpg"
-              alt="3D Cube"
+              alt="Systems Thinking Visualization"
               width={600}
               height={300}
               className={styles.finalCtaImage}
@@ -199,12 +263,13 @@ export default function Home() {
             <div className={styles.finalCtaText}>
               <h2 className={styles.finalCtaTitle}>Your Engineering Journey Starts Here</h2>
               <p className={styles.finalCtaDescription}>
-                Join a community of engineers who don't just code—they build systems that matter. 
-                Transform your career with structured learning, real projects, and industry mentorship.
+                Move beyond feature development to true systems thinking. 
+                Join engineers who understand how components interact, anticipate consequences, 
+                and build solutions that scale reliably in production.
               </p>
               <div className={styles.finalCtaButtons}>
                 <Link href="/paths" className={styles.primaryButton}>
-                  Explore Paths
+                  Start Your Journey
                 </Link>
                 <Link href="/about" className={styles.secondaryButton}>
                   Learn More
