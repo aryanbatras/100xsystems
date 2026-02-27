@@ -1,3 +1,5 @@
+import CubeAnimation from '../components/animation/CubeAnimation';
+import CubeSmall from '../components/animation/CubeSmall';
 import styles from '../styles/Home.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -64,13 +66,20 @@ export default function Home() {
             </div>
 
             <div className={styles.rubiksConclusion}>
-              <h3 className={styles.conclusionTitle}>From Complexity to Clarity</h3>
-              <p className={styles.description}>
-                100xEngineers learn to see the complete system—understanding trade-offs, 
-                anticipating consequences, and architecting solutions that scale. 
-                They don't just solve problems; they understand the underlying principles 
-                that make systems work reliably.
-              </p>
+              <div className={styles.conclusionContent}>
+                <div className={styles.conclusionText}>
+                  <h3 className={styles.conclusionTitle}>From Complexity to Clarity</h3>
+                  <p className={styles.description}>
+                    100xEngineers learn to see the complete system—understanding trade-offs, 
+                    anticipating consequences, and architecting solutions that scale. 
+                    They don't just solve problems; they understand the underlying principles 
+                    that make systems work reliably.
+                  </p>
+                </div>
+                <div className={styles.conclusionAnimation}>
+                  <CubeSmall />
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -278,6 +287,10 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+          <CubeAnimation />
+        </div>
       </div>
     </div>
   );
