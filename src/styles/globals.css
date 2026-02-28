@@ -169,3 +169,21 @@ a {
 @media (prefers-color-scheme: dark) {
   /* Since we're using a fixed dark theme, no changes needed */
 }
+
+/* GSAP ScrollSmoother Styles */
+#smooth-wrapper {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+#smooth-content {
+  overflow: visible;
+  position: relative;
+  width: 100%;
+}
+
+/* Ensure fixed elements work properly with ScrollSmoother */
+[data-fixed] {
+  position: fixed !important;
+}

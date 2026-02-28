@@ -98,24 +98,24 @@ export default function Home() {
         <VideoShowcase />
 
         <AnimatedSection animationType="scaleIn" stagger={0.15}>
-          <section className={styles.featuresSection}>
+          <section className={styles.featuresSection} data-speed="0.9">
                   <AnimatedTitle variant="section" className={styles.sectionTitle}>What You'll Master</AnimatedTitle>
             <div className={styles.featuresGrid}>
-              <AnimatedCard hoverEffect="lift" className={styles.featureCard}>
+              <AnimatedCard hoverEffect="lift" className={styles.featureCard} data-lag="0.3">
                 <div className={styles.featureNumber}>01</div>
                 <AnimatedTitle variant="feature" delay={0.1} className={styles.featureTitle}>Deep Technical Understanding</AnimatedTitle>
                 <AnimatedDescription variant="subtle" delay={0.3} className={styles.featureDescription}>
                   Go beyond surface-level knowledge to truly understand how systems work from the ground up
                 </AnimatedDescription>
               </AnimatedCard>
-              <AnimatedCard hoverEffect="lift" className={styles.featureCard}>
+              <AnimatedCard hoverEffect="lift" className={styles.featureCard} data-lag="0.4">
                 <div className={styles.featureNumber}>02</div>
                 <AnimatedTitle variant="feature" delay={0.15} className={styles.featureTitle}>Systems Thinking</AnimatedTitle>
                 <AnimatedDescription variant="subtle" delay={0.35} className={styles.featureDescription}>
                   Learn to architect scalable solutions and understand the trade-offs engineers make every day
                 </AnimatedDescription>
               </AnimatedCard>
-              <AnimatedCard hoverEffect="lift" className={styles.featureCard}>
+              <AnimatedCard hoverEffect="lift" className={styles.featureCard} data-lag="0.5">
                 <div className={styles.featureNumber}>03</div>
                 <AnimatedTitle variant="feature" delay={0.2} className={styles.featureTitle}>Real-World Application</AnimatedTitle>
                 <AnimatedDescription variant="subtle" delay={0.4} className={styles.featureDescription}>
@@ -149,9 +149,9 @@ export default function Home() {
         </AnimatedSection>
 
         <AnimatedSection animationType="fadeInLeft" delay={0.2}>
-          <section className={styles.illustrationSection}>
+          <section className={styles.illustrationSection} data-speed="1.2">
             <div className={styles.videoSideBySide}>
-              <div className={styles.videoLeft}>
+              <div className={styles.videoLeft} data-speed="0.6">
                 <video autoPlay muted loop playsInline className={styles.videoCard}>
                   <source src="/videos/abstract-light-color-animation-shapes-laptop-google-deepmind.mp4" type="video/mp4" />
                 </video>
@@ -185,7 +185,7 @@ export default function Home() {
         </AnimatedSection>
 
         <AnimatedSection animationType="fadeInLeft" delay={0.2}>
-          <section className={styles.wallpaperSection}>
+          <section className={styles.wallpaperSection} data-speed="0.8">
             <AnimatedSection animationType="fadeInRight" delay={0.4}>
               <div className={styles.wallpaperContent}>
                 <div className={styles.wallpaperText}>
@@ -196,7 +196,7 @@ export default function Home() {
                     and ability to make critical trade-offs that impact millions of users.
                   </AnimatedDescription>
                 </div>
-                <div className={styles.wallpaperImageWrapper}>
+                <div className={styles.wallpaperImageWrapper} data-speed="0.5">
                   <Image
                     src="/assets/wallpaper/portrait-small-cubes-connected-by-lines-3d-cube-shape-systems.jpg"
                     alt="Connected Systems"
@@ -264,9 +264,9 @@ export default function Home() {
         </AnimatedSection>
 
         <AnimatedSection animationType="rotateIn" delay={0.2}>
-          <section className={styles.modernSection}>
+          <section className={styles.modernSection} data-speed="1.1">
             <div className={styles.modernContent}>
-              <div className={styles.modernImageWrapper}>
+              <div className={styles.modernImageWrapper} data-speed="0.7">
                 <div className={styles.videoLeft}>
                   <video autoPlay muted loop playsInline className={styles.videoCard}>
                     <source src="/videos/black-glasses-how-does-llm-work-text-thought-video-google-deepmind.mp4" type="video/mp4" />
@@ -296,26 +296,40 @@ export default function Home() {
           </section>
         </AnimatedSection>
 
-        <AnimatedSection animationType="rotateIn" delay={0.2}>
-          <section className={styles.finalCtaSection}>
-            <div className={styles.finalCtaContent}>
-              <AnimatedSection animationType="scaleIn" delay={0.4}>
+        <AnimatedSection animationType="fadeInLeft" delay={0.2}>
+          <section className={styles.finalCtaSection} data-speed="0.9">
+            <div className={styles.videoSideBySide}>
+              <div className={styles.videoLeft} data-speed="0.7">
                 <Image
                   src="/assets/wallpaper/3d-granular-cube-gray-bg-center.jpg"
                   alt="Systems Thinking Visualization"
                   width={600}
-                  height={300}
+                  height={400}
                   className={styles.finalCtaImage}
                 />
-              </AnimatedSection>
-              <AnimatedSection animationType="fadeInUp" delay={0.8}>
-                <div className={styles.finalCtaText}>
+              </div>
+              <AnimatedSection animationType="fadeInRight" delay={0.4}>
+                <div className={styles.videoRight}>
                   <AnimatedTitle variant="cta" delay={0.1} className={styles.finalCtaTitle}>Your Engineering Journey Starts Here</AnimatedTitle>
                   <AnimatedDescription variant="featured" delay={0.3} className={styles.finalCtaDescription}>
                     Move beyond feature development to true systems thinking. 
                     Join engineers who understand how components interact, anticipate consequences, 
                     and build solutions that scale reliably in production.
                   </AnimatedDescription>
+                  <div className={styles.illustrationPoints}>
+                    <div className={styles.pointItem}>
+                      <span className={styles.pointNumber}>01</span>
+                      <span className={styles.pointText}>System Architecture Mastery</span>
+                    </div>
+                    <div className={styles.pointItem}>
+                      <span className={styles.pointNumber}>02</span>
+                      <span className={styles.pointText}>Performance Engineering</span>
+                    </div>
+                    <div className={styles.pointItem}>
+                      <span className={styles.pointNumber}>03</span>
+                      <span className={styles.pointText}>Production-Ready Development</span>
+                    </div>
+                  </div>
                   <div className={styles.finalCtaButtons}>
                     <AnimatedButton variant="primary" href="/paths">
                       Start Your Journey

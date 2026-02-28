@@ -105,6 +105,9 @@
   font-family: var(--font-samsung-sharp);
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
   text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .featuresSection {
@@ -114,16 +117,21 @@
 .featuresGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 80px;
-  margin-top: 80px;
+  gap: 60px;
+  margin-top: 100px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .featureCard {
   text-align: center;
   padding: 60px 40px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
 
@@ -146,19 +154,28 @@
 }
 
 .featureDescription {
-  font-size: 22px;
-  color: #aaaaaa;
-  line-height: 1.8;
-  font-weight: 200;
+  font-size: 20px;
+  color: #d0d0d0;
+  line-height: 1.7;
+  font-weight: 300;
   font-family: var(--font-samsung-sharp);
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .ctaSection {
   text-align: center;
-  padding: 100px 0;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 0px;
-  margin-bottom: 80px;
+  padding: 120px 40px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  margin-bottom: 100px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .ctaTitle {
@@ -171,15 +188,19 @@
 }
 
 .ctaText {
-  font-size: 26px;
-  color: #bbbbbb;
-  line-height: 1.9;
+  font-size: 24px;
+  color: #e0e0e0;
+  line-height: 1.8;
   margin-bottom: 60px;
-  font-weight: 200;
+  font-weight: 300;
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
   font-family: var(--font-samsung-sharp);
+  text-align: center;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .ctaButton {
@@ -217,8 +238,10 @@
 .illustrationContent {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  gap: 100px;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .illustrationLeft {
@@ -238,12 +261,16 @@
 }
 
 .illustrationText {
-  font-size: 22px;
-  color: #bbbbbb;
-  line-height: 1.8;
+  font-size: 20px;
+  color: #e0e0e0;
+  line-height: 1.7;
   margin-bottom: 40px;
-  font-weight: 200;
+  font-weight: 300;
   font-family: var(--font-samsung-sharp);
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .illustrationPoints {
@@ -284,8 +311,10 @@
 .wallpaperContent {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  gap: 100px;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .wallpaperTitle {
@@ -299,10 +328,14 @@
 
 .wallpaperDescription {
   font-size: 20px;
-  color: #bbbbbb;
-  line-height: 1.8;
-  font-weight: 200;
+  color: #e0e0e0;
+  line-height: 1.7;
+  font-weight: 300;
   font-family: var(--font-samsung-sharp);
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .wallpaperImageWrapper {
@@ -324,16 +357,21 @@
 .processGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 60px;
-  margin-top: 80px;
+  gap: 50px;
+  margin-top: 100px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .processCard {
   text-align: center;
   padding: 60px 40px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
 
@@ -354,10 +392,14 @@
 
 .processDescription {
   font-size: 18px;
-  color: #aaaaaa;
+  color: #d0d0d0;
   line-height: 1.7;
-  font-weight: 200;
+  font-weight: 300;
   font-family: var(--font-samsung-sharp);
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .modernSection {
@@ -368,8 +410,10 @@
 .modernContent {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  gap: 100px;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .modernImageWrapper {
@@ -402,11 +446,15 @@
 
 .modernDescription {
   font-size: 20px;
-  color: #bbbbbb;
-  line-height: 1.8;
+  color: #e0e0e0;
+  line-height: 1.7;
   margin-bottom: 40px;
-  font-weight: 200;
+  font-weight: 300;
   font-family: var(--font-samsung-sharp);
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .techGrid {
@@ -430,9 +478,14 @@
 
 .finalCtaSection {
   margin-bottom: 100px;
-  padding: 100px 0;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 0px;
+  padding: 80px 40px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .finalCtaContent {
@@ -460,11 +513,15 @@
 
 .finalCtaDescription {
   font-size: 20px;
-  color: #bbbbbb;
-  line-height: 1.8;
+  color: #e0e0e0;
+  line-height: 1.7;
   margin-bottom: 50px;
-  font-weight: 200;
+  font-weight: 300;
   font-family: var(--font-samsung-sharp);
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .finalCtaButtons {
@@ -509,6 +566,7 @@
   .finalCtaContent {
     grid-template-columns: 1fr;
     gap: 60px;
+    text-align: center;
   }
 
   .processGrid {
@@ -528,6 +586,31 @@
   .illustrationRight,
   .wallpaperText,
   .modernText {
+    padding: 0;
+    text-align: center;
+  }
+
+  .rubiksInsights {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .insightItem {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .insightNumber {
+    margin: 0 auto;
+  }
+
+  .videoSideBySide {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .videoRight {
     padding: 0;
     text-align: center;
   }
@@ -592,7 +675,7 @@
 
   .featuresGrid {
     grid-template-columns: 1fr;
-    gap: 60px;
+    gap: 40px;
   }
 
   .statsGrid {
@@ -601,7 +684,91 @@
   }
 
   .featureCard {
+    padding: 32px 24px;
+  }
+
+  .description {
+    font-size: 20px;
+    text-align: left;
+  }
+
+  .insightText {
+    font-size: 18px;
+    text-align: left;
+  }
+
+  .featureDescription {
+    font-size: 18px;
+    text-align: left;
+  }
+
+  .processDescription {
+    font-size: 16px;
+    text-align: left;
+  }
+
+  .illustrationText {
+    font-size: 18px;
+    text-align: left;
+  }
+
+  .wallpaperDescription {
+    font-size: 18px;
+    text-align: left;
+  }
+
+  .modernDescription {
+    font-size: 18px;
+    text-align: left;
+  }
+
+  .finalCtaDescription {
+    font-size: 18px;
+    text-align: left;
+  }
+
+  .ctaText {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .ctaSection {
+    padding: 60px 24px;
+  }
+
+  .finalCtaSection {
+    padding: 60px 24px;
+  }
+
+  .rubiksConclusion {
     padding: 40px 24px;
+  }
+
+  .conclusionContent {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .conclusionText {
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .conclusionAnimation {
+    transform: scale(0.6);
+    min-width: 200px;
+  }
+
+  .conclusionTitle {
+    font-size: 36px;
+  }
+
+  .insightTitle {
+    font-size: 24px;
+  }
+
+  .cubeShowcase {
+    padding: 80px 0;
   }
 }
 
@@ -650,14 +817,22 @@
 .rubiksInsights {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 48px;
-  margin: 80px 0;
+  gap: 60px;
+  margin: 100px 0;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .insightItem {
   display: flex;
-  gap: 24px;
+  gap: 32px;
   align-items: flex-start;
+  padding: 32px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  transition: all 0.3s ease;
 }
 
 .insightNumber {
@@ -690,35 +865,40 @@
 }
 
 .insightText {
-  font-size: 22px;
-  color: #aaaaaa;
-  line-height: 1.8;
-  font-weight: 200;
+  font-size: 20px;
+  color: #e0e0e0;
+  line-height: 1.7;
+  font-weight: 300;
   font-family: var(--font-samsung-sharp);
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .rubiksConclusion {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0px;
-  padding: 60px 40px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 80px 60px;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 60px auto 0 auto;
   overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
 .conclusionContent {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 60px;
+  gap: 80px;
   position: relative;
 }
 
 .conclusionText {
   flex: 1;
   text-align: left;
-  max-width: 600px;
+  max-width: 700px;
 }
 
 .conclusionAnimation {
@@ -842,8 +1022,10 @@
 .videoSideBySide {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px;
+  gap: 80px;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .videoLeft {
@@ -876,14 +1058,14 @@
 .rubikVideoShowcase {
   position: relative;
   width: 100vw;
-  height: 125vh;
+  height: 100vh;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 100px;
+  margin-bottom: 60px;
 }
 
 .rubikVideoBackground {
@@ -1180,5 +1362,65 @@
   .ctaSection,
   .statsSection {
     margin-bottom: 100px;
+  }
+
+  .description {
+    font-size: 18px;
+  }
+
+  .insightText {
+    font-size: 16px;
+  }
+
+  .featureDescription {
+    font-size: 16px;
+  }
+
+  .processDescription {
+    font-size: 14px;
+  }
+
+  .illustrationText {
+    font-size: 16px;
+  }
+
+  .wallpaperDescription {
+    font-size: 16px;
+  }
+
+  .modernDescription {
+    font-size: 16px;
+  }
+
+  .finalCtaDescription {
+    font-size: 16px;
+  }
+
+  .ctaText {
+    font-size: 18px;
+  }
+
+  .ctaSection {
+    padding: 40px 16px;
+  }
+
+  .finalCtaSection {
+    padding: 40px 16px;
+  }
+
+  .rubiksConclusion {
+    padding: 32px 16px;
+  }
+
+  .featureCard {
+    padding: 24px 16px;
+  }
+
+  .processCard {
+    padding: 24px 16px;
+  }
+
+  .insightItem {
+    padding: 24px 16px;
   }
 }
