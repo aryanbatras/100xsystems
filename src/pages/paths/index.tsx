@@ -1,225 +1,692 @@
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import Link from 'next/link';
 import Image from 'next/image';
+import { 
+  SiJavascript, 
+  SiTypescript, 
+  SiReact, 
+  SiNodedotjs, 
+  SiPython, 
+  SiDocker, 
+  SiKubernetes, 
+  SiAmazon, 
+  SiGooglecloud, 
+  SiGit,
+  SiLinux,
+  SiMongodb,
+  SiPostgresql,
+  SiRedis,
+  SiNginx,
+  SiTerraform,
+  SiJenkins,
+  SiPrometheus,
+  SiGrafana,
+  SiVuedotjs,
+  SiAngular,
+  SiNextdotjs,
+  SiExpress,
+  SiDjango,
+  SiFlask,
+  SiFastapi,
+  SiGraphql,
+  SiApachekafka,
+  SiElasticsearch,
+  SiWebpack,
+  SiVite,
+  SiJest,
+  SiCypress,
+  SiFigma,
+  SiSlack,
+  SiJira,
+  SiNotion,
+  SiEraser
+} from 'react-icons/si';
+import AnimatedSection from '../../components/animated/AnimatedSection';
+import AnimatedCard from '../../components/animated/AnimatedCard';
+import AnimatedTitle from '../../components/animated/AnimatedTitle';
+import AnimatedDescription from '../../components/animated/AnimatedDescription';
+import InteractiveButton from '../../components/animated/InteractiveButton';
 import styles from '../../styles/Paths.module.css';
 
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+const techIcons = {
+  javascript: SiJavascript,
+  typescript: SiTypescript,
+  react: SiReact,
+  nodejs: SiNodedotjs,
+  python: SiPython,
+  docker: SiDocker,
+  kubernetes: SiKubernetes,
+  aws: SiAmazon,
+  gcp: SiGooglecloud,
+  git: SiGit,
+  linux: SiLinux,
+  mongodb: SiMongodb,
+  postgresql: SiPostgresql,
+  redis: SiRedis,
+  nginx: SiNginx,
+  terraform: SiTerraform,
+  jenkins: SiJenkins,
+  prometheus: SiPrometheus,
+  grafana: SiGrafana,
+  vue: SiVuedotjs,
+  angular: SiAngular,
+  nextjs: SiNextdotjs,
+  express: SiExpress,
+  django: SiDjango,
+  flask: SiFlask,
+  fastapi: SiFastapi,
+  graphql: SiGraphql,
+  kafka: SiApachekafka,
+  elasticsearch: SiElasticsearch,
+  webpack: SiWebpack,
+  vite: SiVite,
+  jest: SiJest,
+  cypress: SiCypress,
+  figma: SiFigma,
+  slack: SiSlack,
+  jira: SiJira,
+  notion: SiNotion,
+  eraser: SiEraser
+};
+
+interface TechStackProps {
+  technologies: string[];
+  className?: string;
+}
+
+const TechStack: React.FC<TechStackProps> = ({ technologies, className = '' }) => {
+  return (
+    <div className={`${styles.techStack} ${className}`}>
+      {technologies.map((tech, index) => {
+        const IconComponent = techIcons[tech as keyof typeof techIcons];
+        return IconComponent ? (
+          <div key={index} className={styles.techItem}>
+            <IconComponent className={styles.techIcon} />
+            <span className={styles.techName}>{tech}</span>
+          </div>
+        ) : null;
+      })}
+    </div>
+  );
+};
+
+interface PathCardProps {
+  number: string;
+  title: string;
+  duration: string;
+  description: string;
+  features: string[];
+  technologies: string[];
+  delay?: number;
+}
+
+const PathCard: React.FC<PathCardProps> = ({ 
+  number, 
+  title, 
+  duration, 
+  description, 
+  features, 
+  technologies,
+  delay = 0 
+}) => {
+  const getPathImage = () => {
+    switch(title) {
+      case 'Foundation':
+        return '/assets/wallpaper/3d-granular-cube-gray-bg-center.jpg';
+      case 'Advanced Systems':
+        return '/assets/carousel/lucid-origin_Wide_cinematic_composition_showing_architectural_evolution_from_left_to_right._O-0.jpg';
+      case 'Engineering Mastery':
+        return '/assets/wallpaper/hand-one-finger-rubik-cube-holded-like-pro.jpg';
+      default:
+        return '/assets/wallpaper/portrait-small-cubes-connected-by-lines-3d-closer-look-red-color.jpg';
+    }
+  };
+
+  const getBackgroundImage = () => {
+    switch(title) {
+      case 'Foundation':
+        return '/assets/wallpaper/portrait-small-cubes-connected-by-lines-3d-cube-shape-systems.jpg';
+      case 'Advanced Systems':
+        return '/assets/wallpaper/modern-dotted-sphere-with-red-glowing-ring-within-bg-black.jpg';
+      case 'Engineering Mastery':
+        return '/assets/wallpaper/rubik-cube-portrait-right-side-getting-broken-in-pieces-on-left-side.jpg';
+      default:
+        return '/assets/wallpaper/black-web-like-lines-white-bg.jpg';
+    }
+  };
+
+  return (
+    <AnimatedCard hoverEffect="lift" className={styles.pathCard} data-delay={delay}>
+      <div className={styles.pathCardBackground}>
+        <Image
+          src={getBackgroundImage()}
+          alt={`${title} Background`}
+          fill
+          className={styles.pathCardBackgroundImage}
+        />
+      </div>
+      <div className={styles.pathCardContent}>
+        <div className={styles.pathNumber}>{number}</div>
+        <h3 className={styles.pathTitle}>{title}</h3>
+        <div className={styles.pathDuration}>{duration}</div>
+        <div className={styles.pathImageWrapper}>
+          <Image
+            src={getPathImage()}
+            alt={title}
+            width={300}
+            height={150}
+            className={styles.pathImage}
+          />
+        </div>
+        <div className={styles.pathDescription}>{description}</div>
+      
+      <div className={styles.pathFeatures}>
+        {features.map((feature, index) => (
+          <div key={index} className={styles.featureItem}>
+            {feature}
+          </div>
+        ))}
+      </div>
+      
+      <div className={styles.techSection}>
+        <h4 className={styles.techTitle}>Tech Stack</h4>
+        <TechStack technologies={technologies} />
+      </div>
+      
+      <InteractiveButton 
+        variant="secondary" 
+        href="/contact"
+        className={styles.pathButton}
+        scrambleText={{
+          hover: "START YOUR JOURNEY",
+          speed: 2,
+          chars: "upperCase",
+          revealDelay: 0.1
+        }}
+      >
+        Start {title}
+      </InteractiveButton>
+      </div>
+    </AnimatedCard>
+  );
+};
+
 export default function Paths() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const subtitleRef = useRef<HTMLDivElement>(null);
+  const parallaxRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const section = sectionRef.current;
+    const video = videoRef.current;
+    const title = titleRef.current;
+    const subtitle = subtitleRef.current;
+    const parallax = parallaxRef.current;
+
+    // Add user interaction to enable autoplay
+    const handleUserInteraction = () => {
+      if (video) {
+        video.play().catch(error => {
+          console.log('Video play failed:', error);
+        });
+        document.removeEventListener('click', handleUserInteraction);
+        document.removeEventListener('keydown', handleUserInteraction);
+      }
+    };
+
+    // Set initial states
+    if (video) {
+      // Try to play, if it fails, wait for user interaction
+      video.play().catch(() => {
+        document.addEventListener('click', handleUserInteraction);
+        document.addEventListener('keydown', handleUserInteraction);
+      });
+    }
+
+    // Text parallax effect
+    if (title && parallax) {
+      gsap.set(title, { 
+        opacity: 1, 
+        y: 0
+      });
+    }
+
+    if (subtitle && parallax) {
+      gsap.set(subtitle, { 
+        opacity: 0.9, 
+        y: 0
+      });
+    }
+
+    // Scroll-based parallax for text
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+
+    if (title && parallax) {
+      tl.to(title, {
+        y: -50,
+        ease: 'none'
+      }, 0);
+    }
+
+    if (subtitle && parallax) {
+      tl.to(subtitle, {
+        y: -30,
+        ease: 'none'
+      }, 0);
+    }
+
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      gsap.killTweensOf([title, subtitle]);
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('keydown', handleUserInteraction);
+    };
+  }, []);
+
   return (
     <div className={styles.page}>
+      <section className={styles.heroSection}>
+        <div ref={parallaxRef} className={styles.heroBackground}>
+          <video 
+            autoPlay
+            muted 
+            loop 
+            playsInline 
+            className={styles.heroBackgroundVideo}
+          >
+            <source src="/videos/shinning-mirror-advanced-abstract-google-deepmind.mp4" type="video/mp4" />
+          </video>
+        </div>
+        
+        <div className={styles.heroOverlay}></div>
+        
+        <div className={styles.heroContent}>
+          <div className={styles.heroTextContent}>
+            <h1 className="hero-title">
+              <AnimatedTitle variant="hero" className={styles.title}>
+                Engineering Excellence Paths
+              </AnimatedTitle>
+            </h1>
+            
+            <div className="hero-subtitle">
+              <AnimatedDescription variant="featured" className={styles.subtitle}>
+                Transform from developer to 100xEngineer through structured, depth-first learning pathways 
+                designed for real-world system mastery
+              </AnimatedDescription>
+            </div>
+            
+            <div className="hero-description">
+              <AnimatedDescription variant="subtle" className={styles.heroDescription}>
+                Our paths are built on the philosophy that true engineering excellence comes from 
+                understanding systems deeply—not just collecting technologies. Each pathway represents 
+                a stage in your evolution from writing code to architecting solutions that scale.
+              </AnimatedDescription>
+            </div>
+          </div>
+        </div>
+      </section>
+      
       <div className={styles.container}>
-        <section className={styles.heroSection}>
-          <h1 className={styles.title}>Growth Paths</h1>
-          <p className={styles.subtitle}>
-            Choose your journey to engineering excellence. Our structured pathways are designed 
-            to transform your skills and accelerate your career in system architecture and development.
-          </p>
-        </section>
+        <div className={styles.heroSpacer}></div>
 
-        <section className={styles.pathsOverview}>
-          <div className={styles.overviewContent}>
-            <div className={styles.overviewLeft}>
+        <AnimatedSection animationType="fadeInUp" delay={0.2}>
+          <section className={styles.videoShowcaseSection}>
+            <div className={styles.videoShowcaseContent}>
+              <div className={styles.videoShowcaseText}>
+                <AnimatedTitle variant="section" delay={0.1} className={styles.sectionTitle}>
+                  Advanced Systems Thinking
+                </AnimatedTitle>
+                <AnimatedDescription variant="featured" delay={0.3} className={styles.videoShowcaseDescription}>
+                  Master the art of building complex systems that scale. Learn to think like an architect, 
+                  make critical design decisions, and understand the trade-offs that separate good engineers from great ones.
+                </AnimatedDescription>
+              </div>
+              <div className={styles.videoShowcaseVideo}>
+                <video 
+                  autoPlay 
+                  muted 
+                  loop 
+                  playsInline 
+                  className={styles.shiningMirrorVideo}
+                >
+                  <source src="/videos/shinning-mirror-advanced-abstract-google-deepmind.mp4" type="video/mp4" />
+                </video>
+              </div>
+            </div>
+          </section>
+        </AnimatedSection>
+
+        <AnimatedSection animationType="fadeInRight" delay={0.3}>
+          <section className={styles.approachSection}>
+            <div className={styles.approachBackground}>
               <Image
-                src="/assets/illustrations/undraw_road-sign_kncb.svg"
-                alt="Path Selection"
-                width={350}
-                height={280}
-                className={styles.overviewImage}
+                src="/assets/wallpaper/eye-with-code-reflection.png"
+                alt="Code Reflection Background"
+                fill
+                className={styles.approachBackgroundImage}
               />
             </div>
-            <div className={styles.overviewRight}>
-              <h2 className={styles.overviewTitle}>Three Paths to Excellence</h2>
-              <p className={styles.overviewText}>
-                Each path is carefully crafted to build expertise progressively, 
-                from foundational concepts to advanced system design. Whether you're starting 
-                your journey or looking to specialize, we have a path that fits your ambitions.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.pathsGrid}>
-          <div className={styles.pathCard}>
-            <div className={styles.pathNumber}>01</div>
-            <h3 className={styles.pathTitle}>Foundation</h3>
-            <div className={styles.pathDuration}>3 Months</div>
-            <p className={styles.pathDescription}>
-              Master the fundamentals of system design, programming principles, 
-              and architectural thinking. Build a strong foundation for complex systems.
-            </p>
-            <div className={styles.pathFeatures}>
-              <div className={styles.featureItem}>Core programming concepts</div>
-              <div className={styles.featureItem}>System design basics</div>
-              <div className={styles.featureItem}>Data structures & algorithms</div>
-              <div className={styles.featureItem}>Version control & collaboration</div>
-              <div className={styles.featureItem}>Testing fundamentals</div>
-            </div>
-            <Link href="/contact" className={styles.pathButton}>
-              Start Foundation
-            </Link>
-          </div>
-
-          <div className={styles.pathCard}>
-            <div className={styles.pathNumber}>02</div>
-            <h3 className={styles.pathTitle}>Acceleration</h3>
-            <div className={styles.pathDuration}>6 Months</div>
-            <p className={styles.pathDescription}>
-              Dive deep into advanced architectures, performance optimization, 
-              and scalable system design. Learn to build production-ready systems.
-            </p>
-            <div className={styles.pathFeatures}>
-              <div className={styles.featureItem}>Microservices architecture</div>
-              <div className={styles.featureItem}>Cloud native development</div>
-              <div className={styles.featureItem}>Performance engineering</div>
-              <div className={styles.featureItem}>Security best practices</div>
-              <div className={styles.featureItem}>DevOps & CI/CD</div>
-            </div>
-            <Link href="/contact" className={styles.pathButton}>
-              Start Acceleration
-            </Link>
-          </div>
-
-          <div className={styles.pathCard}>
-            <div className={styles.pathNumber}>03</div>
-            <h3 className={styles.pathTitle}>Mastery</h3>
-            <div className={styles.pathDuration}>12 Months</div>
-            <p className={styles.pathDescription}>
-              Become a system architect. Lead complex projects, mentor teams, 
-              and design systems that scale to millions of users.
-            </p>
-            <div className={styles.pathFeatures}>
-              <div className={styles.featureItem}>Enterprise architecture</div>
-              <div className={styles.featureItem}>Distributed systems design</div>
-              <div className={styles.featureItem}>Team leadership & mentoring</div>
-              <div className={styles.featureItem}>Technology strategy</div>
-              <div className={styles.featureItem}>Innovation management</div>
-            </div>
-            <Link href="/contact" className={styles.pathButton}>
-              Start Mastery
-            </Link>
-          </div>
-        </section>
-
-        <section className={styles.timelineSection}>
-          <h2 className={styles.sectionTitle}>Your Journey Timeline</h2>
-          <div className={styles.timeline}>
-            <div className={styles.timelineItem}>
-              <div className={styles.timelineDot}></div>
-              <div className={styles.timelineContent}>
-                <h3 className={styles.timelineTitle}>Assessment</h3>
-                <p className={styles.timelineDescription}>
-                  We evaluate your current skills and career goals to recommend the perfect starting path.
-                </p>
+            <div className={styles.approachContent}>
+              <div className={styles.approachHeader}>
+                <AnimatedTitle variant="section" className={styles.sectionTitle}>
+                  Revolutionary Learning Approach
+                </AnimatedTitle>
+                <AnimatedDescription variant="subtle" className={styles.sectionSubtitle}>
+                  We're not just another learning platform. We're fundamentally changing how engineers acquire knowledge.
+                </AnimatedDescription>
               </div>
-            </div>
-
-            <div className={styles.timelineItem}>
-              <div className={styles.timelineDot}></div>
-              <div className={styles.timelineContent}>
-                <h3 className={styles.timelineTitle}>Learning Phase</h3>
-                <p className={styles.timelineDescription}>
-                  Engage in hands-on projects, mentorship sessions, and collaborative learning experiences.
-                </p>
-              </div>
-            </div>
-
-            <div className={styles.timelineItem}>
-              <div className={styles.timelineDot}></div>
-              <div className={styles.timelineContent}>
-                <h3 className={styles.timelineTitle}>Real Projects</h3>
-                <p className={styles.timelineDescription}>
-                  Apply your skills to actual client projects and build a portfolio of impressive work.
-                </p>
-              </div>
-            </div>
-
-            <div className={styles.timelineItem}>
-              <div className={styles.timelineDot}></div>
-              <div className={styles.timelineContent}>
-                <h3 className={styles.timelineTitle}>Graduation</h3>
-                <p className={styles.timelineDescription}>
-                  Join our alumni network and access opportunities with leading technology companies.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.requirementsSection}>
-          <h2 className={styles.sectionTitle}>What You'll Need</h2>
-          <div className={styles.requirementsGrid}>
-            <div className={styles.requirementBlock}>
-              <h3 className={styles.requirementTitle}>Technical Requirements</h3>
-              <ul className={styles.requirementList}>
-                <li className={styles.requirementItem}>Basic programming knowledge</li>
-                <li className={styles.requirementItem}>Computer with internet access</li>
-                <li className={styles.requirementItem}>Development environment setup</li>
-                <li className={styles.requirementItem}>GitHub account</li>
-                <li className={styles.requirementItem}>20+ hours per week commitment</li>
-              </ul>
-            </div>
-
-            <div className={styles.requirementBlock}>
-              <h3 className={styles.requirementTitle}>Mindset Requirements</h3>
-              <ul className={styles.requirementList}>
-                <li className={styles.requirementItem}>Growth-oriented mindset</li>
-                <li className={styles.requirementItem}>Problem-solving attitude</li>
-                <li className={styles.requirementItem}>Collaborative spirit</li>
-                <li className={styles.requirementItem}>Continuous learning desire</li>
-                <li className={styles.requirementItem}>Resilience and persistence</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.ctaSection}>
-          <h2 className={styles.ctaTitle}>Ready to Begin Your Journey?</h2>
-          <p className={styles.ctaText}>
-            Join hundreds of engineers who have transformed their careers through our structured pathways.
-          </p>
-          <div className={styles.ctaButtons}>
-            <Link href="/contact" className={styles.primaryButton}>
-              Apply Now
-            </Link>
-            <Link href="/about" className={styles.secondaryButton}>
-              Learn More
-            </Link>
-          </div>
-        </section>
-
-        <section className={styles.wallpaperSection}>
-          <div className={styles.wallpaperContent}>
-            <div className={styles.wallpaperText}>
-              <h2 className={styles.wallpaperTitle}>Your Engineering Evolution</h2>
-              <p className={styles.wallpaperDescription}>
-                Each path represents a stage in your evolution from developer to engineer. 
-                Through hands-on projects, mentorship, and real-world challenges, you'll build 
-                the skills and mindset needed to excel in today's complex technological landscape.
-              </p>
-              <div className={styles.evolutionPoints}>
-                <div className={styles.evolutionPoint}>
-                  <span className={styles.evolutionNumber}>01</span>
-                  <span className={styles.evolutionText}>Technical Foundation</span>
+              
+              <div className={styles.approachGrid}>
+                <div className={styles.approachBlock}>
+                  <div className={styles.approachIcon}>
+                    <Image
+                      src="/assets/illustrations/undraw_continuous-learning_a1ld.svg"
+                      alt="Article-Based Learning"
+                      width={60}
+                      height={60}
+                    />
+                  </div>
+                  <h3 className={styles.approachTitle}>Article-Based Excellence</h3>
+                  <div className={styles.approachDescription}>
+                    <p>Unlike video-based platforms where content becomes stale and outdated within months, our article-based approach ensures knowledge remains evergreen and continuously relevant.</p>
+                    <p>Articles can be <strong>skimmed efficiently</strong>, <strong>updated instantly</strong>, and <strong>open-sourced</strong> for community contributions. No more sitting through 50-hour video courses that nobody actually completes.</p>
+                    <p>Best for busy software engineers who need to <strong>upskill quickly</strong> without the cognitive load of video consumption.</p>
+                  </div>
                 </div>
-                <div className={styles.evolutionPoint}>
-                  <span className={styles.evolutionNumber}>02</span>
-                  <span className={styles.evolutionText}>System Architecture</span>
+
+                <div className={styles.approachBlock}>
+                  <div className={styles.approachIcon}>
+                    <Image
+                      src="/assets/illustrations/undraw_listening-to-podcasts_j0hm.svg"
+                      alt="Podcast Learning"
+                      width={60}
+                      height={60}
+                    />
+                  </div>
+                  <h3 className={styles.approachTitle}>Podcast-Style Learning</h3>
+                  <div className={styles.approachDescription}>
+                    <p>What makes us truly revolutionary is our <strong>podcast-style learning</strong> layered on top of articles. Complex topics broken into <strong>5-10 minute audio segments</strong> you can consume while commuting, working, or relaxing.</p>
+                    <p>Coming soon: <strong>Multi-language support</strong> with voice narration in English, Hindi, Bengali, Marathi, and even your native language. Learning in your mother tongue - because understanding concepts in your native language accelerates comprehension.</p>
+                    <p>Production-quality audio with noise reduction for the best learning experience anywhere, anytime.</p>
+                  </div>
                 </div>
-                <div className={styles.evolutionPoint}>
-                  <span className={styles.evolutionNumber}>03</span>
-                  <span className={styles.evolutionText}>Engineering Leadership</span>
+
+                <div className={styles.approachBlock}>
+                  <div className={styles.approachIcon}>
+                    <Image
+                      src="/assets/illustrations/undraw_sharing-knowledge_2jx3.svg"
+                      alt="Flexible Learning"
+                      width={60}
+                      height={60}
+                    />
+                  </div>
+                  <h3 className={styles.approachTitle}>Enjoyable & Flexible</h3>
+                  <div className={styles.approachDescription}>
+                    <p>We believe in <strong>enjoyable learning experiences</strong> that <strong>fit into your schedule</strong> seamlessly. No more rigid timetables or overwhelming course structures.</p>
+                    <p>Learn at your own pace, in your preferred format - read articles, listen to podcasts, or combine both. Our adaptive learning system adjusts to your style, not the other way around.</p>
+                    <p>Perfect for <strong>busy software engineers</strong> who want to upskill themselves without sacrificing their work-life balance.</p>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className={styles.wallpaperImageWrapper}>
-              <Image
-                src="/assets/wallpaper/rubik-cube-portrait-right-side-getting-broken-in-pieces-on-left-side.jpg"
-                alt="Engineering Evolution"
-                width={400}
-                height={600}
-                className={styles.wallpaperImage}
-              />
+          </section>
+        </AnimatedSection>
+
+        <AnimatedSection animationType="scaleIn" stagger={0.2}>
+          <section className={styles.pathsGrid}>
+            <PathCard
+              number="01"
+              title="Foundation"
+              duration="3-6 Months"
+              description="Master one programming language deeply and understand the complete software lifecycle. Build the engineering mindset that separates developers from systems engineers."
+              features={[
+                "Deep Language Mastery (JavaScript/TypeScript)",
+                "System Design Fundamentals",
+                "Data Structures & Algorithms in Practice",
+                "Full-Stack Development (Frontend + Backend)",
+                "Version Control & Collaborative Development",
+                "Testing & Quality Assurance",
+                "Basic DevOps & Deployment"
+              ]}
+              technologies={[
+                'javascript', 'typescript', 'react', 'nodejs',
+                'python', 'git', 'linux', 'mongodb', 'postgresql',
+                'redis', 'nginx', 'express', 'django', 'flask', 'fastapi'
+              ]}
+              delay={0.1}
+            />
+
+            <PathCard
+              number="02"
+              title="Advanced Systems"
+              duration="6-12 Months"
+              description="Design and build scalable, production-ready systems. Learn advanced patterns, security engineering, and cloud infrastructure that powers modern applications."
+              features={[
+                "Advanced System Architecture",
+                "Microservices & Distributed Systems",
+                "Cloud Native Development",
+                "Security Engineering & Best Practices",
+                "Performance Optimization",
+                "Advanced DevOps & CI/CD",
+                "Database Design & Optimization"
+              ]}
+              technologies={[
+                'docker', 'kubernetes', 'aws', 'gcp', 'terraform',
+                'prometheus', 'grafana', 'jenkins', 'kafka', 'elasticsearch',
+                'webpack', 'vite', 'jest', 'cypress', 'graphql'
+              ]}
+              delay={0.2}
+            />
+
+            <PathCard
+              number="03"
+              title="Engineering Mastery"
+              duration="12+ Months"
+              description="Lead complex system design, mentor engineering teams, and make architectural decisions that impact millions. Become the engineer who can build anything."
+              features={[
+                "Enterprise Architecture Design",
+                "Team Leadership & Technical Mentoring",
+                "Technology Strategy & Decision Making",
+                "System Scalability & Reliability",
+                "Product Thinking & Business Acumen",
+                "Innovation & Research",
+                "Career Development & Networking"
+              ]}
+              technologies={[
+                'figma', 'jira', 'notion', 'slack', 'eraser'
+              ]}
+              delay={0.3}
+            />
+          </section>
+        </AnimatedSection>
+
+        <AnimatedSection animationType="fadeInLeft" delay={0.2}>
+          <section className={styles.journeySection}>
+            <div className={styles.journeyContent}>
+              <div className={styles.journeyLeft}>
+                <AnimatedTitle variant="section" delay={0.1} className={styles.sectionTitle}>
+                  Your Engineering Journey
+                </AnimatedTitle>
+                <AnimatedDescription variant="featured" delay={0.3} className={styles.journeyText}>
+                  Each path is carefully structured to build upon previous knowledge, 
+                  ensuring you develop the deep understanding required for true engineering excellence. 
+                  Progress through hands-on projects, real-world challenges, and mentorship from experienced engineers.
+                </AnimatedDescription>
+                
+                <div className={styles.journeyStages}>
+                  <div className={styles.stage}>
+                    <div className={styles.stageIcon}>
+                      <Image
+                        src="/assets/illustrations/undraw_ideation_r1g5.svg"
+                        alt="Foundation"
+                        width={60}
+                        height={60}
+                      />
+                    </div>
+                    <div className={styles.stageContent}>
+                      <h4 className={styles.stageTitle}>Foundation</h4>
+                      <div className={styles.stageDesc}>Build deep technical understanding</div>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.stage}>
+                    <div className={styles.stageIcon}>
+                      <Image
+                        src="/assets/illustrations/undraw_developer-activity_4zqd.svg"
+                        alt="Development"
+                        width={60}
+                        height={60}
+                      />
+                    </div>
+                    <div className={styles.stageContent}>
+                      <h4 className={styles.stageTitle}>Application</h4>
+                      <div className={styles.stageDesc}>Apply knowledge to real systems</div>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.stage}>
+                    <div className={styles.stageIcon}>
+                      <Image
+                        src="/assets/illustrations/undraw_project-completed_ug9i.svg"
+                        alt="Mastery"
+                        width={60}
+                        height={60}
+                      />
+                    </div>
+                    <div className={styles.stageContent}>
+                      <h4 className={styles.stageTitle}>Mastery</h4>
+                      <div className={styles.stageDesc}>Lead and architect complex solutions</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className={styles.journeyRight}>
+                <div className={styles.journeyImageWrapper}>
+                  <video autoPlay muted loop playsInline className={styles.journeyVideo}>
+                    <source src="/videos/abstract-light-color-animation-shapes-laptop-google-deepmind.mp4" type="video/mp4" />
+                  </video>
+                </div>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </AnimatedSection>
+
+        <AnimatedSection animationType="fadeInUp" delay={0.2}>
+          <section className={styles.outcomesSection}>
+            <AnimatedTitle variant="section" className={styles.sectionTitle}>
+              Engineering Outcomes
+            </AnimatedTitle>
+            
+            <div className={styles.outcomesGrid}>
+              <AnimatedCard hoverEffect="tilt" className={styles.outcomeCard}>
+                <div className={styles.outcomeIcon}>
+                  <Image
+                    src="/assets/illustrations/undraw_proud-coder_bivp.svg"
+                    alt="Career Growth"
+                    width={80}
+                    height={80}
+                  />
+                </div>
+                <h3 className={styles.outcomeTitle}>Career Acceleration</h3>
+                <div className={styles.outcomeDescription}>
+                  Move from junior developer to senior engineer 5x faster through 
+                  systems thinking and architectural expertise.
+                </div>
+              </AnimatedCard>
+
+              <AnimatedCard hoverEffect="tilt" className={styles.outcomeCard}>
+                <div className={styles.outcomeIcon}>
+                  <Image
+                    src="/assets/illustrations/undraw_web-development_f0tp.svg"
+                    alt="System Architecture"
+                    width={80}
+                    height={80}
+                  />
+                </div>
+                <h3 className={styles.outcomeTitle}>System Architecture</h3>
+                <div className={styles.outcomeDescription}>
+                  Design and build scalable systems that handle millions of users 
+                  with confidence and engineering precision.
+                </div>
+              </AnimatedCard>
+
+              <AnimatedCard hoverEffect="tilt" className={styles.outcomeCard}>
+                <div className={styles.outcomeIcon}>
+                  <Image
+                    src="/assets/illustrations/undraw_sharing-knowledge_2jx3.svg"
+                    alt="Leadership"
+                    width={80}
+                    height={80}
+                  />
+                </div>
+                <h3 className={styles.outcomeTitle}>Engineering Leadership</h3>
+                <div className={styles.outcomeDescription}>
+                  Lead technical teams, make architectural decisions, and mentor 
+                  next generation of engineers.
+                </div>
+              </AnimatedCard>
+            </div>
+          </section>
+        </AnimatedSection>
+
+        <AnimatedSection animationType="fadeInLeft" delay={0.2}>
+          <section className={styles.ctaSection}>
+            <div className={styles.ctaContent}>
+              <AnimatedTitle variant="cta" delay={0.1} className={styles.ctaTitle}>
+                Ready to Become a 100xEngineer?
+              </AnimatedTitle>
+              <AnimatedDescription variant="featured" delay={0.3} className={styles.ctaText}>
+                Join engineers who've transformed their careers through our structured pathways. 
+                Stop collecting certificates and start building real engineering expertise.
+              </AnimatedDescription>
+              
+              <div className={styles.ctaButtons}>
+                <InteractiveButton 
+                  variant="primary" 
+                  href="/contact"
+                  scrambleText={{
+                    hover: "START YOUR JOURNEY",
+                    speed: 2,
+                    chars: "upperCase",
+                    revealDelay: 0.1
+                  }}
+                >
+                  Start Your Journey
+                </InteractiveButton>
+                <InteractiveButton 
+                  variant="secondary" 
+                  href="/about"
+                  scrambleText={{
+                    hover: "LEARN MORE",
+                    speed: 2,
+                    chars: "upperCase",
+                    revealDelay: 0.1
+                  }}
+                >
+                  Learn More
+                </InteractiveButton>
+              </div>
+            </div>
+          </section>
+        </AnimatedSection>
       </div>
     </div>
   );

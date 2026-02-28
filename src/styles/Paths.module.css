@@ -1,27 +1,920 @@
+/* Approach Section Styles */
+.approachSection {
+  margin-bottom: 120px;
+  padding: 80px;
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.03) 0%, rgba(0, 0, 0, 0) 100%);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.approachBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.approachBackgroundImage {
+  object-fit: cover;
+  opacity: 0.08;
+  mix-blend-mode: screen;
+}
+
+.approachContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.approachHeader {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.sectionSubtitle {
+  font-size: 20px;
+  color: #bbbbbb;
+  margin-top: 20px;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+.approachGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px;
+  margin-bottom: 80px;
+}
+
+.approachBlock {
+  text-align: center;
+  padding: 40px 30px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.approachBlock:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 0, 0.1);
+  transform: translateY(-5px);
+}
+
+.approachIcon {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.approachTitle {
+  font-size: 24px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 20px;
+  color: #ffff00;
+  letter-spacing: 0.01em;
+}
+
+.approachDescription {
+  text-align: left;
+}
+
+.approachDescription p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #aaaaaa;
+  margin-bottom: 16px;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+.approachDescription p:last-child {
+  margin-bottom: 0;
+}
+
+.approachDescription strong {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.differentiatorSection {
+  text-align: center;
+  padding: 60px 40px;
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.05) 0%, rgba(0, 0, 0, 0) 100%);
+  border-radius: 12px;
+}
+
+.differentiatorTitle {
+  margin-bottom: 60px;
+}
+
+.differentiatorPoints {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.differentiatorPoint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.pointIcon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.pointContent h4 {
+  font-size: 20px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 12px;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+
+.pointContent p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #aaaaaa;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+/* Path Card Background and Creative Edges */
+.pathCardBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.pathCardBackgroundImage {
+  object-fit: cover;
+  opacity: 0.15;
+  transition: opacity 0.3s ease;
+}
+
+.pathCard:hover .pathCardBackgroundImage {
+  opacity: 0.25;
+}
+
+.pathCardContent {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%);
+  border-radius: 12px;
+  padding: 32px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Creative Edge Effects */
+.pathCard::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    rgba(255, 255, 0, 0.3) 0%, 
+    transparent 25%, 
+    transparent 75%, 
+    rgba(255, 255, 0, 0.3) 100%);
+  border-radius: 12px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.pathCard:hover::before {
+  opacity: 1;
+}
+
+.pathCard::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.05) 0%, 
+    transparent 50%, 
+    rgba(255, 255, 255, 0.02) 100%);
+  border-radius: 12px;
+  z-index: 0;
+}
+
+/* Hero Section Styles - Full Screen Cinematic */
+.heroSection {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+
+.heroBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.heroBackgroundVideo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  object-fit: cover;
+  opacity: 1;
+  /* padding: 1rem; */
+  /* margin-top: 2rem; */
+}
+
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.6) 100%);
+  z-index: 1;
+}
+
+.heroContent {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 40px;
+}
+
+.heroTextContent {
+  text-align: center;
+}
+
+/* Video Showcase Section */
+.videoShowcaseSection {
+  margin-bottom: 120px;
+  padding: 80px 40px;
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.03) 0%, rgba(0, 0, 0, 0) 100%);
+  border-radius: 16px;
+}
+
+.videoShowcaseContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.videoShowcaseText {
+  text-align: left;
+}
+
+.videoShowcaseDescription {
+  font-size: 20px;
+  line-height: 1.8;
+  color: #dddddd;
+  margin-bottom: 40px;
+  font-family: var(--font-samsung-sharp);
+}
+
+.videoShowcaseVideo {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+}
+
+.shiningMirrorVideo {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
+/* Path Card Image Styles */
+.pathImageWrapper {
+  margin: 20px 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pathImage {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.pathCard:hover .pathImage {
+  transform: scale(1.05);
+}
+
+/* Hero Section Styles */
+.heroSection {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin: 0;
+}
+
+.heroBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.heroImage {
+  object-fit: cover;
+  opacity: 0.15;
+}
+
+.heroDescription {
+  margin-top: 40px;
+  font-size: 20px;
+  line-height: 1.8;
+  max-width: 800px;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+  color: #ffffff;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.8);
+}
+
+/* Philosophy Section */
+.philosophySection {
+  margin-bottom: 120px;
+  padding: 80px;
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.05) 0%, rgba(0, 0, 0, 0) 100%);
+  border-radius: 16px;
+}
+
+.philosophyContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.philosophyImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.philosophyText {
+  font-size: 20px;
+  line-height: 1.8;
+  margin-bottom: 40px;
+  color: #dddddd;
+  text-align: justify;
+  font-family: var(--font-samsung-sharp);
+}
+
+.philosophyPoints {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.philosophyPoint {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.pointNumber {
+  font-size: 32px;
+  font-weight: 100;
+  font-family: var(--font-samsung-sharp);
+  color: #ffff00;
+  opacity: 0.8;
+  min-width: 40px;
+}
+
+.pointText {
+  font-size: 20px;
+  color: #ffffff;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+/* Journey Section */
+.journeySection {
+  margin-bottom: 120px;
+}
+
+.journeyContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.journeyText {
+  font-size: 20px;
+  line-height: 1.8;
+  margin-bottom: 40px;
+  color: #bbbbbb;
+  text-align: justify;
+    font-family: var(--font-samsung-sharp);
+}
+
+.journeyStages {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.stage {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.03) 0%, rgba(0, 0, 0, 0) 100%);
+  border: 1px solid rgba(250, 204, 21, 0.1);
+  border-radius: 8px;
+}
+
+.stageIcon {
+  flex-shrink: 0;
+}
+
+.stageContent {
+  flex: 1;
+}
+
+.stageTitle {
+  font-size: 20px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 8px;
+  color: #ffff00;
+  letter-spacing: 0.01em;
+}
+
+.stageDesc {
+  font-size: 16px;
+  color: #aaaaaa;
+  line-height: 1.6;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+}
+
+.journeyImageWrapper {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+}
+
+.journeyVideo {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Outcomes Section */
+.outcomesSection {
+  margin-bottom: 120px;
+}
+
+.outcomesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-top: 80px;
+}
+
+.outcomeCard {
+  padding: 40px;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.05) 0%, rgba(0, 0, 0, 0) 100%);
+  border: 1px solid rgba(250, 204, 21, 0.1);
+  border-radius: 12px;
+}
+
+.outcomeIcon {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.outcomeTitle {
+  font-size: 24px;
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 16px;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.outcomeDescription {
+  font-size: 18px;
+  color: #aaaaaa;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+}
+
+.outcomeMetrics {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.metric {
+  text-align: center;
+}
+
+.metricNumber {
+  display: block;
+  font-size: 28px;
+  font-weight: 600;
+  font-family: var(--font-axle);
+  color: #ffff00;
+  letter-spacing: 0.02em;
+}
+
+.metricLabel {
+  font-size: 14px;
+  color: #bbbbbb;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 200;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Tech Stack Styles */
+.techSection {
+  margin: 32px 0;
+  text-align: left;
+}
+
+.techTitle {
+  font-size: 18px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 16px;
+  color: #ffff00;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.techStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.techItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.techItem:hover {
+  background: rgba(255, 255, 0, 0.1);
+  border-color: rgba(255, 255, 0, 0.3);
+}
+
+.techIcon {
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+}
+
+.techName {
+  font-size: 14px;
+  color: #ffffff;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+/* Enhanced CTA Section */
+.ctaPoints {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.ctaPoint {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ctaPointIcon {
+  font-size: 20px;
+}
+
+.ctaPointText {
+  font-size: 16px;
+  color: #bbbbbb;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+/* Enhanced Responsive Design */
+@media (max-width: 1024px) {
+  .heroContent {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+
+  .heroTextContent {
+    padding: 0 24px;
+    max-width: 100%;
+  }
+
+  .title {
+    font-size: 48px;
+    margin-bottom: 24px;
+  }
+
+  .subtitle {
+    font-size: 20px;
+    margin-bottom: 40px;
+  }
+
+  .heroDescription {
+    font-size: 16px;
+    margin-top: 24px;
+  }
+
+  .heroVisualImage {
+    max-width: 80%;
+  }
+
+  .videoShowcaseContent {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+
+  .videoShowcaseText {
+    text-align: center;
+  }
+
+  .videoShowcaseDescription {
+    font-size: 18px;
+  }
+
+  .differentiatorPoints {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .philosophyContent,
+  .journeyContent {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+
+  .outcomesGrid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .outcomeMetrics {
+    gap: 30px;
+  }
+
+  .ctaPoints {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroContent {
+    padding: 0 24px;
+  }
+
+  .title {
+    font-size: 40px;
+    margin-bottom: 20px;
+  }
+
+  .subtitle {
+    font-size: 18px;
+    margin-bottom: 30px;
+  }
+
+  .heroDescription {
+    font-size: 16px;
+    margin-top: 20px;
+  }
+
+  .heroVisualImage {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .videoShowcaseSection {
+    padding: 60px 32px;
+  }
+
+  .videoShowcaseContent {
+    gap: 40px;
+  }
+
+  .videoShowcaseDescription {
+    font-size: 16px;
+  }
+
+  .shiningMirrorVideo {
+    height: 300px;
+    object-fit: cover;
+  }
+
+  .approachSection {
+    padding: 60px 32px;
+  }
+
+  .approachBlock {
+    padding: 32px 24px;
+  }
+
+  .differentiatorSection {
+    padding: 40px 24px;
+  }
+
+  .philosophySection {
+    padding: 60px 32px;
+  }
+
+  .philosophyText,
+  .journeyText {
+    font-size: 18px;
+    text-align: justify;
+    font-family: var(--font-samsung-sharp);
+  }
+
+  .stage {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .outcomeCard {
+    padding: 32px 24px;
+  }
+
+  .outcomeMetrics {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .techStack {
+    gap: 8px;
+  }
+
+  .techItem {
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroContent {
+    padding: 0 16px;
+  }
+
+  .title {
+    font-size: 32px;
+    margin-bottom: 16px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    margin-bottom: 24px;
+  }
+
+  .heroDescription {
+    font-size: 14px;
+    margin-top: 16px;
+  }
+
+  .pathImage {
+    height: 120px;
+  }
+
+  .approachSection {
+    padding: 40px 20px;
+  }
+
+  .approachBlock {
+    padding: 24px 20px;
+  }
+
+  .approachTitle {
+    font-size: 20px;
+  }
+
+  .approachDescription p {
+    font-size: 14px;
+  }
+
+  .differentiatorSection {
+    padding: 32px 20px;
+  }
+
+  .pointIcon {
+    font-size: 36px;
+  }
+
+  .philosophySection {
+    padding: 40px 20px;
+  }
+
+  .philosophyText,
+  .journeyText {
+    font-size: 16px;
+    text-align: justify;
+    font-family: var(--font-samsung-sharp);
+  }
+
+  .outcomeCard {
+    padding: 24px 20px;
+  }
+
+  .techName {
+    font-size: 12px;
+  }
+
+  .techIcon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .videoShowcaseSection {
+    padding: 40px 20px;
+  }
+
+  .videoShowcaseContent {
+    gap: 30px;
+  }
+
+  .videoShowcaseDescription {
+    font-size: 14px;
+  }
+
+  .shiningMirrorVideo {
+    height: 250px;
+    object-fit: cover;
+  }
+}
+
 .page {
   min-height: 100vh;
-  background: #000000;
   color: #ffffff;
   font-family: var(--font-optima);
   font-weight: 300;
   position: relative;
   overflow-x: hidden;
-}
-
-.page::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-image: url('/assets/wallpaper/black-web-like-lines-white-bg.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  z-index: -1;
-  opacity: 0.1;
 }
 
 .container {
@@ -46,11 +939,12 @@
   letter-spacing: -0.03em;
   color: #ffffff;
   line-height: 1;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
 .subtitle {
   font-size: 30px;
-  color: #cccccc;
+  color: #ffffff;
   font-family: var(--font-samsung-sharp);
   margin-bottom: 60px;
   font-weight: 200;
@@ -59,6 +953,7 @@
   margin-left: auto;
   margin-right: auto;
   line-height: 1.6;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.8);
 }
 
 .pathsOverview {
@@ -160,7 +1055,7 @@
   margin-bottom: 16px;
   font-size: 18px;
   color: #ffffff;
-  font-family: var(--font-optima);
+  font-family: var(--font-samsung-sharp);
   font-weight: 300;
   line-height: 1.6;
 }
