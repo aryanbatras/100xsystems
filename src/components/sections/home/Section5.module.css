@@ -1,8 +1,8 @@
 .ctaSection {
   text-align: center;
   padding: 120px 40px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  border: none;
   border-radius: 24px;
   margin-bottom: 100px;
   max-width: 1000px;

@@ -46,9 +46,9 @@ export default function Section3() {
       scrollTrigger: {
         trigger: section,
         start: 'top top',
-        end: '+=400%',
+        end: '+=600%',
         pin: true,
-        scrub: 3,
+        scrub: 5,
         pinSpacing: true,
       },
     });
@@ -63,7 +63,7 @@ export default function Section3() {
       duration: 1
     }, '-=0.5');
 
-    tl.to({}, { duration: 0.5 });
+    tl.to({}, { duration: 1 });
 
     tl.to(videos[1], { 
       opacity: 1,
@@ -78,18 +78,18 @@ export default function Section3() {
       opacity: 0, 
       y: -30, 
       duration: 1 
-    }, '-=2.5')
+    }, '-=1.5')
     .to(videos[0], { 
       opacity: 0, 
       duration: 1 
-    }, '<')
+    }, '-=1')
     .to(titles[1], { 
       opacity: 1, 
       y: 0, 
       duration: 1
-    }, '-=0.5');
+    }, '-=1.8');
 
-    tl.to({}, { duration: 0.5 });
+    tl.to({}, { duration: 1 });
 
     tl.to(videos[2], { 
       opacity: 1,
@@ -104,31 +104,18 @@ export default function Section3() {
       opacity: 0, 
       y: -30, 
       duration: 1 
-    }, '-=2.5')
+    }, '-=1.5')
     .to(videos[1], { 
       opacity: 0, 
       duration: 1 
-    }, '<')
+    }, '-=1')
     .to(titles[2], { 
       opacity: 1, 
       y: 0, 
       duration: 1
-    }, '-=0.5');
+    }, '-=1.8');
 
     tl.to({}, { duration: 1 });
-    
-    tl.to(videos[2], { 
-      clipPath: 'circle(20px at 50% 50%)', 
-      duration: 2,
-      ease: 'power2.inOut'
-    })
-    .to(titles[2], { 
-      opacity: 0, 
-      y: 30,
-      rotationX: 15,
-      duration: 1.5,
-      ease: 'power2.in'
-    }, '-=2.5');
 
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());

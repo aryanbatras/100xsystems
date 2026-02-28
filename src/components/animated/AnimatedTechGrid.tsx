@@ -42,38 +42,11 @@ const AnimatedTechGrid = ({ items, className = '' }: AnimatedTechGridProps) => {
     tl.to(techItems, {
       opacity: 1,
       scale: 1,
-      duration: 0.4,
-      stagger: 0.08,
-      ease: 'back.out(1.5)'
+      duration: 0.6,
+      stagger: 0.1,
+      ease: 'power2.out'
     });
 
-    techItems.forEach((item) => {
-      const handleMouseEnter = () => {
-        gsap.to(item, {
-          scale: 1.1,
-          backgroundColor: 'rgba(255, 255, 255, 0.15)',
-          duration: 0.2,
-          ease: 'power2.out'
-        });
-      };
-
-      const handleMouseLeave = () => {
-        gsap.to(item, {
-          scale: 1,
-          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-          duration: 0.2,
-          ease: 'power2.out'
-        });
-      };
-
-      item.addEventListener('mouseenter', handleMouseEnter);
-      item.addEventListener('mouseleave', handleMouseLeave);
-
-      return () => {
-        item.removeEventListener('mouseenter', handleMouseEnter);
-        item.removeEventListener('mouseleave', handleMouseLeave);
-      };
-    });
 
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());

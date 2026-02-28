@@ -1,103 +1,221 @@
-.finalCtaSection {
-  margin-bottom: 100px;
-  padding: 80px 40px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 24px;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+.ctaSection {
+  padding: 120px 0;
+  background: rgba(255, 255, 255, 0.02);
 }
 
-.finalCtaContent {
+.ctaContainer {
+  max-width: 1200px;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  gap: 40px;
+  align-items: center;
+  padding: 0 40px;
+}
+
+.leftCard {
+  position: relative;
+  border-radius: 0px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+  background: #000;
+}
+
+.cardImage {
+  position: relative;
+  width: 100%;
+  height: 600px;
+}
+
+.cardImageElement {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.1) 50%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+.rightCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardContent {
+  max-width: 600px;
+  text-align: left;
+  padding: 0;
+}
+
+.cardTitle {
+  font-size: clamp(36px, 6vw, 48px);
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  line-height: 0;
+  margin-bottom: 0px;
+}
+
+.cardSubtitle {
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 0px;
+  background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cardDescription {
+  font-size: clamp(16px, 2.5vw, 20px);
+  color: #e0e0e0;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+}
+
+.cardSubDescription {
+  font-size: clamp(14px, 2vw, 16px);
+  color: #b0b0b0;
+  line-height: 1.5;
+  margin-bottom: 24px;
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+  font-style: italic;
+  text-align: left;
+  text-align-last: center;
+}
+
+.ctaButton {
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
-.finalCtaImage {
-  max-width: 100%;
-  height: auto;
-  border-radius: 0px;
-  box-shadow: 0 35px 70px rgba(0, 0, 0, 0.6);
+.trustIndicators {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.finalCtaTitle {
-  font-size: 48px;
+.trustItem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.trustNumber {
+  font-size: 28px;
   font-weight: 200;
   font-family: var(--font-samsung-sharp);
-  margin-bottom: 30px;
   color: #ffffff;
   letter-spacing: -0.02em;
 }
 
-.finalCtaDescription {
-  font-size: 20px;
-  color: #e0e0e0;
-  line-height: 1.7;
-  margin-bottom: 50px;
-  font-weight: 300;
+.trustLabel {
+  font-size: 12px;
+  color: #b0b0b0;
   font-family: var(--font-samsung-sharp);
+  font-weight: 300;
   text-align: left;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  hyphens: auto;
-}
-
-.finalCtaButtons {
-  display: flex;
-  gap: 24px;
-}
-
-.primaryButton {
-  display: inline-block;
-  padding: 16px 40px;
-  background: #ffffff;
-  color: #000000;
-  font-family: var(--font-axle);
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-decoration: none;
-  border-radius: 0px;
-}
-
-.secondaryButton {
-  display: inline-block;
-  padding: 16px 40px;
-  background: transparent;
-  color: #ffffff;
-  font-family: var(--font-axle);
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-decoration: none;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 0px;
+  max-width: 120px;
 }
 
 @media (max-width: 1024px) {
-  .finalCtaContent {
+  .ctaContainer {
     grid-template-columns: 1fr;
     gap: 60px;
-    text-align: center;
+    padding: 0 32px;
   }
-
-  .finalCtaButtons {
-    flex-direction: column;
-    gap: 16px;
+  
+  .cardContent {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .trustIndicators {
+    justify-content: center;
+    gap: 24px;
+  }
+  
+  .trustItem {
+    align-items: center;
+  }
+  
+  .trustLabel {
+    text-align: center;
   }
 }
 
 @media (max-width: 768px) {
-  .finalCtaSection {
-    padding: 60px 24px;
+  .ctaSection {
+    padding: 80px 0;
   }
+  
+  .ctaContainer {
+    padding: 0 24px;
+    gap: 40px;
+  }
+  
+  .cardImage {
+    height: 400px;
+  }
+  
+  .primaryCtaButton {
+    padding: 16px 32px;
+    font-size: 16px;
+  }
+  
+  .trustIndicators {
+    gap: 16px;
+  }
+  
+  .trustNumber {
+    font-size: 24px;
+  }
+  
+  .trustLabel {
+    font-size: 11px;
+  }
+}
 
-  .finalCtaDescription {
-    font-size: 18px;
-    text-align: left;
+@media (max-width: 480px) {
+  .ctaSection {
+    padding: 60px 0;
+  }
+  
+  .ctaContainer {
+    padding: 0 16px;
+  }
+  
+  .cardImage {
+    height: 300px;
+  }
+  
+  .trustIndicators {
+    gap: 12px;
   }
 }

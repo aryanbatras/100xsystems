@@ -1,66 +1,81 @@
 import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
-import AnimatedButton from '../../animated/AnimatedButton';
-import CubeAnimation from '../../animation/CubeAnimation';
+import InteractiveButton from '../../animated/InteractiveButton';
 import Image from 'next/image';
-import sharedStyles from './shared.module.css';
 import styles from './Section10.module.css';
 
 export default function Section10() {
   return (
-    <>
-      <AnimatedSection animationType="fadeInLeft" delay={0.2}>
-        <section className={styles.finalCtaSection} data-speed="0.9">
-          <div className={styles.finalCtaContent}>
-            <div className={sharedStyles.videoLeft} data-speed="0.7">
+    <AnimatedSection animationType="fadeInUp" delay={0.2}>
+      <section className={styles.ctaSection}>
+        <div className={styles.ctaContainer}>
+          <div className={styles.leftCard}>
+            <div className={styles.cardImage}>
               <Image
-                src="/assets/wallpaper/3d-granular-cube-gray-bg-center.jpg"
-                alt="Systems Thinking Visualization"
+                src="/assets/wallpaper/hand-one-finger-rubik-cube-holded-like-pro.jpg"
+                alt="Mastery and Precision"
                 width={600}
-                height={400}
-                className={styles.finalCtaImage}
+                height={800}
+                className={styles.cardImageElement}
               />
             </div>
-            <AnimatedSection animationType="fadeInRight" delay={0.4}>
-              <div className={sharedStyles.videoRight}>
-                <AnimatedTitle variant="cta" delay={0.1} className={styles.finalCtaTitle}>Your Engineering Journey Starts Here</AnimatedTitle>
-                <AnimatedDescription variant="featured" delay={0.3} className={styles.finalCtaDescription}>
-                  Move beyond feature development to true systems thinking. 
-                  Join engineers who understand how components interact, anticipate consequences, 
-                  and build solutions that scale reliably in production.
-                </AnimatedDescription>
-                <div className={sharedStyles.illustrationPoints}>
-                  <div className={sharedStyles.pointItem}>
-                    <span className={sharedStyles.pointNumber}>01</span>
-                    <span className={sharedStyles.pointText}>System Architecture Mastery</span>
-                  </div>
-                  <div className={sharedStyles.pointItem}>
-                    <span className={sharedStyles.pointNumber}>02</span>
-                    <span className={sharedStyles.pointText}>Performance Engineering</span>
-                  </div>
-                  <div className={sharedStyles.pointItem}>
-                    <span className={sharedStyles.pointNumber}>03</span>
-                    <span className={sharedStyles.pointText}>Production-Ready Development</span>
-                  </div>
-                </div>
-                <div className={styles.finalCtaButtons}>
-                  <AnimatedButton variant="primary" href="/paths">
-                    Start Your Journey
-                  </AnimatedButton>
-                  <AnimatedButton variant="secondary" href="/about">
-                    Learn More
-                  </AnimatedButton>
-                </div>
-              </div>
-            </AnimatedSection>
+            <div className={styles.imageOverlay}></div>
           </div>
-        </section>
-      </AnimatedSection>
-
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-        <CubeAnimation />
-      </div>
-    </>
+          
+          <div className={styles.rightCard}>
+            <div className={styles.cardContent}>
+              <AnimatedTitle variant="hero" delay={0.3} className={styles.cardTitle}>
+                The Final 1%
+              </AnimatedTitle>
+              <AnimatedTitle variant="hero" delay={0.5} className={styles.cardSubtitle}>
+                That Separates Good Engineers From 100x Engineers
+              </AnimatedTitle>
+              <AnimatedDescription variant="featured" delay={0.7} className={styles.cardDescription}>
+                You've mastered the syntax. You know the frameworks. But can you architect systems that scale?
+                Can you debug the impossible? Can you lead teams through complexity?
+              </AnimatedDescription>
+              <AnimatedDescription variant="subtle" delay={0.9} className={styles.cardSubDescription}>
+                Join engineers from Google, Meta, and startups who've made the leap.
+                The journey isn't easy—but greatness never is.
+              </AnimatedDescription>
+              
+              <AnimatedSection animationType="scaleIn" delay={1.1}>
+                <InteractiveButton 
+                  variant="cta" 
+                  href="/paths"
+                  scrambleText={{
+                    hover: "START JOURNEY NOW",
+                    speed: 2,
+                    chars: "upperCase",
+                    revealDelay: 0.1
+                  }}
+                  className={styles.ctaButton}
+                >
+                  Start Your Journey
+                </InteractiveButton>
+              </AnimatedSection>
+              
+              <AnimatedSection animationType="fadeInUp" delay={1.3}>
+                <div className={styles.trustIndicators}>
+                  <div className={styles.trustItem}>
+                    <span className={styles.trustNumber}>500+</span>
+                    <span className={styles.trustLabel}>Engineers Transformed</span>
+                  </div>
+                  <div className={styles.trustItem}>
+                    <span className={styles.trustNumber}>50x</span>
+                    <span className={styles.trustLabel}>Impact Multiplier</span>
+                  </div>
+                  <div className={styles.trustItem}>
+                    <span className={styles.trustNumber}>12mo</span>
+                    <span className={styles.trustLabel}>Journey Duration</span>
+                  </div>
+                </div>
+              </AnimatedSection>
+            </div>
+          </div>
+        </div>
+      </section>
+    </AnimatedSection>
   );
 }

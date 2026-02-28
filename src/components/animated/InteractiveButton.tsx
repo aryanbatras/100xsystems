@@ -39,8 +39,8 @@ const InteractiveButton = forwardRef<HTMLAnchorElement | HTMLButtonElement, Inte
 
     const handleMouseEnter = () => {
       gsap.to(button, {
-        scale: 1.05,
-        y: -3,
+        scale: 1.0,
+        y: 0,
         duration: 0.3,
         ease: 'power2.out'
       });
