@@ -8,6 +8,7 @@ import Section7 from '../components/sections/home/Section7';
 import Section8 from '../components/sections/home/Section8';
 import Section9 from '../components/sections/home/Section9';
 import Section10 from '../components/sections/home/Section10';
+import Section11 from '../components/sections/home/Section11';
 import styles from '../components/sections/home/shared.module.css';
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
       <div className={styles.container}>
         <Section1 />
         <Section2 />
+        <Section11 />
         <Section3 />
         {/* <Section4 /> */}
         <Section5 />

@@ -1,0 +1,138 @@
+.marqueeSection {
+  position: fixed;
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  height: 400px;
+  overflow: hidden;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marqueeContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.marqueeTrack {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  height: 120px;
+}
+
+.marqueeTrack.center {
+  opacity: 0.7;
+  transform: scale(0.9);
+}
+
+.marqueeContent {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  will-change: transform;
+}
+
+.marqueeTrack.reverse .marqueeContent {
+  will-change: transform;
+}
+
+.marqueeItem {
+  flex-shrink: 0;
+  margin: 0 4rem;
+  opacity: 0.9;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.marqueeImage {
+  height: 120px;
+  width: auto;
+  filter: drop-shadow(0 12px 60px rgba(255, 255, 255, 0.2));
+  transition: filter 0.3s ease;
+}
+
+.marqueeTrack.paused .marqueeContent,
+.marqueeTrack.reverse.paused .marqueeContent {
+  transform: none;
+}
+
+.marqueeSection::before,
+.marqueeSection::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.marqueeSection::before {
+  left: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
+  filter: blur(30px);
+}
+
+.marqueeSection::after {
+  right: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.15) 100%);
+  filter: blur(30px);
+}
+
+
+@media (max-width: 768px) {
+  .marqueeSection {
+    height: 280px;
+  }
+  
+  .marqueeTrack {
+    height: 90px;
+  }
+  
+  .marqueeItem {
+    margin: 0 3rem;
+  }
+  
+  .marqueeImage {
+    height: 80px;
+  }
+  
+  .marqueeSection::before,
+  .marqueeSection::after {
+    width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .marqueeSection {
+    height: 220px;
+  }
+  
+  .marqueeTrack {
+    height: 70px;
+  }
+  
+  .marqueeItem {
+    margin: 0 2.5rem;
+  }
+  
+  .marqueeImage {
+    height: 65px;
+  }
+  
+  .marqueeSection::before,
+  .marqueeSection::after {
+    width: 150px;
+  }
+}
