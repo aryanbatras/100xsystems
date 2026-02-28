@@ -1,0 +1,45 @@
+.animatedCard {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.animatedCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  transition: left 0.5s;
+  pointer-events: none;
+}
+
+.animatedCard:hover::before {
+  left: 100%;
+}
+
+.lift {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.scale {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.tilt {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.glow {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

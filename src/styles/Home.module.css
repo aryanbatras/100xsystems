@@ -1140,6 +1140,31 @@
   }
 }
 
+/* GSAP SplitText Animations */
+.line {
+  overflow: hidden;
+  display: block;
+}
+
+.word {
+  display: inline-block;
+  transform-origin: center center;
+}
+
+.char {
+  display: inline-block;
+  transform-origin: center center;
+  font-kerning: none;
+  text-rendering: optimizeSpeed;
+}
+
+/* Responsive text animation adjustments */
+@media (max-width: 768px) {
+  .char {
+    transform-origin: center center;
+  }
+}
+
 @media (max-width: 480px) {
   .container {
     padding: 0 16px;
