@@ -10,6 +10,7 @@ import AnimatedTechGrid from '../components/animated/AnimatedTechGrid';
 import AnimatedTitle from '../components/animated/AnimatedTitle';
 import AnimatedDescription from '../components/animated/AnimatedDescription';
 import InteractiveButton from '../components/animated/InteractiveButton';
+import SystemsThinkingCinematic from '../components/systems/SystemsThinkingCinematic';
 import styles from '../styles/Home.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -20,79 +21,25 @@ export default function Home() {
       <div className={styles.container}>
         <RubikVideoShowcase />
         
-        <AnimatedSection animationType="fadeInUp" stagger={0.2}>
-          <section className={styles.rubiksSection}>
-            <div className={styles.container}>
-              <AnimatedTitle variant="section" className={styles.sectionTitle}>Systems Thinking in Engineering</AnimatedTitle>
-              <AnimatedDescription variant="featured" delay={0.2} className={styles.description}>
-                Like a Rubik's Cube, software systems appear simple but hide immense complexity. 
-                Most developers focus on one aspect—building features—without understanding how 
-                all components work together to create robust, scalable solutions.
-              </AnimatedDescription>
-              
-              <div className={styles.rubiksInsights}>
-                <AnimatedCard hoverEffect="tilt" className={styles.insightItem}>
-                  <div className={styles.insightNumber}>01</div>
-                  <div className={styles.insightContent}>
-                    <AnimatedTitle variant="insight" delay={0.1} className={styles.insightTitle}>Pattern Recognition</AnimatedTitle>
-                    <AnimatedDescription variant="subtle" delay={0.3} className={styles.insightText}>
-                      Expert engineers recognize architectural patterns instantly, applying proven solutions 
-                      to complex problems rather than reinventing approaches.
-                    </AnimatedDescription>
-                  </div>
-                </AnimatedCard>
-                <AnimatedCard hoverEffect="tilt" className={styles.insightItem}>
-                  <div className={styles.insightNumber}>02</div>
-                  <div className={styles.insightContent}>
-                    <AnimatedTitle variant="insight" delay={0.15} className={styles.insightTitle}>System Interconnections</AnimatedTitle>
-                    <AnimatedDescription variant="subtle" delay={0.35} className={styles.insightText}>
-                      Understanding how changes in one component affect others. Frontend decisions impact 
-                      backend design, which influences deployment and monitoring strategies.
-                    </AnimatedDescription>
-                  </div>
-                </AnimatedCard>
-                <AnimatedCard hoverEffect="tilt" className={styles.insightItem}>
-                  <div className={styles.insightNumber}>03</div>
-                  <div className={styles.insightContent}>
-                    <AnimatedTitle variant="insight" delay={0.2} className={styles.insightTitle}>Algorithmic Thinking</AnimatedTitle>
-                    <AnimatedDescription variant="subtle" delay={0.4} className={styles.insightText}>
-                      Every system needs well-defined algorithms for data flow, state management, 
-                      and decision logic. Clear processes lead to predictable, maintainable systems.
-                    </AnimatedDescription>
-                  </div>
-                </AnimatedCard>
-                <AnimatedCard hoverEffect="tilt" className={styles.insightItem}>
-                  <div className={styles.insightNumber}>04</div>
-                  <div className={styles.insightContent}>
-                    <AnimatedTitle variant="insight" delay={0.25} className={styles.insightTitle}>Practice Over Theory</AnimatedTitle>
-                    <AnimatedDescription variant="subtle" delay={0.45} className={styles.insightText}>
-                      Systems thinking is developed through hands-on experience. Building, breaking, 
-                      and fixing real systems teaches what theory alone cannot.
-                    </AnimatedDescription>
-                  </div>
-                </AnimatedCard>
-              </div>
+        <SystemsThinkingCinematic />
 
-              <AnimatedSection animationType="fadeInUp" delay={0.8}>
-                <div className={styles.rubiksConclusion}>
-                  <div className={styles.conclusionContent}>
-                    <div className={styles.conclusionText}>
-                      <AnimatedTitle variant="insight" delay={0.1} className={styles.conclusionTitle}>From Complexity to Clarity</AnimatedTitle>
-                      <AnimatedDescription variant="featured" delay={0.3} className={styles.description}>
-                        100xEngineers learn to see the complete system—understanding trade-offs, 
-                        anticipating consequences, and architecting solutions that scale. 
-                        They don't just solve problems; they understand the underlying principles 
-                        that make systems work reliably.
-                      </AnimatedDescription>
-                    </div>
-                    <div className={styles.conclusionAnimation}>
-                      <CubeSmall />
-                    </div>
-                  </div>
-                </div>
-              </AnimatedSection>
+        <AnimatedSection animationType="fadeInUp" delay={0.8}>
+          <div className={styles.rubiksConclusion}>
+            <div className={styles.conclusionContent}>
+              <div className={styles.conclusionText}>
+                <AnimatedTitle variant="insight" delay={0.1} className={styles.conclusionTitle}>Systems Clarity</AnimatedTitle>
+                <AnimatedDescription variant="featured" delay={0.3} className={styles.description}>
+                  100xEngineers learn to see the complete system—understanding trade-offs, 
+                  anticipating consequences, and architecting solutions that scale. 
+                  They don't just solve problems; they understand the underlying principles 
+                  that make systems work reliably.
+                </AnimatedDescription>
+              </div>
+              <div className={styles.conclusionAnimation}>
+                <CubeSmall />
+              </div>
             </div>
-          </section>
+          </div>
         </AnimatedSection>
 
         <VideoShowcase />
@@ -275,8 +222,8 @@ export default function Home() {
               </div>
               <AnimatedSection animationType="fadeInRight" delay={0.6}>
                 <div className={styles.modernText}>
-                  <AnimatedTitle variant="modern" delay={0.1} className={styles.modernTitle}>Modern Engineering Stack</AnimatedTitle>
-                  <AnimatedDescription variant="featured" delay={0.3} className={styles.modernDescription}>
+                  <AnimatedTitle variant="modern" delay={0.5} className={styles.modernTitle}>Modern Engineering Stack</AnimatedTitle>
+                  <AnimatedDescription variant="featured" delay={0.7} className={styles.modernDescription}>
                     Stay ahead with cutting-edge technologies and practices that define modern software engineering. 
                     From microservices to serverless, from containers to orchestration.
                   </AnimatedDescription>
