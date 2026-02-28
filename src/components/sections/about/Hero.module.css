@@ -1,0 +1,115 @@
+/* Hero Section Styles */
+.heroSection {
+  text-align: center;
+  margin-bottom: 160px;
+}
+
+.heroContent {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.heroLeft {
+  display: flex;
+  justify-content: center;
+}
+
+.heroRight {
+  text-align: left;
+}
+
+.heroPoints {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.heroPoint {
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0px;
+}
+
+.pointTitle {
+  font-size: 24px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 16px;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+
+.pointText {
+  font-size: 18px;
+  color: #bbbbbb;
+  line-height: 1.7;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+}
+
+.title {
+  font-size: clamp(48px, 8vw, 72px);
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 24px;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.subtitle {
+  font-size: clamp(24px, 4vw, 30px);
+  color: #cccccc;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 60px;
+  font-weight: 200;
+  letter-spacing: 0.02em;
+}
+
+.heroImage {
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 1024px) {
+  .heroContent {
+    grid-template-columns: 1fr;
+    gap: 60px;
+    text-align: center;
+  }
+  
+  .heroRight {
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroSection {
+    margin-bottom: 120px;
+  }
+  
+  .heroContent {
+    gap: 40px;
+  }
+  
+  .heroPoints {
+    gap: 30px;
+    margin-top: 30px;
+  }
+  
+  .heroPoint {
+    padding: 20px;
+  }
+  
+  .title {
+    margin-bottom: 16px;
+  }
+  
+  .subtitle {
+    margin-bottom: 40px;
+  }
+}

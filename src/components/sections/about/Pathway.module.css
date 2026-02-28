@@ -1,0 +1,117 @@
+/* Pathway Section */
+.pathwaySection {
+  margin-bottom: 120px;
+  padding: 80px 40px;
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.03) 0%, rgba(0, 0, 0, 0) 100%);
+  border-radius: 16px;
+}
+
+.pathwayHeader {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.pathwayIllustration {
+  margin: 40px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.sectionIllustration {
+  border-radius: 12px;
+  opacity: 0.8;
+}
+
+.pathwayStages {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.stage {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.stage:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.stageNumber {
+  font-size: 48px;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  color: #ffff00;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.stageContent {
+  flex: 1;
+}
+
+.stageTitle {
+  font-size: 20px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 12px;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+
+.stageDesc {
+  font-size: 16px;
+  color: #bbbbbb;
+  line-height: 1.6;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+.sectionTitle {
+  font-size: clamp(36px, 5vw, 48px);
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 40px;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  text-align: center;
+  line-height: 1.1;
+}
+
+@media (max-width: 1024px) {
+  .pathwayStages {
+    grid-template-columns: 1fr;
+  }
+  
+  .pathwaySection {
+    padding: 60px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pathwaySection {
+    margin-bottom: 80px;
+    padding: 40px 20px;
+  }
+  
+  .stage {
+    padding: 20px;
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  
+  .stageNumber {
+    font-size: 36px;
+  }
+}

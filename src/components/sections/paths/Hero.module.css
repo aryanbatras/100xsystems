@@ -1,0 +1,100 @@
+/* Hero Section Styles - Full Screen Cinematic */
+.heroSection {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+
+.heroBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.heroBackgroundVideo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  object-fit: cover;
+  opacity: 1;
+}
+
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.6) 100%);
+  z-index: 1;
+}
+
+.heroContent {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 40px;
+}
+
+.heroTextContent {
+  text-align: center;
+}
+
+.title {
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 24px;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.subtitle {
+  font-size: clamp(20px, 3vw, 32px);
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 20px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.heroDescription {
+  font-size: clamp(16px, 2.5vw, 20px);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.7;
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .heroContent {
+    top: 25%;
+    padding: 0 20px;
+  }
+  
+  .title {
+    margin-bottom: 16px;
+  }
+  
+  .subtitle {
+    margin-bottom: 16px;
+  }
+}

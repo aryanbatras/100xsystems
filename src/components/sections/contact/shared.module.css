@@ -1,0 +1,57 @@
+/* Shared styles for contact page sections */
+.page {
+  min-height: 100vh;
+  background: #000000;
+  color: #ffffff;
+  font-family: var(--font-optima);
+  font-weight: 300;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  padding-top: 120px;
+  padding-bottom: 120px;
+  min-height: 100vh;
+}
+
+.contactContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 120px;
+  margin-bottom: 100px;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 32px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+  }
+
+  .contactContent {
+    grid-template-columns: 1fr;
+    gap: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 24px;
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 16px;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .contactContent {
+    gap: 60px;
+  }
+}

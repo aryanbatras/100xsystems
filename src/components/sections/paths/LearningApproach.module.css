@@ -1,0 +1,150 @@
+/* Approach Section Styles */
+.approachSection {
+  margin-bottom: 120px;
+  padding: 80px;
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.03) 0%, rgba(0, 0, 0, 0) 100%);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.approachBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.approachBackgroundImage {
+  object-fit: cover;
+  opacity: 0.08;
+  mix-blend-mode: screen;
+}
+
+.approachContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.approachHeader {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.sectionSubtitle {
+  font-size: 20px;
+  color: #bbbbbb;
+  margin-top: 20px;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+.sectionTitle {
+  font-size: clamp(36px, 5vw, 48px);
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 40px;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  text-align: center;
+  line-height: 1.1;
+}
+
+.approachGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px;
+  margin-bottom: 80px;
+}
+
+.approachBlock {
+  text-align: center;
+  padding: 40px 30px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.approachBlock:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 0, 0.1);
+  transform: translateY(-5px);
+}
+
+.approachIcon {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.approachIcon img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.approachTitle {
+  font-size: 24px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 20px;
+  color: #ffff00;
+  letter-spacing: 0.01em;
+}
+
+.approachDescription {
+  text-align: left;
+}
+
+.approachDescription p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #aaaaaa;
+  margin-bottom: 16px;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+.approachDescription p:last-child {
+  margin-bottom: 0;
+}
+
+.approachDescription strong {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+@media (max-width: 1024px) {
+  .approachGrid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .approachSection {
+    padding: 60px 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .approachSection {
+    padding: 40px 20px;
+    margin-bottom: 80px;
+  }
+  
+  .approachHeader {
+    margin-bottom: 60px;
+  }
+  
+  .approachBlock {
+    padding: 30px 20px;
+  }
+  
+  .approachTitle {
+    font-size: 20px;
+  }
+}

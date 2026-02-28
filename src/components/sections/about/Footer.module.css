@@ -1,0 +1,32 @@
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 60px 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footerText {
+  font-size: 24px;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 12px;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.footerSubtext {
+  font-size: 16px;
+  color: #aaaaaa;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 40px 20px;
+  }
+  
+  .footerText {
+    font-size: 20px;
+  }
+}

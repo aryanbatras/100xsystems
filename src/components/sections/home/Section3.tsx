@@ -1,13 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-import styles from '../../styles/Home.module.css';
+import styles from './Section3.module.css';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const VideoShowcase = () => {
+export default function Section3() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const video1Ref = useRef<HTMLVideoElement>(null);
   const video2Ref = useRef<HTMLVideoElement>(null);
@@ -23,7 +23,6 @@ const VideoShowcase = () => {
     const videos = [video1Ref.current, video2Ref.current, video3Ref.current];
     const titles = [title1Ref.current, title2Ref.current, title3Ref.current];
 
-    // Set initial states
     videos.forEach((video, index) => {
       if (video) {
         gsap.set(video, { 
@@ -43,7 +42,6 @@ const VideoShowcase = () => {
       }
     });
 
-    // Create simple scroll-triggered animations
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
@@ -55,7 +53,6 @@ const VideoShowcase = () => {
       },
     });
 
-    // Video 1 entrance - circle expands first, then text appears
     tl.to(videos[0], { 
       clipPath: 'circle(100vw at 50% 50%)', 
       duration: 2
@@ -66,10 +63,8 @@ const VideoShowcase = () => {
       duration: 1
     }, '-=0.5');
 
-    // Hold for a bit
     tl.to({}, { duration: 0.5 });
 
-    // Video 1 to Video 2 transition - circle appears first, then fade happens
     tl.to(videos[1], { 
       opacity: 1,
       clipPath: 'circle(30px at 50% 50%)',
@@ -94,10 +89,8 @@ const VideoShowcase = () => {
       duration: 1
     }, '-=0.5');
 
-    // Hold for a bit
     tl.to({}, { duration: 0.5 });
 
-    // Video 2 to Video 3 transition - circle appears first, then fade happens
     tl.to(videos[2], { 
       opacity: 1,
       clipPath: 'circle(30px at 50% 50%)',
@@ -122,10 +115,8 @@ const VideoShowcase = () => {
       duration: 1
     }, '-=0.5');
 
-    // Final hold with beautiful ending animation
     tl.to({}, { duration: 1 });
     
-    // Beautiful ending animation
     tl.to(videos[2], { 
       clipPath: 'circle(20px at 50% 50%)', 
       duration: 2,
@@ -146,7 +137,6 @@ const VideoShowcase = () => {
 
   return (
     <div ref={sectionRef} className={styles.videoShowcaseFullWidth}>
-      {/* Video 1 */}
       <video
         ref={video1Ref}
         className={styles.videoCircularMask}
@@ -158,7 +148,6 @@ const VideoShowcase = () => {
         <source src="/videos/abstract-light-color-animation-shapes-laptop-google-deepmind.mp4" type="video/mp4" />
       </video>
       
-      {/* Video 2 */}
       <video
         ref={video2Ref}
         className={styles.videoCircularMask}
@@ -170,7 +159,6 @@ const VideoShowcase = () => {
         <source src="/videos/abstract-light-color-files-tasks-animation-google-deepmind.mp4" type="video/mp4" />
       </video>
       
-      {/* Video 3 */}
       <video
         ref={video3Ref}
         className={styles.videoCircularMask}
@@ -184,31 +172,26 @@ const VideoShowcase = () => {
 
       <div className={styles.videoOverlay}></div>
 
-      {/* Title 1 */}
       <div ref={title1Ref} className={styles.videoShowcaseContent}>
         <h2 className={styles.videoShowcaseTitle}>From Developer to Systems Engineer</h2>
         <p className={styles.videoShowcaseDescription}>
-          Most developers learn technologies quickly but miss the systems perspective. We teach you to understand the complete software lifecycle - from frontend architecture to deployment patterns. Transform how you think about code and become the engineer who builds scalable, maintainable systems that stand the test of time.
+          Most developers learn technologies quickly but miss systems perspective. We teach you to understand complete software lifecycle - from frontend architecture to deployment patterns. Transform how you think about code and become engineer who builds scalable, maintainable systems that stand test of time.
         </p>
       </div>
 
-      {/* Title 2 */}
       <div ref={title2Ref} className={styles.videoShowcaseContent}>
         <h2 className={styles.videoShowcaseTitle}>Depth Over Breadth Learning</h2>
         <p className={styles.videoShowcaseDescription}>
-          Stop collecting certificates and start building real expertise. Our structured learning paths focus on mastering fundamentals that never become obsolete. Learn one language deeply, understand systems architecture, and gain the engineering judgment that separates senior engineers from junior developers.
+          Stop collecting certificates and start building real expertise. Our structured learning paths focus on mastering fundamentals that never become obsolete. Learn one language deeply, understand systems architecture, and gain engineering judgment that separates senior engineers from junior developers.
         </p>
       </div>
 
-      {/* Title 3 */}
       <div ref={title3Ref} className={styles.videoShowcaseContent}>
         <h2 className={styles.videoShowcaseTitle}>Build Systems That Matter</h2>
         <p className={styles.videoShowcaseDescription}>
-          AI can generate code, but only engineers understand systems. Learn to make architectural decisions, solve complex problems, and lead technical teams. Join the 100xEngineer cohort where we build real projects, understand constraints, and develop the engineering mindset that creates career opportunities.
+          AI can generate code, but only engineers understand systems. Learn to make architectural decisions, solve complex problems, and lead technical teams. Join 100xEngineer cohort where we build real projects, understand constraints, and develop engineering mindset that creates career opportunities.
         </p>
       </div>
     </div>
   );
-};
-
-export default VideoShowcase;
+}

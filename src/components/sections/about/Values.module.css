@@ -1,0 +1,100 @@
+/* Values Section */
+.valuesSection {
+  margin-bottom: 120px;
+  padding: 80px 40px;
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.03) 0%, rgba(0, 0, 0, 0) 100%);
+  border-radius: 16px;
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.valueCard {
+  text-align: center;
+  padding: 40px 30px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.valueCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(255, 255, 0, 0.1);
+  border-color: rgba(255, 255, 0, 0.2);
+}
+
+.valueIcon {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.valueIcon img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.valueTitle {
+  font-size: 24px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 16px;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+
+.valueDescription {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #e0e0e0;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+.sectionTitle {
+  font-size: clamp(36px, 5vw, 48px);
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 60px;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  text-align: center;
+  line-height: 1.1;
+}
+
+@media (max-width: 1024px) {
+  .valuesGrid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .valuesSection {
+    padding: 60px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .valuesSection {
+    margin-bottom: 80px;
+    padding: 40px 20px;
+  }
+  
+  .valueCard {
+    padding: 30px 20px;
+  }
+  
+  .valueTitle {
+    font-size: 20px;
+  }
+  
+  .sectionTitle {
+    margin-bottom: 40px;
+  }
+}

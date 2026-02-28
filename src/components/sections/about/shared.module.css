@@ -1,0 +1,73 @@
+/* Shared styles for about page sections */
+.page {
+  min-height: 100vh;
+  background: transparent;
+  color: #ffffff;
+  font-family: var(--font-optima);
+  font-weight: 300;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  padding-top: 120px;
+  padding-bottom: 120px;
+  min-height: 100vh;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sectionTitle {
+  font-size: clamp(36px, 5vw, 48px);
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 40px;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  text-align: center;
+  line-height: 1.1;
+}
+
+.blockTitle {
+  font-size: 24px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 16px;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+
+.blockText {
+  font-size: 18px;
+  color: #bbbbbb;
+  line-height: 1.7;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 20px;
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+  
+  .sectionTitle {
+    font-size: clamp(28px, 6vw, 36px);
+    margin-bottom: 30px;
+  }
+  
+  .blockTitle {
+    font-size: 20px;
+  }
+  
+  .blockText {
+    font-size: 16px;
+  }
+}

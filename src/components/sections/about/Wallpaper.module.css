@@ -1,0 +1,116 @@
+/* Wallpaper Section */
+.wallpaperSection {
+  margin-bottom: 120px;
+  padding: 80px 40px;
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.03) 0%, rgba(0, 0, 0, 0) 100%);
+  border-radius: 16px;
+}
+
+.wallpaperContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.wallpaperText {
+  text-align: left;
+}
+
+.wallpaperTitle {
+  font-size: clamp(36px, 5vw, 48px);
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 30px;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.wallpaperDescription {
+  font-size: 18px;
+  color: #e0e0e0;
+  line-height: 1.7;
+  margin-bottom: 40px;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+.wallpaperPoints {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.wallpaperPoint {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.wallpaperPoint:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 0, 0.1);
+}
+
+.pointIcon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.pointLabel {
+  font-size: 16px;
+  color: #ffffff;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+.wallpaperImageWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.wallpaperImage {
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 1024px) {
+  .wallpaperContent {
+    grid-template-columns: 1fr;
+    gap: 60px;
+    text-align: center;
+  }
+  
+  .wallpaperText {
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .wallpaperSection {
+    padding: 60px 20px;
+    margin-bottom: 80px;
+  }
+  
+  .wallpaperContent {
+    gap: 40px;
+  }
+  
+  .wallpaperTitle {
+    margin-bottom: 24px;
+  }
+  
+  .wallpaperDescription {
+    margin-bottom: 30px;
+  }
+}

@@ -1,0 +1,69 @@
+.wallpaperSection {
+  margin-bottom: 200px;
+  padding: 100px 0;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 0px;
+}
+
+.wallpaperContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.wallpaperTitle {
+  font-size: 42px;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 30px;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.wallpaperDescription {
+  font-size: 20px;
+  color: #e0e0e0;
+  line-height: 1.7;
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  padding: 1rem;
+}
+
+.wallpaperImageWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.wallpaperImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 1024px) {
+  .wallpaperContent {
+    grid-template-columns: 1fr;
+    gap: 60px;
+    text-align: center;
+  }
+
+  .wallpaperText {
+    padding: 0;
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .wallpaperDescription {
+    font-size: 18px;
+    text-align: left;
+  }
+}

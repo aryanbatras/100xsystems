@@ -1,0 +1,236 @@
+/* Path Cards Section */
+.pathsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 40px;
+  margin-bottom: 120px;
+  padding: 0 20px;
+}
+
+/* Path Card Styles */
+.pathCard {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pathCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(255, 255, 0, 0.1);
+}
+
+/* Path Card Background and Creative Edges */
+.pathCardBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.pathCardBackgroundImage {
+  object-fit: cover;
+  opacity: 0.15;
+  transition: opacity 0.3s ease;
+}
+
+.pathCard:hover .pathCardBackgroundImage {
+  opacity: 0.25;
+}
+
+.pathCardContent {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%);
+  border-radius: 16px;
+  padding: 32px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Creative Edge Effects */
+.pathCard::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    rgba(255, 255, 0, 0.3) 0%, 
+    transparent 25%, 
+    transparent 75%, 
+    rgba(255, 255, 0, 0.3) 100%);
+  border-radius: 16px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.pathCard:hover::before {
+  opacity: 1;
+}
+
+.pathCard::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.05) 0%, 
+    transparent 50%, 
+    rgba(255, 255, 255, 0.02) 100%);
+  border-radius: 16px;
+  z-index: 0;
+}
+
+.pathNumber {
+  font-size: 48px;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  color: #ffff00;
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+
+.pathTitle {
+  font-size: 28px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 8px;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.pathDuration {
+  font-size: 16px;
+  color: #aaaaaa;
+  margin-bottom: 20px;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+.pathImageWrapper {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.pathImage {
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.pathDescription {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #e0e0e0;
+  margin-bottom: 24px;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+.pathFeatures {
+  margin-bottom: 24px;
+}
+
+.featureItem {
+  font-size: 14px;
+  color: #cccccc;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+.featureItem:last-child {
+  margin-bottom: 0;
+}
+
+.techSection {
+  margin-bottom: 24px;
+}
+
+.techTitle {
+  font-size: 16px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.techStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.techItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  font-size: 12px;
+  color: #ffffff;
+}
+
+.techIcon {
+  width: 16px;
+  height: 16px;
+  color: #ffffff;
+}
+
+.techName {
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+.pathButton {
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .pathsGrid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pathsGrid {
+    padding: 0 10px;
+    gap: 20px;
+  }
+  
+  .pathCardContent {
+    padding: 24px;
+  }
+  
+  .pathNumber {
+    font-size: 36px;
+  }
+  
+  .pathTitle {
+    font-size: 24px;
+  }
+  
+  .pathDescription {
+    font-size: 15px;
+  }
+  
+  .featureItem {
+    font-size: 13px;
+  }
+}

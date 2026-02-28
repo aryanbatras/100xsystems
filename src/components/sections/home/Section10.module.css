@@ -1,0 +1,103 @@
+.finalCtaSection {
+  margin-bottom: 100px;
+  padding: 80px 40px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.finalCtaContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.finalCtaImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0px;
+  box-shadow: 0 35px 70px rgba(0, 0, 0, 0.6);
+}
+
+.finalCtaTitle {
+  font-size: 48px;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 30px;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.finalCtaDescription {
+  font-size: 20px;
+  color: #e0e0e0;
+  line-height: 1.7;
+  margin-bottom: 50px;
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.finalCtaButtons {
+  display: flex;
+  gap: 24px;
+}
+
+.primaryButton {
+  display: inline-block;
+  padding: 16px 40px;
+  background: #ffffff;
+  color: #000000;
+  font-family: var(--font-axle);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  border-radius: 0px;
+}
+
+.secondaryButton {
+  display: inline-block;
+  padding: 16px 40px;
+  background: transparent;
+  color: #ffffff;
+  font-family: var(--font-axle);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0px;
+}
+
+@media (max-width: 1024px) {
+  .finalCtaContent {
+    grid-template-columns: 1fr;
+    gap: 60px;
+    text-align: center;
+  }
+
+  .finalCtaButtons {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .finalCtaSection {
+    padding: 60px 24px;
+  }
+
+  .finalCtaDescription {
+    font-size: 18px;
+    text-align: left;
+  }
+}
