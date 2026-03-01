@@ -144,7 +144,7 @@ const PathCard: React.FC<PathCardProps> = ({
 
   return (
     <AnimatedCard hoverEffect="lift" className={styles.pathCard} data-delay={delay} onClick={onClick}>
-      <div className={styles.pathCardBackground}>
+      <div className={styles.pathCardBackground} data-speed="0.85">
         <Image
           src={getBackgroundImage()}
           alt={`${title} Background`}
@@ -209,11 +209,11 @@ export default function PathCards() {
 
   return (
     <>
-      <AnimatedSection animationType="scaleIn" stagger={0.2}>
+      <AnimatedSection animationType="fadeInUp" stagger={0.2}>
         <section className={styles.pathsSection}>
           <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>Choose Your Learning Path</h2>
-            <p className={styles.sectionSubtitle}>
+            <h2 className={styles.sectionTitle} data-speed="0.90">Choose Your Learning Path</h2>
+            <p className={styles.sectionSubtitle} data-speed="0.90">
               Three carefully crafted paths to take you from beginner to engineering mastery. 
               Each path builds upon the previous one, creating a complete learning journey.
             </p>

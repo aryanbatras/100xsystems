@@ -8,12 +8,12 @@ export default function Outcomes() {
   return (
     <AnimatedSection animationType="fadeInUp" delay={0.2}>
       <section className={styles.outcomesSection}>
-        <AnimatedTitle variant="section" className={styles.sectionTitle}>
+        <AnimatedTitle variant="section" className={styles.sectionTitle} data-speed="0.95">
           Engineering Outcomes
         </AnimatedTitle>
         
         <div className={styles.outcomesGrid}>
-          <AnimatedCard hoverEffect="tilt" className={styles.outcomeCard}>
+          <AnimatedCard hoverEffect="tilt" className={styles.outcomeCard} data-speed="0.98">
             <div className={styles.outcomeIcon}>
               <Image
                 src="/assets/illustrations/undraw_proud-coder_bivp.svg"
@@ -29,7 +29,7 @@ export default function Outcomes() {
             </div>
           </AnimatedCard>
 
-          <AnimatedCard hoverEffect="tilt" className={styles.outcomeCard}>
+          <AnimatedCard hoverEffect="tilt" className={styles.outcomeCard} data-speed="0.99">
             <div className={styles.outcomeIcon}>
               <Image
                 src="/assets/illustrations/undraw_web-development_f0tp.svg"
@@ -45,7 +45,7 @@ export default function Outcomes() {
             </div>
           </AnimatedCard>
 
-          <AnimatedCard hoverEffect="tilt" className={styles.outcomeCard}>
+          <AnimatedCard hoverEffect="tilt" className={styles.outcomeCard} data-speed="1.0">
             <div className={styles.outcomeIcon}>
               <Image
                 src="/assets/illustrations/undraw_sharing-knowledge_2jx3.svg"

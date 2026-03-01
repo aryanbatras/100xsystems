@@ -13,6 +13,7 @@
   justify-content: center;
   padding: 40px;
   overflow-y: auto;
+  /* margin-top: 60rem; */
 }
 
 /* Popup Content - Same as PathCard */
@@ -25,8 +26,8 @@
   border: 0px solid rgba(255, 255, 255, 0.03);
   max-width: 900px;
   width: 100%;
-  /* margin-top: 50rem; */
-  overflow: hidden;
+  margin-top: 50rem;
+  overflow: visible;
 }
 
 /* Popup Background - Same as PathCard */
@@ -246,7 +247,7 @@
   
   .popupContent {
     padding: 30px;
-    /* margin-top: 50rem; */
+    margin-top: 50rem;
   }
   
   .popupTitle {

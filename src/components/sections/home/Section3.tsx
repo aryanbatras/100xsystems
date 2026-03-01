@@ -50,9 +50,9 @@ export default function Section3() {
       scrollTrigger: {
         trigger: section,
         start: 'top top',
-        end: '+=600%',
+        end: '+=300%',
         pin: true,
-        scrub: 5,
+        scrub: 1.8,
         pinSpacing: true,
       },
     });

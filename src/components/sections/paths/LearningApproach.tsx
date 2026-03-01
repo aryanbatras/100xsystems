@@ -6,16 +6,16 @@ import styles from './LearningApproach.module.css';
 export default function LearningApproach() {
   return (
     <AnimatedSection animationType="fadeInRight" delay={0.3}>
-      <section className={styles.approachSection}>
+      <section className={styles.approachSection} data-speed="0.9">
         <div className={styles.approachContent}>
-          <div className={styles.approachHeader}>
+          <div className={styles.approachHeader} data-speed="0.95">
             <AnimatedTitle variant="section" className={styles.sectionTitle}>
               Learning Approach
             </AnimatedTitle>
           </div>
           
           <div className={styles.approachGrid}>
-            <div className={styles.approachBlock}>
+            <div className={styles.approachBlock} data-speed="0.98">
               <div className={styles.approachIcon}>
                 <Image
                   src="/assets/illustrations/undraw_continuous-learning_a1ld.svg"
@@ -32,7 +32,7 @@ export default function LearningApproach() {
               </div>
             </div>
 
-            <div className={styles.approachBlock}>
+            <div className={styles.approachBlock} data-speed="0.99">
               <div className={styles.approachIcon}>
                 <Image
                   src="/assets/illustrations/undraw_listening-to-podcasts_j0hm.svg"
@@ -49,7 +49,7 @@ export default function LearningApproach() {
               </div>
             </div>
 
-            <div className={styles.approachBlock}>
+            <div className={styles.approachBlock} data-speed="1.0">
               <div className={styles.approachIcon}>
                 <Image
                   src="/assets/illustrations/undraw_sharing-knowledge_2jx3.svg"
