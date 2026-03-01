@@ -1,0 +1,60 @@
+.guidelinesSection {
+  padding: 4rem 0;
+}
+
+.sectionTitle {
+  font-size: 2.5rem;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 3rem;
+  letter-spacing: -0.02em;
+}
+
+.guidelines {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.guideline {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.guideline:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--accent-yellow);
+}
+
+.guidelineTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  font-family: var(--font-samsung-sharp);
+  color: var(--accent-yellow);
+  margin-bottom: 1rem;
+}
+
+.guidelineText {
+  font-size: 1rem;
+  color: #cccccc;
+  line-height: 1.6;
+  font-family: var(--font-optima);
+  font-weight: 300;
+}
+
+@media (max-width: 768px) {
+  .guidelines {
+    padding: 0 1rem;
+  }
+  
+  .guideline {
+    padding: 1.5rem;
+  }
+}
