@@ -1,5 +1,7 @@
 .rubiksConclusion {
-  background: transparent;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   border: none;
   border-radius: 0;
   padding: 80px 60px;

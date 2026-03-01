@@ -22,8 +22,8 @@ const geistSans = Geist({
 export default function About() {
   return (
     <div className={`${geistSans.variable} ${styles.page}`}>
+      <AboutHero />
       <div className={styles.container}>
-        <AboutHero />
         <Innovation />
         <Founder />
         <Systems />

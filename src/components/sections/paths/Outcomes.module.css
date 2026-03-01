@@ -3,6 +3,11 @@
   margin-bottom: 120px;
   padding: 80px 40px;
   text-align: center;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: none;
+  border-radius: 0;
 }
 
 .outcomesGrid {
@@ -26,17 +31,16 @@
 
 .outcomeCard {
   padding: 40px 30px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: none;
+  border-radius: 0;
   transition: all 0.3s ease;
   text-align: center;
 }
 
 .outcomeCard:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(255, 255, 0, 0.1);
-  border-color: rgba(255, 255, 0, 0.2);
+  box-shadow: none;
 }
 
 .outcomeIcon {

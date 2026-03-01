@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
 import styles from './Hero.module.css';
+import { useVideoAutoplay } from '@/hooks/useVideoAutoplay';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -24,6 +25,8 @@ export default function PathsHero() {
     const title = titleRef.current;
     const subtitle = subtitleRef.current;
     const parallax = parallaxRef.current;
+
+    useVideoAutoplay(videoRef);
 
     const handleUserInteraction = () => {
       if (video) {

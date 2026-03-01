@@ -3,6 +3,11 @@
   margin-bottom: 120px;
   padding: 80px 40px;
   position: relative;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: none;
+  border-radius: 0;
 }
 
 .approachContent {

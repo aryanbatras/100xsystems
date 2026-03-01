@@ -2,7 +2,10 @@
 .corePrinciplesSection {
   margin-bottom: 120px;
   padding: 80px 40px;
-  background: linear-gradient(135deg, rgba(250, 204, 21, 0.03) 0%, rgba(0, 0, 0, 0) 100%);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: none;
   border-radius: 0;
 }
 
@@ -32,11 +35,15 @@
 .principleCard {
   padding: 40px 30px;
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: none;
   border-radius: 0;
-  text-align: center;
+  transition: all 0.3s ease;
 }
 
+.principleCard:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+}
 
 .principleIcon {
   margin-bottom: 24px;
@@ -45,12 +52,11 @@
   align-items: center;
   width: 80px;
   height: 80px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 0, 0.1);
   border-radius: 0;
   margin-left: auto;
   margin-right: auto;
 }
-
 
 .iconImage {
   opacity: 0.9;

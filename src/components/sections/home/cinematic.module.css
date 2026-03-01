@@ -4,8 +4,13 @@
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
   padding: 120px 0;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: none;
+  border-radius: 0;
   overflow: hidden;
+  margin-bottom: 60px;
 }
 
 .cinematicContainer {

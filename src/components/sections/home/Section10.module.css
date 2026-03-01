@@ -1,6 +1,11 @@
 .ctaSection {
   padding: 120px 0;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: none;
+  border-radius: 0;
+  margin: 0 40px;
 }
 
 .ctaContainer {

@@ -2,8 +2,11 @@
 .pathwaySection {
   margin-bottom: 120px;
   padding: 80px 40px;
-  background: linear-gradient(135deg, rgba(250, 204, 21, 0.03) 0%, rgba(0, 0, 0, 0) 100%);
-  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: none;
+  border-radius: 0;
 }
 
 .pathwayHeader {
@@ -18,7 +21,7 @@
 }
 
 .sectionIllustration {
-  border-radius: 12px;
+  border-radius: 0;
   opacity: 0.8;
 }
 
@@ -36,14 +39,13 @@
   gap: 20px;
   padding: 30px;
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+  border: none;
+  border-radius: 0;
   transition: all 0.3s ease;
 }
 
 .stage:hover {
   background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 0, 0.1);
   transform: translateY(-2px);
 }
 

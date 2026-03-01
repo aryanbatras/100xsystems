@@ -1,6 +1,23 @@
 .modernSection {
   margin-bottom: 200px;
   padding: 100px 0;
+  position: relative;
+}
+
+.modernSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: none;
+  border-radius: 0;
+  z-index: 1;
 }
 
 .modernContent {
@@ -10,6 +27,8 @@
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
+  position: relative;
+  z-index: 2;
 }
 
 .modernImageWrapper {
@@ -22,6 +41,8 @@
   height: 350px;
   border-radius: 0px;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: 3;
 }
 
 .modernImage {
@@ -38,6 +59,8 @@
   margin-bottom: 30px;
   color: #ffffff;
   letter-spacing: -0.02em;
+  position: relative;
+  z-index: 3;
 }
 
 .modernDescription {
@@ -51,12 +74,16 @@
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
+  position: relative;
+  z-index: 3;
 }
 
 .techGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+  position: relative;
+  z-index: 3;
 }
 
 .techItem {
@@ -79,8 +106,8 @@
   }
 
   .modernText {
-    padding: 0;
-    text-align: center;
+    position: relative;
+    z-index: 3;
   }
 
   .techGrid {

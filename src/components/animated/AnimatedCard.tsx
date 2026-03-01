@@ -5,7 +5,7 @@ import styles from '../../styles/AnimatedCard.module.css';
 interface AnimatedCardProps {
   children: ReactNode;
   className?: string;
-  hoverEffect?: 'lift' | 'scale' | 'tilt' | 'glow';
+  hoverEffect?: 'lift' | 'scale' | 'tilt' | 'glow' | 'none';
   onClick?: () => void;
 }
 
@@ -53,6 +53,8 @@ const AnimatedCard = ({
             duration: 0.3,
             ease: 'power2.out'
           });
+          break;
+        case 'none':
           break;
       }
     };

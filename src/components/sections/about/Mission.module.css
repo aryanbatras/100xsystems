@@ -2,6 +2,11 @@
 .missionSection {
   margin-bottom: 120px;
   padding: 80px 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: none;
+  border-radius: 0;
 }
 
 .videoSideBySide {
@@ -15,7 +20,7 @@
 
 .videoLeft {
   position: relative;
-  border-radius: 12px;
+  border-radius: 0;
   overflow: hidden;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
 }

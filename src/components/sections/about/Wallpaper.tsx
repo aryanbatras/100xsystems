@@ -16,17 +16,17 @@ export default function Wallpaper() {
           </p>
           <div className={styles.wallpaperPoints}>
             <div className={styles.wallpaperPoint}>
-              <span className={styles.pointIcon}>🔧</span>
+              {/* <span className={styles.pointIcon}>🔧</span> */}
               <span className={styles.pointLabel}>
                 Systematic Thinking
               </span>
             </div>
             <div className={styles.wallpaperPoint}>
-              <span className={styles.pointIcon}>⚡</span>
+              {/* <span className={styles.pointIcon}>⚡</span> */}
               <span className={styles.pointLabel}>Performance First</span>
             </div>
             <div className={styles.wallpaperPoint}>
-              <span className={styles.pointIcon}>🛡️</span>
+              {/* <span className={styles.pointIcon}>🛡️</span> */}
               <span className={styles.pointLabel}>Security Mindful</span>
             </div>
           </div>

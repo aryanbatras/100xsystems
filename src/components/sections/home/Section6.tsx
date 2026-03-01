@@ -8,7 +8,7 @@ export default function Section6() {
   return (
     <AnimatedSection animationType="fadeInLeft" delay={0.2}>
       <section className={styles.illustrationSection} data-speed="1.03">
-        <div className={sharedStyles.videoSideBySide}>
+        <div className={`${sharedStyles.videoSideBySide} ${styles.illustrationContent}`}>
           <div className={sharedStyles.videoLeft} data-speed="0.98">
             <video autoPlay muted loop playsInline className={sharedStyles.videoCard}>
               <source src="/videos/abstract-light-color-animation-shapes-laptop-google-deepmind.mp4" type="video/mp4" />

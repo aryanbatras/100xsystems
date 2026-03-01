@@ -1,7 +1,11 @@
 .cinematicSection {
   position: relative;
   padding: 120px 0;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: none;
+  border-radius: 0;
   overflow: hidden;
 }
 
@@ -51,17 +55,16 @@
   text-align: center;
   padding: 40px 20px;
   background: rgba(255, 255, 255, 0.02);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 0;
+  backdrop-filter: blur(20px);
   transition: all 0.3s ease;
 }
 
 .cinematicFeature:hover {
   transform: translateY(-10px);
   background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: none;
 }
 
 .cinematicFeatureIcon {

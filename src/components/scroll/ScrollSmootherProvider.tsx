@@ -10,17 +10,17 @@ if (typeof window !== 'undefined') {
 export default function ScrollSmootherProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const smoother = ScrollSmoother.create({
-        wrapper: "#smooth-wrapper",
-        content: "#smooth-content",
-        smooth: 3,
-        effects: true,
-        smoothTouch: 0.5
-      });
+      // const smoother = ScrollSmoother.create({
+      //   wrapper: "#smooth-wrapper",
+      //   content: "#smooth-content",
+      //   smooth: 3,
+      //   effects: true,
+      //   smoothTouch: 0.25
+      // });
 
-      return () => {
-        smoother.kill();
-      };
+      // return () => {
+      //   smoother.kill();
+      // };
     }
   }, []);
 

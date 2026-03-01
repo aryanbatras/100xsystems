@@ -143,7 +143,7 @@ const PathCard: React.FC<PathCardProps> = ({
   };
 
   return (
-    <AnimatedCard hoverEffect="glow" className={styles.pathCard} data-delay={delay} onClick={onClick}>
+    <AnimatedCard hoverEffect="lift" className={styles.pathCard} data-delay={delay} onClick={onClick}>
       <div className={styles.pathCardBackground}>
         <Image
           src={getBackgroundImage()}
