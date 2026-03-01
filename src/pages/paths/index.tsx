@@ -1,11 +1,11 @@
 import PathsHero from "../../components/sections/paths/Hero";
-import PathsVideoShowcase from "../../components/sections/paths/VideoShowcase";
 import LearningApproach from "../../components/sections/paths/LearningApproach";
-import PathCards from "../../components/sections/paths/PathCards";
 import Journey from "../../components/sections/paths/Journey";
+import PathCards from "../../components/sections/paths/PathCards";
 import Outcomes from "../../components/sections/paths/Outcomes";
 import CTA from "../../components/sections/paths/CTA";
 import styles from "../../components/sections/paths/shared.module.css";
+import PathsVideoShowcase from "../../components/sections/paths/VideoShowcase";
 
 export default function Paths() {
   return (
@@ -13,12 +13,12 @@ export default function Paths() {
       <PathsHero />
       <div className={styles.container}>
         <div className={styles.heroSpacer}></div>
+        <PathCards />
         <PathsVideoShowcase />
         <LearningApproach />
-        <PathCards />
         <Journey />
         <Outcomes />
-        <CTA />
+        {/* <CTA /> */}
       </div>
     </div>
   );

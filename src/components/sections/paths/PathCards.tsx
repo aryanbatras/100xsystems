@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { 
   SiJavascript, 
   SiTypescript, 
@@ -42,6 +43,7 @@ import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedCard from '../../animated/AnimatedCard';
 import InteractiveButton from '../../animated/InteractiveButton';
 import Image from 'next/image';
+import PathDetailsPopup from './PathDetailsPopup';
 import styles from './PathCards.module.css';
 
 const techIcons = {
@@ -114,6 +116,7 @@ interface PathCardProps {
   features: string[];
   technologies: string[];
   delay?: number;
+  onClick?: () => void;
 }
 
 const PathCard: React.FC<PathCardProps> = ({ 
@@ -123,21 +126,9 @@ const PathCard: React.FC<PathCardProps> = ({
   description, 
   features, 
   technologies,
-  delay = 0 
+  delay = 0,
+  onClick 
 }) => {
-  const getPathImage = () => {
-    switch(title) {
-      case 'Foundation':
-        return '/assets/wallpaper/3d-granular-cube-gray-bg-center.jpg';
-      case 'Advanced Systems':
-        return '/assets/carousel/lucid-origin_Wide_cinematic_composition_showing_architectural_evolution_from_left_to_right._O-0.jpg';
-      case 'Engineering Mastery':
-        return '/assets/wallpaper/hand-one-finger-rubik-cube-holded-like-pro.jpg';
-      default:
-        return '/assets/wallpaper/portrait-small-cubes-connected-by-lines-3d-closer-look-red-color.jpg';
-    }
-  };
-
   const getBackgroundImage = () => {
     switch(title) {
       case 'Foundation':
@@ -152,7 +143,7 @@ const PathCard: React.FC<PathCardProps> = ({
   };
 
   return (
-    <AnimatedCard hoverEffect="lift" className={styles.pathCard} data-delay={delay}>
+    <AnimatedCard hoverEffect="glow" className={styles.pathCard} data-delay={delay} onClick={onClick}>
       <div className={styles.pathCardBackground}>
         <Image
           src={getBackgroundImage()}
@@ -165,15 +156,6 @@ const PathCard: React.FC<PathCardProps> = ({
         <div className={styles.pathNumber}>{number}</div>
         <h3 className={styles.pathTitle}>{title}</h3>
         <div className={styles.pathDuration}>{duration}</div>
-        <div className={styles.pathImageWrapper}>
-          <Image
-            src={getPathImage()}
-            alt={title}
-            width={300}
-            height={150}
-            className={styles.pathImage}
-          />
-        </div>
         <div className={styles.pathDescription}>{description}</div>
       
       <div className={styles.pathFeatures}>
@@ -208,9 +190,36 @@ const PathCard: React.FC<PathCardProps> = ({
 };
 
 export default function PathCards() {
+  const [selectedPath, setSelectedPath] = useState<{
+    number: string;
+    title: string;
+    duration: string;
+    description: string;
+    features: string[];
+    technologies: string[];
+  } | null>(null);
+
+  const handleCardClick = (pathData: typeof selectedPath) => {
+    setSelectedPath(pathData);
+  };
+
+  const handleClosePopup = () => {
+    setSelectedPath(null);
+  };
+
   return (
-    <AnimatedSection animationType="scaleIn" stagger={0.2}>
-      <section className={styles.pathsGrid}>
+    <>
+      <AnimatedSection animationType="scaleIn" stagger={0.2}>
+        <section className={styles.pathsSection}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Choose Your Learning Path</h2>
+            <p className={styles.sectionSubtitle}>
+              Three carefully crafted paths to take you from beginner to engineering mastery. 
+              Each path builds upon the previous one, creating a complete learning journey.
+            </p>
+          </div>
+          
+          <section className={styles.pathsGrid}>
         <PathCard
           number="01"
           title="Foundation"
@@ -231,6 +240,26 @@ export default function PathCards() {
             'redis', 'nginx', 'express', 'django', 'flask', 'fastapi'
           ]}
           delay={0.1}
+          onClick={() => handleCardClick({
+            number: "01",
+            title: "Foundation",
+            duration: "3-6 Months",
+            description: "Master one programming language deeply and understand the complete software lifecycle. Build the engineering mindset that separates developers from systems engineers.",
+            features: [
+              "Deep Language Mastery (JavaScript/TypeScript)",
+              "System Design Fundamentals",
+              "Data Structures & Algorithms in Practice",
+              "Full-Stack Development (Frontend + Backend)",
+              "Version Control & Collaborative Development",
+              "Testing & Quality Assurance",
+              "Basic DevOps & Deployment"
+            ],
+            technologies: [
+              'javascript', 'typescript', 'react', 'nodejs',
+              'python', 'git', 'linux', 'mongodb', 'postgresql',
+              'redis', 'nginx', 'express', 'django', 'flask', 'fastapi'
+            ]
+          })}
         />
 
         <PathCard
@@ -253,6 +282,26 @@ export default function PathCards() {
             'webpack', 'vite', 'jest', 'cypress', 'graphql'
           ]}
           delay={0.2}
+          onClick={() => handleCardClick({
+            number: "02",
+            title: "Advanced Systems",
+            duration: "6-12 Months",
+            description: "Design and build scalable, production-ready systems. Learn advanced patterns, security engineering, and cloud infrastructure that powers modern applications.",
+            features: [
+              "Advanced System Architecture",
+              "Microservices & Distributed Systems",
+              "Cloud Native Development",
+              "Security Engineering & Best Practices",
+              "Performance Optimization",
+              "Advanced DevOps & CI/CD",
+              "Database Design & Optimization"
+            ],
+            technologies: [
+              'docker', 'kubernetes', 'aws', 'gcp', 'terraform',
+              'prometheus', 'grafana', 'jenkins', 'kafka', 'elasticsearch',
+              'webpack', 'vite', 'jest', 'cypress', 'graphql'
+            ]
+          })}
         />
 
         <PathCard
@@ -273,8 +322,34 @@ export default function PathCards() {
             'figma', 'jira', 'notion', 'slack', 'eraser'
           ]}
           delay={0.3}
+          onClick={() => handleCardClick({
+            number: "03",
+            title: "Engineering Mastery",
+            duration: "12+ Months",
+            description: "Lead complex system design, mentor engineering teams, and make architectural decisions that impact millions. Become the engineer who can build anything.",
+            features: [
+              "Enterprise Architecture Design",
+              "Team Leadership & Technical Mentoring",
+              "Technology Strategy & Decision Making",
+              "System Scalability & Reliability",
+              "Product Thinking & Business Acumen",
+              "Innovation & Research",
+              "Career Development & Networking"
+            ],
+            technologies: [
+              'figma', 'jira', 'notion', 'slack', 'eraser'
+            ]
+          })}
         />
-      </section>
-    </AnimatedSection>
+        </section>
+        </section>
+      </AnimatedSection>
+      
+      <PathDetailsPopup 
+        isOpen={selectedPath !== null}
+        onClose={handleClosePopup}
+        path={selectedPath}
+      />
+    </>
   );
 }

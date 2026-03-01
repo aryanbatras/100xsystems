@@ -4,6 +4,7 @@ import Innovation from "../../components/sections/about/Innovation";
 import Founder from "../../components/sections/about/Founder";
 import Systems from "../../components/sections/about/Systems";
 import Mission from "../../components/sections/about/Mission";
+import CorePrinciples from "../../components/sections/about/CorePrinciples";
 import Philosophy from "../../components/sections/about/Philosophy";
 import Pathway from "../../components/sections/about/Pathway";
 import Difference from "../../components/sections/about/Difference";
@@ -21,22 +22,21 @@ const geistSans = Geist({
 export default function About() {
   return (
     <div className={`${geistSans.variable} ${styles.page}`}>
-      <main className={styles.container}>
-        <div className={styles.content}>
-          <AboutHero />
-          <Innovation />
-          <Founder />
-          <Systems />
-          <Mission />
-          <Philosophy />
-          <Pathway />
-          <Difference />
-          <AboutCTA />
-          <Wallpaper />
-          <Values />
-          <AboutFooter />
-        </div>
-      </main>
+      <div className={styles.container}>
+        <AboutHero />
+        <Innovation />
+        <Founder />
+        <Systems />
+        <Mission />
+        <CorePrinciples />
+        <Philosophy />
+        <Pathway />
+        <Difference />
+        <AboutCTA />
+        <Wallpaper />
+        <Values />
+        <AboutFooter />
+      </div>
     </div>
   );
 }

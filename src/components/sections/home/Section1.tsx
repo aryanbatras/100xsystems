@@ -5,9 +5,11 @@ import cinematicStyles from './cinematic.module.css';
 import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
+import { useVideoAutoplay } from '../../../hooks/useVideoAutoplay';
 
 export default function Section1() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  useVideoAutoplay(videoRef);
 
   return (
     <>

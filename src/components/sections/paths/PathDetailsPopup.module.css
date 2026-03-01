@@ -1,0 +1,278 @@
+/* Popup Overlay */
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(20px);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+/* Popup Content - Same as PathCard */
+.popupContent {
+  position: relative;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0px;
+  padding: 40px;
+  backdrop-filter: blur(50px);
+  border: 0px solid rgba(255, 255, 255, 0.03);
+  max-width: 900px;
+  width: 100%;
+  margin-top: 50rem;
+  overflow: hidden;
+}
+
+/* Popup Background - Same as PathCard */
+.popupContent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3;
+  border-radius: 8px;
+  z-index: -1;
+}
+
+.popupContent.foundation::before {
+  background-image: url('/assets/wallpaper/portrait-small-cubes-connected-by-lines-3d-cube-shape-systems.jpg');
+}
+
+.popupContent.advanced::before {
+  background-image: url('/assets/wallpaper/modern-dotted-sphere-with-red-glowing-ring-within-bg-black.jpg');
+}
+
+.popupContent.mastery::before {
+  background-image: url('/assets/wallpaper/rubik-cube-portrait-right-side-getting-broken-in-pieces-on-left-side.jpg');
+}
+
+/* Close Button */
+.closeButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  z-index: 10;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Popup Content Wrapper */
+.popupInnerContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Popup Header - Same as PathCard */
+.popupHeader {
+  margin-bottom: 24px;
+}
+
+.popupNumber {
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-samsung-sharp);
+  color: #666666;
+  margin-bottom: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.popupTitle {
+  font-size: 28px;
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 8px;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.popupDuration {
+  font-size: 15px;
+  color: #cccccc;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* Popup Description - Same as PathCard */
+.popupDescription {
+  margin-bottom: 24px;
+}
+
+.popupDescription p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #bbbbbb;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+/* Popup Sections */
+.popupSection {
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 16px;
+  color: #ffffff;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Features List - Same as PathCard */
+.featuresList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.featuresList .featureItem {
+  font-size: 15px;
+  color: #aaaaaa;
+  margin-bottom: 12px;
+  padding: 12px 0;
+  background: transparent;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+  line-height: 1.6;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.featuresList .featureItem:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.featuresList .featureItem:last-child {
+  margin-bottom: 0;
+}
+
+/* Tech Grid - Same as PathCard */
+.techGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 32px;
+}
+
+.techGrid .techItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  color: #bbbbbb;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+/* Popup Actions */
+.popupActions {
+  display: flex;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.primaryButton {
+  flex: 1;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 16px;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.primaryButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.secondaryButton {
+  padding: 16px 24px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 16px;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.secondaryButton:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .popupOverlay {
+    padding: 20px;
+    align-items: flex-start;
+  }
+  
+  .popupContent {
+    padding: 30px;
+    margin-top: 50rem;
+  }
+  
+  .popupTitle {
+    font-size: 24px;
+  }
+  
+  .popupDescription p {
+    font-size: 15px;
+  }
+  
+  .featuresList .featureItem {
+    font-size: 14px;
+    padding: 10px 0;
+  }
+  
+  .techGrid .techItem {
+    font-size: 13px;
+    gap: 8px;
+  }
+  
+  .popupActions {
+    flex-direction: column;
+  }
+  
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+}

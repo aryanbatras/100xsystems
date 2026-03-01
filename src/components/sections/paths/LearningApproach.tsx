@@ -1,6 +1,5 @@
 import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
-import AnimatedDescription from '../../animated/AnimatedDescription';
 import Image from 'next/image';
 import styles from './LearningApproach.module.css';
 
@@ -8,22 +7,11 @@ export default function LearningApproach() {
   return (
     <AnimatedSection animationType="fadeInRight" delay={0.3}>
       <section className={styles.approachSection}>
-        <div className={styles.approachBackground}>
-          <Image
-            src="/assets/wallpaper/eye-with-code-reflection.png"
-            alt="Code Reflection Background"
-            fill
-            className={styles.approachBackgroundImage}
-          />
-        </div>
         <div className={styles.approachContent}>
           <div className={styles.approachHeader}>
             <AnimatedTitle variant="section" className={styles.sectionTitle}>
-              Revolutionary Learning Approach
+              Learning Approach
             </AnimatedTitle>
-            <AnimatedDescription variant="subtle" className={styles.sectionSubtitle}>
-              We're not just another learning platform. We're fundamentally changing how engineers acquire knowledge.
-            </AnimatedDescription>
           </div>
           
           <div className={styles.approachGrid}>
@@ -32,8 +20,8 @@ export default function LearningApproach() {
                 <Image
                   src="/assets/illustrations/undraw_continuous-learning_a1ld.svg"
                   alt="Article-Based Learning"
-                  width={60}
-                  height={60}
+                  width={48}
+                  height={48}
                 />
               </div>
               <h3 className={styles.approachTitle}>Article-Based Excellence</h3>
@@ -49,8 +37,8 @@ export default function LearningApproach() {
                 <Image
                   src="/assets/illustrations/undraw_listening-to-podcasts_j0hm.svg"
                   alt="Podcast Learning"
-                  width={60}
-                  height={60}
+                  width={48}
+                  height={48}
                 />
               </div>
               <h3 className={styles.approachTitle}>Podcast-Style Learning</h3>
@@ -66,8 +54,8 @@ export default function LearningApproach() {
                 <Image
                   src="/assets/illustrations/undraw_sharing-knowledge_2jx3.svg"
                   alt="Flexible Learning"
-                  width={60}
-                  height={60}
+                  width={48}
+                  height={48}
                 />
               </div>
               <h3 className={styles.approachTitle}>Enjoyable & Flexible</h3>

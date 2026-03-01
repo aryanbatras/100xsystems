@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import styles from './Section3.module.css';
+import { useVideoAutoplay } from '../../../hooks/useVideoAutoplay';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -16,6 +17,10 @@ export default function Section3() {
   const title2Ref = useRef<HTMLDivElement>(null);
   const title3Ref = useRef<HTMLDivElement>(null);
 
+  useVideoAutoplay(video1Ref);
+  useVideoAutoplay(video2Ref);
+  useVideoAutoplay(video3Ref);
+
   useEffect(() => {
     if (!sectionRef.current) return;
 
@@ -29,7 +34,6 @@ export default function Section3() {
           clipPath: 'circle(30px at 50% 50%)',
           opacity: index === 0 ? 1 : 0
         });
-        video.play();
       }
     });
 

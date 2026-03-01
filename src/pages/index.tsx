@@ -17,7 +17,7 @@ export default function Home() {
       <div className={styles.container}>
         <Section1 />
         <Section2 />
-        <Section11 />
+        {/* <Section11 /> */}
         <Section3 />
         {/* <Section4 /> */}
         <Section5 />

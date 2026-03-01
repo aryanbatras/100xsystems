@@ -1,5 +1,5 @@
 .nav {
-  height: 8vh;
+  height: 5vh;
   width: 100vw;
   background: transparent;
   backdrop-filter: blur(25px) saturate(180%);
@@ -42,7 +42,7 @@
 }
 
 .titleImage{
-  height: 2.75rem;
+  height: 2rem;
   width: auto;
   object-fit: contain;
   pointer-events: none;
@@ -59,7 +59,7 @@
 }
 
 .link {
-  font-size: 1.75rem;
+  font-size: 1.25rem;
   text-decoration: none;
   font-family: var(--font-axle);
   color: white;

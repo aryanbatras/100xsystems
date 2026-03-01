@@ -1,69 +1,63 @@
+import { useRef } from 'react';
 import Image from 'next/image';
 import styles from './Hero.module.css';
+import cinematicStyles from './cinematic.module.css';
+import AnimatedSection from '../../animated/AnimatedSection';
+import AnimatedTitle from '../../animated/AnimatedTitle';
+import AnimatedDescription from '../../animated/AnimatedDescription';
+import { useVideoAutoplay } from '../../../hooks/useVideoAutoplay';
 
 export default function AboutHero() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  useVideoAutoplay(videoRef);
+
   return (
-    <div className={styles.heroSection}>
-      <div className={styles.heroContent}>
-        <div className={styles.heroLeft}>
-          <Image
-            src="/assets/illustrations/undraw_programmer_raqr.svg"
-            alt="Systems Engineering"
-            width={400}
-            height={300}
-            priority
-            className={styles.heroImage}
-          />
-        </div>
+    <>
+      <div className={styles.heroSection}>
+        <video
+          ref={videoRef}
+          className={styles.heroVideoBackground}
+          autoPlay
+          muted
+          loop
+          playsInline
+        >
+          <source src="/videos/black-boxes-advanced-abstract-animation-google-deepmind.mp4" type="video/mp4" />
+        </video>
         
-        <div className={styles.heroRight}>
-          <h1 className={styles.title}>
-            100x Systems
-          </h1>
-          
-          <p className={styles.subtitle}>
-            From Developer to Systems Engineer
-          </p>
-
-          <div className={styles.heroPoints}>
-            <div className={styles.heroPoint}>
-              <h3 className={styles.pointTitle}>Systems vs Isolated Technologies</h3>
-              <p className={styles.pointText}>
-                Most engineers learn technologies quickly and start building projects. 
-                But systems knowledge expands your perspective and makes you mature as a software engineer. 
-                Understanding how any technology works as a system reveals its impact across every domain.
-              </p>
-            </div>
-
-            <div className={styles.heroPoint}>
-              <h3 className={styles.pointTitle}>Love for Engineering</h3>
-              <p className={styles.pointText}>
-                This isn't just about getting a job. It's about having genuine love for engineering 
-                and understanding how things are made at a deep level. This website is my adventure and exploration of systems thinking, 
-                documenting insights so other engineers don't have to spend years discovering them.
-              </p>
-            </div>
-
-            <div className={styles.heroPoint}>
-              <h3 className={styles.pointTitle}>Real Engineering vs AI Tools</h3>
-              <p className={styles.pointText}>
-                AI can help develop things faster, but you must understand the system first 
-                to use tools effectively. AI can't build complex systems without deep system understanding. 
-                Real engineers build things themselves because they've explored similar domains with such depth.
-              </p>
-            </div>
-
-            <div className={styles.heroPoint}>
-              <h3 className={styles.pointTitle}>The Learning Gap</h3>
-              <p className={styles.pointText}>
-                Experienced engineers don't have time for 50-hour courses. They want to 
-                skim through notes and major topics quickly. With AI spreading false information, there's need for 
-                authentic, factual content that bridges scattered knowledge into coherent systems understanding.
+        <div className={styles.heroOverlay}></div>
+        
+        <div className={styles.heroContent}>
+          <div className={styles.heroMain}>
+            <div className={styles.heroHeader}>
+              <h1 className={styles.title}>
+                100x Systems
+              </h1>
+              
+              <p className={styles.subtitle}>
+                From Developer to Systems Engineer
               </p>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <AnimatedSection animationType="fadeInUp" delay={0.4}>
+        <div className={cinematicStyles.cinematicSection}>
+          <div className={cinematicStyles.cinematicContainer}>
+            <div className={cinematicStyles.cinematicHeader}>
+              <AnimatedTitle variant="hero" delay={0.1} className={cinematicStyles.cinematicTitle}>
+                Engineering Systems That Matter
+              </AnimatedTitle>
+              <AnimatedDescription variant="featured" delay={0.3} className={cinematicStyles.cinematicDescription}>
+                In a world of rapid technological change, systems thinking remains timeless. 
+                While frameworks come and go, understanding how systems work—how components interact, 
+                how failures cascade, how performance scales—separates senior engineers from junior developers.
+              </AnimatedDescription>
+            </div>
+          </div>
+        </div>
+      </AnimatedSection>
+    </>
   );
 }
