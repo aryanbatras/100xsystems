@@ -22,7 +22,7 @@
   opacity: 1;
 }
 
-.rubikVideoOverlay {
+/* .rubikVideoOverlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -36,7 +36,7 @@
     rgba(0, 0, 0, 0.4) 100%
   );
   z-index: 1;
-}
+} */
 
 .rubikVideoContent {
   position: absolute;

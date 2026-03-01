@@ -6,7 +6,7 @@
   border-radius: 0;
   padding: 80px 60px;
   max-width: 1200px;
-  margin: 60px auto 0 auto;
+  margin: 0 auto 0 auto;
   overflow: hidden;
   box-shadow: none;
 }
@@ -15,7 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 80px;
+  /* gap: 80px; */
   position: relative;
 }
 

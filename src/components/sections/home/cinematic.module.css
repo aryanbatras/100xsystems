@@ -10,7 +10,7 @@
   border: none;
   border-radius: 0;
   overflow: hidden;
-  margin-bottom: 60px;
+  /* margin-bottom: 60px; */
 }
 
 .cinematicContainer {
@@ -131,9 +131,9 @@
     padding: 0 20px;
   }
   
-  .cinematicHeader {
+  /* .cinematicHeader {
     margin-bottom: 60px;
-  }
+  } */
   
   .cinematicContent {
     padding: 30px 20px 20px;

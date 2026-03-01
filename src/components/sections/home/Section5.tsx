@@ -7,7 +7,7 @@ import styles from './Section5.module.css';
 export default function Section5() {
   return (
     <AnimatedSection animationType="fadeInUp" stagger={0.1}>
-      <section className={styles.ctaSection}>
+      <section className={styles.ctaSection} data-speed="0.4">
         <AnimatedTitle variant="cta" delay={0.1} className={styles.ctaTitle}>Ready to Become an Engineer?</AnimatedTitle>
         <AnimatedDescription variant="featured" delay={0.3} className={styles.ctaText}>
           Join thousands who've transformed their careers through our structured learning pathways

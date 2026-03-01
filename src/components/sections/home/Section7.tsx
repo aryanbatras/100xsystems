@@ -7,7 +7,7 @@ import styles from './Section7.module.css';
 export default function Section7() {
   return (
     <AnimatedSection animationType="fadeInLeft" delay={0.2}>
-      <section className={styles.wallpaperSection} data-speed="0.8">
+      <section className={styles.wallpaperSection} data-speed="0.5">
         <AnimatedSection animationType="fadeInRight" delay={0.4}>
           <div className={styles.wallpaperContent}>
             <div className={styles.wallpaperText}>
@@ -18,7 +18,7 @@ export default function Section7() {
                 and ability to make critical trade-offs that impact millions of users.
               </AnimatedDescription>
             </div>
-            <div className={styles.wallpaperImageWrapper} data-speed="0.5">
+            <div className={styles.wallpaperImageWrapper} data-speed="0.8">
               <Image
                 src="/assets/wallpaper/portrait-small-cubes-connected-by-lines-3d-cube-shape-systems.jpg"
                 alt="Connected Systems"

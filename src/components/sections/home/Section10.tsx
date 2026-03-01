@@ -7,10 +7,9 @@ import styles from './Section10.module.css';
 
 export default function Section10() {
   return (
-    <AnimatedSection animationType="fadeInUp" delay={0.2}>
-      <section className={styles.ctaSection}>
+      <section className={styles.ctaSection} data-speed="0.7">
         <div className={styles.ctaContainer}>
-          <div className={styles.leftCard}>
+          <div className={styles.leftCard} data-speed="0.9">
             <div className={styles.cardImage}>
               <Image
                 src="/assets/wallpaper/hand-one-finger-rubik-cube-holded-like-pro.jpg"
@@ -76,6 +75,5 @@ export default function Section10() {
           </div>
         </div>
       </section>
-    </AnimatedSection>
   );
 }

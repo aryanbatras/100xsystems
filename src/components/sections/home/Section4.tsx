@@ -7,7 +7,7 @@ import styles from './Section4.module.css';
 export default function Section4() {
   return (
     <AnimatedSection animationType="scaleIn" stagger={0.15}>
-      <section className={styles.featuresSection} data-speed="0.9">
+      <section className={styles.featuresSection} data-speed="0.6">
         <AnimatedTitle variant="section" className={styles.sectionTitle}>What You'll Master</AnimatedTitle>
         <div className={styles.featuresGrid}>
           <AnimatedCard hoverEffect="lift" className={styles.featureCard} data-lag="0.3">

@@ -7,9 +7,9 @@ import styles from './Section9.module.css';
 export default function Section9() {
   return (
     <AnimatedSection animationType="rotateIn" delay={0.2}>
-      <section className={styles.modernSection} data-speed="1.02">
+      <section className={styles.modernSection} data-speed="0.8">
         <div className={styles.modernContent}>
-          <div className={styles.modernImageWrapper} data-speed="0.95">
+          <div className={styles.modernImageWrapper} data-speed="0.85">
             <div className={styles.videoLeft}>
               <video autoPlay muted loop playsInline className={styles.videoCard}>
                 <source src="/videos/black-glasses-how-does-llm-work-text-thought-video-google-deepmind.mp4" type="video/mp4" />

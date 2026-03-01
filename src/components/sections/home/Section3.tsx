@@ -127,7 +127,7 @@ export default function Section3() {
   }, []);
 
   return (
-    <div ref={sectionRef} className={styles.videoShowcaseFullWidth}>
+    <div ref={sectionRef} className={styles.videoShowcaseFullWidth} data-speed="0.8">
       <video
         ref={video1Ref}
         className={styles.videoCircularMask}

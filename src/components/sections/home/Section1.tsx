@@ -53,17 +53,17 @@ export default function Section1() {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
-        start: '10% top',
-        end: '75% 75%',
-        scrub: 1
+        start: '5% 5%',
+        end: '75% 50%',
+        scrub: 1.8
       }
     });
 
     if (video) {
       tl.to(video, {
-        scale: 1.25,
+        scale: 1.3,
         y: 100,
-        ease: 'easeInOut'
+        ease: 'ease'
       }, 0);
     }
 
@@ -106,14 +106,14 @@ export default function Section1() {
         </div>
       </div>
 
-      <AnimatedSection animationType="fadeInUp" delay={0.4}>
+      <AnimatedSection animationType="fadeInUp" delay={0.3}>
         <div className={cinematicStyles.cinematicSection}>
           <div className={cinematicStyles.cinematicContainer}>
             <div className={cinematicStyles.cinematicHeader}>
               <AnimatedTitle variant="hero" delay={0.1} className={cinematicStyles.cinematicTitle}>
                 Systems Thinking in Engineering
               </AnimatedTitle>
-              <AnimatedDescription variant="featured" delay={0.3} className={cinematicStyles.cinematicDescription}>
+              <AnimatedDescription variant="featured" delay={0.2} className={cinematicStyles.cinematicDescription}>
                 Like a Rubik's Cube, software systems appear simple but hide immense complexity. 
                 Most developers focus on one aspect—building features—without understanding how 
                 all components work together to create robust, scalable solutions.

@@ -187,3 +187,8 @@ a {
 [data-fixed] {
   position: fixed !important;
 }
+
+/* Ensure pinned elements work properly with ScrollSmoother */
+.pin-spacer {
+  pointer-events: none !important;
+}
