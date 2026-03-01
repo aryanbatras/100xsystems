@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
+import InteractiveButton from '../../animated/InteractiveButton';
 import styles from './Section1.module.css';
 import cinematicStyles from './cinematic.module.css';
 import AnimatedSection from '../../animated/AnimatedSection';
@@ -103,6 +104,32 @@ export default function Section1() {
           <p ref={subtitleRef} className={styles.rubikVideoSubtitle}>
             Master Rubik's Cube of Software Engineering
           </p>
+          <div className={styles.ctaButtons}>
+            <InteractiveButton 
+              href="/dashboard" 
+              variant="cta"
+              scrambleText={{
+                hover: "BEGIN MASTERY",
+                speed: 2,
+                chars: "upperCase",
+                revealDelay: 0.1
+              }}
+            >
+              Start Learning
+            </InteractiveButton>
+            <InteractiveButton 
+              href="/paths" 
+              variant="secondary"
+              scrambleText={{
+                hover: "EXPLORE PATHS",
+                speed: 2,
+                chars: "upperCase",
+                revealDelay: 0.1
+              }}
+            >
+              Explore Paths
+            </InteractiveButton>
+          </div>
         </div>
       </div>
 

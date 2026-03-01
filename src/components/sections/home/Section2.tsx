@@ -2,6 +2,7 @@ import AnimatedSection from '../../animated/AnimatedSection';
 import CubeSmall from '../../animation/CubeSmall';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
+import InteractiveButton from '../../animated/InteractiveButton';
 import styles from './Section2.module.css';
 
 export default function Section2() {
@@ -17,6 +18,20 @@ export default function Section2() {
               They don't just solve problems; they understand the underlying principles 
               that make systems work reliably.
             </AnimatedDescription>
+            <div className={styles.ctaContainer}>
+              <InteractiveButton 
+                href="/dashboard" 
+                variant="cta"
+                scrambleText={{
+                  hover: "BEGIN JOURNEY",
+                  speed: 2,
+                  chars: "upperCase",
+                  revealDelay: 0.1
+                }}
+              >
+                Start Your Journey
+              </InteractiveButton>
+            </div>
           </div>
           <div className={styles.conclusionAnimation}>
             <CubeSmall />

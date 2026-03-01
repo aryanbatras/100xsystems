@@ -43,14 +43,17 @@
 }
 
 .link {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--text-secondary);
   text-decoration: none;
-  font-family: var(--font-optima);
-  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.5;
   transition: all 0.3s ease;
   position: relative;
   display: inline-block;
+  padding: 0.25rem 0;
 }
 
 .link::after {
@@ -88,7 +91,8 @@
   }
   
   .link {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
+    padding: 0.2rem 0;
   }
 }
 
