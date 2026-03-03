@@ -1,48 +1,19 @@
 .adminContainer {
   min-height: 100vh;
-  background: #ffffff;
+  background: #000000;
   position: relative;
   z-index: 1;
   padding: 0;
 }
 
 .adminWrapper {
-  max-width: 700px;
+  max-width: 90%;
   margin: 0 auto;
-  background: #ffffff;
+  background: #000000;
   border: none;
   border-radius: 0;
-  padding: 60px 40px;
+  padding: 40px 20px;
   box-shadow: none;
-}
-
-.adminHeader {
-  text-align: left;
-  margin-bottom: 40px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #e1e4e8;
-}
-
-.adminTitle {
-  font-size: 44px;
-  font-weight: 700;
-  color: #292929;
-  margin-bottom: 8px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  line-height: 1.1;
-  letter-spacing: -0.5px;
-}
-
-.adminSubtitle {
-  font-size: 16px;
-  color: #6b7280;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  line-height: 1.4;
-  font-weight: 400;
-}
-
-.adminMain {
-  position: relative;
 }
 
 .loading {
@@ -50,7 +21,7 @@
   align-items: center;
   justify-content: center;
   min-height: 200px;
-  color: #6b7280;
+  color: #9ca3af;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
@@ -60,14 +31,7 @@
   }
   
   .adminWrapper {
-    padding: 40px 20px;
-  }
-  
-  .adminTitle {
-    font-size: 32px;
-  }
-  
-  .adminSubtitle {
-    font-size: 14px;
+    padding: 20px 10px;
+    max-width: 95%;
   }
 }

@@ -2,11 +2,18 @@ import { useState } from "react";
 import dynamic from 'next/dynamic';
 import styles from './Admin.module.css';
 
+// // Dynamically import QuillEditor with SSR disabled
+// const QuillEditor = dynamic(() => import("../editor/QuillEditor"), {
+//   ssr: false,
+//   loading: () => <div className={styles.loading}>Loading editor...</div>
+// });
+
 // Dynamically import QuillEditor with SSR disabled
-const QuillEditor = dynamic(() => import("../editor/QuillEditor"), {
+const CustomQuillEditor = dynamic(() => import("../editor/CustomQuillEditor"), {
   ssr: false,
   loading: () => <div className={styles.loading}>Loading editor...</div>
 });
+
 
 interface AdminProps {
   initialContent?: string;
@@ -28,13 +35,8 @@ export default function Admin({ initialContent = "", initialTitle = "" }: AdminP
   return (
     <div className={styles.adminContainer}>
       <div className={styles.adminWrapper}>
-        <header className={styles.adminHeader}>
-          <h1 className={styles.adminTitle}>New Story</h1>
-          <p className={styles.adminSubtitle}>Share your ideas with the world</p>
-        </header>
-        
         <main className={styles.adminMain}>
-          <QuillEditor 
+          <CustomQuillEditor 
             value={value} 
             onChange={handleChange} 
             title={title}
