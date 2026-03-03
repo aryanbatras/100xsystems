@@ -26,25 +26,49 @@ export default function Terminal({ logs, isVisible, onClear, onClose }: Terminal
     }
   }, [logs, isUserScrolling]);
 
-  const handleScroll = () => {
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     if (terminalRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = terminalRef.current;
+      const delta = e.deltaY;
+      
+      // Update scroll state
       const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
       setIsUserScrolling(!isAtBottom);
+      
+      // Prevent page scroll when terminal has scrollable content
+      const hasScrollableContent = scrollHeight > clientHeight;
+      
+      if (hasScrollableContent) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
     }
   };
 
   const scrollToTop = () => {
     if (terminalRef.current) {
-      terminalRef.current.scrollTop = 0;
+      const currentScrollTop = terminalRef.current.scrollTop;
+      const viewportHeight = terminalRef.current.clientHeight;
+      const newScrollTop = Math.max(0, currentScrollTop - viewportHeight);
+      terminalRef.current.scrollTop = newScrollTop;
       setIsUserScrolling(true);
     }
   };
 
   const scrollToBottom = () => {
     if (terminalRef.current) {
-      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
-      setIsUserScrolling(false);
+      const currentScrollTop = terminalRef.current.scrollTop;
+      const viewportHeight = terminalRef.current.clientHeight;
+      const scrollHeight = terminalRef.current.scrollHeight;
+      const newScrollTop = Math.min(scrollHeight, currentScrollTop + viewportHeight);
+      terminalRef.current.scrollTop = newScrollTop;
+      
+      // Only set isUserScrolling to false if we're actually at the bottom
+      if (newScrollTop >= scrollHeight - viewportHeight - 10) {
+        setIsUserScrolling(false);
+      } else {
+        setIsUserScrolling(true);
+      }
     }
   };
 
@@ -89,8 +113,8 @@ export default function Terminal({ logs, isVisible, onClear, onClose }: Terminal
     <div className={`${styles.terminalContainer} ${isExpanded ? styles.expanded : ''}`}>
       <div className={styles.terminalHeader}>
         <div className={styles.headerLeft}>
-          <div className={styles.terminalIcon}>TERM</div>
-          <div className={styles.terminalTitle}>Publishing Terminal</div>
+          <div className={styles.terminalIcon}>TERMINAL</div>
+          {/* <div className={styles.terminalTitle}>Publishing Terminal</div> */}
           <div className={styles.logCount}>{logs.length} logs</div>
         </div>
         <div className={styles.headerRight}>
@@ -127,28 +151,29 @@ export default function Terminal({ logs, isVisible, onClear, onClose }: Terminal
         </div>
       </div>
       
+      {/* Always Visible Overlay Navigation Buttons */}
+      <div className={styles.scrollOverlay}>
+        <button
+          onClick={scrollToTop}
+          className={styles.scrollButton}
+          title="Scroll to top"
+        >
+          ↑
+        </button>
+        <button
+          onClick={scrollToBottom}
+          className={styles.scrollButton}
+          title="Scroll to bottom"
+        >
+          ↓
+        </button>
+      </div>
+      
       <div 
         ref={terminalRef}
         className={styles.terminalContent}
-        onScroll={handleScroll}
+        onWheel={handleWheel}
       >
-        {/* Always Visible Overlay Navigation Buttons */}
-        <div className={styles.scrollOverlay}>
-          <button
-            onClick={scrollToTop}
-            className={styles.scrollButton}
-            title="Scroll to top"
-          >
-            ↑
-          </button>
-          <button
-            onClick={scrollToBottom}
-            className={styles.scrollButton}
-            title="Scroll to bottom"
-          >
-            ↓
-          </button>
-        </div>
 
         {logs.length === 0 ? (
           <div className={styles.emptyState}>
