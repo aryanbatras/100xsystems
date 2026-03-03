@@ -48,6 +48,30 @@ export default function CustomQuillEditor({
   const { imageQueue } = useImageQueue(mounted);
   const { publishingState, handlePublish, logs, clearLogs } = usePublishing(articleTitle);
   const [isTerminalVisible, setIsTerminalVisible] = useState(false);
+  const [isContainerMode, setIsContainerMode] = useState(true);
+
+  // Handle wheel events for smooth scrolling in editor container
+  const handleEditorWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    // Only handle custom scrolling in container mode
+    if (!isContainerMode) return;
+    
+    const editorContainer = e.currentTarget;
+    const { scrollTop, scrollHeight, clientHeight } = editorContainer;
+    const delta = e.deltaY;
+    
+    // Check if container has scrollable content
+    const hasScrollableContent = scrollHeight > clientHeight;
+    
+    if (hasScrollableContent) {
+      // Prevent page scroll when editor container can scroll
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Manual scroll implementation
+      const newScrollTop = scrollTop + delta;
+      editorContainer.scrollTop = Math.max(0, Math.min(newScrollTop, scrollHeight - clientHeight));
+    }
+  };
 
   // Debounced onChange handler with adaptive delay based on content size
   const debouncedOnChange = useMemo(
@@ -366,15 +390,21 @@ export default function CustomQuillEditor({
         className={styles.titleInput}
       />
 
-      <ReactQuill
-        ref={quillRef}
-        theme="bubble"
-        value={value}
-        onChange={handleTextChange}
-        modules={modules}
-        placeholder={placeholder || " "}
-        style={{ minHeight: "500px" }}
-      />
+      {/* Scrollable Editor Container */}
+      <div 
+        className={`${styles.editorContainer} ${isContainerMode ? styles.containerMode : styles.fullPageMode}`}
+        onWheel={handleEditorWheel}
+      >
+        <ReactQuill
+          ref={quillRef}
+          theme="bubble"
+          value={value}
+          onChange={handleTextChange}
+          modules={modules}
+          placeholder={placeholder || " "}
+          style={{ minHeight: "500px" }}
+        />
+      </div>
 
       <Terminal
         logs={logs}
@@ -416,6 +446,17 @@ export default function CustomQuillEditor({
           </button>
         </div>
       )}
+
+      {/* View Mode Toggle Button */}
+      <div className={styles.viewModeContainer}>
+        <button
+          onClick={() => setIsContainerMode(!isContainerMode)}
+          className={styles.viewModeButton}
+          title={isContainerMode ? "Switch to full page view" : "Switch to container view"}
+        >
+          {isContainerMode ? "FULL PAGE" : "CONTAINER"}
+        </button>
+      </div>
 
       <div className={styles.publishButtonContainer}>
         <button

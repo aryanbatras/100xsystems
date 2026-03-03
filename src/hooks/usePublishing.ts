@@ -55,8 +55,8 @@ export const usePublishing = (articleTitle: string) => {
       log('🚀 Starting publish process...');
       log(`📝 Article title: "${articleTitle}"`);
       
-      // Fix: quillRef.current IS the editor instance, not a wrapper
-      const quill = quillRef.current;
+      // Fix: quillRef.current is the ReactQuill component, need to getEditor() for Quill instance
+      const quill = quillRef.current.getEditor();
       log('✅ Quill editor instance obtained');
       log(`🔍 Quill methods available: ${Object.getOwnPropertyNames(quill).join(', ')}`);
       log('✅ Quill editor instance obtained');
