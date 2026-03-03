@@ -9,8 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@types/lodash": "^4.17.24",
     "browser-image-compression": "^2.0.2",
     "gsap": "^3.14.2",
+    "lodash": "^4.17.23",
     "lucide-react": "^0.575.0",
     "next": "16.1.6",
     "quill": "^1.2.4",

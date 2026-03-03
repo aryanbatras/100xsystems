@@ -177,8 +177,8 @@ export class HtmlConverter {
     let replacedCount = 0;
 
     remainingBlobs.forEach((blob, index) => {
-      if (uploadedImages.length > 0) {
-        const fallbackUrl = uploadedImages[0].publicUrl;
+      if (uploadedImages.length > 0 && uploadedImages[index]) {
+        const fallbackUrl = uploadedImages[index].publicUrl;
         processedHtml = processedHtml.replace(blob, `src="${fallbackUrl}"`);
         replacedCount++;
         log(`🔧 Replaced blob ${index + 1} with: ${fallbackUrl}`, 'info');

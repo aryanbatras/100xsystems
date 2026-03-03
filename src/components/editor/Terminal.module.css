@@ -232,18 +232,19 @@
   display: flex;
   align-items: center;
   margin-top: 8px;
+  font-size: 0.75rem;
 }
 
 .cursorBlink {
   color: #10b981;
   font-weight: bold;
-  animation: cursor 1s infinite;
+  /* animation: cursor 1s infinite; */
 }
 
-@keyframes cursor {
+/* @keyframes cursor {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
-}
+} */
 
 /* Responsive design */
 @media (max-width: 768px) {
