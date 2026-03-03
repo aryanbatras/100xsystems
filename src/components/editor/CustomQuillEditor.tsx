@@ -119,48 +119,13 @@ export default function CustomQuillEditor({
       setIsTerminalVisible(true);
       onSave(quillRef);
     } else if (mode === 'parser' && quillRef.current) {
-      // For parser mode, use the article update logic
+      // For parser mode, use the same publish flow as admin (which works perfectly)
       setIsTerminalVisible(true);
       try {
-        // Get quill instance from ReactQuill component
-        const quill = quillRef.current.getEditor();
-        
-        // Get delta from quill editor
-        const delta = quill.getContents();
-        
-        // Get existing article metadata
-        const slug = articleTitle.toLowerCase()
-          .replace(/[^a-z0-9\s-]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/-+/g, '-')
-          .trim();
-        
-        const existingArticle = await ArticleUpdater.loadExistingArticle(slug);
-        
-        if (existingArticle) {
-          // Use update logic for existing articles
-          const result = await handleUpdate(delta);
-          if (result.success) {
-            log(`✅ Article updated successfully`, 'success');
-          } else {
-            log(`❌ Update failed: ${result.error}`, 'error');
-            // Fallback: try publish if update fails
-            log(`⚠️ Falling back to publish due to update failure`, 'warning');
-            await handlePublish(quillRef);
-          }
-        } else {
-          // Use publish logic for new articles
-          await handlePublish(quillRef);
-        }
+        await handlePublish(quillRef);
+        log(`✅ Parser save completed successfully`, 'success');
       } catch (error) {
-        log(`❌ Error in parser save: ${error}`, 'error');
-        // Fallback: try direct publish if all else fails
-        try {
-          log(`⚠️ Attempting fallback publish`, 'warning');
-          await handlePublish(quillRef);
-        } catch (fallbackError) {
-          log(`❌ Fallback publish also failed: ${fallbackError}`, 'error');
-        }
+        log(`❌ Parser save failed: ${error}`, 'error');
       }
     }
   };

@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const githubToken = process.env.GITHUB_TOKEN;
     const githubRepo = process.env.GITHUB_REPO;
-    const githubOwner = process.env.GITHUB_OWNER;
+    const githubOwner = process.env.GITHUB_USERNAME; // Use USERNAME instead of missing OWNER
 
     // Debug logging
     console.log('🔍 Load HTML API Debug:', {
@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error('❌ Missing GitHub environment variables:', {
         GITHUB_TOKEN: !!githubToken,
         GITHUB_REPO: !!githubRepo,
-        GITHUB_OWNER: !!githubOwner
+         GITHUB_OWNER: !!githubOwner
       });
       return res.status(500).json({ error: 'GitHub configuration missing' });
     }
