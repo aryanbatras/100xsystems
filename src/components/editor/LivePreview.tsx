@@ -5,9 +5,10 @@ interface LivePreviewProps {
   content: string;
   isVisible: boolean;
   onClose: () => void;
+  onRefreshQuill: () => void;
 }
 
-export default function LivePreview({ content, isVisible, onClose }: LivePreviewProps) {
+export default function LivePreview({ content, isVisible, onClose, onRefreshQuill }: LivePreviewProps) {
   const previewRef = useRef<HTMLPreElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -39,6 +40,13 @@ export default function LivePreview({ content, isVisible, onClose }: LivePreview
     setIsExpanded(!isExpanded);
   };
 
+  const handleRefreshQuill = () => {
+    if (onRefreshQuill) {
+      onRefreshQuill();
+      console.log('🔄 Refresh button clicked in Live Preview', 'info');
+    }
+  };
+
   const handleCopyHTML = async () => {
     try {
       await navigator.clipboard.writeText(content);
@@ -54,10 +62,17 @@ export default function LivePreview({ content, isVisible, onClose }: LivePreview
       <div className={styles.previewHeader}>
         <div className={styles.headerLeft}>
           <div className={styles.previewIcon}>HTML</div>
-          <div className={styles.previewTitle}>Raw HTML Source</div>
+          {/* <div className={styles.previewTitle}>Raw HTML Source</div> */}
           <div className={styles.contentLength}>{content.length} chars</div>
         </div>
         <div className={styles.headerRight}>
+          <button 
+            onClick={handleRefreshQuill}
+            className={styles.refreshButton}
+            title="Refresh Quill editor display"
+          >
+            REFRESH
+          </button>
           <button 
             onClick={handleCopyHTML}
             className={styles.copyButton}

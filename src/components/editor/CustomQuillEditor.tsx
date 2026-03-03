@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import styles from "./CustomQuillEditor.module.css";
-import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
 import Quill from "quill";
 import { useImageQueue } from "../../hooks/useImageQueue";
 import { usePublishing, PublishingState } from "../../hooks/usePublishing";
@@ -48,7 +48,7 @@ export default function CustomQuillEditor({
 
   const { imageQueue } = useImageQueue(mounted);
   const { publishingState, handlePublish, logs, clearLogs } = usePublishing(articleTitle);
-  const [isTerminalVisible, setIsTerminalVisible] = useState(true);
+  const [isTerminalVisible, setIsTerminalVisible] = useState(false);
 
   // Debounced onChange handler with adaptive delay based on content size
   const debouncedOnChange = useMemo(
@@ -142,6 +142,24 @@ export default function CustomQuillEditor({
     log(`👁️ Live preview ${!isLivePreviewVisible ? 'opened' : 'closed'}`, 'info');
   };
 
+  const refreshQuillDisplay = () => {
+    if (quillRef.current) {
+      const currentContent = quillRef.current.root.innerHTML;
+      log('🔄 Refreshing Quill editor display', 'info');
+      
+      // Force Quill to re-render by clearing and re-setting content
+      quillRef.current.setText('');
+      
+      // Use requestAnimationFrame to ensure smooth refresh
+      requestAnimationFrame(() => {
+        if (quillRef.current) {
+          quillRef.current.root.innerHTML = currentContent;
+          log('✅ Quill editor refreshed', 'success');
+        }
+      });
+    }
+  };
+
   // Initialize editor logger
   useEffect(() => {
     log('🔧 Editor component mounted', 'info');
@@ -162,7 +180,7 @@ export default function CustomQuillEditor({
 
     log('🔧 Initializing Quill editor...', 'info');
         
-    // Initialize Quill 1.2.4 style
+    // Initialize Quill with Bubble theme and tables disabled
     const quill = new Quill(editorRef.current, {
       modules: {
         toolbar: [
@@ -171,14 +189,45 @@ export default function CustomQuillEditor({
           [{ list: "ordered" }, { list: "bullet" }],
           ["blockquote", "code-block"],
           ["link", "image"],
-          ["clean"],
+          ["clean"], ["table"],
         ],
         clipboard: {
           matchVisual: false,
+          matchers: [
+            // Simple approach: catch any table elements and convert to plain text
+            ['TABLE', function(node: any, delta: any) {
+              console.log('🔍 Table found, converting to text');
+              const html = node.innerHTML;
+              const convertedDelta = quill.clipboard.convert({ html: html });
+              return convertedDelta;
+            }],
+            ['TR', function(node: any, delta: any) {
+              const html = node.innerHTML;
+              const convertedDelta = quill.clipboard.convert({ html: html });
+              return convertedDelta;
+            }],
+            ['TD', function(node: any, delta: any) {
+              const html = node.innerHTML;
+              const convertedDelta = quill.clipboard.convert({ html: html });
+              return convertedDelta;
+            }],
+            ['TH', function(node: any, delta: any) {
+              const html = node.innerHTML;
+              const convertedDelta = quill.clipboard.convert({ html: html });
+              return convertedDelta;
+            }]
+          ]
         },
       },
-      placeholder: placeholder || "Tell your story...",
-      theme: "snow",
+      placeholder: placeholder || " ",
+      theme: "bubble",
+      // formats: [
+      //   'bold', 'italic', 'underline', 'strike',
+      //   'header', 'list', 'bullet',
+      //   'blockquote', 'code-block', 'code',
+      //   'link', 'image', 'clean'
+      //   // Note: 'table' is NOT included in formats whitelist
+      // ],
     });
 
     log('✅ Quill editor initialized successfully', 'success');
@@ -344,6 +393,7 @@ export default function CustomQuillEditor({
         content={currentContent}
         isVisible={isLivePreviewVisible}
         onClose={() => setIsLivePreviewVisible(false)}
+        onRefreshQuill={refreshQuillDisplay}
       />
 
       {/* Open Terminal Button - Only show when terminal is closed */}

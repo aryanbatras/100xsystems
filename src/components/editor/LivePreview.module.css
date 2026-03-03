@@ -9,6 +9,7 @@
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
+  margin: 1rem;
 }
 
 .previewContainer.expanded {
@@ -62,6 +63,7 @@
 }
 
 .copyButton,
+.refreshButton,
 .expandButton,
 .closeButton {
   background: none;
@@ -80,14 +82,30 @@
   height: 28px;
 }
 
-.copyButton:disabled {
+.copyButton:disabled,
+.refreshButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.copyButton:hover:not(:disabled) {
+.copyButton:hover:not(:disabled),
+.refreshButton:hover:not(:disabled) {
   background: #353c42;
   color: #f0f6fc;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(53, 60, 66, 0.2);
+}
+
+.refreshButton:hover:not(:disabled) {
+  background: #0ea5e9;
+  color: #f0f6fc;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2);
+}
+
+.refreshButton:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(14, 165, 233, 0.2);
 }
 
 .expandButton:hover {

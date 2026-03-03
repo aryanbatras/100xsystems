@@ -35,7 +35,7 @@ export default function Admin({ initialContent = "", initialTitle = "" }: AdminP
             onChange={handleChange} 
             title={title}
             onTitleChange={handleTitleChange}
-            placeholder="Tell your story..." 
+            placeholder="         Tell your story..." 
           />
         </main>
       </div>
