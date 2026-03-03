@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import styles from "./CustomQuillEditor.module.css";
-import "quill/dist/quill.bubble.css";
-import Quill from "quill";
+import "react-quill-new/dist/quill.bubble.css";
+import ReactQuill from "react-quill-new";
 import { useImageQueue } from "../../hooks/useImageQueue";
 import { usePublishing, PublishingState } from "../../hooks/usePublishing";
 import { log, LogLevel } from "../../lib/logger";
@@ -37,8 +37,7 @@ export default function CustomQuillEditor({
   title,
   onTitleChange,
 }: CustomQuillEditorProps) {
-  const editorRef = useRef<HTMLDivElement>(null);
-  const quillRef = useRef<Quill | null>(null);
+  const quillRef = useRef<ReactQuill>(null);
   const [mounted, setMounted] = useState(false);
   const [articleTitle, setArticleTitle] = useState(title || "");
   const lastContentRef = useRef<string>("");
@@ -93,10 +92,9 @@ export default function CustomQuillEditor({
   );
 
   // Optimized content change handler with image-aware processing
-  const handleTextChange = useCallback(() => {
-    if (!quillRef.current) return;
+  const handleTextChange = useCallback((content: string, delta: any, source: string, editor: any) => {
+    if (!editor) return;
     
-    const content = quillRef.current.root.innerHTML;
     const contentLength = content.length;
     
     // Update current content for live preview
@@ -105,7 +103,7 @@ export default function CustomQuillEditor({
     // Count actual text characters vs image data
     const imageCount = (content.match(/<img/g) || []).length;
     const estimatedImageSize = imageCount * 100000; // Rough estimate per image
-    const textContent = quillRef.current.getText();
+    const textContent = editor.getText();
     const actualTextLength = textContent.length;
     
     // Only log for significant changes to reduce spam
@@ -144,16 +142,18 @@ export default function CustomQuillEditor({
 
   const refreshQuillDisplay = () => {
     if (quillRef.current) {
-      const currentContent = quillRef.current.root.innerHTML;
+      const editor = quillRef.current.getEditor();
+      const currentContent = editor.root.innerHTML;
       log('🔄 Refreshing Quill editor display', 'info');
       
       // Force Quill to re-render by clearing and re-setting content
-      quillRef.current.setText('');
+      editor.setText('');
       
       // Use requestAnimationFrame to ensure smooth refresh
       requestAnimationFrame(() => {
         if (quillRef.current) {
-          quillRef.current.root.innerHTML = currentContent;
+          const editorRef = quillRef.current.getEditor();
+          editorRef.root.innerHTML = currentContent;
           log('✅ Quill editor refreshed', 'success');
         }
       });
@@ -175,187 +175,177 @@ export default function CustomQuillEditor({
 
   useEffect(() => setMounted(true), []);
 
+  // ReactQuill modules configuration
+  const modules = useMemo(() => ({
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["blockquote", "code-block"],
+      ["link", "image"],
+      ["clean"], ["table"],
+    ],
+    clipboard: {
+      matchVisual: false,
+      // Add our matchers at the module level to ensure they're processed first
+      matchers: [
+        ['TABLE', (node: Node, delta: any, scroll: any) => {
+          console.log('🔍 TABLE matcher triggered!', { node, delta, scroll });
+          const htmlContent = (node as HTMLElement).innerHTML;
+          console.log('🔍 Extracted HTML:', htmlContent);
+          
+          // Use Quill's clipboard to convert HTML to Delta
+          const Quill = ReactQuill.Quill;
+          const Delta = Quill.import('delta');
+          const Clipboard = Quill.import('modules/clipboard') as any;
+          
+          // Create a temporary clipboard instance and use its convert method
+          const tempContainer = document.createElement('div');
+          const tempEditor = new Quill(tempContainer);
+          const tempClipboard = new Clipboard(tempEditor, {});
+          
+          // Use the clipboard's convert method directly (not onPaste)
+          const convertedDelta = tempClipboard.convert({ html: htmlContent, text: '' });
+          
+          console.log('📋 Converted Delta:', convertedDelta);
+          return new Delta(convertedDelta.ops).concat(new Delta().insert('\n\n'));
+        }],
+        ['TR', (node: Node, delta: any, scroll: any) => {
+          console.log('🔍 TR matcher triggered!', { node, delta, scroll });
+          const htmlContent = (node as HTMLElement).innerHTML;
+          console.log('🔍 TR HTML:', htmlContent);
+          
+          // Use Quill's clipboard to convert HTML to Delta
+          const Quill = ReactQuill.Quill;
+          const Delta = Quill.import('delta');
+          const Clipboard = Quill.import('modules/clipboard') as any;
+          
+          // Create a temporary clipboard instance and use its convert method
+          const tempContainer = document.createElement('div');
+          const tempEditor = new Quill(tempContainer);
+          const tempClipboard = new Clipboard(tempEditor, {});
+          
+          // Use the clipboard's convert method directly (not onPaste)
+          const convertedDelta = tempClipboard.convert({ html: htmlContent, text: '' });
+          
+          console.log('📋 Converted Delta:', convertedDelta);
+          return new Delta(convertedDelta.ops).concat(new Delta().insert('\n'));
+        }],
+        ['TD', (node: Node, delta: any, scroll: any) => {
+          console.log('🔍 TD matcher triggered!', { node, delta, scroll });
+          const htmlContent = (node as HTMLElement).innerHTML;
+          console.log('🔍 TD HTML:', htmlContent);
+          
+          // Use Quill's clipboard to convert HTML to Delta
+          const Quill = ReactQuill.Quill;
+          const Delta = Quill.import('delta');
+          const Clipboard = Quill.import('modules/clipboard') as any;
+          
+          // Create a temporary clipboard instance and use its convert method
+          const tempContainer = document.createElement('div');
+          const tempEditor = new Quill(tempContainer);
+          const tempClipboard = new Clipboard(tempEditor, {});
+          
+          // Use the clipboard's convert method directly (not onPaste)
+          const convertedDelta = tempClipboard.convert({ html: htmlContent, text: '' });
+          
+          console.log('📋 Converted Delta:', convertedDelta);
+          return new Delta(convertedDelta.ops).concat(new Delta().insert(' | '));
+        }],
+        ['TH', (node: Node, delta: any, scroll: any) => {
+          console.log('🔍 TH matcher triggered!', { node, delta, scroll });
+          const htmlContent = (node as HTMLElement).innerHTML;
+          console.log('🔍 TH HTML:', htmlContent);
+          
+          // Use Quill's clipboard to convert HTML to Delta
+          const Quill = ReactQuill.Quill;
+          const Delta = Quill.import('delta');
+          const Clipboard = Quill.import('modules/clipboard') as any;
+          
+          // Create a temporary clipboard instance and use its convert method
+          const tempContainer = document.createElement('div');
+          const tempEditor = new Quill(tempContainer);
+          const tempClipboard = new Clipboard(tempEditor, {});
+          
+          // Use the clipboard's convert method directly (not onPaste)
+          const convertedDelta = tempClipboard.convert({ html: htmlContent, text: '' });
+          
+          console.log('📋 Converted Delta:', convertedDelta);
+          return new Delta(convertedDelta.ops).concat(new Delta().insert(' | '));
+        }]
+      ]
+    },
+  }), []);
+
+  // Enhanced clipboard handlers for ReactQuill
   useEffect(() => {
-    if (!mounted || !editorRef.current || quillRef.current) return;
+    if (!mounted || !quillRef.current) return;
 
-    log('🔧 Initializing Quill editor...', 'info');
-        
-    // Initialize Quill with Bubble theme and tables disabled
-    const quill = new Quill(editorRef.current, {
-      modules: {
-        toolbar: [
-          [{ header: [1, 2, 3, false] }],
-          ["bold", "italic", "underline", "strike"],
-          [{ list: "ordered" }, { list: "bullet" }],
-          ["blockquote", "code-block"],
-          ["link", "image"],
-          ["clean"], ["table"],
-        ],
-        clipboard: {
-          matchVisual: false,
-          matchers: [
-            // Simple approach: catch any table elements and convert to plain text
-            ['TABLE', function(node: any, delta: any) {
-              console.log('🔍 Table found, converting to text');
-              const html = node.innerHTML;
-              const convertedDelta = quill.clipboard.convert({ html: html });
-              return convertedDelta;
-            }],
-            ['TR', function(node: any, delta: any) {
-              const html = node.innerHTML;
-              const convertedDelta = quill.clipboard.convert({ html: html });
-              return convertedDelta;
-            }],
-            ['TD', function(node: any, delta: any) {
-              const html = node.innerHTML;
-              const convertedDelta = quill.clipboard.convert({ html: html });
-              return convertedDelta;
-            }],
-            ['TH', function(node: any, delta: any) {
-              const html = node.innerHTML;
-              const convertedDelta = quill.clipboard.convert({ html: html });
-              return convertedDelta;
-            }]
-          ]
-        },
-      },
-      placeholder: placeholder || " ",
-      theme: "bubble",
-      // formats: [
-      //   'bold', 'italic', 'underline', 'strike',
-      //   'header', 'list', 'bullet',
-      //   'blockquote', 'code-block', 'code',
-      //   'link', 'image', 'clean'
-      //   // Note: 'table' is NOT included in formats whitelist
-      // ],
-    });
-
-    log('✅ Quill editor initialized successfully', 'success');
-    log('🔧 Setting up optimized clipboard handlers...', 'info');
-
-    // Optimized paste handling with performance improvements
+    console.log('🔧 Setting up clipboard handlers...');
+    const editor = quillRef.current.getEditor();
+    console.log('📝 Editor instance:', editor);
+    console.log('📝 Editor clipboard:', editor.clipboard);
+    
+    const Quill = ReactQuill.Quill;
     const Delta = Quill.import('delta');
+    console.log('📝 Quill instance:', Quill);
+    console.log('📝 Delta class:', Delta);
     
-    // Use requestAnimationFrame for large content processing
-    const processLargeContent = (content: string, formatter: (text: string) => any) => {
-      if (content.length > 10000) {
-        // Process large content in chunks to avoid blocking
-        return new Promise((resolve) => {
-          requestAnimationFrame(() => {
-            resolve(formatter(content));
-          });
-        });
-      }
-      return formatter(content);
-    };
+    // Test paste event listener - multiple approaches
+    console.log('🔧 Adding paste event listeners...');
     
-    quill.clipboard.addMatcher('PRE', (node: any, delta: any) => {
-      const text = node.textContent || '';
-      if (text.length > 5000) {
-        // For large content, process synchronously but defer heavy operations
-        setTimeout(() => {
-          // Process in background to avoid blocking
-        }, 0);
-        return new Delta().insert(text, { 'code-block': true });
-      }
-      return new Delta().insert(text, { 'code-block': true });
+    // 1. Direct paste on editor root
+    editor.root.addEventListener('paste', (e) => {
+      console.log('🔍 Paste event detected on root!', e);
+      console.log('🔍 Clipboard data:', e.clipboardData);
+      console.log('🔍 Paste data types:', e.clipboardData?.types);
+      console.log('🔍 Paste HTML:', e.clipboardData?.getData('text/html'));
+      console.log('🔍 Paste text:', e.clipboardData?.getData('text/plain'));
     });
     
-    quill.clipboard.addMatcher('CODE', (node: any, delta: any) => {
-      const text = node.textContent || '';
-      return new Delta().insert(text, { 'code': true });
+    // 2. Paste on document
+    document.addEventListener('paste', (e) => {
+      console.log('🔍 Global paste event detected!', e);
+      if (e.target && editor.root.contains(e.target as Node)) {
+        console.log('🔍 Paste happened inside editor!');
+      }
     });
     
-    quill.clipboard.addMatcher(Node.TEXT_NODE, (node: any, delta: any) => {
-      let text = node.data;
-      
-      // Skip processing for very large text nodes to prevent freezing
-      if (text.length > 20000) {
-        return delta; // Let Quill handle large text normally
+    // 3. Monitor text-change for paste detection
+    let lastLength = 0;
+    editor.on('text-change', (delta: any, oldDelta: any, source: string) => {
+      const currentLength = editor.getText().length;
+      if (source === 'user' && currentLength > lastLength + 100) {
+        console.log('🔍 Large text change detected (possible paste)', { delta, oldDelta, source, currentLength, lastLength });
+        console.log('🔍 Current editor content:', editor.root.innerHTML);
       }
-      
-      if (text.includes('```') || text.includes('`')) {
-        const codeBlockMatch = text.match(/```([\s\S]*?)```/);
-        if (codeBlockMatch) {
-          return new Delta()
-            .insert(codeBlockMatch[1].trim(), { 'code-block': true })
-            .insert('\n');
-        }
-        
-        const inlineCodeMatch = text.match(/`([^`]+)`/);
-        if (inlineCodeMatch) {
-          return new Delta()
-            .insert(inlineCodeMatch[1], { 'code': true });
-        }
-      }
-      
-      return delta;
+      lastLength = currentLength;
+    });
+    
+    // 4. Check if matchers are actually called
+    console.log('🔧 Testing matcher registration...');
+    console.log('📝 Matchers array:', editor.clipboard.matchers);
+    console.log('📝 Matcher count:', editor.clipboard.matchers.length);
+    
+    // Log each matcher
+    editor.clipboard.matchers.forEach((matcher: any, index: number) => {
+      console.log(`📝 Matcher ${index}:`, matcher[0], typeof matcher[1]);
     });
 
-    // Handle content changes with optimized handler
-    quill.on('text-change', handleTextChange);
+    log('✅ Enhanced clipboard handlers setup complete', 'success');
+  }, [mounted]);
 
-    // Set initial content efficiently
-    if (value && value.length > 0) {
-      const message = `� Setting initial content, length: ${value.length}`;
-      log(message, 'info');
-      
-      // Use requestAnimationFrame for large content to prevent blocking
-      if (value.length > 50000) {
-        requestAnimationFrame(() => {
-          quill.root.innerHTML = value;
-          lastContentRef.current = value;
-        });
-      } else {
-        quill.root.innerHTML = value;
-        lastContentRef.current = value;
-      }
-    }
-
-    quillRef.current = quill;
-    const message = '✅ Quill editor setup complete';
-    log(message, 'success');
-
-    return () => {
-      const cleanupMessage = '🧹 Cleaning up Quill editor';
-      log(cleanupMessage, 'info');
-      
-      // Clean up event listeners and references
-      quill.off('text-change', handleTextChange);
-      quillRef.current = null;
-      
-      // Cancel any pending operations
-      if (updateTimeoutRef.current) {
-        clearTimeout(updateTimeoutRef.current);
-      }
-    };
-  }, [mounted, handleTextChange]);
-
-  // Optimized value synchronization with comparison
+  // Optimized value synchronization with comparison - ReactQuill handles this automatically
+  // This effect is only needed for additional logging and performance tracking
   useEffect(() => {
     if (!quillRef.current) return;
     
-    const currentContent = quillRef.current.root.innerHTML;
+    const editor = quillRef.current.getEditor();
+    const currentContent = editor.root.innerHTML;
     
-    // Only update if content is actually different
-    if (value !== currentContent && value !== lastContentRef.current) {
-      // Use requestAnimationFrame for large content to prevent blocking
-      if (value.length > 50000) {
-        if (updateTimeoutRef.current) {
-          clearTimeout(updateTimeoutRef.current);
-        }
-        
-        // Use setTimeout for very large content with images
-        updateTimeoutRef.current = setTimeout(() => {
-          if (quillRef.current && value !== quillRef.current.root.innerHTML) {
-            quillRef.current.root.innerHTML = value;
-            lastContentRef.current = value;
-          }
-        }, 100);
-      } else {
-        quillRef.current.root.innerHTML = value;
-        lastContentRef.current = value;
-      }
+    // Only log for significant content changes
+    if (value !== currentContent && value !== lastContentRef.current && value.length > 100) {
+      log(`📝 Value prop changed - New length: ${value.length}`);
     }
   }, [value]);
 
@@ -376,8 +366,13 @@ export default function CustomQuillEditor({
         className={styles.titleInput}
       />
 
-      <div 
-        ref={editorRef}
+      <ReactQuill
+        ref={quillRef}
+        theme="bubble"
+        value={value}
+        onChange={handleTextChange}
+        modules={modules}
+        placeholder={placeholder || " "}
         style={{ minHeight: "500px" }}
       />
 
