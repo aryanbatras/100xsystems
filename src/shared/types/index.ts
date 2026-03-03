@@ -82,6 +82,8 @@ export interface InlineStylesConfig {
 
 export type LogLevel = 'info' | 'success' | 'error' | 'warning';
 
+export type PublishingState = 'draft' | 'uploading' | 'success' | 'failed';
+
 export interface LogEntry {
   id: string;
   timestamp: string;

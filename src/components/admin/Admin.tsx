@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import styles from './Admin.module.css';
+import { ArticleUpdater } from '../../core/infrastructure/ArticleUpdater';
+import { useArticleUpdate } from '../../hooks/useArticleUpdate';
+import { QuillDelta, ArticleMetadata } from '../../shared/types';
 
 // Dynamically import QuillEditor with SSR disabled
 const CustomQuillEditor = dynamic(() => import("../editor/CustomQuillEditor"), {
@@ -8,15 +12,58 @@ const CustomQuillEditor = dynamic(() => import("../editor/CustomQuillEditor"), {
   loading: () => <div className={styles.loading}>Loading editor...</div>
 });
 
-
 interface AdminProps {
   initialContent?: string;
   initialTitle?: string;
+  mode?: 'create' | 'edit';
+  slug?: string;
 }
 
-export default function Admin({ initialContent = "", initialTitle = "" }: AdminProps) {
+export default function Admin({ 
+  initialContent = "", 
+  initialTitle = "",
+  mode = 'create',
+  slug
+}: AdminProps) {
+  const router = useRouter();
   const [value, setValue] = useState(initialContent);
   const [title, setTitle] = useState(initialTitle);
+  const [existingMetadata, setExistingMetadata] = useState<ArticleMetadata | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(mode === 'edit');
+  
+  const { handleUpdate, updateState, isUpdating, updateResult, resetUpdateState } = useArticleUpdate({
+    slug: slug || '',
+    title,
+    existingMetadata: existingMetadata || undefined
+  });
+
+  useEffect(() => {
+    if (mode === 'edit' && slug && !initialContent) {
+      loadExistingArticle(slug);
+    }
+  }, [mode, slug, initialContent]);
+
+  const loadExistingArticle = async (articleSlug: string) => {
+    setIsLoading(true);
+    try {
+      const articleData = await ArticleUpdater.loadExistingArticle(articleSlug);
+      
+      if (articleData) {
+        setValue(articleData.html);
+        setTitle(articleData.metadata?.title || '');
+        setExistingMetadata(articleData.metadata);
+        setIsEditMode(true);
+      } else {
+        console.error('Article not found:', articleSlug);
+        // Optionally redirect to create mode or show error
+      }
+    } catch (error) {
+      console.error('Error loading article:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleChange = (content: string) => {
     setValue(content);
@@ -26,9 +73,52 @@ export default function Admin({ initialContent = "", initialTitle = "" }: AdminP
     setTitle(newTitle);
   };
 
+  const handleSave = async (quillRef: any) => {
+    if (!quillRef?.current || !slug) return;
+
+    try {
+      const quill = quillRef.current.getEditor();
+      const delta = quill.getContents();
+      
+      const result = await handleUpdate(delta);
+      
+      if (result.success) {
+        // Show success message or redirect
+        console.log('Article updated successfully:', result.url);
+      } else {
+        // Show error message
+        console.error('Update failed:', result.error);
+      }
+    } catch (error) {
+      console.error('Error during save:', error);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className={styles.adminContainer}>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loading}>Loading article...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.adminContainer}>
       <div className={styles.adminWrapper}>
+        <header className={styles.adminHeader}>
+          <h1>
+            {isEditMode ? 'Edit Article' : 'Create New Article'}
+          </h1>
+          {isEditMode && existingMetadata && (
+            <div className={styles.articleInfo}>
+              <span>Slug: {existingMetadata.slug}</span>
+              <span>Created: {existingMetadata.date}</span>
+            </div>
+          )}
+        </header>
+        
         <main className={styles.adminMain}>
           <CustomQuillEditor 
             value={value} 
@@ -36,6 +126,12 @@ export default function Admin({ initialContent = "", initialTitle = "" }: AdminP
             title={title}
             onTitleChange={handleTitleChange}
             placeholder="         Tell your story..." 
+            mode={isEditMode ? 'edit' : 'create'}
+            onSave={isEditMode ? handleSave : undefined}
+            saveState={updateState}
+            isSaving={isUpdating}
+            saveResult={updateResult}
+            onResetSave={resetUpdateState}
           />
         </main>
       </div>

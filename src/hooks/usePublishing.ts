@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react';
 import { extractImagesFromDelta, uploadImagesToGitHub } from '../features/publishing/useImageProcessing';
 import { generateSlug, generateHTML, publishHTMLToGitHub } from '../features/publishing/htmlGenerator';
 import { log, clearLogs as clearAllLogs, getLogs } from '../lib/logger';
-import { LogEntry, LogLevel } from '../shared/types';
-
-export type PublishingState = 'draft' | 'uploading' | 'success' | 'failed';
+import { LogEntry, LogLevel, PublishingState } from '../shared/types';
 
 export const usePublishing = (articleTitle: string) => {
   const [publishingState, setPublishingState] = useState<PublishingState>('draft');

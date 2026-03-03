@@ -8,6 +8,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const { filename, content } = req.body;
 
+    // Debug logging
+    console.log('🔍 Upload API Debug:', {
+      filename,
+      contentLength: content?.length,
+      hasToken: !!process.env.GITHUB_TOKEN,
+      hasUsername: !!process.env.GITHUB_USERNAME,
+      hasRepo: !!process.env.GITHUB_REPO,
+      tokenLength: process.env.GITHUB_TOKEN?.length
+    });
+
+    if (!filename || !content) {
+      return res.status(400).json({ error: 'Filename and content are required' });
+    }
+
+    if (!process.env.GITHUB_TOKEN || !process.env.GITHUB_USERNAME || !process.env.GITHUB_REPO) {
+      console.error('❌ Missing GitHub environment variables:', {
+        GITHUB_TOKEN: !!process.env.GITHUB_TOKEN,
+        GITHUB_USERNAME: !!process.env.GITHUB_USERNAME,
+        GITHUB_REPO: !!process.env.GITHUB_REPO
+      });
+      return res.status(500).json({ error: 'GitHub configuration missing' });
+    }
+
     const response = await fetch(`https://api.github.com/repos/${process.env.GITHUB_USERNAME}/${process.env.GITHUB_REPO}/contents/${filename}`, {
       method: 'PUT',
       headers: {
@@ -21,8 +44,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`GitHub API error: ${response.status} - ${errorData.message}`);
+      const errorData = await response.text();
+      console.error('❌ GitHub API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorData
+      });
+      throw new Error(`GitHub API error: ${response.status} - ${errorData}`);
     }
 
     const result = await response.json();

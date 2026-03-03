@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Article for Phase 2</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            color: #333;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2em;
+            margin-bottom: 1em;
+            font-weight: 600;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1em 0;
+        }
+        blockquote {
+            border-left: 4px solid #ddd;
+            margin: 1em 0;
+            padding-left: 1em;
+            color: #666;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 1em;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+            font-weight: 600;
+        }
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .ql-editor {
+            font-size: 18px;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body>
+    <script type="application/json" id="article-metadata">{"title":"Test Article for Phase 2","slug":"test-article-phase-2","date":"2025-01-03","images":["https://github.com/user/repo/assets/images/test-article-phase-2/test-article-phase-2-001.webp","https://github.com/user/repo/assets/images/test-article-phase-2/test-article-phase-2-002.webp"]}</script>
+    <article class="ql-editor">
+        <h1>Test Article for Phase 2</h1>
+        <p>This is a <strong>test article</strong> to verify that the HTML to Quill conversion is working properly in Phase 2.</p>
+        <p>It includes various formatting elements like <em>italic text</em>, <u>underlined text</u>, and <a href="https://example.com">links</a>.</p>
+        <h2>Code Example</h2>
+        <p>Here's a code block:</p>
+        <pre><code>function helloWorld() {
+    console.log("Hello, Phase 2!");
+}</code></pre>
+        <h2>Images</h2>
+        <p>There should be two images in this article:</p>
+        <p><img src="https://github.com/user/repo/assets/images/test-article-phase-2/test-article-phase-2-001.webp" alt="Test image 1"></p>
+        <p><img src="https://github.com/user/repo/assets/images/test-article-phase-2/test-article-phase-2-002.webp" alt="Test image 2"></p>
+        <h2>Lists</h2>
+        <p>Unordered list:</p>
+        <ul>
+            <li>First item</li>
+            <li>Second item</li>
+            <li>Third item</li>
+        </ul>
+        <p>Ordered list:</p>
+        <ol>
+            <li>Step one</li>
+            <li>Step two</li>
+            <li>Step three</li>
+        </ol>
+        <h2>Blockquote</h2>
+        <blockquote>
+            <p>This is a blockquote to test that quotes are properly converted back to Quill format.</p>
+        </blockquote>
+        <h2>Table</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Column 1</th>
+                    <th>Column 2</th>
+                    <th>Column 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Row 1, Cell 1</td>
+                    <td>Row 1, Cell 2</td>
+                    <td>Row 1, Cell 3</td>
+                </tr>
+                <tr>
+                    <td>Row 2, Cell 1</td>
+                    <td>Row 2, Cell 2</td>
+                    <td>Row 2, Cell 3</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>This article should be successfully parsed and loaded back into the Quill editor with all formatting preserved.</p>
+    </article>
+</body>
+</html>

@@ -47,4 +47,79 @@ export class GitHubPublisher {
       };
     }
   }
+
+  static async deleteFile(filePath: string): Promise<PublishResult> {
+    log('🗑️ Deleting file from GitHub...', 'info');
+    log(`📂 Target file: "${filePath}"`, 'info');
+
+    try {
+      const response = await fetch('/api/delete-file', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          filePath: filePath,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        log('❌ Failed to delete file: ' + errorData, 'error');
+        return {
+          success: false,
+          error: `Delete error: ${errorData.error}`
+        };
+      }
+
+      const result = await response.json();
+      log('✅ File deleted successfully!', 'success');
+
+      return {
+        success: true,
+        url: result.url
+      };
+
+    } catch (error) {
+      log('❌ File deletion failed: ' + error, 'error');
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  }
+
+  static async loadHTML(slug: string): Promise<string | null> {
+    log('📂 Loading HTML from GitHub...', 'info');
+    log(`📂 Target slug: "${slug}"`, 'info');
+
+    try {
+      const response = await fetch(`/api/load-html?slug=${encodeURIComponent(slug)}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          log(`⚠️ Article not found: ${slug}`, 'warning');
+          return null;
+        }
+        const errorData = await response.json();
+        log('❌ Failed to load HTML: ' + errorData, 'error');
+        return null;
+      }
+
+      const result = await response.json();
+      log('✅ HTML loaded successfully!', 'success');
+      log(`📏 Content length: ${result.html?.length || 0} characters`, 'info');
+
+      return result.html || '';
+
+    } catch (error) {
+      log('❌ Loading HTML failed: ' + error, 'error');
+      return null;
+    }
+  }
 }

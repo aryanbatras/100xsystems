@@ -129,7 +129,9 @@ export class HtmlConverter {
             log(`✅ Replaced image blob with: ${replacementUrl}`, 'success');
             return `<img src="${replacementUrl}" />`;
           } else {
-            log(`⚠️ No replacement URL found for image`, 'warning');
+            log(`⚠️ No replacement URL found for image - removing failed upload`, 'warning');
+            // Return empty string to remove failed images instead of leaving blob URLs
+            return '';
           }
         }
 
