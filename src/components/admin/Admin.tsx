@@ -2,12 +2,6 @@ import { useState } from "react";
 import dynamic from 'next/dynamic';
 import styles from './Admin.module.css';
 
-// // Dynamically import QuillEditor with SSR disabled
-// const QuillEditor = dynamic(() => import("../editor/QuillEditor"), {
-//   ssr: false,
-//   loading: () => <div className={styles.loading}>Loading editor...</div>
-// });
-
 // Dynamically import QuillEditor with SSR disabled
 const CustomQuillEditor = dynamic(() => import("../editor/CustomQuillEditor"), {
   ssr: false,
