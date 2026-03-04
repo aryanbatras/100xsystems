@@ -1,10 +1,9 @@
 import { ImageProcessor } from '../../core/infrastructure';
-import { log } from '../../shared/utils';
 import { ImageData, UploadedImage } from '../../shared/types';
 
 export type { ImageData, UploadedImage };
 
-export const extractImagesFromDelta = (delta: any): ImageData[] => {
+export const extractImagesFromDelta = (delta: any): Promise<ImageData[]> => {
   return ImageProcessor.extractImagesFromDelta(delta);
 };
 

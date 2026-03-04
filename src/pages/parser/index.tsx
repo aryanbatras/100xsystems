@@ -15,17 +15,71 @@ export default function ParserPage() {
   const [editorDelta, setEditorDelta] = useState<any>(null);
   const [metadata, setMetadata] = useState<any>(null);
   const [conversionLog, setConversionLog] = useState<string[]>([]);
+  const [hasProcessedSessionStorage, setHasProcessedSessionStorage] = useState(false);
+
+  // Check for HTML content from sessionStorage on component mount
+  useEffect(() => {
+    console.log('🔍 === PARSER SESSION STORAGE DEBUG START ===');
+    
+    // Only process sessionStorage once
+    if (hasProcessedSessionStorage) {
+      console.log('⚠️ SessionStorage already processed, skipping...');
+      console.log('🔍 === PARSER SESSION STORAGE DEBUG END ===');
+      return;
+    }
+    
+    const storedHtml = sessionStorage.getItem('parserHtml');
+    console.log('📊 sessionStorage.getItem result:', !!storedHtml);
+    console.log('📏 Stored HTML length:', storedHtml?.length || 0);
+    
+    if (storedHtml) {
+      console.log('📝 First 300 chars of stored HTML:', storedHtml.substring(0, 300));
+      console.log('📝 Last 300 chars of stored HTML:', storedHtml.substring(storedHtml.length - 300));
+      
+      setHtmlInput(storedHtml);
+      console.log('✅ HTML set in state');
+      
+      // Mark as processed BEFORE clearing
+      setHasProcessedSessionStorage(true);
+      
+      // Clear the stored HTML so it doesn't persist on refresh
+      sessionStorage.removeItem('parserHtml');
+      console.log('🗑️ sessionStorage cleared');
+      
+      // Automatically trigger the edit process
+      console.log('⏰ Scheduling automatic edit trigger...');
+      setTimeout(() => {
+        console.log('🔄 Triggering handleEditClick with stored HTML...');
+        handleEditClick(storedHtml); // Pass the HTML directly to avoid state issues
+      }, 100);
+    } else {
+      console.log('⚠️ No HTML found in sessionStorage');
+      setHasProcessedSessionStorage(true);
+    }
+    
+    console.log('🔍 === PARSER SESSION STORAGE DEBUG END ===');
+  }, [hasProcessedSessionStorage]);
 
   const addLog = (message: string) => {
     setConversionLog(prev => [...prev, `${new Date().toLocaleTimeString()}: ${message}`]);
   };
 
-  const handleEditClick = () => {
+  const handleEditClick = (event?: React.MouseEvent<HTMLButtonElement> | string) => {
+    // If the first parameter is a string (from sessionStorage), use it directly
+    // If it's an event (from button click), use the htmlInput state
+    const contentToProcess = typeof event === 'string' ? event : htmlInput;
+    
+    console.log('🔄 === HANDLE EDIT CLICK DEBUG START ===');
+    console.log('📏 htmlInput state length:', htmlInput.length);
+    console.log('📏 event type:', typeof event);
+    console.log('📏 contentToProcess length:', contentToProcess.length);
+    console.log('📝 First 200 chars of contentToProcess:', contentToProcess.substring(0, 200));
+    
     addLog('Starting HTML to Quill conversion...');
     
     try {
-      const parsed = HtmlToDeltaConverter.parseHtml(htmlInput);
-      const delta = HtmlToDeltaConverter.convertToDelta(htmlInput);
+      const parsed = HtmlToDeltaConverter.parseHtml(contentToProcess);
+      const delta = HtmlToDeltaConverter.convertToDelta(contentToProcess);
       
       setMetadata(parsed.metadata);
       setExtractedContent(parsed.content);
@@ -45,7 +99,10 @@ export default function ParserPage() {
       // Use extracted HTML content directly for editor
       setEditorDelta(parsed.content);
       setShowEditor(true);
+      
+      console.log('🔄 === HANDLE EDIT CLICK DEBUG END ===');
     } catch (error) {
+      console.log('❌ Error during conversion:', error);
       addLog(`❌ Error during conversion: ${error}`);
     }
   };

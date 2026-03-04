@@ -36,7 +36,7 @@ export class PublishingService {
         throw new Error(`Invalid slug: "${slug}"`);
       }
 
-      const images = ImageProcessor.extractImagesFromDelta(input.delta);
+      const images = await ImageProcessor.extractImagesFromDelta(input.delta);
       const uploadedImages = images.length > 0 
         ? await ImageProcessor.uploadImagesToGitHub(images, slug)
         : [];
@@ -91,7 +91,7 @@ export class PublishingService {
       log('🔄 Starting HTML generation only...', 'info');
       
       const slug = input.customSlug || SlugGenerator.generateSlug(input.title);
-      const images = ImageProcessor.extractImagesFromDelta(input.delta);
+      const images = await ImageProcessor.extractImagesFromDelta(input.delta);
       const uploadedImages = images.length > 0 
         ? await ImageProcessor.uploadImagesToGitHub(images, slug)
         : [];

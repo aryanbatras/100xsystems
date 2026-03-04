@@ -83,7 +83,7 @@ export const usePublishing = (articleTitle: string) => {
       // Extract images
       log('🔍 Starting image extraction...');
       const imageExtractionStart = Date.now();
-      const images = extractImagesFromDelta(delta);
+      const images = await extractImagesFromDelta(delta);
       const imageExtractionTime = Date.now() - imageExtractionStart;
       
       log(`📸 Image extraction completed in ${imageExtractionTime}ms`);
@@ -145,9 +145,9 @@ export const usePublishing = (articleTitle: string) => {
       
       log('🎉 ========== PUBLISH PROCESS SUCCESS ==========');
       log(`🎉 Total publish time: ${totalPublishTime}ms`);
-      log(`📂 Article available at: articles/${slug}.html`);
+      log(`📂 Article available at: articles/${slug}/index.html`);
       log('🎉 Publish complete! Article published successfully.');
-      log(`📂 Article available at: articles/${slug}.html`);
+      log(`📂 Article available at: articles/${slug}/index.html`);
       log(`⏱️ Total publish time: ${totalPublishTime}ms`);
       
       // Performance breakdown

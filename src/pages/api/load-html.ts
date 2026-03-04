@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ error: 'GitHub configuration missing' });
     }
 
-    const filePath = `articles/${slug}.html`;
+    const filePath = `articles/${slug}/index.html`;
     const url = `https://api.github.com/repos/${githubOwner}/${githubRepo}/contents/${filePath}`;
 
     console.log('🔍 Fetching from URL:', url);

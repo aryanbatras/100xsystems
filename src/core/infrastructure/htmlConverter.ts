@@ -69,7 +69,11 @@ export class HtmlConverter {
     const converterConfig = { ...this.DEFAULT_CONFIG, ...config };
     const converter = new QuillDeltaToHtmlConverter(delta.ops || [], converterConfig);
 
+    // Enable registerImageRenderer to process ALL images (blobs AND GitHub URLs) during initial conversion
+    // This ensures existing GitHub URLs also go through our sequential numbering system
+    log('🔧 Registering image renderer for Delta conversion...', 'info');
     this.registerImageRenderer(converter, imageUrlMap, uploadedImages);
+    log('✅ Image renderer registered successfully', 'info');
 
     const conversionStartTime = Date.now();
     let html = converter.convert();
@@ -117,22 +121,26 @@ export class HtmlConverter {
     imageUrlMap: Map<string, string>,
     uploadedImages: UploadedImage[]
   ): void {
+    log('🚀 registerImageRenderer called!', 'info');
+    log(`📋 Uploaded images available: ${uploadedImages.length}`, 'info');
+    
     converter.renderCustomWith((customOp, contextOp) => {
       if (customOp.insert.type === 'image') {
         const imageUrl = customOp.insert.value;
-        log(`🖼️ Processing image: ${imageUrl.substring(0, 50)}...`, 'info');
-
-        if (imageUrl.startsWith('data:image')) {
-          const replacementUrl = this.findReplacementUrl(imageUrl, contextOp, imageUrlMap, uploadedImages);
+        log(`🖼️ Processing image during Delta conversion: ${imageUrl.substring(0, 50)}...`, 'info');
+        
+        // Process ALL images (data blobs AND GitHub URLs) through sequential numbering
+        const isDataBlob = imageUrl.startsWith('data:image/');
+        const isGitHubRaw = imageUrl.startsWith('https://raw.githubusercontent.com/aryanbatras/100xsystems-storage/main/images/');
+        
+        if (isDataBlob || isGitHubRaw) {
+          // Find the sequential position for this image based on its order in Delta
+          const imagePosition = this.findImagePositionInDelta(imageUrl, uploadedImages);
+          const slug = this.extractSlugFromImageUrl(uploadedImages[0]?.publicUrl || '');
+          const replacementUrl = `https://raw.githubusercontent.com/aryanbatras/100xsystems-storage/main/images/${slug}/${slug}-${String(imagePosition).padStart(3, '0')}.webp`;
           
-          if (replacementUrl) {
-            log(`✅ Replaced image blob with: ${replacementUrl}`, 'success');
-            return `<img src="${replacementUrl}" />`;
-          } else {
-            log(`⚠️ No replacement URL found for image - removing failed upload`, 'warning');
-            // Return empty string to remove failed images instead of leaving blob URLs
-            return '';
-          }
+          log(`🔧 Delta conversion: Image position ${imagePosition} → ${replacementUrl}`, 'info');
+          return `<img src="${replacementUrl}" />`;
         }
 
         return `<img src="${imageUrl}" />`;
@@ -140,6 +148,23 @@ export class HtmlConverter {
 
       return 'Unmanaged custom blot!';
     });
+  }
+
+  private static findImagePositionInDelta(imageUrl: string, uploadedImages: UploadedImage[]): number {
+    // For existing GitHub URLs, find their position in the uploaded images array
+    // For new blobs, assign the next available position
+    const isGitHubUrl = imageUrl.startsWith('https://raw.githubusercontent.com/aryanbatras/100xsystems-storage/main/images/');
+    
+    if (isGitHubUrl) {
+      const existingImage = uploadedImages.find(img => img.publicUrl === imageUrl);
+      if (existingImage && 'documentPosition' in existingImage) {
+        return (existingImage as any).documentPosition;
+      }
+    }
+    
+    // For new blobs or unfound GitHub URLs, assign next position
+    const maxPosition = Math.max(...uploadedImages.map(img => ('documentPosition' in img ? (img as any).documentPosition : 0)));
+    return maxPosition + 1;
   }
 
   private static findReplacementUrl(
@@ -165,30 +190,88 @@ export class HtmlConverter {
   private static processRemainingImageBlobs(html: string, uploadedImages: UploadedImage[]): string {
     log('🔄 Performing final cleanup of remaining image blobs...', 'info');
 
-    const dataImageRegex = /src="data:image\/[^"]*"/gi;
-    const remainingBlobs = html.match(dataImageRegex);
+    // Find ALL image sources in exact order they appear in HTML
+    const allImageRegex = /src="([^"]*)"/gi;
+    const allImageMatches = html.match(allImageRegex);
 
-    if (!remainingBlobs || remainingBlobs.length === 0) {
-      log('✅ No remaining image blobs found', 'success');
+    if (!allImageMatches || allImageMatches.length === 0) {
+      log('✅ No images found in HTML', 'success');
       return html;
     }
 
-    log(`⚠️ Found ${remainingBlobs.length} remaining image blobs for cleanup`, 'warning');
+    log(`📊 Found ${allImageMatches.length} total images in HTML to process in order`, 'info');
+    
+    // Log all found images with their positions
+    allImageMatches.forEach((imageMatch, index) => {
+      const imageUrl = imageMatch.match(/src="([^"]*)"/)?.[1];
+      const displayUrl = imageUrl && imageUrl.startsWith('data:image/') ? 'data:image/[...large blob...]' : (imageUrl || '');
+      log(`🔍 HTML Image ${index + 1}: ${displayUrl}`, 'info');
+    });
+
+    log(`📋 Available uploaded images:`, 'info');
+    uploadedImages.forEach((img, index) => {
+      log(`   Uploaded ${index + 1}: ${img.publicUrl}`, 'info');
+    });
 
     let processedHtml = html;
-    let replacedCount = 0;
+    let imagePosition = 1;
 
-    remainingBlobs.forEach((blob, index) => {
-      if (uploadedImages.length > 0 && uploadedImages[index]) {
-        const fallbackUrl = uploadedImages[index].publicUrl;
-        processedHtml = processedHtml.replace(blob, `src="${fallbackUrl}"`);
-        replacedCount++;
-        log(`🔧 Replaced blob ${index + 1} with: ${fallbackUrl}`, 'info');
+    // Create a map of current HTML images to their correct sequential URLs
+    const slug = this.extractSlugFromImageUrl(uploadedImages[0]?.publicUrl || '');
+    
+    // Process ALL images in exact order they appear in HTML
+    allImageMatches.forEach((imageMatch, index) => {
+      const imageUrl = imageMatch.match(/src="([^"]*)"/)?.[1];
+      
+      if (imageUrl) {
+        // Only process data blobs and GitHub raw URLs, skip external images
+        const isDataBlob = imageUrl.startsWith('data:image/');
+        const isGitHubRaw = imageUrl.startsWith('https://raw.githubusercontent.com/aryanbatras/100xsystems-storage/main/images/');
+        
+        log(`🔍 Processing HTML Image ${index + 1}:`, 'info');
+        const displayUrl = imageUrl.startsWith('data:image/') ? 'data:image/[...large blob...]' : imageUrl;
+        log(`   - URL: ${displayUrl}`, 'info');
+        log(`   - Is Data Blob: ${displayUrl}`, 'info');
+        log(`   - Is GitHub Raw: ${isGitHubRaw}`, 'info');
+        
+        if (isDataBlob || isGitHubRaw) {
+          // ALWAYS generate sequential URL based on HTML position (1, 2, 3, 4)
+          // This ensures correct ordering regardless of what Delta conversion produced
+          const replacementUrl = `https://raw.githubusercontent.com/aryanbatras/100xsystems-storage/main/images/${slug}/${slug}-${String(imagePosition).padStart(3, '0')}.webp`;
+          
+          log(`🔧 FORCED SEQUENTIAL REPLACEMENT:`, 'info');
+          log(`   - HTML Position: ${index + 1}`, 'info');
+          log(`   - New Sequential Position: ${imagePosition}`, 'info');
+          log(`   - Original URL: ${isDataBlob ? 'data:image/[...large blob...]' : imageUrl}`, 'info');
+          log(`   - Replacement URL: ${replacementUrl}`, 'info');
+          log(`   - Slug: ${slug}`, 'info');
+          
+          processedHtml = processedHtml.replace(imageMatch, `src="${replacementUrl}"`);
+          log(`✅ Successfully replaced image ${index + 1} with sequential position ${imagePosition}`, 'success');
+          imagePosition++;
+        } else {
+          log(`✅ Skipping external image ${index + 1}: ${imageUrl.substring(0, 50)}...`, 'info');
+        }
       }
     });
 
-    log(`✅ Cleaned up ${replacedCount} remaining blobs`, 'success');
+    log(`✅ Processed ${imagePosition - 1} images in correct HTML sequence`, 'success');
+    log(`📝 Final image positions: 1 to ${imagePosition - 1}`, 'info');
+    
+    // Log final HTML snippet to verify
+    const finalImageMatches = processedHtml.match(/src="([^"]*)"/gi);
+    log(`📋 Final HTML Images:`, 'info');
+    finalImageMatches?.forEach((match, index) => {
+      const url = match.match(/src="([^"]*)"/)?.[1];
+      log(`   Final ${index + 1}: ${url}`, 'info');
+    });
+    
     return processedHtml;
+  }
+
+  private static extractSlugFromImageUrl(imageUrl: string): string {
+    const match = imageUrl.match(/\/images\/([^\/]+)\/[^\/]+$/);
+    return match ? match[1] : '';
   }
 
   private static calculateImageStats(

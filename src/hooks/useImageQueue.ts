@@ -14,12 +14,12 @@ export const useImageQueue = (mounted: boolean) => {
       if (quill) {
         console.log('Quill editor found, setting up listener');
 
-        const handleTextChange = (delta: any, oldDelta: any, source: string) => {
+        const handleTextChange = async (delta: any, oldDelta: any, source: string) => {
           if (source === 'user') {
             console.log('Content changed by user!');
             
             const currentContent = quill.getContents();
-            const allImages = extractImagesFromDelta(currentContent);
+            const allImages = await extractImagesFromDelta(currentContent);
             
             setImageQueue(allImages);
             console.log('Images in queue:', allImages.length);

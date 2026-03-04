@@ -12,13 +12,34 @@ export class ImageProcessor {
     fileType: 'image/jpeg',
   };
 
-  static extractImagesFromDelta(delta: any): ImageData[] {
+  private static async downloadImageAsBase64(imageUrl: string): Promise<string | null> {
+    try {
+      log(`📥 Downloading image from: ${imageUrl}`, 'info');
+      
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        log(`⚠️ Failed to download image: ${response.status}`, 'warning');
+        return null;
+      }
+      
+      const blob = await response.blob();
+      const base64 = await this.convertToBase64(new File([blob], 'image.jpg', { type: blob.type }));
+      
+      log(`✅ Successfully downloaded and converted image to base64`, 'success');
+      return base64;
+    } catch (error) {
+      log(`❌ Error downloading image: ${error instanceof Error ? error.message : String(error)}`, 'error');
+      return null;
+    }
+  }
+
+  static async extractImagesFromDelta(delta: any): Promise<ImageData[]> {
     log('🔍 Starting image extraction from Delta...', 'info');
     log(`📊 Delta operations count: ${delta.ops?.length || 0}`, 'info');
 
     const images: ImageData[] = [];
 
-    delta.ops?.forEach((op: any, index: number) => {
+    for (const [index, op] of (delta.ops || []).entries()) {
       if (this.isImageOperation(op)) {
         const imageData = op.insert.image;
         log(`🖼️ Found image in operation ${index + 1}`, 'success');
@@ -34,11 +55,31 @@ export class ImageProcessor {
               fileType: imageInfo.fileType
             });
           }
+        } else if (this.isGitHubImage(imageData)) {
+          log(`🌐 Found GitHub image URL, downloading...`, 'info');
+          const downloadedBase64 = await this.downloadImageAsBase64(imageData);
+          
+          if (downloadedBase64) {
+            const imageInfo = this.parseImageData(downloadedBase64);
+            if (imageInfo) {
+              this.logImageDetails(imageInfo, images.length + 1);
+              
+              images.push({
+                base64Data: downloadedBase64,
+                temporaryId: this.generateTemporaryId(),
+                fileType: imageInfo.fileType
+              });
+              
+              log(`✅ GitHub image converted to base64 blob`, 'success');
+            }
+          } else {
+            log(`⚠️ Failed to download GitHub image, skipping`, 'warning');
+          }
         } else {
-          log('⚠️ Image data is not base64 format, skipping', 'warning');
+          log('⚠️ Image data is not base64 or GitHub URL format, skipping', 'warning');
         }
       }
-    });
+    }
 
     log(`✅ Image extraction complete. Found ${images.length} image(s)`, 'success');
     return images;
@@ -50,6 +91,14 @@ export class ImageProcessor {
 
   private static isBase64Image(imageData: string): boolean {
     return imageData.startsWith('data:image/');
+  }
+
+  private static isGitHubImage(imageData: string): boolean {
+    return imageData.startsWith('https://') && 
+           (imageData.includes('github.com') || imageData.includes('raw.githubusercontent.com')) &&
+           (imageData.includes('.jpg') || imageData.includes('.jpeg') || 
+            imageData.includes('.png') || imageData.includes('.webp') || 
+            imageData.includes('.gif') || imageData.includes('.svg'));
   }
 
   private static parseImageData(imageData: string) {

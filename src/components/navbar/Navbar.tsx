@@ -26,6 +26,7 @@ export function Navbar(): React.ReactElement {
                     <li className={styles.link}><Link href="/paths">Paths</Link></li>
                     <li className={styles.link}><Link href="/about">About</Link></li>
                     <li className={styles.link}><Link href="/contact">Contact</Link></li>
+                    <li className={styles.link}><Link href="/admin-dashboard">Admin</Link></li>
                 </ul>
                 {!isMenuOpen ? (
                 <button className={styles.menuButton} onClick={() => setIsMenuOpen(true)}>
@@ -42,6 +43,7 @@ export function Navbar(): React.ReactElement {
                         <Link href="/paths"> <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}>Paths</li></Link>
                         <Link href="/about"> <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}>About</li></Link>
                         <Link href="/contact"> <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}>Contact</li></Link>
+                        <Link href="/admin-dashboard"> <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}>Admin</li></Link>
                     </ul>
                 </div>
             )}

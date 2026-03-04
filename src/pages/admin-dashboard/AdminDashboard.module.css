@@ -1,0 +1,238 @@
+.dashboardContainer {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+}
+
+.dashboardWrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.dashboardHeader {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.dashboardHeader h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dashboardHeader p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin-bottom: 1.5rem;
+}
+
+.newArticleButton {
+  background: white;
+  color: #667eea;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.newArticleButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.dashboardMain {
+  padding: 2rem;
+}
+
+.loadingContainer,
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+}
+
+.loading,
+.error {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.error {
+  color: #e74c3c;
+}
+
+.retryButton {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+.retryButton:hover {
+  background: #5a6fd8;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #666;
+}
+
+.emptyState h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.emptyState p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.articleGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+.articleCard {
+  background: white;
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.articleCard:hover:not(.loading) {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-color: #667eea;
+}
+
+.articleCard.loading {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.articleCard.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.articleCardHeader {
+  margin-bottom: 1rem;
+}
+
+.articleCardHeader h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  word-break: break-word;
+}
+
+.articleCardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.editIndicator {
+  color: #667eea;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.articleCard:hover .editIndicator {
+  opacity: 1;
+}
+
+.cardLoading {
+  color: #667eea;
+  font-weight: 500;
+  position: relative;
+  z-index: 2;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .dashboardContainer {
+    padding: 1rem;
+  }
+  
+  .dashboardHeader {
+    padding: 1.5rem;
+  }
+  
+  .dashboardHeader h1 {
+    font-size: 2rem;
+  }
+  
+  .dashboardMain {
+    padding: 1rem;
+  }
+  
+  .articleGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .articleCard {
+    padding: 1rem;
+  }
+}
+
+/* Loading animation */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.articleCard.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
