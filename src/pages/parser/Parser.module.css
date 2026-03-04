@@ -1,30 +1,36 @@
 .parserContainer {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: #ffffff;
+  font-family: var(--font-samsung-sharp);
 }
 
 .parserWrapper {
   max-width: 1200px;
-  margin: 2rem;
-  padding: 20px;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
 .parserHeader {
   text-align: center;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 4rem;
+  padding-top: 10rem;
   font-family: var(--font-samsung-sharp);
 }
 
 .parserHeader h1 {
-  font-size: 2.5rem;
-  color: #333;
-  margin-bottom: 10px;
+  font-size: 3.5rem;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+  font-weight: 200;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
 }
 
 .parserHeader p {
-  color: #666;
-  font-size: 1.1rem;
+  color: #666666;
+  font-size: 1.2rem;
+  font-weight: 300;
+  line-height: 1.5;
 }
 
 .parserMain {
@@ -34,60 +40,67 @@
 }
 
 .inputSection {
-  background: white;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
 }
 
 .inputHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 }
 
 .inputHeader h2 {
-  color: #333;
+  color: #1a1a1a;
   margin: 0;
+  font-weight: 300;
+  font-size: 1.5rem;
 }
 
 .editButton {
-  background: #0066cc;
-  color: white;
+  background: #1a1a1a;
+  color: #ffffff;
   border: none;
   padding: 12px 24px;
-  border-radius: 6px;
+  border-radius: 0;
   cursor: pointer;
   font-size: 1rem;
-  font-weight: 500;
-  transition: background-color 0.2s;
+  font-weight: 400;
+  transition: background-color 0.2s ease;
+  font-family: var(--font-samsung-sharp);
 }
 
 .editButton:hover:not(:disabled) {
-  background: #0052a3;
+  background: #333333;
 }
 
 .editButton:disabled {
-  background: #ccc;
+  background: #cccccc;
   cursor: not-allowed;
+  color: #666666;
 }
 
 .htmlTextarea {
   width: 100%;
   min-height: 400px;
-  padding: 15px;
-  border: 2px solid #e1e5e9;
-  border-radius: 8px;
-  font-family: 'Monaco', 'Courier New', monospace;
+  padding: 1.5rem;
+  border: 1px solid #e1e1e1;
+  border-radius: 0;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
   font-size: 14px;
   resize: vertical;
   line-height: 1.5;
+  background: #ffffff;
+  color: #1a1a1a;
+  outline: none;
 }
 
 .htmlTextarea:focus {
-  outline: none;
-  border-color: #0066cc;
+  border-color: #1a1a1a;
 }
 
 .editorSection {
@@ -98,79 +111,89 @@
 }
 
 .metadataPanel {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
   position: sticky;
-  top: 20px;
+  top: 10rem;
 }
 
 .metadataPanel h3 {
-  color: #333;
-  margin-bottom: 15px;
+  color: #1a1a1a;
+  margin-bottom: 1.5rem;
   font-size: 1.2rem;
+  font-weight: 300;
 }
 
 .metadataInfo p {
-  margin-bottom: 8px;
-  color: #555;
+  margin-bottom: 1rem;
+  color: #666666;
+  font-weight: 300;
 }
 
 .metadataInfo strong {
-  color: #333;
+  color: #1a1a1a;
+  font-weight: 400;
 }
 
 .imageList {
-  margin-top: 10px;
+  margin-top: 1rem;
 }
 
 .imageList ul {
-  margin: 5px 0 0 0;
-  padding-left: 20px;
+  margin: 0.5rem 0 0 0;
+  padding-left: 2rem;
 }
 
 .imageList li {
-  margin-bottom: 5px;
+  margin-bottom: 0.5rem;
 }
 
 .imageList a {
-  color: #0066cc;
-  text-decoration: none;
+  color: #1a1a1a;
+  text-decoration: underline;
   font-size: 0.9rem;
   word-break: break-all;
+  font-weight: 300;
 }
 
 .imageList a:hover {
-  text-decoration: underline;
+  color: #666666;
 }
 
 .editorContainer {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
 }
 
 .logPanel {
-  background: #1e1e1e;
-  border-radius: 12px;
-  padding: 20px;
-  color: #fff;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 0;
+  padding: 2rem;
+  color: #1a1a1a;
+  margin-top: 3rem;
 }
 
 .logPanel h3 {
-  color: #fff;
-  margin-bottom: 15px;
+  color: #1a1a1a;
+  margin-bottom: 1.5rem;
   font-size: 1.2rem;
+  font-weight: 300;
 }
 
 .logContent {
-  font-family: 'Monaco', 'Courier New', monospace;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
   font-size: 13px;
   line-height: 1.4;
   max-height: 200px;
   overflow-y: auto;
+  color: #666666;
 }
 
 .logEntry {
@@ -181,8 +204,9 @@
 .loading {
   text-align: center;
   padding: 40px;
-  color: #666;
+  color: #666666;
   font-size: 1.1rem;
+  font-weight: 300;
 }
 
 @media (max-width: 768px) {
@@ -192,13 +216,18 @@
   
   .metadataPanel {
     position: static;
+    top: 0;
   }
   
   .parserWrapper {
-    padding: 10px;
+    padding: 0 1rem;
   }
   
   .inputSection {
-    padding: 20px;
+    padding: 0;
+  }
+  
+  .parserHeader {
+    padding-top: 6rem;
   }
 }

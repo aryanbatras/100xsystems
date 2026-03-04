@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import styles from './AdminDashboard.module.css';
 
 interface Article {
@@ -118,14 +119,27 @@ export default function AdminDashboard() {
     <div className={styles.dashboardContainer}>
       <div className={styles.dashboardWrapper}>
         <header className={styles.dashboardHeader}>
-          <h1>Admin Dashboard</h1>
-          <p>Manage your articles</p>
-          <button 
-            onClick={handleNewArticle}
-            className={styles.newArticleButton}
-          >
-            New Article
-          </button>
+          <div className={styles.headerTop}>
+            <div className={styles.headerInfo}>
+              <h1>Admin Dashboard</h1>
+              <p>Manage your articles</p>
+            </div>
+            <button 
+              onClick={handleNewArticle}
+              className={styles.newArticleButton}
+            >
+              New Article
+            </button>
+          </div>
+          
+          <div className={styles.managementLinks}>
+            <Link href="/admin/roadmaps" className={styles.managementLink}>
+              🗺️ Manage Roadmaps
+            </Link>
+            <Link href="/admin/manifests" className={styles.managementLink}>
+              📋 Manage Manifests
+            </Link>
+          </div>
         </header>
 
         <main className={styles.dashboardMain}>
