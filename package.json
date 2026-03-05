@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/lodash": "^4.17.24",
+    "@xyflow/react": "^12.10.1",
     "browser-image-compression": "^2.0.2",
     "gsap": "^3.14.2",
     "lodash": "^4.17.23",

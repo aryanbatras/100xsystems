@@ -22,9 +22,32 @@ export interface ArticleManifest {
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   author?: string;
   tags: string[];
+  
+  // Enhanced features
+  estimatedReadTime: number; // minutes
+  prerequisites: string[]; // article slugs
+  relatedArticles: string[]; // article slugs
+  learningOutcomes: string[];
+  keyConcepts: string[];
+  
+  // Interactive features
+  interactiveElements: {
+    quizzes: boolean;
+    codePlaygrounds: boolean;
+    exercises: boolean;
+    projects: boolean;
+  };
+  
+  // Media
   podcast?: {
     enabled: boolean;
     url?: string;
+    duration?: number; // minutes
+  };
+  video?: {
+    enabled: boolean;
+    url?: string;
+    duration?: number; // minutes
   };
   discussion?: {
     enabled: boolean;
@@ -33,6 +56,8 @@ export interface ArticleManifest {
   resources?: {
     externalLinks?: string[];
     codeExamples?: string[];
+    downloads?: string[];
+    references?: string[];
   };
 }
 
@@ -40,9 +65,43 @@ export interface RoadmapMeta {
   slug: string;
   title: string;
   description: string;
+  longDescription?: string;
   sections: string[];
   estimatedTime: string;
   difficulty: 'beginner' | 'intermediate' | 'advanced';
+  
+  // Enhanced metadata for 100xSystems context
+  category: 'foundation' | 'systems' | 'development' | 'patterns' | 'devops' | 'ai' | 'leadership';
+  level: number; // 1-9 based on README path
+  prerequisites: string[]; // roadmap slugs that should be completed first
+  outcomes: string[]; // what learner will achieve
+  skills: string[]; // specific skills gained
+  technologies: string[]; // technologies covered
+  
+  // Learning structure
+  learningObjectives: string[];
+  keyProjects: string[];
+  assessmentCriteria: string[];
+  
+  // Metadata
+  author?: string;
+  tags: string[];
+  lastUpdated: string;
+  version: string;
+  
+  // Progress tracking
+  totalArticles: number;
+  estimatedHours: number;
+  difficultyScore: number; // 1-100
+  
+  // Community features
+  discussionEnabled: boolean;
+  mentorshipAvailable: boolean;
+  communityResources: string[];
+  
+  // Certification
+  certificateAvailable: boolean;
+  certificateRequirements: string[];
 }
 
 export interface KnowledgeGraph {
@@ -52,6 +111,21 @@ export interface KnowledgeGraph {
     byRoadmap: Record<string, ArticleManifest[]>;
     bySection: Record<string, ArticleManifest[]>;
     byTag: Record<string, ArticleManifest[]>;
+    byDifficulty: Record<string, ArticleManifest[]>;
+    byCategory: Record<string, ArticleManifest[]>;
+    bySkill: Record<string, ArticleManifest[]>;
+    byTechnology: Record<string, ArticleManifest[]>;
+    prerequisites: Record<string, string[]>; // article -> prerequisites
+    related: Record<string, string[]>; // article -> related articles
+  };
+  
+  // Advanced analytics
+  analytics: {
+    totalRoadmaps: number;
+    totalArticles: number;
+    averageDifficulty: number;
+    mostPopularSkills: string[];
+    learningPaths: string[][]; // recommended article sequences
   };
 }
 
@@ -321,14 +395,25 @@ export class StaticSiteGenerator {
       this.fetchAllManifests()
     ]);
     
-    // Build relationships
+    // Build enhanced relationships
     const relationships = {
       byRoadmap: {} as Record<string, ArticleManifest[]>,
       bySection: {} as Record<string, ArticleManifest[]>,
-      byTag: {} as Record<string, ArticleManifest[]>
+      byTag: {} as Record<string, ArticleManifest[]>,
+      byDifficulty: {} as Record<string, ArticleManifest[]>,
+      byCategory: {} as Record<string, ArticleManifest[]>,
+      bySkill: {} as Record<string, ArticleManifest[]>,
+      byTechnology: {} as Record<string, ArticleManifest[]>,
+      prerequisites: {} as Record<string, string[]>,
+      related: {} as Record<string, string[]>
     };
     
-    // Organize manifests by roadmap, section, and tags
+    // Collect analytics data
+    const allSkills = new Set<string>();
+    const allTechnologies = new Set<string>();
+    const difficulties: number[] = [];
+    
+    // Organize manifests by various dimensions
     Object.values(manifests).forEach(manifest => {
       // Organize by roadmap
       if (manifest.roadmaps && Array.isArray(manifest.roadmaps)) {
@@ -340,7 +425,7 @@ export class StaticSiteGenerator {
         });
       }
       
-      // Organize by section (as array)
+      // Organize by section
       if (manifest.section) {
         if (!relationships.bySection[manifest.section]) {
           relationships.bySection[manifest.section] = [];
@@ -348,7 +433,7 @@ export class StaticSiteGenerator {
         relationships.bySection[manifest.section].push(manifest);
       }
       
-      // Organize by tags (with null check)
+      // Organize by tags
       if (manifest.tags && Array.isArray(manifest.tags)) {
         manifest.tags.forEach(tag => {
           if (!relationships.byTag[tag]) {
@@ -357,9 +442,63 @@ export class StaticSiteGenerator {
           relationships.byTag[tag].push(manifest);
         });
       }
+      
+      // Organize by difficulty
+      if (!relationships.byDifficulty[manifest.difficulty]) {
+        relationships.byDifficulty[manifest.difficulty] = [];
+      }
+      relationships.byDifficulty[manifest.difficulty].push(manifest);
+      
+      // Organize by category (through roadmaps)
+      if (manifest.roadmaps && Array.isArray(manifest.roadmaps)) {
+        manifest.roadmaps.forEach(roadmapSlug => {
+          const roadmap = roadmaps[roadmapSlug];
+          if (roadmap) {
+            if (!relationships.byCategory[roadmap.category]) {
+              relationships.byCategory[roadmap.category] = [];
+            }
+            relationships.byCategory[roadmap.category].push(manifest);
+            
+            // Organize by skills (from roadmap)
+            if (roadmap.skills && Array.isArray(roadmap.skills)) {
+              roadmap.skills.forEach(skill => {
+                allSkills.add(skill);
+                if (!relationships.bySkill[skill]) {
+                  relationships.bySkill[skill] = [];
+                }
+                relationships.bySkill[skill].push(manifest);
+              });
+            }
+            
+            // Organize by technologies (from roadmap)
+            if (roadmap.technologies && Array.isArray(roadmap.technologies)) {
+              roadmap.technologies.forEach(tech => {
+                allTechnologies.add(tech);
+                if (!relationships.byTechnology[tech]) {
+                  relationships.byTechnology[tech] = [];
+                }
+                relationships.byTechnology[tech].push(manifest);
+              });
+            }
+          }
+        });
+      }
+      
+      // Handle article prerequisites and related articles
+      if (manifest.prerequisites && Array.isArray(manifest.prerequisites)) {
+        relationships.prerequisites[manifest.slug] = manifest.prerequisites;
+      }
+      
+      if (manifest.relatedArticles && Array.isArray(manifest.relatedArticles)) {
+        relationships.related[manifest.slug] = manifest.relatedArticles;
+      }
+      
+      // Collect difficulty for analytics
+      const difficultyScore = manifest.difficulty === 'beginner' ? 1 : manifest.difficulty === 'intermediate' ? 2 : 3;
+      difficulties.push(difficultyScore);
     });
     
-    // Sort articles by order within each roadmap and section
+    // Sort articles by order within each grouping
     Object.keys(relationships.byRoadmap).forEach(roadmap => {
       relationships.byRoadmap[roadmap].sort((a, b) => a.order - b.order);
     });
@@ -368,13 +507,48 @@ export class StaticSiteGenerator {
       relationships.bySection[section].sort((a, b) => a.order - b.order);
     });
     
-    console.log(`✅ Built knowledge graph: ${Object.keys(roadmaps).length} roadmaps, ${Object.keys(manifests).length} articles`);
+    // Calculate analytics
+    const analytics = {
+      totalRoadmaps: Object.keys(roadmaps).length,
+      totalArticles: Object.keys(manifests).length,
+      averageDifficulty: difficulties.length > 0 ? difficulties.reduce((a, b) => a + b, 0) / difficulties.length : 0,
+      mostPopularSkills: Array.from(allSkills).slice(0, 10), // Top 10 skills
+      learningPaths: this.generateLearningPaths(manifests, relationships) // Generate recommended paths
+    };
+    
+    console.log(`✅ Built knowledge graph: ${analytics.totalRoadmaps} roadmaps, ${analytics.totalArticles} articles`);
     
     return {
       roadmaps,
       articles: manifests,
-      relationships
+      relationships,
+      analytics
     };
+  }
+  
+  // Helper method to generate learning paths
+  private static generateLearningPaths(manifests: Record<string, ArticleManifest>, relationships: any): string[][] {
+    // Simple learning path generation - can be enhanced with more sophisticated algorithms
+    const paths: string[][] = [];
+    
+    // Generate paths by difficulty progression
+    const beginnerArticles = Object.values(manifests).filter(m => m.difficulty === 'beginner');
+    const intermediateArticles = Object.values(manifests).filter(m => m.difficulty === 'intermediate');
+    const advancedArticles = Object.values(manifests).filter(m => m.difficulty === 'advanced');
+    
+    if (beginnerArticles.length > 0) {
+      paths.push(beginnerArticles.slice(0, 5).map(a => a.slug)); // First 5 beginner articles
+    }
+    
+    if (intermediateArticles.length > 0) {
+      paths.push(intermediateArticles.slice(0, 5).map(a => a.slug)); // First 5 intermediate articles
+    }
+    
+    if (advancedArticles.length > 0) {
+      paths.push(advancedArticles.slice(0, 5).map(a => a.slug)); // First 5 advanced articles
+    }
+    
+    return paths;
   }
 
   // Enhanced article fetch with manifest data

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import styles from './Manifests.module.css';
@@ -11,9 +11,32 @@ interface ArticleManifest {
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   author?: string;
   tags: string[];
+  
+  // Enhanced features
+  estimatedReadTime: number; // minutes
+  prerequisites: string[]; // article slugs
+  relatedArticles: string[]; // article slugs
+  learningOutcomes: string[];
+  keyConcepts: string[];
+  
+  // Interactive features
+  interactiveElements: {
+    quizzes: boolean;
+    codePlaygrounds: boolean;
+    exercises: boolean;
+    projects: boolean;
+  };
+  
+  // Media
   podcast?: {
     enabled: boolean;
     url?: string;
+    duration?: number; // minutes
+  };
+  video?: {
+    enabled: boolean;
+    url?: string;
+    duration?: number; // minutes
   };
   discussion?: {
     enabled: boolean;
@@ -22,17 +45,26 @@ interface ArticleManifest {
   resources?: {
     externalLinks?: string[];
     codeExamples?: string[];
+    downloads?: string[];
+    references?: string[];
   };
 }
 
 export default function AdminManifests() {
   const [articles, setArticles] = useState<Record<string, ArticleManifest>>({});
   const [availableArticles, setAvailableArticles] = useState<string[]>([]);
+  const [roadmaps, setRoadmaps] = useState<Record<string, any>>({});
+  const [selectedRoadmaps, setSelectedRoadmaps] = useState<string[]>([]);
+  const [availableSections, setAvailableSections] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingManifest, setEditingManifest] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  
+  // Terminal-style scroll handling
+  const formRef = useRef<HTMLDivElement>(null);
+  const [isUserScrolling, setIsUserScrolling] = useState(false);
 
   const [formData, setFormData] = useState({
     slug: '',
@@ -42,12 +74,35 @@ export default function AdminManifests() {
     difficulty: 'beginner' as 'beginner' | 'intermediate' | 'advanced',
     author: '',
     tags: '',
+    
+    // Enhanced features
+    estimatedReadTime: 30,
+    prerequisites: '',
+    relatedArticles: '',
+    learningOutcomes: '',
+    keyConcepts: '',
+    
+    // Interactive features
+    quizzesEnabled: false,
+    codePlaygroundsEnabled: false,
+    exercisesEnabled: false,
+    projectsEnabled: false,
+    
+    // Media
     podcastEnabled: false,
     podcastUrl: '',
+    podcastDuration: 0,
+    videoEnabled: false,
+    videoUrl: '',
+    videoDuration: 0,
     discussionEnabled: false,
     discussionProvider: 'giscus' as 'giscus' | 'github',
+    
+    // Resources
     externalLinks: '',
-    codeExamples: ''
+    codeExamples: '',
+    downloads: '',
+    references: ''
   });
 
   useEffect(() => {
@@ -65,12 +120,61 @@ export default function AdminManifests() {
     setNotification({ type, message });
   };
 
+  // Helper functions for dynamic dropdowns
+  const handleRoadmapSelection = (roadmapSlug: string) => {
+    setSelectedRoadmaps(prev => 
+      prev.includes(roadmapSlug) 
+        ? prev.filter(r => r !== roadmapSlug)
+        : [...prev, roadmapSlug]
+    );
+  };
+
+  // Update available sections when selected roadmaps change
+  useEffect(() => {
+    const sections = new Set<string>();
+    selectedRoadmaps.forEach(roadmapSlug => {
+      const roadmap = roadmaps[roadmapSlug];
+      if (roadmap && roadmap.sections) {
+        roadmap.sections.forEach((section: string) => sections.add(section));
+      }
+    });
+    setAvailableSections(Array.from(sections));
+  }, [selectedRoadmaps, roadmaps]);
+
+  // Terminal-style scroll handling
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    if (formRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = formRef.current;
+      const delta = e.deltaY;
+      
+      // Update scroll state
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+      setIsUserScrolling(!isAtBottom);
+      
+      // Prevent page scroll when form has scrollable content
+      const hasScrollableContent = scrollHeight > clientHeight;
+      
+      if (hasScrollableContent) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }
+  };
+
+  // Auto-scroll to bottom when form opens or content changes
+  useEffect(() => {
+    if (formRef.current && showCreateForm && !isUserScrolling) {
+      formRef.current.scrollTop = formRef.current.scrollHeight;
+    }
+  }, [showCreateForm, selectedRoadmaps, isUserScrolling]);
+
   const fetchData = async () => {
     try {
-      // Fetch manifests and available articles via API without authentication
-      const [manifestsResponse, articlesResponse] = await Promise.all([
+      // Fetch manifests, available articles, and roadmaps via API without authentication
+      const [manifestsResponse, articlesResponse, roadmapsResponse] = await Promise.all([
         fetch('/api/admin/manifests'),
-        fetch('/api/list-articles')
+        fetch('/api/list-articles'),
+        fetch('/api/admin/roadmaps')
       ]);
       
       if (manifestsResponse.ok) {
@@ -89,10 +193,19 @@ export default function AdminManifests() {
         console.error('Failed to fetch articles');
         setAvailableArticles([]);
       }
+      
+      if (roadmapsResponse.ok) {
+        const roadmapsData = await roadmapsResponse.json();
+        setRoadmaps(roadmapsData);
+      } else {
+        console.error('Failed to fetch roadmaps');
+        setRoadmaps({});
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
       setArticles({});
       setAvailableArticles([]);
+      setRoadmaps({});
     } finally {
       setIsLoading(false);
     }
@@ -103,10 +216,16 @@ export default function AdminManifests() {
     
     setIsSubmitting(true);
     
-    const roadmapsArray = formData.roadmaps.split(',').map(r => r.trim()).filter(r => r);
+    const roadmapsArray = selectedRoadmaps; // Use selected roadmaps array directly
     const tagsArray = formData.tags.split(',').map(t => t.trim()).filter(t => t);
+    const prerequisitesArray = formData.prerequisites.split(',').map(p => p.trim()).filter(p => p);
+    const relatedArticlesArray = formData.relatedArticles.split(',').map(r => r.trim()).filter(r => r);
+    const learningOutcomesArray = formData.learningOutcomes.split('\n').map(o => o.trim()).filter(o => o);
+    const keyConceptsArray = formData.keyConcepts.split('\n').map(c => c.trim()).filter(c => c);
     const externalLinksArray = formData.externalLinks.split('\n').map(link => link.trim()).filter(link => link);
     const codeExamplesArray = formData.codeExamples.split('\n').map(example => example.trim()).filter(example => example);
+    const downloadsArray = formData.downloads.split('\n').map(d => d.trim()).filter(d => d);
+    const referencesArray = formData.references.split('\n').map(r => r.trim()).filter(r => r);
     
     const manifestData: ArticleManifest = {
       slug: formData.slug,
@@ -116,11 +235,39 @@ export default function AdminManifests() {
       difficulty: formData.difficulty,
       author: formData.author || undefined,
       tags: tagsArray,
-      podcast: formData.podcastEnabled ? { enabled: true, url: formData.podcastUrl || undefined } : undefined,
+      
+      // Enhanced features
+      estimatedReadTime: formData.estimatedReadTime,
+      prerequisites: prerequisitesArray,
+      relatedArticles: relatedArticlesArray,
+      learningOutcomes: learningOutcomesArray,
+      keyConcepts: keyConceptsArray,
+      
+      // Interactive features
+      interactiveElements: {
+        quizzes: formData.quizzesEnabled,
+        codePlaygrounds: formData.codePlaygroundsEnabled,
+        exercises: formData.exercisesEnabled,
+        projects: formData.projectsEnabled
+      },
+      
+      // Media
+      podcast: formData.podcastEnabled ? { 
+        enabled: true, 
+        url: formData.podcastUrl || undefined,
+        duration: formData.podcastDuration || undefined
+      } : undefined,
+      video: formData.videoEnabled ? { 
+        enabled: true, 
+        url: formData.videoUrl || undefined,
+        duration: formData.videoDuration || undefined
+      } : undefined,
       discussion: formData.discussionEnabled ? { enabled: true, provider: formData.discussionProvider } : undefined,
-      resources: (externalLinksArray.length > 0 || codeExamplesArray.length > 0) ? {
+      resources: (externalLinksArray.length > 0 || codeExamplesArray.length > 0 || downloadsArray.length > 0 || referencesArray.length > 0) ? {
         externalLinks: externalLinksArray.length > 0 ? externalLinksArray : undefined,
-        codeExamples: codeExamplesArray.length > 0 ? codeExamplesArray : undefined
+        codeExamples: codeExamplesArray.length > 0 ? codeExamplesArray : undefined,
+        downloads: downloadsArray.length > 0 ? downloadsArray : undefined,
+        references: referencesArray.length > 0 ? referencesArray : undefined
       } : undefined
     };
 
@@ -151,6 +298,7 @@ export default function AdminManifests() {
 
   const handleEdit = (manifest: ArticleManifest) => {
     setEditingManifest(manifest.slug);
+    setSelectedRoadmaps(manifest.roadmaps);
     setFormData({
       slug: manifest.slug,
       roadmaps: manifest.roadmaps.join(', '),
@@ -159,12 +307,35 @@ export default function AdminManifests() {
       difficulty: manifest.difficulty,
       author: manifest.author || '',
       tags: manifest.tags.join(', '),
+      
+      // Enhanced features
+      estimatedReadTime: manifest.estimatedReadTime || 30,
+      prerequisites: manifest.prerequisites?.join(', ') || '',
+      relatedArticles: manifest.relatedArticles?.join(', ') || '',
+      learningOutcomes: manifest.learningOutcomes?.join('\n') || '',
+      keyConcepts: manifest.keyConcepts?.join('\n') || '',
+      
+      // Interactive features
+      quizzesEnabled: manifest.interactiveElements?.quizzes || false,
+      codePlaygroundsEnabled: manifest.interactiveElements?.codePlaygrounds || false,
+      exercisesEnabled: manifest.interactiveElements?.exercises || false,
+      projectsEnabled: manifest.interactiveElements?.projects || false,
+      
+      // Media
       podcastEnabled: manifest.podcast?.enabled || false,
       podcastUrl: manifest.podcast?.url || '',
+      podcastDuration: manifest.podcast?.duration || 0,
+      videoEnabled: manifest.video?.enabled || false,
+      videoUrl: manifest.video?.url || '',
+      videoDuration: manifest.video?.duration || 0,
       discussionEnabled: manifest.discussion?.enabled || false,
       discussionProvider: manifest.discussion?.provider || 'giscus',
+      
+      // Resources
       externalLinks: manifest.resources?.externalLinks?.join('\n') || '',
-      codeExamples: manifest.resources?.codeExamples?.join('\n') || ''
+      codeExamples: manifest.resources?.codeExamples?.join('\n') || '',
+      downloads: manifest.resources?.downloads?.join('\n') || '',
+      references: manifest.resources?.references?.join('\n') || ''
     });
     setShowCreateForm(true);
   };
@@ -203,15 +374,40 @@ export default function AdminManifests() {
       difficulty: 'beginner',
       author: '',
       tags: '',
+      
+      // Enhanced features
+      estimatedReadTime: 30,
+      prerequisites: '',
+      relatedArticles: '',
+      learningOutcomes: '',
+      keyConcepts: '',
+      
+      // Interactive features
+      quizzesEnabled: false,
+      codePlaygroundsEnabled: false,
+      exercisesEnabled: false,
+      projectsEnabled: false,
+      
+      // Media
       podcastEnabled: false,
       podcastUrl: '',
+      podcastDuration: 0,
+      videoEnabled: false,
+      videoUrl: '',
+      videoDuration: 0,
       discussionEnabled: false,
       discussionProvider: 'giscus',
+      
+      // Resources
       externalLinks: '',
-      codeExamples: ''
+      codeExamples: '',
+      downloads: '',
+      references: ''
     });
     setShowCreateForm(false);
     setEditingManifest(null);
+    setSelectedRoadmaps([]);
+    setAvailableSections([]);
   };
 
   if (isLoading) {
@@ -253,61 +449,111 @@ export default function AdminManifests() {
         </div>
 
         {showCreateForm && (
-          <div className={styles.formOverlay}>
-            <div className={styles.formContainer}>
-              <h2>{editingManifest ? 'Edit Manifest' : 'Create New Manifest'}</h2>
+          <div className={styles.formSection}>
+            <div 
+              ref={formRef}
+              className={styles.formContainer}
+              onWheel={handleWheel}
+            >
+              <div className={styles.formHeader}>
+                <h2>{editingManifest ? 'Edit Manifest' : 'Create New Manifest'}</h2>
+                <button 
+                  onClick={resetForm}
+                  className={styles.closeButton}
+                  disabled={isSubmitting}
+                >
+                  ×
+                </button>
+              </div>
               
               <form onSubmit={handleSubmit} className={styles.form}>
+                {/* Article Selection */}
+                <div className={styles.formGroup}>
+                  <label htmlFor="slug">Article Slug *</label>
+                  <select
+                    id="slug"
+                    value={formData.slug}
+                    onChange={(e) => setFormData({...formData, slug: e.target.value})}
+                    required
+                    className={styles.select}
+                    disabled={!!editingManifest}
+                  >
+                    <option value="">Select an article</option>
+                    {[...availableArticles, ...(editingManifest ? [editingManifest] : [])].map(articleSlug => (
+                      <option key={articleSlug} value={articleSlug}>
+                        {articleSlug}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Roadmap Selection - Dynamic Checkboxes */}
+                <div className={styles.formGroup}>
+                  <label>Select Roadmaps *</label>
+                  <div className={styles.roadmapSelection}>
+                    {Object.keys(roadmaps).length === 0 ? (
+                      <p className={styles.noRoadmaps}>No roadmaps available. Please create roadmaps first.</p>
+                    ) : (
+                      Object.values(roadmaps).map((roadmap: any) => (
+                        <div key={roadmap.slug} className={styles.roadmapCheckbox}>
+                          <label className={styles.roadmapLabel}>
+                            <input
+                              type="checkbox"
+                              checked={selectedRoadmaps.includes(roadmap.slug)}
+                              onChange={() => handleRoadmapSelection(roadmap.slug)}
+                              disabled={isSubmitting}
+                            />
+                            <div className={styles.roadmapInfo}>
+                              <div className={styles.roadmapTitle}>{roadmap.title}</div>
+                              <div className={styles.roadmapMeta}>
+                                <span className={`${styles.difficulty} ${styles[roadmap.difficulty]}`}>
+                                  {roadmap.difficulty}
+                                </span>
+                                <span className={styles.category}>{roadmap.category}</span>
+                                <span className={styles.level}>Level {roadmap.level}</span>
+                              </div>
+                              <div className={styles.roadmapDescription}>{roadmap.description}</div>
+                              <div className={styles.roadmapSections}>
+                                <strong>Sections:</strong> {roadmap.sections?.join(', ') || 'No sections'}
+                              </div>
+                            </div>
+                          </label>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                {/* Section Selection - Dynamic Dropdown */}
                 <div className={styles.formRow}>
                   <div className={styles.formGroup}>
-                    <label htmlFor="slug">Article Slug</label>
+                    <label htmlFor="section">Section *</label>
                     <select
-                      id="slug"
-                      value={formData.slug}
-                      onChange={(e) => setFormData({...formData, slug: e.target.value})}
-                      required
-                      className={styles.select}
-                      disabled={!!editingManifest}
-                    >
-                      <option value="">Select an article</option>
-                      {[...availableArticles, ...(editingManifest ? [editingManifest] : [])].map(articleSlug => (
-                        <option key={articleSlug} value={articleSlug}>
-                          {articleSlug}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <label htmlFor="section">Section</label>
-                    <input
-                      type="text"
                       id="section"
                       value={formData.section}
                       onChange={(e) => setFormData({...formData, section: e.target.value})}
                       required
-                      className={styles.input}
-                      placeholder="arrays, linked-lists, etc."
-                    />
+                      className={styles.select}
+                      disabled={selectedRoadmaps.length === 0 || isSubmitting}
+                    >
+                      <option value="">
+                        {selectedRoadmaps.length === 0 ? 'Select roadmaps first' : 'Select a section'}
+                      </option>
+                      {availableSections.map(section => (
+                        <option key={section} value={section}>
+                          {section}
+                        </option>
+                      ))}
+                    </select>
+                    {selectedRoadmaps.length > 0 && (
+                      <small className={styles.helperText}>
+                        Available sections from: {selectedRoadmaps.join(', ')}
+                      </small>
+                    )}
                   </div>
-                </div>
-
-                <div className={styles.formRow}>
-                  <div className={styles.formGroup}>
-                    <label htmlFor="roadmaps">Roadmaps (comma-separated)</label>
-                    <input
-                      type="text"
-                      id="roadmaps"
-                      value={formData.roadmaps}
-                      onChange={(e) => setFormData({...formData, roadmaps: e.target.value})}
-                      placeholder="datastructures, systemdesign"
-                      required
-                      className={styles.input}
-                    />
-                  </div>
 
                   <div className={styles.formGroup}>
-                    <label htmlFor="order">Order</label>
+                    <label htmlFor="order">Order *</label>
                     <input
                       type="number"
                       id="order"
@@ -316,80 +562,290 @@ export default function AdminManifests() {
                       required
                       min="1"
                       className={styles.input}
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
 
-                <div className={styles.formRow}>
-                  <div className={styles.formGroup}>
-                    <label htmlFor="difficulty">Difficulty</label>
-                    <select
-                      id="difficulty"
-                      value={formData.difficulty}
-                      onChange={(e) => setFormData({...formData, difficulty: e.target.value as any})}
-                      className={styles.select}
-                    >
-                      <option value="beginner">Beginner</option>
-                      <option value="intermediate">Intermediate</option>
-                      <option value="advanced">Advanced</option>
-                    </select>
-                  </div>
+                {/* Auto-suggested fields based on selected roadmaps */}
+                {selectedRoadmaps.length > 0 && (
+                  <div className={styles.suggestedFields}>
+                    <h3>📝 Auto-suggested from Selected Roadmaps</h3>
+                    
+                    <div className={styles.formRow}>
+                      <div className={styles.formGroup}>
+                        <label htmlFor="difficulty">Difficulty *</label>
+                        <select
+                          id="difficulty"
+                          value={formData.difficulty}
+                          onChange={(e) => setFormData({...formData, difficulty: e.target.value as any})}
+                          className={styles.select}
+                          disabled={isSubmitting}
+                        >
+                          <option value="beginner">Beginner</option>
+                          <option value="intermediate">Intermediate</option>
+                          <option value="advanced">Advanced</option>
+                        </select>
+                        <small className={styles.helperText}>
+                          Based on: {selectedRoadmaps.map(r => roadmaps[r]?.difficulty).filter(Boolean).join(', ')}
+                        </small>
+                      </div>
 
-                  <div className={styles.formGroup}>
-                    <label htmlFor="author">Author (optional)</label>
-                    <input
-                      type="text"
-                      id="author"
-                      value={formData.author}
-                      onChange={(e) => setFormData({...formData, author: e.target.value})}
-                      className={styles.input}
-                    />
-                  </div>
-                </div>
+                      <div className={styles.formGroup}>
+                        <label htmlFor="tags">Tags (comma-separated)</label>
+                        <input
+                          type="text"
+                          id="tags"
+                          value={formData.tags}
+                          onChange={(e) => setFormData({...formData, tags: e.target.value})}
+                          placeholder="arrays, algorithms, complexity"
+                          className={styles.input}
+                          disabled={isSubmitting}
+                        />
+                        <small className={styles.helperText}>
+                          Suggested: {selectedRoadmaps.flatMap(r => roadmaps[r]?.tags || []).slice(0, 5).join(', ')}
+                        </small>
+                      </div>
+                    </div>
 
+                    <div className={styles.formGroup}>
+                      <label htmlFor="skills">Skills (comma-separated)</label>
+                      <input
+                        type="text"
+                        id="skills"
+                        value={formData.tags} // Using tags field temporarily
+                        onChange={(e) => setFormData({...formData, tags: e.target.value})}
+                        placeholder="javascript, react, system-design"
+                        className={styles.input}
+                        disabled={isSubmitting}
+                      />
+                      <small className={styles.helperText}>
+                        From roadmaps: {selectedRoadmaps.flatMap(r => roadmaps[r]?.skills || []).slice(0, 8).join(', ')}
+                      </small>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label htmlFor="technologies">Technologies (comma-separated)</label>
+                      <input
+                        type="text"
+                        id="technologies"
+                        value={formData.tags} // Using tags field temporarily
+                        onChange={(e) => setFormData({...formData, tags: e.target.value})}
+                        placeholder="JavaScript, React, Node.js"
+                        className={styles.input}
+                        disabled={isSubmitting}
+                      />
+                      <small className={styles.helperText}>
+                        From roadmaps: {selectedRoadmaps.flatMap(r => roadmaps[r]?.technologies || []).slice(0, 8).join(', ')}
+                      </small>
+                    </div>
+                  </div>
+                )}
+
+                {/* Author */}
                 <div className={styles.formGroup}>
-                  <label htmlFor="tags">Tags (comma-separated)</label>
+                  <label htmlFor="author">Author (optional)</label>
                   <input
                     type="text"
-                    id="tags"
-                    value={formData.tags}
-                    onChange={(e) => setFormData({...formData, tags: e.target.value})}
-                    placeholder="arrays, algorithms, complexity"
+                    id="author"
+                    value={formData.author}
+                    onChange={(e) => setFormData({...formData, author: e.target.value})}
+                    placeholder="John Doe"
                     className={styles.input}
+                    disabled={isSubmitting}
                   />
                 </div>
 
+                {/* Enhanced Features */}
                 <div className={styles.formSection}>
-                  <h3>Podcast</h3>
+                  <h3>📚 Enhanced Features</h3>
+                  
+                  <div className={styles.formRow}>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="estimatedReadTime">Estimated Read Time (minutes)</label>
+                      <input
+                        type="number"
+                        id="estimatedReadTime"
+                        value={formData.estimatedReadTime}
+                        onChange={(e) => setFormData({...formData, estimatedReadTime: parseInt(e.target.value) || 30})}
+                        min="1"
+                        className={styles.input}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label htmlFor="prerequisites">Prerequisites (comma-separated article slugs)</label>
+                    <input
+                      type="text"
+                      id="prerequisites"
+                      value={formData.prerequisites}
+                      onChange={(e) => setFormData({...formData, prerequisites: e.target.value})}
+                      placeholder="basics-javascript, arrays-introduction"
+                      className={styles.input}
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label htmlFor="relatedArticles">Related Articles (comma-separated)</label>
+                    <input
+                      type="text"
+                      id="relatedArticles"
+                      value={formData.relatedArticles}
+                      onChange={(e) => setFormData({...formData, relatedArticles: e.target.value})}
+                      placeholder="linked-lists-advanced, trees-introduction"
+                      className={styles.input}
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label htmlFor="learningOutcomes">Learning Outcomes (one per line)</label>
+                    <textarea
+                      id="learningOutcomes"
+                      value={formData.learningOutcomes}
+                      onChange={(e) => setFormData({...formData, learningOutcomes: e.target.value})}
+                      placeholder="Understand array operations&#10;Implement common algorithms&#10;Analyze time complexity"
+                      rows={3}
+                      className={styles.textarea}
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label htmlFor="keyConcepts">Key Concepts (one per line)</label>
+                    <textarea
+                      id="keyConcepts"
+                      value={formData.keyConcepts}
+                      onChange={(e) => setFormData({...formData, keyConcepts: e.target.value})}
+                      placeholder="Time Complexity&#10;Space Complexity&#10;Big O Notation"
+                      rows={3}
+                      className={styles.textarea}
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                </div>
+
+                {/* Interactive Elements */}
+                <div className={styles.formSection}>
+                  <h3>🎮 Interactive Elements</h3>
+                  <div className={styles.checkboxGroup}>
+                    <label className={styles.checkboxLabel}>
+                      <input
+                        type="checkbox"
+                        checked={formData.quizzesEnabled}
+                        onChange={(e) => setFormData({...formData, quizzesEnabled: e.target.checked})}
+                        disabled={isSubmitting}
+                      />
+                      Enable Quizzes
+                    </label>
+                    <label className={styles.checkboxLabel}>
+                      <input
+                        type="checkbox"
+                        checked={formData.codePlaygroundsEnabled}
+                        onChange={(e) => setFormData({...formData, codePlaygroundsEnabled: e.target.checked})}
+                        disabled={isSubmitting}
+                      />
+                      Enable Code Playgrounds
+                    </label>
+                    <label className={styles.checkboxLabel}>
+                      <input
+                        type="checkbox"
+                        checked={formData.exercisesEnabled}
+                        onChange={(e) => setFormData({...formData, exercisesEnabled: e.target.checked})}
+                        disabled={isSubmitting}
+                      />
+                      Enable Exercises
+                    </label>
+                    <label className={styles.checkboxLabel}>
+                      <input
+                        type="checkbox"
+                        checked={formData.projectsEnabled}
+                        onChange={(e) => setFormData({...formData, projectsEnabled: e.target.checked})}
+                        disabled={isSubmitting}
+                      />
+                      Enable Projects
+                    </label>
+                  </div>
+                </div>
+
+                {/* Media Section */}
+                <div className={styles.formSection}>
+                  <h3>🎥 Media</h3>
+                  
                   <div className={styles.checkboxGroup}>
                     <label className={styles.checkboxLabel}>
                       <input
                         type="checkbox"
                         checked={formData.podcastEnabled}
                         onChange={(e) => setFormData({...formData, podcastEnabled: e.target.checked})}
+                        disabled={isSubmitting}
                       />
                       Enable Podcast
                     </label>
                     {formData.podcastEnabled && (
-                      <input
-                        type="url"
-                        value={formData.podcastUrl}
-                        onChange={(e) => setFormData({...formData, podcastUrl: e.target.value})}
-                        placeholder="Podcast URL"
-                        className={styles.input}
-                      />
+                      <div className={styles.mediaFields}>
+                        <input
+                          type="url"
+                          value={formData.podcastUrl}
+                          onChange={(e) => setFormData({...formData, podcastUrl: e.target.value})}
+                          placeholder="Podcast URL"
+                          className={styles.input}
+                          disabled={isSubmitting}
+                        />
+                        <input
+                          type="number"
+                          value={formData.podcastDuration}
+                          onChange={(e) => setFormData({...formData, podcastDuration: parseInt(e.target.value) || 0})}
+                          placeholder="Duration (minutes)"
+                          className={styles.input}
+                          disabled={isSubmitting}
+                        />
+                      </div>
                     )}
                   </div>
-                </div>
 
-                <div className={styles.formSection}>
-                  <h3>Discussion</h3>
+                  <div className={styles.checkboxGroup}>
+                    <label className={styles.checkboxLabel}>
+                      <input
+                        type="checkbox"
+                        checked={formData.videoEnabled}
+                        onChange={(e) => setFormData({...formData, videoEnabled: e.target.checked})}
+                        disabled={isSubmitting}
+                      />
+                      Enable Video
+                    </label>
+                    {formData.videoEnabled && (
+                      <div className={styles.mediaFields}>
+                        <input
+                          type="url"
+                          value={formData.videoUrl}
+                          onChange={(e) => setFormData({...formData, videoUrl: e.target.value})}
+                          placeholder="Video URL"
+                          className={styles.input}
+                          disabled={isSubmitting}
+                        />
+                        <input
+                          type="number"
+                          value={formData.videoDuration}
+                          onChange={(e) => setFormData({...formData, videoDuration: parseInt(e.target.value) || 0})}
+                          placeholder="Duration (minutes)"
+                          className={styles.input}
+                          disabled={isSubmitting}
+                        />
+                      </div>
+                    )}
+                  </div>
+
                   <div className={styles.checkboxGroup}>
                     <label className={styles.checkboxLabel}>
                       <input
                         type="checkbox"
                         checked={formData.discussionEnabled}
                         onChange={(e) => setFormData({...formData, discussionEnabled: e.target.checked})}
+                        disabled={isSubmitting}
                       />
                       Enable Discussion
                     </label>
@@ -398,6 +854,7 @@ export default function AdminManifests() {
                         value={formData.discussionProvider}
                         onChange={(e) => setFormData({...formData, discussionProvider: e.target.value as any})}
                         className={styles.select}
+                        disabled={isSubmitting}
                       >
                         <option value="giscus">Giscus</option>
                         <option value="github">GitHub</option>
@@ -406,8 +863,9 @@ export default function AdminManifests() {
                   </div>
                 </div>
 
+                {/* Resources */}
                 <div className={styles.formSection}>
-                  <h3>Resources</h3>
+                  <h3>📚 Resources</h3>
                   <div className={styles.formGroup}>
                     <label htmlFor="externalLinks">External Links (one per line)</label>
                     <textarea
@@ -417,6 +875,7 @@ export default function AdminManifests() {
                       placeholder="https://example.com/resource1&#10;https://example.com/resource2"
                       rows={3}
                       className={styles.textarea}
+                      disabled={isSubmitting}
                     />
                   </div>
                   <div className={styles.formGroup}>
@@ -428,16 +887,50 @@ export default function AdminManifests() {
                       placeholder="solution.js&#10;explanation.md"
                       rows={3}
                       className={styles.textarea}
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="downloads">Downloads (one per line)</label>
+                    <textarea
+                      id="downloads"
+                      value={formData.downloads}
+                      onChange={(e) => setFormData({...formData, downloads: e.target.value})}
+                      placeholder="slides.pdf&#10;cheatsheet.pdf"
+                      rows={2}
+                      className={styles.textarea}
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="references">References (one per line)</label>
+                    <textarea
+                      id="references"
+                      value={formData.references}
+                      onChange={(e) => setFormData({...formData, references: e.target.value})}
+                      placeholder="Book: Algorithm Design Manual&#10;Paper: Original Research"
+                      rows={2}
+                      className={styles.textarea}
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
 
                 <div className={styles.formActions}>
-                  <button type="button" onClick={resetForm} className={styles.cancelButton}>
+                  <button 
+                    type="button" 
+                    onClick={resetForm} 
+                    className={styles.cancelButton}
+                    disabled={isSubmitting}
+                  >
                     Cancel
                   </button>
-                  <button type="submit" className={styles.submitButton}>
-                    {editingManifest ? 'Update Manifest' : 'Create Manifest'}
+                  <button 
+                    type="submit" 
+                    className={styles.submitButton}
+                    disabled={isSubmitting || selectedRoadmaps.length === 0}
+                  >
+                    {isSubmitting ? 'Saving...' : (editingManifest ? 'Update Manifest' : 'Create Manifest')}
                   </button>
                 </div>
               </form>

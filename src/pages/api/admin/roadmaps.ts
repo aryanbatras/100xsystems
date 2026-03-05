@@ -4,9 +4,43 @@ interface RoadmapData {
   slug: string;
   title: string;
   description: string;
+  longDescription?: string;
   sections: string[];
   estimatedTime: string;
   difficulty: 'beginner' | 'intermediate' | 'advanced';
+  
+  // Enhanced metadata for 100xSystems context
+  category: 'foundation' | 'systems' | 'development' | 'patterns' | 'devops' | 'ai' | 'leadership';
+  level: number; // 1-9 based on README path
+  prerequisites: string[]; // roadmap slugs that should be completed first
+  outcomes: string[]; // what learner will achieve
+  skills: string[]; // specific skills gained
+  technologies: string[]; // technologies covered
+  
+  // Learning structure
+  learningObjectives: string[];
+  keyProjects: string[];
+  assessmentCriteria: string[];
+  
+  // Metadata
+  author?: string;
+  tags: string[];
+  lastUpdated: string;
+  version: string;
+  
+  // Progress tracking
+  totalArticles: number;
+  estimatedHours: number;
+  difficultyScore: number; // 1-100
+  
+  // Community features
+  discussionEnabled: boolean;
+  mentorshipAvailable: boolean;
+  communityResources: string[];
+  
+  // Certification
+  certificateAvailable: boolean;
+  certificateRequirements: string[];
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -112,12 +146,48 @@ async function handleCreate(
 
   const fileName = `${roadmapData.slug}.json`;
   const filePath = `meta/${fileName}`;
+  
+  // Create enhanced roadmap content with all new fields
   const content = JSON.stringify({
     title: roadmapData.title,
     description: roadmapData.description,
+    longDescription: roadmapData.longDescription,
     sections: roadmapData.sections,
     estimatedTime: roadmapData.estimatedTime,
-    difficulty: roadmapData.difficulty
+    difficulty: roadmapData.difficulty,
+    
+    // Enhanced metadata for 100xSystems context
+    category: roadmapData.category,
+    level: roadmapData.level,
+    prerequisites: roadmapData.prerequisites || [],
+    outcomes: roadmapData.outcomes || [],
+    skills: roadmapData.skills || [],
+    technologies: roadmapData.technologies || [],
+    
+    // Learning structure
+    learningObjectives: roadmapData.learningObjectives || [],
+    keyProjects: roadmapData.keyProjects || [],
+    assessmentCriteria: roadmapData.assessmentCriteria || [],
+    
+    // Metadata
+    author: roadmapData.author,
+    tags: roadmapData.tags || [],
+    lastUpdated: new Date().toISOString(),
+    version: roadmapData.version || '1.0.0',
+    
+    // Progress tracking
+    totalArticles: roadmapData.totalArticles || 0,
+    estimatedHours: roadmapData.estimatedHours || 0,
+    difficultyScore: roadmapData.difficultyScore || 30,
+    
+    // Community features
+    discussionEnabled: roadmapData.discussionEnabled ?? true,
+    mentorshipAvailable: roadmapData.mentorshipAvailable ?? false,
+    communityResources: roadmapData.communityResources || [],
+    
+    // Certification
+    certificateAvailable: roadmapData.certificateAvailable ?? false,
+    certificateRequirements: roadmapData.certificateRequirements || []
   }, null, 2);
 
   console.log('📁 File path:', filePath);
@@ -160,12 +230,48 @@ async function handleUpdate(
 
   const fileName = `${roadmapData.slug}.json`;
   const filePath = `meta/${fileName}`;
+  
+  // Create enhanced roadmap content with all new fields
   const content = JSON.stringify({
     title: roadmapData.title,
     description: roadmapData.description,
+    longDescription: roadmapData.longDescription,
     sections: roadmapData.sections,
     estimatedTime: roadmapData.estimatedTime,
-    difficulty: roadmapData.difficulty
+    difficulty: roadmapData.difficulty,
+    
+    // Enhanced metadata for 100xSystems context
+    category: roadmapData.category,
+    level: roadmapData.level,
+    prerequisites: roadmapData.prerequisites || [],
+    outcomes: roadmapData.outcomes || [],
+    skills: roadmapData.skills || [],
+    technologies: roadmapData.technologies || [],
+    
+    // Learning structure
+    learningObjectives: roadmapData.learningObjectives || [],
+    keyProjects: roadmapData.keyProjects || [],
+    assessmentCriteria: roadmapData.assessmentCriteria || [],
+    
+    // Metadata
+    author: roadmapData.author,
+    tags: roadmapData.tags || [],
+    lastUpdated: new Date().toISOString(),
+    version: roadmapData.version || '1.0.0',
+    
+    // Progress tracking
+    totalArticles: roadmapData.totalArticles || 0,
+    estimatedHours: roadmapData.estimatedHours || 0,
+    difficultyScore: roadmapData.difficultyScore || 30,
+    
+    // Community features
+    discussionEnabled: roadmapData.discussionEnabled ?? true,
+    mentorshipAvailable: roadmapData.mentorshipAvailable ?? false,
+    communityResources: roadmapData.communityResources || [],
+    
+    // Certification
+    certificateAvailable: roadmapData.certificateAvailable ?? false,
+    certificateRequirements: roadmapData.certificateRequirements || []
   }, null, 2);
 
   try {
