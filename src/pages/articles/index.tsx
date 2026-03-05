@@ -1,8 +1,9 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StaticSiteGenerator } from '../../core/infrastructure/staticSiteGenerator';
+import InlineSearch from '../../components/search/InlineSearch';
 import styles from './Articles.module.css';
 
 interface Article {
@@ -45,13 +46,15 @@ export default function Articles({ articles }: ArticlesProps) {
             <div className={styles.searchContainer}>
               <input
                 type="text"
-                placeholder="Search articles..."
+                placeholder="Quick filter articles..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={styles.searchInput}
               />
             </div>
           </header>
+
+          <InlineSearch articles={articles} />
 
           <main className={styles.articlesMain}>
             {filteredArticles.length === 0 ? (

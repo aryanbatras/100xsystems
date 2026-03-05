@@ -5,6 +5,21 @@ export interface ArticleMetadata {
   date: string | null;
 }
 
+// Search document interface for Fuse.js
+export interface SearchDocument {
+  id: string;
+  slug: string;
+  title: string;
+  description: string | null;
+  content: string;
+  fullContent: string;
+  tags: string[];
+  difficulty: string;
+  section: string;
+  date: string | null;
+  wordCount: number;
+}
+
 export interface StaticArticleData {
   html: string;
   slug: string;
@@ -569,5 +584,87 @@ export class StaticSiteGenerator {
     }
     
     return articleData;
+  }
+
+  // Search index generation for Fuse.js
+  static async generateSearchIndex(): Promise<SearchDocument[]> {
+    console.log('🔍 Building search index...');
+    
+    const articles = await this.fetchAllArticlesMetadata();
+    const searchDocuments: SearchDocument[] = [];
+    
+    for (const article of articles) {
+      try {
+        const content = await this.fetchArticleContent(article.slug);
+        
+        // Extract clean text from HTML
+        const cleanText = this.extractTextFromHtml(content.html);
+        
+        // Try to fetch manifest for additional metadata
+        let manifest = null;
+        try {
+          const { githubUsername, githubRepo } = this.getGitHubConfig();
+          const manifestUrl = `https://raw.githubusercontent.com/${githubUsername}/${githubRepo}/main/articles/${article.slug}/manifest.json`;
+          const response = await fetch(manifestUrl);
+          
+          if (response.ok) {
+            manifest = await response.json();
+          }
+        } catch (error) {
+          // Manifest is optional, continue without it
+        }
+        
+        searchDocuments.push({
+          id: article.slug,
+          slug: article.slug,
+          title: article.title,
+          description: article.description,
+          content: cleanText.substring(0, 2000), // First 2000 chars for relevance
+          fullContent: cleanText,
+          tags: manifest?.tags || [],
+          difficulty: manifest?.difficulty || 'beginner',
+          section: manifest?.section || '',
+          date: article.date,
+          wordCount: cleanText.split(' ').length
+        });
+        
+        console.log(`✅ Processed article for search: ${article.slug}`);
+      } catch (error) {
+        console.warn(`⚠️ Failed to process article ${article.slug} for search:`, error);
+      }
+    }
+    
+    console.log(`✅ Built search index: ${searchDocuments.length} documents`);
+    return searchDocuments;
+  }
+  
+  static extractTextFromHtml(html: string): string {
+    // Remove script/style tags and metadata - use template literals for regex
+    const cleanHtml = html
+      .replace(new RegExp('<script[^>]*>[\\s\\S]*?<\\/script>', 'gi'), '')
+      .replace(new RegExp('<style[^>]*>[\\s\\S]*?<\\/style>', 'gi'), '')
+      .replace(new RegExp('<script[^>]*>[\\s\\S]*?<\\/script>', 'gi'), '')
+      .replace(new RegExp('<meta[^>]*>', 'gi'), '')
+      .replace(new RegExp('<link[^>]*>', 'gi'), '')
+      .replace(new RegExp('<script type="application/json"[^>]*>[\\s\\S]*?<\\/script>', 'gi'), '');
+    
+    // Extract content from ql-editor
+    const articleMatch = cleanHtml.match(new RegExp('<article[^>]*class="ql-editor"[^>]*>([\\s\\S]*?)<\\/article>'));
+    const articleContent = articleMatch ? articleMatch[1] : cleanHtml;
+    
+    // Remove HTML tags and clean up - improved regex patterns
+    return articleContent
+      .replace(/<script[^>]*>.*?<\/script>/gi, '')
+      .replace(/<style[^>]*>.*?<\/style>/gi, '')
+      .replace(/<[^>]*>/g, '')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&#\d+;/g, '') // Remove numeric HTML entities
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 }
