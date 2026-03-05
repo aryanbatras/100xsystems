@@ -2,6 +2,8 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { StaticSiteGenerator, ArticleManifest } from '../../core/infrastructure/staticSiteGenerator';
+import GiscusComments from '../../components/discussions/GiscusComments';
+import { DiscussionProvider } from '../../components/discussions/DiscussionProvider';
 import styles from './Articles.module.css';
 
 interface ArticleProps {
@@ -9,11 +11,14 @@ interface ArticleProps {
   slug: string;
   title: string;
   description: string | null;
-  date: string | null;
+  date: string | null; 
   manifest?: ArticleManifest;
 }
 
 export default function Article({ html, slug, title, description, date, manifest }: ArticleProps) {
+  const discussionEnabled = manifest?.discussion?.enabled || false;
+  const articleTitle = title || slug;
+
   return (
     <>
       <Head>
@@ -133,6 +138,19 @@ export default function Article({ html, slug, title, description, date, manifest
                 </section>
               )}
             </div>
+          )}
+
+          {/* Discussions Section */}
+          {discussionEnabled && (
+            <DiscussionProvider enabled={discussionEnabled}>
+              <section className={styles.discussionSection}>
+                <h2 className={styles.discussionTitle}>💬 Discussion</h2>
+                <GiscusComments 
+                  title={articleTitle}
+                  className={styles.giscusComments}
+                />
+              </section>
+            </DiscussionProvider>
           )}
 
           <footer className={styles.articleFooter}>
