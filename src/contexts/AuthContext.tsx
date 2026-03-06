@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase, signInWithGitHub, signOut, getCurrentUser, getCurrentSession, syncUserProfile } from '../utils/supabase';
+import { supabase, signInWithGitHub, signInWithGoogle, signOut, getCurrentUser, getCurrentSession, syncUserProfile } from '../utils/supabase';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
   signInWithGitHub: () => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -68,6 +69,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setLoading(false);
   };
 
+  const handleSignInWithGoogle = async () => {
+    setLoading(true);
+    const { error } = await signInWithGoogle();
+    if (error) {
+      console.error('Google sign in error:', error);
+    }
+    setLoading(false);
+  };
+
   const handleSignOut = async () => {
     setLoading(true);
     const { error } = await signOut();
@@ -85,6 +95,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     session,
     loading,
     signInWithGitHub: handleSignInWithGitHub,
+    signInWithGoogle: handleSignInWithGoogle,
     signOut: handleSignOut,
   };
 

@@ -16,6 +16,16 @@ export const signInWithGitHub = async () => {
   return { error };
 };
 
+export const signInWithGoogle = async () => {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${window.location.origin}/auth/callback`
+    }
+  });
+  return { error };
+};
+
 export const signOut = async () => {
   const { error } = await supabase.auth.signOut();
   return { error };
@@ -37,10 +47,11 @@ export const syncUserProfile = async (user: User) => {
     .from('profiles')
     .upsert({
       id: user.id,
-      username: user.user_metadata?.user_name || user.email?.split('@')[0],
-      full_name: user.user_metadata?.full_name,
+      username: user.user_metadata?.user_name || user.user_metadata?.name || user.email?.split('@')[0],
+      full_name: user.user_metadata?.full_name || user.user_metadata?.name,
       avatar_url: user.user_metadata?.avatar_url,
       github_username: user.user_metadata?.user_name,
+      google_username: user.user_metadata?.email,
       updated_at: new Date().toISOString()
     });
   
