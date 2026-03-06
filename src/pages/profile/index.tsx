@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../contexts/AuthContext';
 import { Navbar } from '../../components/navbar/Navbar';
-import { Footer } from '../../components/footer/Footer';
 import { supabase } from '../../utils/supabase';
+import styles from './Profile.module.css';
 
 export default function Profile() {
   const router = useRouter();
@@ -111,9 +111,9 @@ export default function Profile() {
   if (loading) {
     return (
       <>
-        <Navbar />
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        {/* <Navbar /> */}
+        <div className={styles.loadingContainer}>
+          <div className={styles.spinner}></div>
         </div>
       </>
     );
@@ -122,12 +122,10 @@ export default function Profile() {
   if (!user) {
     return (
       <>
-        <Navbar />
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900">Authentication Required</h2>
-            <p className="text-gray-600 mt-2">Please sign in to view your profile.</p>
-          </div>
+        {/* <Navbar /> */}
+        <div className={styles.errorContainer}>
+          <h2 className={styles.errorTitle}>Authentication Required</h2>
+          <p className={styles.errorText}>Please sign in to view your profile.</p>
         </div>
       </>
     );
@@ -135,126 +133,124 @@ export default function Profile() {
 
   return (
     <>
-      <Navbar />
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-lg shadow-md">
-            <div className="border-b border-gray-200 pb-4 mb-6">
-              <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
-                <button
-                  onClick={() => setIsEditing(!isEditing)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  {isEditing ? 'Cancel' : 'Edit Profile'}
-                </button>
-              </div>
+      {/* <Navbar /> */}
+      <div className={styles.page}>
+        <div className={styles.container}>
+          <div className={styles.profileCard}>
+            <div className={styles.header}>
+              <h1 className={styles.title}>Profile</h1>
+              <button
+                onClick={() => setIsEditing(!isEditing)}
+                className={styles.editButton}
+              >
+                {isEditing ? 'Cancel' : 'Edit Profile'}
+              </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6 p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Email</label>
+            <form onSubmit={handleSubmit} className={styles.form}>
+              <div className={styles.formGrid}>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Email</label>
                   <input
                     type="email"
                     value={user.email}
                     disabled
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-100"
+                    className={styles.input}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Username</label>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Username</label>
                   <input
                     type="text"
                     name="username"
                     value={formData.username}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    className={styles.input}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Full Name</label>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Full Name</label>
                   <input
                     type="text"
                     name="full_name"
                     value={formData.full_name}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    className={styles.input}
                   />
                 </div>
 
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700">Bio</label>
+                <div className={styles.formGroupFull}>
+                  <label className={styles.label}>Bio</label>
                   <textarea
                     name="bio"
                     value={formData.bio}
                     onChange={handleTextAreaChange}
                     disabled={!isEditing}
                     rows={4}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    className={styles.textarea}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">GitHub Username</label>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>GitHub Username</label>
                   <input
                     type="text"
                     name="github_username"
                     value={formData.github_username}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    className={styles.input}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">LinkedIn URL</label>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>LinkedIn URL</label>
                   <input
                     type="url"
                     name="linkedin_url"
                     value={formData.linkedin_url}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    className={styles.input}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Website URL</label>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Website URL</label>
                   <input
                     type="url"
                     name="website_url"
                     value={formData.website_url}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    className={styles.input}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Location</label>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Location</label>
                   <input
                     type="text"
                     name="location"
                     value={formData.location}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    className={styles.input}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Timezone</label>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Timezone</label>
                   <select
                     name="timezone"
                     value={formData.timezone}
                     onChange={handleSelectChange}
                     disabled={!isEditing}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    className={styles.select}
                   >
                     <option value="UTC">UTC</option>
                     <option value="EST">EST</option>
@@ -263,14 +259,14 @@ export default function Profile() {
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Preferred Language</label>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Preferred Language</label>
                   <select
                     name="preferred_language"
                     value={formData.preferred_language}
                     onChange={handleSelectChange}
                     disabled={!isEditing}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    className={styles.select}
                   >
                     <option value="en">English</option>
                     <option value="es">Spanish</option>
@@ -279,33 +275,33 @@ export default function Profile() {
                   </select>
                 </div>
 
-                <div className="md:col-span-2">
-                  <div className="flex items-center">
+                <div className={styles.formGroupFull}>
+                  <div className={styles.checkboxGroup}>
                     <input
                       type="checkbox"
                       name="is_mentor"
                       checked={formData.is_mentor}
                       onChange={handleCheckboxChange}
                       disabled={!isEditing}
-                      className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                      className={styles.checkbox}
                     />
-                    <label className="ml-2 block text-sm text-gray-700">
+                    <label className={styles.checkboxLabel}>
                       Available as mentor
                     </label>
                   </div>
                 </div>
 
-                <div className="md:col-span-2">
-                  <div className="flex items-center">
+                <div className={styles.formGroupFull}>
+                  <div className={styles.checkboxGroup}>
                     <input
                       type="checkbox"
                       name="is_public"
                       checked={formData.is_public}
                       onChange={handleCheckboxChange}
                       disabled={!isEditing}
-                      className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                      className={styles.checkbox}
                     />
-                    <label className="ml-2 block text-sm text-gray-700">
+                    <label className={styles.checkboxLabel}>
                       Make profile public
                     </label>
                   </div>
@@ -313,10 +309,10 @@ export default function Profile() {
               </div>
 
               {isEditing && (
-                <div className="pt-6">
+                <div className={styles.submitSection}>
                   <button
                     type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className={styles.submitButton}
                   >
                     Save Profile
                   </button>
@@ -326,7 +322,6 @@ export default function Profile() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

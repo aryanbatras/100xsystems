@@ -6,10 +6,12 @@ import { CgMenuHotdog } from "react-icons/cg";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../contexts/AuthContext';
+import { AuthModal } from '../auth/AuthModal';
 
 export function Navbar(): React.ReactElement {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isWhiteTheme, setIsWhiteTheme] = useState(false);
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const router = useRouter();
     const { user, loading, signOut, signInWithGitHub } = useAuth();
 
@@ -52,16 +54,16 @@ export function Navbar(): React.ReactElement {
                     <li className={styles.link}><Link href="/contact">Contact</Link></li>
                     {user ? (
                         <li className={styles.link}>
-                            <Link href="/user-dashboard" className="text-blue-600 hover:text-blue-800 font-medium">
+                            <Link href="/user-dashboard" className={styles.welcomeLink}>
                                 Welcome, {user.user_metadata?.full_name || user.email?.split('@')[0]}
                             </Link>
                         </li>
                     ) : (
                         <li className={styles.link}>
                             <button 
-                                onClick={signInWithGitHub}
+                                onClick={() => setIsAuthModalOpen(true)}
                                 disabled={loading}
-                                className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors"
+                                className={styles.authButton}
                             >
                                 {loading ? 'Signing in...' : 'Sign In'}
                             </button>
@@ -71,7 +73,7 @@ export function Navbar(): React.ReactElement {
                         <li className={styles.link}>
                             <button 
                                 onClick={signOut}
-                                className="text-red-600 hover:text-red-800 font-medium hover:underline transition-colors"
+                                className={styles.signOutButton}
                             >
                                 Sign Out
                             </button>
@@ -106,11 +108,11 @@ export function Navbar(): React.ReactElement {
                             <li className={styles.mobile_link}>
                                 <button 
                                         onClick={() => {
-                                            signInWithGitHub();
+                                            setIsAuthModalOpen(true);
                                             setIsMenuOpen(false);
                                         }}
                                         disabled={loading}
-                                        className="text-blue-600 font-medium hover:underline transition-colors"
+                                        className={styles.mobileAuthButton}
                                     >
                                         {loading ? 'Signing in...' : 'Sign In'}
                                     </button>
@@ -123,7 +125,7 @@ export function Navbar(): React.ReactElement {
                                             signOut();
                                             setIsMenuOpen(false);
                                         }}
-                                        className="text-red-600 font-medium hover:underline transition-colors"
+                                        className={styles.mobileSignOutButton}
                                     >
                                         Sign Out
                                     </button>
@@ -133,6 +135,7 @@ export function Navbar(): React.ReactElement {
                     </ul>
                 </div>
             )}
+            <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
         </>
     )
 }

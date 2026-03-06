@@ -228,6 +228,70 @@
   }
 }
 
+.welcomeLink {
+  color: var(--accent-yellow);
+  font-family: var(--font-samsung-sharp);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.authButton {
+  background: none;
+  border: none;
+  color: var(--accent-yellow);
+  text-transform: uppercase;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.signOutButton {
+  background: none;
+  border: none;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.mobileAuthButton {
+  background: none;
+  border: none;
+  color: var(--accent-yellow);
+  text-transform: uppercase;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  padding: 2rem;
+  font-size: 1.75rem;
+  width: 100%;
+  text-align: end;
+}
+
+.mobileSignOutButton {
+  background: none;
+  border: none;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  padding: 2rem;
+  font-size: 1.75rem;
+  width: 100%;
+  text-align: end;
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
