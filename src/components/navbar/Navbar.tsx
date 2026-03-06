@@ -5,11 +5,13 @@ import { RxCross1 } from "react-icons/rx";
 import { CgMenuHotdog } from "react-icons/cg";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useAuth } from '../../contexts/AuthContext';
 
 export function Navbar(): React.ReactElement {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isWhiteTheme, setIsWhiteTheme] = useState(false);
     const router = useRouter();
+    const { user, loading, signOut, signInWithGitHub } = useAuth();
 
     // Routes that should use white theme
     const whiteThemeRoutes = ['/articles', '/admin', '/roadmaps', '/parser', '/admin-dashboard', '/graph'];
@@ -48,6 +50,33 @@ export function Navbar(): React.ReactElement {
                     <li className={styles.link}><Link href="/graph">Knowledge Graph</Link></li>
                     <li className={styles.link}><Link href="/about">About</Link></li>
                     <li className={styles.link}><Link href="/contact">Contact</Link></li>
+                    {user ? (
+                        <li className={styles.link}>
+                            <Link href="/user-dashboard" className="text-blue-600 hover:text-blue-800 font-medium">
+                                Welcome, {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                            </Link>
+                        </li>
+                    ) : (
+                        <li className={styles.link}>
+                            <button 
+                                onClick={signInWithGitHub}
+                                disabled={loading}
+                                className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors"
+                            >
+                                {loading ? 'Signing in...' : 'Sign In'}
+                            </button>
+                        </li>
+                    )}
+                    {user && (
+                        <li className={styles.link}>
+                            <button 
+                                onClick={signOut}
+                                className="text-red-600 hover:text-red-800 font-medium hover:underline transition-colors"
+                            >
+                                Sign Out
+                            </button>
+                        </li>
+                    )}
                     <li className={styles.link}><Link href="/admin-dashboard">Admin</Link></li>
                 </ul>
                 {!isMenuOpen ? (
@@ -67,6 +96,39 @@ export function Navbar(): React.ReactElement {
                         <Link href="/graph"> <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}>Knowledge Graph</li></Link>
                         <Link href="/about"> <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}>About</li></Link>
                         <Link href="/contact"> <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}>Contact</li></Link>
+                        {user ? (
+                            <Link href="/user-dashboard">
+                                <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}>
+                                    Welcome, {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                                </li>
+                            </Link>
+                        ) : (
+                            <li className={styles.mobile_link}>
+                                <button 
+                                        onClick={() => {
+                                            signInWithGitHub();
+                                            setIsMenuOpen(false);
+                                        }}
+                                        disabled={loading}
+                                        className="text-blue-600 font-medium hover:underline transition-colors"
+                                    >
+                                        {loading ? 'Signing in...' : 'Sign In'}
+                                    </button>
+                            </li>
+                        )}
+                        {user && (
+                            <li className={styles.mobile_link}>
+                                <button 
+                                        onClick={() => {
+                                            signOut();
+                                            setIsMenuOpen(false);
+                                        }}
+                                        className="text-red-600 font-medium hover:underline transition-colors"
+                                    >
+                                        Sign Out
+                                    </button>
+                            </li>
+                        )}
                         <Link href="/admin-dashboard"> <li className={styles.mobile_link} onClick={() => setIsMenuOpen(false)}>Admin</li></Link>
                     </ul>
                 </div>

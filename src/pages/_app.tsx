@@ -6,6 +6,7 @@ import { Footer } from "../components/footer/Footer";
 import ScrollSmootherProvider from "../components/scroll/ScrollSmootherProvider";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { AuthProvider } from "../contexts/AuthContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -23,15 +24,17 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [router.events]);
 
   return (
-    <ScrollSmootherProvider>
-      <Loading /> 
-      <Navbar />
-      <div id="smooth-wrapper">
-        <div id="smooth-content">
-          <Component {...pageProps} />
-          <Footer/>
-        </div>
-      </div>
-    </ScrollSmootherProvider>
+    <AuthProvider>
+      <ScrollSmootherProvider>
+        <Loading /> 
+          <Navbar />
+          <div id="smooth-wrapper">
+            <div id="smooth-content">
+              <Component {...pageProps} />
+              <Footer/>
+            </div>
+          </div>
+        </ScrollSmootherProvider>
+    </AuthProvider>
   );
 }
