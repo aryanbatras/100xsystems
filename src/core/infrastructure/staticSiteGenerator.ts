@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+
 export interface ArticleMetadata {
   slug: string;
   title: string;
@@ -18,6 +21,40 @@ export interface SearchDocument {
   section: string;
   date: string | null;
   wordCount: number;
+}
+
+// DSA Problem interfaces
+export interface DSAProblem {
+  id: string;
+  title: string;
+  category: string;
+  subcategory: string;
+  order: number;
+  difficulty: 'Easy' | 'Medium' | 'Hard' | 'Theory';
+  leetcode: string;
+  description: string;
+  examples: string[];
+  solution?: string;
+  timeComplexity?: string;
+  spaceComplexity?: string;
+  tags: string[];
+}
+
+export interface DSACategory {
+  name: string;
+  displayName: string;
+  problems: DSAProblem[];
+}
+
+export interface DSASection {
+  name: string;
+  displayName: string;
+  categories: DSACategory[];
+}
+
+export interface DSAContent {
+  sections: DSASection[];
+  totalProblems: number;
 }
 
 export interface StaticArticleData {
@@ -666,5 +703,295 @@ export class StaticSiteGenerator {
       .replace(/&#\d+;/g, '') // Remove numeric HTML entities
       .replace(/\s+/g, ' ')
       .trim();
+  }
+
+  // DSA Content Methods
+  static parseDSAFrontmatter(content: string): { frontmatter: Record<string, any>, body: string } {
+    const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+    const match = content.match(frontmatterRegex);
+    
+    if (!match) {
+      return { frontmatter: {}, body: content };
+    }
+    
+    try {
+      const frontmatter = match[1];
+      const body = match[2];
+      const parsed: Record<string, any> = {};
+      
+      // Parse YAML-like frontmatter
+      frontmatter.split('\n').forEach(line => {
+        const [key, ...valueParts] = line.split(':');
+        if (key && valueParts.length > 0) {
+          let value = valueParts.join(':').trim();
+          
+          // Remove quotes if present
+          if (value.startsWith('"') && value.endsWith('"')) {
+            value = value.slice(1, -1);
+          }
+          
+          // Parse arrays
+          if (value.startsWith('[') && value.endsWith(']')) {
+            const arrayValue = value.slice(1, -1).split(',').map(v => v.trim().replace(/['"]/g, ''));
+            parsed[key.trim()] = arrayValue;
+          } else {
+            parsed[key.trim()] = value;
+          }
+        }
+      });
+      
+      return { frontmatter: parsed, body };
+    } catch (error) {
+      console.warn('Error parsing frontmatter:', error);
+      return { frontmatter: {}, body: content };
+    }
+  }
+
+  static async fetchDSAProblems(): Promise<DSAContent> {
+    console.log('🏗️ Building DSA content...');
+    
+    const sections: DSASection[] = [];
+    let totalProblems = 0;
+    
+    // Define the structure based on curriculum
+    const sectionStructure = [
+      {
+        name: 'implementation',
+        displayName: 'Implementation',
+        categories: []
+      },
+      {
+        name: 'data-structures',
+        displayName: 'Data Structures',
+        categories: []
+      },
+      {
+        name: 'revision',
+        displayName: 'Revision',
+        categories: []
+      },
+      {
+        name: 'cses-algorithms',
+        displayName: 'CSES Algorithms',
+        categories: []
+      },
+      {
+        name: 'codeforces-problems',
+        displayName: 'Codeforces Problems',
+        categories: []
+      },
+      {
+        name: 'daily-coding-challenge',
+        displayName: 'Daily Coding Challenge',
+        categories: []
+      }
+    ];
+    
+    // For each section, scan categories and problems
+    for (const section of sectionStructure) {
+      const sectionPath = `/content/dsa/${section.name}`;
+      
+      try {
+        const categories = await this.fetchDSACategories(sectionPath, section.name);
+        section.categories = categories as never[]; // Type assertion to fix TypeScript error
+        totalProblems += categories.reduce((sum, cat) => sum + cat.problems.length, 0);
+      } catch (error) {
+        console.warn(`⚠️ Failed to load section ${section.name}:`, error);
+      }
+    }
+    
+    sections.push(...sectionStructure);
+    
+    console.log(`✅ Built DSA content: ${totalProblems} problems across ${sections.length} sections`);
+    
+    return {
+      sections,
+      totalProblems
+    };
+  }
+
+  static async fetchDSACategories(sectionPath: string, sectionName: string): Promise<DSACategory[]> {
+    const categories: DSACategory[] = [];
+    
+    // This would scan the actual file system
+    // For now, return empty - will be implemented with actual file scanning
+    try {
+        // Implementation would go here to scan directories
+        const categoryNames = this.getCategoryNames(sectionName);
+        
+        for (const categoryName of categoryNames) {
+          const problems = await this.fetchDSAProblemsForCategory(sectionPath, categoryName);
+          if (problems.length > 0) {
+            categories.push({
+              name: categoryName,
+              displayName: this.formatDisplayName(categoryName),
+              problems
+            });
+          }
+        }
+      } catch (error) {
+        console.warn(`Error fetching categories for ${sectionPath}:`, error);
+      }
+    
+    return categories;
+  }
+
+  static getCategoryNames(sectionName: string): string[] {
+    const categoryMap: Record<string, string[]> = {
+      'implementation': [
+        'introduction-to-data-structures', 'stacks-and-queues-basics', 'linked-lists-fundamentals', 'trees-and-graphs-introduction', 'sorting-and-searching-algorithms'
+      ],
+      'data-structures': [
+        'arrays-matrices', 'searching-sorting', 'linked-list', 'stacks-queues', 'recursion-backtracking',
+        'trees', 'binary-search-trees', 'heaps-trie', 'graphs', 'dynamic-programming',
+        'greedy-algorithms', 'hashmaps', 'strings'
+      ],
+      'revision': [
+        'arrays-hashing', 'binary-search', 'linked-list', 'recursion-backtracking',
+        'stacks-queues', 'heaps', 'trees', 'graphs', 'dynamic-programming',
+        'tries', 'strings'
+      ],
+      'cses-algorithms': [
+        'introductory', 'sorting-searching', 'dynamic-programming', 'graph-algorithms',
+        'range-queries', 'tree-algorithms', 'mathematics', 'string-algorithms',
+        'geometry', 'advanced-techniques', 'additional-problems'
+      ],
+      'codeforces-problems': [
+        'implementation', 'prime-sieve', 'bit-manipulation', 'stacks-queues-priorityqueues',
+        'string-algorithms', 'trees', 'graph-algorithms', 'matrix-exponentiation',
+        'trie', 'dynamic-programming', 'disjoint-set', 'sqrt-decomposition',
+        'fenwick-tree', 'segment-tree', 'lazy-propagation'
+      ],
+      'daily-coding-challenge': ['problems']
+    };
+    
+    return categoryMap[sectionName] || [];
+  }
+
+  static formatDisplayName(categoryName: string): string {
+    return categoryName
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
+  static async fetchDSAProblemsForCategory(sectionPath: string, categoryName: string): Promise<DSAProblem[]> {
+    const problems: DSAProblem[] = [];
+    
+    // This would scan actual markdown files
+    // For now, return empty - will be implemented with actual file scanning
+    try {
+      const categoryPath = `${sectionPath}/${categoryName}`;
+      const problemFiles = await this.getProblemFiles(categoryPath);
+      
+      for (const filename of problemFiles) {
+        if (filename.endsWith('.md')) {
+          const problem = await this.parseDSAProblem(categoryPath, filename);
+          if (problem) {
+            problems.push(problem);
+          }
+        }
+      }
+      
+      // Sort by order
+      problems.sort((a, b) => a.order - b.order);
+    } catch (error) {
+      console.warn(`Error fetching problems for ${categoryName}:`, error);
+    }
+    
+    return problems;
+  }
+
+  static async getProblemFiles(categoryPath: string): Promise<string[]> {
+    const fullPath = path.join(process.cwd(), categoryPath);
+    
+    try {
+      if (!fs.existsSync(fullPath)) {
+        console.warn(`Directory does not exist: ${fullPath}`);
+        return [];
+      }
+      
+      const files = fs.readdirSync(fullPath);
+      return files.filter(file => file.endsWith('.md')).sort();
+    } catch (error) {
+      console.warn(`Error reading directory ${fullPath}:`, error);
+      return [];
+    }
+  }
+
+  static async parseDSAProblem(categoryPath: string, filename: string): Promise<DSAProblem | null> {
+    try {
+      const fullPath = path.join(process.cwd(), categoryPath, filename);
+      
+      if (!fs.existsSync(fullPath)) {
+        console.warn(`File does not exist: ${fullPath}`);
+        return null;
+      }
+      
+      const content = fs.readFileSync(fullPath, 'utf-8');
+      const { frontmatter, body } = this.parseDSAFrontmatter(content);
+      
+      const problemId = filename.replace('.md', '');
+      const orderMatch = problemId.match(/^(\d+)/);
+      const order = orderMatch ? parseInt(orderMatch[1]) : 999;
+      
+      // Extract title from frontmatter or filename
+      const title = frontmatter.title || problemId.replace(/^\d+-/, '').replace(/-/g, ' ');
+      
+      // Extract examples from markdown content
+      const examples = this.extractExamples(body);
+      
+      return {
+        id: problemId,
+        title: title,
+        category: categoryPath.split('/').pop() || '',
+        subcategory: categoryPath.split('/').pop() || '',
+        order,
+        difficulty: frontmatter.difficulty || 'Easy',
+        leetcode: frontmatter.leetcode || '',
+        description: body,
+        examples,
+        timeComplexity: frontmatter.timeComplexity || '',
+        spaceComplexity: frontmatter.spaceComplexity || '',
+        tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : []
+      };
+    } catch (error) {
+      console.warn(`Error parsing problem ${filename}:`, error);
+      return null;
+    }
+  }
+
+  static extractExamples(content: string): string[] {
+    const examples: string[] = [];
+    const lines = content.split('\n');
+    let currentExample: string[] = [];
+    let inExample = false;
+    
+    for (const line of lines) {
+      if (line.startsWith('**Example:**') || line.startsWith('**Input:**') || line.startsWith('**Output:**')) {
+        if (currentExample.length > 0) {
+          examples.push(currentExample.join('\n').trim());
+          currentExample = [];
+        }
+        inExample = true;
+        currentExample.push(line);
+      } else if (inExample && (line.startsWith('**') || line.startsWith('##'))) {
+        // End of example block
+        if (currentExample.length > 0) {
+          examples.push(currentExample.join('\n').trim());
+          currentExample = [];
+        }
+        inExample = false;
+      } else if (inExample && line.trim()) {
+        currentExample.push(line);
+      }
+    }
+    
+    // Add the last example if there is one
+    if (currentExample.length > 0) {
+      examples.push(currentExample.join('\n').trim());
+    }
+    
+    return examples;
   }
 }
