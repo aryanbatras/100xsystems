@@ -104,6 +104,12 @@ export default function AchievementsPage() {
           {/* Group Header */}
           <div className={styles.groupHeader}>
             <div className={styles.groupInfo}>
+                  <button 
+                              onClick={() => router.push('/groups')}
+                              className={styles.backButtonTop}
+                            >
+                              ← Back to Groups
+                            </button>
               <h1 className={styles.groupName}>{group.name}</h1>
               <p className={styles.groupDescription}>{group.description}</p>
               <div className={styles.groupMeta}>

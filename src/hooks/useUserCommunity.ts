@@ -31,7 +31,16 @@ export interface UseUserCommunityReturn {
   createStudyGroup: (groupData: Partial<any>) => Promise<boolean>;
   createGroupWithGiscus: (groupData: Partial<StudyGroup>) => Promise<boolean>;
   deleteGroup: (groupId: string) => Promise<boolean>;
-  updateGroup: (groupId: string, updateData: { description?: string; tags?: string[] }) => Promise<boolean>;
+  updateGroup: (groupId: string, updateData: { 
+  description?: string; 
+  tags?: string[];
+  welcome_message?: string;
+  rules?: string;
+  is_private?: boolean;
+  is_active?: boolean;
+  max_members?: number;
+  roadmap_slug?: string;
+}) => Promise<boolean>;
   joinStudyGroup: (groupId: string) => Promise<boolean>;
   leaveStudyGroup: (groupId: string) => Promise<boolean>;
   createPost: (groupId: string, postData: Partial<any>) => Promise<boolean>;
@@ -333,7 +342,16 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
     }
   }, [user?.id]);
 
-  const updateGroup = useCallback(async (groupId: string, updateData: { description?: string; tags?: string[] }): Promise<boolean> => {
+  const updateGroup = useCallback(async (groupId: string, updateData: { 
+  description?: string; 
+  tags?: string[];
+  welcome_message?: string;
+  rules?: string;
+  is_private?: boolean;
+  is_active?: boolean;
+  max_members?: number;
+  roadmap_slug?: string;
+}): Promise<boolean> => {
     try {
       const updatedGroup = await CommunityService.updateGroup(groupId, updateData);
       

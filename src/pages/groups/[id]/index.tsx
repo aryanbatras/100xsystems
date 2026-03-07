@@ -20,9 +20,14 @@ export default function GroupPage() {
   // Show loading while redirecting
   return (
     <>
-      <Navbar />
       <div className={styles.page}>
         <div className={styles.container}>
+              <button 
+                  onClick={() => router.push('/groups')}
+                  className={styles.backButtonTop}
+                >
+                  ← Back to Groups
+                </button>
           <div className={styles.loadingState}>
             <div className={styles.spinner}></div>
             <h2>Loading Group...</h2>

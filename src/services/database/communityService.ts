@@ -563,7 +563,16 @@ export class CommunityService {
     }
   }
 
-  static async updateGroup(groupId: string, updateData: { description?: string; tags?: string[] }): Promise<StudyGroup | null> {
+  static async updateGroup(groupId: string, updateData: { 
+  description?: string; 
+  tags?: string[];
+  welcome_message?: string;
+  rules?: string;
+  is_private?: boolean;
+  is_active?: boolean;
+  max_members?: number;
+  roadmap_slug?: string;
+}): Promise<StudyGroup | null> {
     try {
       const { data, error } = await supabase
         .from('study_groups')
@@ -577,6 +586,42 @@ export class CommunityService {
     } catch (error) {
       console.error('Error updating study group:', error);
       return null;
+    }
+  }
+
+  static async getGroupMembers(groupId: string): Promise<any[]> {
+    try {
+      const { data, error } = await supabase
+        .from('study_group_members')
+        .select(`
+          user_id,
+          role,
+          joined_at,
+          contribution_score,
+          last_active_at,
+          profiles!user_id (
+            id,
+            full_name,
+            username,
+            avatar_url,
+            bio,
+            github_username,
+            linkedin_url,
+            website_url,
+            location,
+            is_mentor,
+            mentorship_areas,
+            created_at
+          )
+        `)
+        .eq('group_id', groupId)
+        .order('joined_at', { ascending: true });
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching group members:', error);
+      return [];
     }
   }
 

@@ -26,7 +26,10 @@
 }
 
 .groupInfo {
+  /* display: flex;
+  flex-direction: column; */
   flex: 1;
+  /* background: red;   */
 }
 
 .groupName {
@@ -52,16 +55,20 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
 }
 
 .memberCount {
-  font-size: 0.875rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  color: #6b7280;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+  font-size: 0.95rem;
+  color: #666666;
+  font-family: var(--font-samsung-sharp);
+}
+
+.maxMembers {
+  font-size: 0.95rem;
+  color: #666666;
+  font-family: var(--font-samsung-sharp);
 }
 
 .privateBadge {
@@ -140,6 +147,7 @@
   border-radius: 16px;
   padding: 2rem;
   min-height: 400px;
+  /* margin-bottom: 10rem; */
 }
 
 /* Join Prompt */
@@ -227,9 +235,53 @@
 .errorText {
   font-size: 1rem;
   line-height: 1.6;
-  margin: 0;
+  margin: 0 0 2rem 0;
   color: #666;
   max-width: 400px;
+}
+
+.backButton {
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 0;
+  padding: 1rem 2rem;
+  font-family: var(--font-samsung-sharp);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.backButton:hover {
+  background: #333333;
+}
+
+.backButtonTop {
+  background: transparent;
+  color: #666666;
+  border: 1px solid #e5e5e5;
+  border-radius: 0;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-samsung-sharp);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: end;
+  justify-content: end;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.backButtonTop:hover {
+  color: #000000;
+  border-color: #000000;
+  background: #f8f8f8;
 }
 
 .privateBadge {
@@ -354,6 +406,253 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 2rem;
+}
+
+/* Welcome Message Section */
+.welcomeSection {
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+  border-radius: 0;
+  padding: 3rem;
+  margin-bottom: 3rem;
+  line-height: 1.7;
+}
+
+.welcomeTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-samsung-sharp);
+  color: #1a1a1a;
+  margin: 0 0 1.5rem 0;
+  letter-spacing: -0.02em;
+}
+
+.welcomeText {
+  font-size: 1.1rem;
+  font-family: var(--font-samsung-sharp);
+  color: #333333;
+  margin: 0;
+  line-height: 1.7;
+  font-weight: 400;
+  white-space: pre-wrap;
+}
+
+/* Group Rules Section */
+.rulesSection {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 0;
+  padding: 3rem;
+  margin-bottom: 3rem;
+}
+
+.rulesTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-samsung-sharp);
+  color: #1a1a1a;
+  margin: 0 0 2rem 0;
+  letter-spacing: -0.02em;
+}
+
+.rulesContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Members Section */
+.membersSection {
+  margin-bottom: 3rem;
+}
+
+.membersTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-samsung-sharp);
+  color: #1a1a1a;
+  margin: 0 0 2rem 0;
+  letter-spacing: -0.02em;
+}
+
+.loadingMembers {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+}
+
+.loadingMembers p {
+  margin-top: 1rem;
+  font-family: var(--font-samsung-sharp);
+  color: #666666;
+}
+
+.noMembers {
+  text-align: center;
+  padding: 3rem;
+}
+
+.noMembers p {
+  font-family: var(--font-samsung-sharp);
+  color: #666666;
+  font-size: 1.1rem;
+}
+
+.membersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.memberCard {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 0;
+  padding: 2rem;
+  transition: all 0.2s ease;
+  margin-bottom: 2rem;
+}
+
+.memberCard:hover {
+  border-color: #000000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.memberAvatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 0;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.defaultAvatar {
+  width: 100%;
+  height: 100%;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-samsung-sharp);
+  font-size: 2rem;
+  font-weight: 700;
+  color: #666666;
+}
+
+.memberInfo {
+  flex: 1;
+}
+
+.memberName {
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-family: var(--font-samsung-sharp);
+  color: #1a1a1a;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
+}
+
+.memberUsername {
+  font-size: 1rem;
+  font-family: var(--font-samsung-sharp);
+  color: #666666;
+  margin: 0 0 1rem 0;
+  font-weight: 500;
+}
+
+.memberBio {
+  font-size: 0.95rem;
+  font-family: var(--font-samsung-sharp);
+  color: #333333;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.memberMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.memberRole {
+  font-size: 0.85rem;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  background: #000000;
+  padding: 0.25rem 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.memberJoined {
+  font-size: 0.85rem;
+  font-family: var(--font-samsung-sharp);
+  color: #666666;
+  font-weight: 500;
+}
+
+.memberScore {
+  font-size: 0.85rem;
+  font-family: var(--font-samsung-sharp);
+  color: #666666;
+  font-weight: 500;
+  background: #f0f0f0;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0;
+}
+
+.memberLocation {
+  font-size: 0.85rem;
+  font-family: var(--font-samsung-sharp);
+  color: #666666;
+  font-weight: 500;
+}
+
+.mentorBadge {
+  font-size: 0.85rem;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  background: #000000;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0;
+  font-weight: 600;
+}
+
+.memberSocial {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.socialLink {
+  font-size: 0.85rem;
+  font-family: var(--font-samsung-sharp);
+  color: #666666;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 0;
+  transition: all 0.2s ease;
+}
+
+.socialLink:hover {
+  color: #000000;
+  border-color: #000000;
+  background: #f8f8f8;
 }
 
 .memberList {

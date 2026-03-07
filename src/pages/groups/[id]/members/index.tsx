@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { CommunityService } from '../../../../services/database/communityService';
 import { Navbar } from '../../../../components/navbar/Navbar';
-import { GiscusComments } from '../../../../components/giscus/GiscusComments';
 import styles from '../id.module.css';
 
 const CATEGORIES = [
@@ -15,7 +14,7 @@ const CATEGORIES = [
   { id: 'members', label: 'Members' }
 ];
 
-export default function DiscussionsPage() {
+export default function MembersPage() {
   const router = useRouter();
   const { user } = useAuth();
   const [group, setGroup] = useState<any>(null);
@@ -83,7 +82,7 @@ export default function DiscussionsPage() {
   if (loading) {
     return (
       <>
-        
+
         <div className={styles.page}>
           <div className={styles.container}>
             <div className={styles.loadingState}>
@@ -99,7 +98,7 @@ export default function DiscussionsPage() {
   if (!group) {
     return (
       <>
-        
+        <Navbar />
         <div className={styles.page}>
           <div className={styles.container}>
             <div className={styles.errorContainer}>
@@ -118,21 +117,14 @@ export default function DiscussionsPage() {
     );
   }
 
-  const isAdmin = user && group && group.creator_id === user.id;
-
-  const handleJoinGroup = async () => {
-    console.log('Join group functionality coming soon');
-  };
-
   return (
     <>
-      
       <div className={styles.page}>
         <div className={styles.container}>
           {/* Group Header */}
           <div className={styles.groupHeader}>
             <div className={styles.groupInfo}>
-              <button 
+                  <button 
                   onClick={() => router.push('/groups')}
                   className={styles.backButtonTop}
                 >
@@ -187,7 +179,7 @@ export default function DiscussionsPage() {
             {CATEGORIES.map(cat => (
               <button
                 key={cat.id}
-                className={`${styles.categoryTab} ${router.asPath?.endsWith(cat.id) ? styles.active : ''}`}
+                className={`${styles.categoryTab} ${cat.id === 'members' ? styles.active : ''}`}
                 onClick={() => router.push(`/groups/${groupId}/${cat.id}`)}
               >
                 {cat.label}
@@ -195,28 +187,25 @@ export default function DiscussionsPage() {
             ))}
           </div>
 
-          {/* Content based on active category */}
-          <div className={styles.discussionContent}>
-            {router.asPath?.endsWith('members') ? (
-              /* Members Section */
-              <div className={styles.membersSection}>
-                <h3 className={styles.membersTitle}>Group Members ({members.length})</h3>
-                {loadingMembers ? (
-                  <div className={styles.loadingMembers}>
-                    <div className={styles.spinner}></div>
-                    <p>Loading members...</p>
-                  </div>
-                ) : members.length === 0 ? (
-                  <div className={styles.noMembers}>
-                    <p>No members found in this group.</p>
-                  </div>
-                ) : (
-                  <div className={styles.membersGrid}>
-                    {members.map((member: any, index: number) => (
-                      <div key={member.user_id} className={styles.memberCard}>
-                        <div className={styles.memberAvatar}>
-                          {member.profiles?.avatar_url ? (
-                            <img 
+          {/* Members Section */}
+          <div className={styles.membersSection}>
+            <h3 className={styles.membersTitle}>Group Members ({members.length})</h3>
+            {loadingMembers ? (
+              <div className={styles.loadingMembers}>
+                <div className={styles.spinner}></div>
+                <p>Loading members...</p>
+              </div>
+            ) : members.length === 0 ? (
+              <div className={styles.noMembers}>
+                <p>No members found in this group.</p>
+              </div>
+            ) : (
+              <div className={styles.membersGrid}>
+                {members.map((member: any, index: number) => (
+                  <div key={member.user_id} className={styles.memberCard}>
+                    <div className={styles.memberAvatar}>
+                      {member.profiles?.avatar_url ? (
+                        <img 
                               src={member.profiles.avatar_url} 
                               alt={member.profiles.full_name || member.profiles.username}
                               className={styles.avatarImage}
@@ -226,66 +215,70 @@ export default function DiscussionsPage() {
                               {(member.profiles?.full_name || member.profiles?.username || 'User')?.charAt(0)?.toUpperCase()}
                             </div>
                           )}
-                        </div>
-                        <div className={styles.memberInfo}>
-                          <h4 className={styles.memberName}>
-                            {member.profiles?.full_name || member.profiles?.username || 'Unknown User'}
-                          </h4>
-                          <p className={styles.memberUsername}>@{member.profiles?.username || 'unknown'}</p>
-                          <p className={styles.memberBio}>
-                            {member.profiles?.bio || 'No bio available'}
-                          </p>
-                          <div className={styles.memberMeta}>
-                            <span className={styles.memberRole}>{member.role}</span>
-                            <span className={styles.memberJoined}>
-                              Joined {new Date(member.joined_at).toLocaleDateString()}
-                            </span>
-                          </div>
-                          <div className={styles.memberSocial}>
-                            {member.profiles?.github_username && (
-                              <a 
-                                href={`https://github.com/${member.profiles.github_username}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={styles.socialLink}
-                              >
-                                GitHub
-                              </a>
-                            )}
-                            {member.profiles?.linkedin_url && (
-                              <a 
-                                href={member.profiles.linkedin_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={styles.socialLink}
-                              >
-                                LinkedIn
-                              </a>
-                            )}
-                            {member.profiles?.website_url && (
-                              <a 
-                                href={member.profiles.website_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={styles.socialLink}
-                              >
-                                Website
-                              </a>
-                            )}
-                          </div>
-                        </div>
+                    </div>
+                    <div className={styles.memberInfo}>
+                      <h4 className={styles.memberName}>
+                        {member.profiles?.full_name || member.profiles?.username || 'Unknown User'}
+                      </h4>
+                      <p className={styles.memberUsername}>@{member.profiles?.username || 'unknown'}</p>
+                      <p className={styles.memberBio}>
+                        {member.profiles?.bio || 'No bio available'}
+                      </p>
+                      <div className={styles.memberMeta}>
+                        <span className={styles.memberRole}>{member.role}</span>
+                        <span className={styles.memberJoined}>
+                          Joined {new Date(member.joined_at).toLocaleDateString()}
+                        </span>
+                        <span className={styles.memberScore}>
+                          Score: {member.contribution_score || 0}
+                        </span>
+                        {member.profiles?.location && (
+                          <span className={styles.memberLocation}>
+                            📍 {member.profiles.location}
+                          </span>
+                        )}
+                        {member.profiles?.is_mentor && (
+                          <span className={styles.mentorBadge}>
+                            👨‍🏫 Mentor
+                          </span>
+                        )}
                       </div>
-                    ))}
+                      <div className={styles.memberSocial}>
+                        {member.profiles?.github_username && (
+                          <a 
+                            href={`https://github.com/${member.profiles.github_username}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.socialLink}
+                          >
+                            GitHub
+                          </a>
+                        )}
+                        {member.profiles?.linkedin_url && (
+                          <a 
+                            href={member.profiles.linkedin_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.socialLink}
+                          >
+                            LinkedIn
+                          </a>
+                        )}
+                        {member.profiles?.website_url && (
+                          <a 
+                            href={member.profiles.website_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.socialLink}
+                          >
+                            Website
+                          </a>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                )}
+                ))}
               </div>
-            ) : (
-              /* Default Discussion Content */
-              <GiscusComments 
-                groupId={groupId} 
-                groupName={group.name}
-                category="discussion"
-              />
             )}
           </div>
         </div>

@@ -717,6 +717,13 @@
   font-weight: 600;
   font-family: var(--font-samsung-sharp);
   font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.formLabel input[type="checkbox"] {
+  margin: 0;
 }
 
 .formHelp {
@@ -724,6 +731,7 @@
   color: #666666;
   margin-top: 0.25rem;
   font-family: var(--font-samsung-sharp);
+  display: block;
 }
 
 .formInput,
