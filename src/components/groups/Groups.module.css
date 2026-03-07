@@ -31,94 +31,64 @@
   line-height: 1.1;
 }
 
-.createButton {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 50px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.createButton:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-}
-
-.createButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
 /* Section Layout */
 .section {
   background: #ffffff;
-  border: 1px solid #e5e5e5;
-  border-radius: 16px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: 3rem;
 }
 
 .sectionTitle {
   font-size: 1.5rem;
-  font-weight: 600;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  color: #1a1a1a;
-  margin: 0 0 1.5rem 0;
+  font-weight: 700;
+  font-family: var(--font-samsung-sharp);
+  color: #000000;
+  margin: 0 0 2rem 0;
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
 .sectionBadge {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--accent-yellow);
+  color: #000000;
   padding: 0.25rem 0.75rem;
-  border-radius: 50px;
+  border-radius: 0;
   font-size: 0.875rem;
   font-weight: 600;
+  font-family: var(--font-samsung-sharp);
 }
 
 /* Group Cards */
 .groupsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 1.5rem;
+  display: block;
   margin-bottom: 2rem;
 }
 
 .groupCard {
   background: #ffffff;
-  border: 1px solid #e5e5e5;
-  border-radius: 16px;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-  position: relative;
+  border: none;
+  border-radius: 0;
+  padding: 2rem 0;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+  border-bottom: 1px solid #f0f0f0;
+  transition: none;
 }
 
 .groupCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  border-color: #667eea;
+  transform: none;
+  box-shadow: none;
+  border-color: #f0f0f0;
 }
 
-.groupHeader {
+.groupCardHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1rem;
-  gap: 1rem;
 }
 
 .groupInfo {
@@ -126,77 +96,79 @@
 }
 
 .groupName {
-  font-size: 1.25rem;
-  font-weight: 600;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  color: #1a1a1a;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-samsung-sharp);
+  color: #000000;
   margin: 0 0 0.5rem 0;
   line-height: 1.3;
 }
 
 .groupDescription {
-  color: #666;
-  font-size: 0.95rem;
-  line-height: 1.5;
+  font-size: 1rem;
+  font-family: var(--font-samsung-sharp);
+  color: #666666;
   margin: 0 0 1rem 0;
+  line-height: 1.5;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  line-clamp: 3;
 }
 
 .groupMeta {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   margin-bottom: 1rem;
 }
 
 .memberCount {
-  background: #f3f4f6;
-  color: #374151;
-  padding: 0.25rem 0.75rem;
-  border-radius: 50px;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-family: var(--font-samsung-sharp);
+  color: #666666;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .privateBadge {
-  background: #fef3c7;
-  color: #d97706;
-  padding: 0.25rem 0.75rem;
-  border-radius: 50px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  background: var(--accent-yellow);
+  color: #000000;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-samsung-sharp);
 }
 
 .tags {
   display: flex;
-  gap: 0.5rem;
   flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 
 .tag {
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: #f8f8f8;
+  color: #666666;
   padding: 0.25rem 0.75rem;
-  border-radius: 50px;
+  border-radius: 0;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 400;
 }
 
 .groupAvatar {
   width: 60px;
   height: 60px;
-  border-radius: 12px;
+  border-radius: 0;
   object-fit: cover;
-  border: 2px solid #e5e5e5;
+  border: none;
 }
 
-.groupContent {
-  margin-bottom: 1rem;
-}
-
+/* Welcome Message */
 .welcomeMessage {
   background: #f9fafb;
   border-left: 3px solid #667eea;
@@ -209,8 +181,10 @@
   margin: 0;
   color: #374151;
   font-style: italic;
+  font-family: var(--font-samsung-sharp);
 }
 
+/* Group Actions */
 .groupActions {
   display: flex;
   gap: 0.75rem;
@@ -222,47 +196,18 @@
   border: none;
   color: white;
   padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  border-radius: 0;
+  font-family: var(--font-samsung-sharp);
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-.joinButton:hover {
-  background: #059669;
-  transform: translateY(-1px);
-}
-
-.leaveButton {
-  background: #ef4444;
+/* Create Button */
+.createButton {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
   color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.leaveButton:hover {
-  background: #dc2626;
-  transform: translateY(-1px);
-}
-
-.adminActions {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.editButton {
-  background: #3b82f6;
-  border: none;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  padding: 0.75rem 1.5rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -442,13 +387,17 @@
 }
 
 .formLabel {
-  color: #374151;
+  color: #000000;
   font-weight: 500;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: var(--font-samsung-sharp);
   font-size: 0.95rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+}
+
+.formHelp {
+  font-size: 0.75rem;
+  color: #666666;
+  margin-top: 0.25rem;
+  font-family: var(--font-samsung-sharp);
 }
 
 .formInput,
@@ -540,6 +489,325 @@
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
+}
+
+/* Action Buttons */
+.editButton {
+  background: #000000;
+  border: none;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 0;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.deleteButton {
+  background: #dc2626;
+  border: none;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 0;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.leaveButton {
+  background: #6b7280;
+  border: none;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 0;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.editButton:hover {
+  background: #333333;
+}
+
+.deleteButton:hover {
+  background: #b91c1c;
+}
+
+.leaveButton:hover {
+  background: #4b5563;
+}
+
+/* Admin Actions */
+.adminActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Group Footer */
+.groupFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.createdAt {
+  font-size: 0.875rem;
+  color: #666666;
+  font-family: var(--font-samsung-sharp);
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-samsung-sharp);
+  color: #000000;
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #666666;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-family: var(--font-samsung-sharp);
+}
+
+.closeButton:hover {
+  color: #000000;
+}
+
+.closeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.modalActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.submitButton {
+  background: #000000;
+  border: none;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #333333;
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Group Settings Section */
+.groupSettings {
+  background: #ffffff;
+  border: 1px solid #f0f0f0;
+  border-radius: 0;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.settingsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.settingsTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-samsung-sharp);
+  color: #000000;
+  margin: 0;
+}
+
+.closeSettings {
+  background: none;
+  border: none;
+  color: #666666;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-family: var(--font-samsung-sharp);
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.closeSettings:hover {
+  color: #000000;
+}
+
+.closeSettings:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settingsForm {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.formLabel {
+  color: #000000;
+  font-weight: 600;
+  font-family: var(--font-samsung-sharp);
+  font-size: 0.95rem;
+}
+
+.formHelp {
+  font-size: 0.75rem;
+  color: #666666;
+  margin-top: 0.25rem;
+  font-family: var(--font-samsung-sharp);
+}
+
+.formInput,
+.formTextarea,
+.formSelect {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 0;
+  padding: 1rem;
+  color: #000000;
+  font-family: var(--font-samsung-sharp);
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+}
+
+.formInput:focus,
+.formTextarea:focus,
+.formSelect:focus {
+  outline: none;
+  border-color: #000000;
+}
+
+.formInput:disabled,
+.formTextarea:disabled {
+  background: #f8f8f8;
+  color: #666666;
+  cursor: not-allowed;
+}
+
+.formTextarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: var(--font-samsung-sharp);
+}
+
+.settingsActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.saveButton {
+  background: #000000;
+  border: none;
+  color: #ffffff;
+  padding: 0.75rem 2rem;
+  border-radius: 0;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.saveButton:hover:not(:disabled) {
+  background: #333333;
+}
+
+.saveButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancelButton {
+  background: #f0f0f0;
+  border: none;
+  color: #666666;
+  padding: 0.75rem 2rem;
+  border-radius: 0;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background: #e5e5e5;
+}
+
+.cancelButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Responsive Design */

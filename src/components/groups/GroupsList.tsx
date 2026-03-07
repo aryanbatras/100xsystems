@@ -26,8 +26,8 @@ export const GroupsList: React.FC<GroupsListProps> = ({
 }) => {
   const joinedGroupsOnly = joinedGroups.filter(g => g.user_role !== 'admin');
   const availableGroups = allGroups.filter(group => 
-    !joinedGroups.some(joined => joined.id === group.id) &&
-    (!userCreatedGroup || userCreatedGroup.id !== group.id)
+    !joinedGroups.some(joined => joined.id === group.id) 
+    // && (!userCreatedGroup || userCreatedGroup.id !== group.id)
   );
 
   if (loading) {
@@ -49,7 +49,7 @@ export const GroupsList: React.FC<GroupsListProps> = ({
         </h2>
         
         {userCreatedGroup ? (
-          <div className={styles.groupsGrid}>
+          <div>
             <GroupCard
               group={userCreatedGroup}
               onEdit={onEditGroup}
@@ -73,7 +73,7 @@ export const GroupsList: React.FC<GroupsListProps> = ({
             <span className={styles.sectionBadge}>{joinedGroupsOnly.length} Joined</span>
           </h2>
           
-          <div className={styles.groupsGrid}>
+          <div>
             {joinedGroupsOnly.map(group => (
               <GroupCard
                 key={group.id}
@@ -86,7 +86,7 @@ export const GroupsList: React.FC<GroupsListProps> = ({
         </section>
       )}
 
-      {joinedGroupsOnly.length === 0 && !userCreatedGroup && (
+      {joinedGroupsOnly.length === 0 && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>
             Joined Groups
@@ -108,7 +108,7 @@ export const GroupsList: React.FC<GroupsListProps> = ({
             <span className={styles.sectionBadge}>{availableGroups.length} Available</span>
           </h2>
           
-          <div className={styles.groupsGrid}>
+          <div>
             {availableGroups.map(group => (
               <GroupCard
                 key={group.id}

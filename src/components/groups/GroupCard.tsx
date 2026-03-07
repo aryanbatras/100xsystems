@@ -113,12 +113,12 @@ export const GroupCard: React.FC<GroupCardProps> = ({
               >
                 Edit Group
               </button>
-              <button 
+              {/* <button 
                 className={styles.deleteButton}
                 onClick={handleDelete}
               >
                 Delete Group
-              </button>
+              </button> */}
             </div>
           )}
         </div>

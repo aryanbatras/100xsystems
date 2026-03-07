@@ -4,6 +4,7 @@ import { useUserCommunity } from '../../hooks/useUserCommunity';
 import { Navbar } from '../../components/navbar/Navbar';
 import { GroupsList } from '../../components/groups/GroupsList';
 import { CreateGroupModal } from '../../components/groups/CreateGroupModal';
+import { GroupEditSection } from '../../components/groups/GroupEditSection';
 import styles from './Groups.module.css';
 
 export default function GroupsPage() {
@@ -17,11 +18,15 @@ export default function GroupsPage() {
     joinStudyGroup,
     leaveStudyGroup,
     deleteGroup,
+    updateGroup,
     isCreatingGroup,
     loading 
   } = useUserCommunity();
   
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [editingGroupId, setEditingGroupId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredGroups, setFilteredGroups] = useState(publicGroups);
 
   useEffect(() => {
     console.log('🎯 GroupsPage: State updated:', { 
@@ -33,6 +38,15 @@ export default function GroupsPage() {
     });
   }, [user?.id, userCreatedGroup, canCreateGroup, isCreatingGroup, loading]);
 
+  useEffect(() => {
+    const filtered = publicGroups.filter(group => 
+      group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      group.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      group.tags?.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+    setFilteredGroups(filtered);
+  }, [searchQuery, publicGroups]);
+
   const handleCreateGroup = async (groupData: any) => {
     const success = await createGroupWithGiscus(groupData);
     if (success) {
@@ -41,8 +55,7 @@ export default function GroupsPage() {
   };
 
   const handleEditGroup = (groupId: string) => {
-    // TODO: Implement edit group functionality
-    console.log('Edit group:', groupId);
+    setEditingGroupId(groupId);
   };
 
   const handleDeleteGroup = async (groupId: string) => {
@@ -90,6 +103,25 @@ export default function GroupsPage() {
           {/* Header with title */}
           <div className={styles.header}>
             <h1 className={styles.title}>Study Groups</h1>
+            <p className={styles.articlesDescription}>
+              Connect with learners, share knowledge, and accelerate your learning journey through collaborative study groups.
+            </p>
+          </div>
+
+          {/* Search Section */}
+          <div className={styles.searchSection}>
+            <div className={styles.searchContainer}>
+              <input
+                type="text"
+                className={styles.searchInput}
+                placeholder="Search groups by name, description, or tags..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button className={styles.filterButton}>
+                🔍 Filter
+              </button>
+            </div>
           </div>
 
           {/* Create Group Section */}
@@ -112,6 +144,27 @@ export default function GroupsPage() {
           </div>
 
           {/* Groups List */}
+
+          {editingGroupId && userCreatedGroup && (
+            <GroupEditSection
+              group={{
+                ...userCreatedGroup,
+                user_role: 'admin',
+                joined_at: userCreatedGroup.created_at
+              }}
+              onClose={() => setEditingGroupId(null)}
+              onUpdateGroup={async (updatedGroup: any) => {
+                const success = await updateGroup(userCreatedGroup.id, updatedGroup);
+                if (success) {
+                  console.log('Group updated successfully');
+                  setEditingGroupId(null);
+                } else {
+                  console.error('Failed to update group');
+                }
+              }}
+            />
+          )}
+
           <GroupsList
             userCreatedGroup={userCreatedGroup ? {
               ...userCreatedGroup,
@@ -119,7 +172,7 @@ export default function GroupsPage() {
               joined_at: userCreatedGroup.created_at
             } : null}
             joinedGroups={studyGroups.filter(g => g.user_role !== 'admin')}
-            allGroups={publicGroups}
+            allGroups={filteredGroups}
             onJoinGroup={handleJoinGroup}
             onLeaveGroup={handleLeaveGroup}
             onEditGroup={handleEditGroup}

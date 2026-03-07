@@ -31,6 +31,7 @@ export interface UseUserCommunityReturn {
   createStudyGroup: (groupData: Partial<any>) => Promise<boolean>;
   createGroupWithGiscus: (groupData: Partial<StudyGroup>) => Promise<boolean>;
   deleteGroup: (groupId: string) => Promise<boolean>;
+  updateGroup: (groupId: string, updateData: { description?: string; tags?: string[] }) => Promise<boolean>;
   joinStudyGroup: (groupId: string) => Promise<boolean>;
   leaveStudyGroup: (groupId: string) => Promise<boolean>;
   createPost: (groupId: string, postData: Partial<any>) => Promise<boolean>;
@@ -332,6 +333,32 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
     }
   }, [user?.id]);
 
+  const updateGroup = useCallback(async (groupId: string, updateData: { description?: string; tags?: string[] }): Promise<boolean> => {
+    try {
+      const updatedGroup = await CommunityService.updateGroup(groupId, updateData);
+      
+      if (updatedGroup) {
+        // Update study groups with the new data
+        setStudyGroups(prev => prev.map(g => 
+          g.id === groupId 
+            ? { ...g, ...updatedGroup }
+            : g
+        ));
+        
+        // Update user created group if it's the one being updated
+        if (userCreatedGroup?.id === groupId) {
+          setUserCreatedGroup({ ...userCreatedGroup, ...updatedGroup });
+        }
+        
+        return true;
+      }
+      return false;
+    } catch (error) {
+      setError('Failed to update group');
+      return false;
+    }
+  }, [userCreatedGroup]);
+
   const canCreateGroup = !userCreatedGroup;
 
   useEffect(() => {
@@ -353,6 +380,7 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
     createStudyGroup,
     createGroupWithGiscus,
     deleteGroup,
+    updateGroup,
     joinStudyGroup,
     leaveStudyGroup,
     createPost,

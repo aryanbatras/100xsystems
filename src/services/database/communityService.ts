@@ -563,6 +563,23 @@ export class CommunityService {
     }
   }
 
+  static async updateGroup(groupId: string, updateData: { description?: string; tags?: string[] }): Promise<StudyGroup | null> {
+    try {
+      const { data, error } = await supabase
+        .from('study_groups')
+        .update(updateData)
+        .eq('id', groupId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error updating study group:', error);
+      return null;
+    }
+  }
+
   static async getUserCommunityStats(userId: string): Promise<{
     studyGroupsCount: number;
     postsCount: number;

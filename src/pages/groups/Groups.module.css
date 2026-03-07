@@ -1,120 +1,280 @@
-/* Page Layout */
+/* Groups Page Styles - Pure Medium-inspired Minimalist Design */
 .page {
   min-height: 100vh;
   background: #ffffff;
-  position: relative;
+  color: #000000;
   padding: 0;
+  font-family: var(--font-samsung-sharp);
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 680px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 0 2rem;
 }
 
+/* Header with proper spacing for navbar */
 .header {
   text-align: center;
-  margin-bottom: 3rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 4rem;
+  padding-top: 8vh;
+  min-height: 8vh;
+  font-family: var(--font-samsung-sharp);
 }
 
 .title {
-  font-size: 3rem;
+  font-size: 3.5rem;
   font-weight: 700;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  color: #1a1a1a;
-  margin: 0;
-  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  color: #000000;
+  letter-spacing: -0.03em;
   line-height: 1.1;
 }
 
-/* Create Section */
-.createSection {
-  margin-bottom: 4rem;
+.articlesDescription {
+  font-size: 1.2rem;
+  color: #666666;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
-.sectionTitle {
+/* Search Section - Minimalist */
+.searchSection {
+  margin-bottom: 3rem;
+}
+
+.searchContainer {
+  width: 100%;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.75rem 0;
+  border: none;
+  border-bottom: 1px solid #000000;
+  border-radius: 0;
+  font-family: var(--font-samsung-sharp);
+  font-size: 1rem;
+  background: #ffffff;
+  color: #000000;
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: #999999;
+}
+
+.filterButton {
+  display: none;
+}
+
+/* Group Cards - Pure Minimalist */
+.groupsGrid {
+  display: block;
+  margin-bottom: 2rem;
+}
+
+.groupCard {
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
+  padding: 2rem 0;
+  cursor: pointer;
+  position: relative;
+  border-bottom: 1px solid #f0f0f0;
+  transition: none;
+}
+
+.groupCard:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: #f0f0f0;
+}
+
+.groupCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.groupInfo {
+  flex: 1;
+}
+
+.groupName {
   font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-samsung-sharp);
+  color: #000000;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+.groupDescription {
+  font-size: 1rem;
+  font-family: var(--font-samsung-sharp);
+  color: #666666;
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-clamp: 3;
+}
+
+.groupMeta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.memberCount {
+  font-size: 0.875rem;
+  font-family: var(--font-samsung-sharp);
+  color: #666666;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.privateBadge {
+  background: var(--accent-yellow);
+  color: #000000;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0;
+  font-size: 0.75rem;
   font-weight: 600;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  color: #1a1a1a;
-  margin: 0 0 1.5rem 0;
+  font-family: var(--font-samsung-sharp);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.tag {
+  background: #f8f8f8;
+  color: #666666;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0;
+  font-size: 0.75rem;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 400;
+}
+
+.groupAvatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 0;
+  object-fit: cover;
+  border: none;
+}
+
+/* Create Section - Minimalist */
+.createSection {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.createSection h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-samsung-sharp);
+  color: #000000;
+  margin: 0 0 2rem 0;
 }
 
 .createCard {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 16px;
-  padding: 3rem;
-  color: white;
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
+  padding: 3rem 2rem;
   text-align: center;
   position: relative;
-  overflow: hidden;
-}
-
-.createCard::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
-  pointer-events: none;
 }
 
 .createContent h3 {
   font-size: 2rem;
   font-weight: 700;
+  font-family: var(--font-samsung-sharp);
+  color: #000000;
   margin: 0 0 1rem 0;
-  position: relative;
-  z-index: 1;
 }
 
 .createContent p {
   font-size: 1.1rem;
   line-height: 1.6;
   margin: 0 0 2rem 0;
-  opacity: 0.9;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
-  z-index: 1;
+  color: #666666;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 400;
 }
 
 .createButton {
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 50px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: #000000;
+  border: none;
+  color: #ffffff;
+  padding: 0.75rem 2rem;
+  border-radius: 0;
+  font-family: var(--font-samsung-sharp);
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 1;
-  backdrop-filter: blur(10px);
+  transition: none;
 }
 
 .createButton:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  background: #333333;
+  transform: none;
+  box-shadow: none;
 }
 
 .createButton:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
-  transform: none;
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: #999999;
 }
 
-/* Error Container */
+/* Section Layout - Minimalist */
+.section {
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: 3rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-samsung-sharp);
+  color: #000000;
+  margin: 0 0 2rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sectionBadge {
+  background: var(--accent-yellow);
+  color: #000000;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: var(--font-samsung-sharp);
+}
+
+/* Error Container - Minimalist */
 .errorContainer {
   display: flex;
   flex-direction: column;
@@ -127,9 +287,9 @@
 
 .errorTitle {
   font-size: 2rem;
-  font-weight: 600;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  color: #1a1a1a;
+  font-weight: 700;
+  font-family: var(--font-samsung-sharp);
+  color: #000000;
   margin: 0 0 1rem 0;
 }
 
@@ -137,8 +297,62 @@
   font-size: 1rem;
   line-height: 1.6;
   margin: 0;
-  color: #666;
+  color: #666666;
   max-width: 400px;
+  font-family: var(--font-samsung-sharp);
+}
+
+/* Empty State - Minimalist */
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.emptyState h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-samsung-sharp);
+  color: #000000;
+  margin: 0 0 1rem 0;
+}
+
+.emptyState p {
+  font-size: 1rem;
+  color: #666666;
+  margin: 0;
+  line-height: 1.5;
+  font-family: var(--font-samsung-sharp);
+}
+
+/* Loading State - Minimalist */
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+.loadingState p {
+  font-size: 1rem;
+  color: #666666;
+  margin: 1rem 0 0 0;
+  font-family: var(--font-samsung-sharp);
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #f0f0f0;
+  border-top: 2px solid #000000;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Responsive Design */

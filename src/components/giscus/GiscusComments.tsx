@@ -38,14 +38,6 @@ export const GiscusComments: React.FC<GiscusCommentsProps> = ({
   category, 
   readOnly = false 
 }) => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
-
-  useEffect(() => {
-    // Detect theme from system or CSS
-    const isDark = document.documentElement.classList.contains('dark') || 
-                  window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setTheme(isDark ? 'dark' : 'light');
-  }, []);
 
   if (!process.env.NEXT_PUBLIC_GISCUS_REPO || !process.env.NEXT_PUBLIC_GISCUS_REPO_ID) {
     return (
@@ -70,7 +62,7 @@ export const GiscusComments: React.FC<GiscusCommentsProps> = ({
         term={`${groupName.toLowerCase().replace(/\s+/g, '-')}-${category}` as any}
         reactionsEnabled="1"
         emitMetadata="0"
-        theme={theme}
+        theme="light"
         lang="en"
         loading="lazy"
       />
