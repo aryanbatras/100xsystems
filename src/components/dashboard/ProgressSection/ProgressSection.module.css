@@ -1,0 +1,458 @@
+.section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  opacity: 0.92;
+  margin: 0;
+}
+
+.statsOverview {
+  display: flex;
+  gap: 2rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.statNumber {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fac815;
+  font-family: var(--font-samsung-sharp);
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  color: #ffffff;
+  opacity: 0.7;
+  font-family: var(--font-samsung-sharp);
+  text-transform: uppercase;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tab {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  opacity: 0.7;
+  padding: 1rem 1.5rem;
+  font-size: 0.9rem;
+  font-family: var(--font-samsung-sharp);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tab:hover {
+  opacity: 0.9;
+}
+
+.tab.active {
+  opacity: 1;
+  border-bottom-color: #fac815;
+  color: #fac815;
+}
+
+.tabCount {
+  background: rgba(250, 204, 21, 0.2);
+  color: #fac815;
+  padding: 0.125rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.progressGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.progressCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.progressCard:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #ffffff;
+  opacity: 0.9;
+  font-family: var(--font-samsung-sharp);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.cardMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.contentType {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-family: var(--font-samsung-sharp);
+}
+
+.contentType.article {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+.contentType.roadmap {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.contentType.section {
+  background: rgba(168, 85, 247, 0.2);
+  color: #a855f7;
+}
+
+.difficulty {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  font-family: var(--font-samsung-sharp);
+}
+
+.difficulty.beginner {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.difficulty.intermediate {
+  background: rgba(250, 204, 21, 0.2);
+  color: #fac815;
+}
+
+.difficulty.advanced {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.difficulty.unknown {
+  background: rgba(107, 114, 128, 0.2);
+  color: #6b7280;
+}
+
+.cardDescription {
+  color: #ffffff;
+  opacity: 0.7;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 1rem 0;
+  font-family: var(--font-samsung-sharp);
+}
+
+.progressInfo {
+  margin-bottom: 1rem;
+}
+
+.progressBar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #fac815 0%, #f59e0b 100%);
+  transition: width 0.3s ease;
+}
+
+.progressText {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #ffffff;
+  opacity: 0.7;
+  font-family: var(--font-samsung-sharp);
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.statusInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.status {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  font-family: var(--font-samsung-sharp);
+  text-transform: uppercase;
+}
+
+.status.completed {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.status.in-progress {
+  background: rgba(250, 204, 21, 0.2);
+  color: #fac815;
+}
+
+.status.bookmarked {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+.status.not-started {
+  background: rgba(107, 114, 128, 0.2);
+  color: #6b7280;
+}
+
+.lastAccessed {
+  font-size: 0.75rem;
+  color: #ffffff;
+  opacity: 0.5;
+  font-family: var(--font-samsung-sharp);
+}
+
+.cardActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  opacity: 0.8;
+  padding: 0.375rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: var(--font-samsung-sharp);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.actionButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+  opacity: 1;
+}
+
+.actionButton.bookmarked {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #3b82f6;
+}
+
+.viewButton {
+  background: rgba(250, 204, 21, 0.1);
+  border: 1px solid rgba(250, 204, 21, 0.3);
+  color: #fac815;
+  padding: 0.375rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: var(--font-samsung-sharp);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.viewButton:hover {
+  background: rgba(250, 204, 21, 0.2);
+  border-color: rgba(250, 204, 21, 0.5);
+}
+
+.notesSection,
+.ratingSection,
+.feedbackSection {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.notesTitle,
+.ratingTitle,
+.feedbackTitle {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #ffffff;
+  opacity: 0.7;
+  font-family: var(--font-samsung-sharp);
+  margin: 0 0 0.5rem 0;
+}
+
+.notesText {
+  color: #ffffff;
+  opacity: 0.6;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin: 0;
+  font-family: var(--font-samsung-sharp);
+}
+
+.ratingStars {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.star {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 1rem;
+}
+
+.star.filled {
+  color: #fac815;
+}
+
+.feedback {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  font-family: var(--font-samsung-sharp);
+}
+
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skeleton {
+  height: 20px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.errorState,
+.emptyState {
+  text-align: center;
+  padding: 3rem;
+}
+
+.errorMessage,
+.emptyMessage {
+  color: #ffffff;
+  opacity: 0.7;
+  font-family: var(--font-samsung-sharp);
+  font-size: 1rem;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 1.5rem;
+  }
+
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .statsOverview {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .tabs {
+    overflow-x: auto;
+    border-bottom: none;
+  }
+
+  .progressGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cardHeader {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .cardMeta {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .cardFooter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .cardActions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

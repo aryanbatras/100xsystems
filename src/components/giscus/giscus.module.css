@@ -1,0 +1,33 @@
+.giscusContainer {
+  margin-top: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.error {
+  padding: 2rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-samsung-sharp);
+}
+
+/* Giscus theme overrides */
+.giscusContainer :global(.giscus) {
+  background: transparent;
+}
+
+.giscusContainer :global(.giscus-frame) {
+  border-radius: 8px;
+}
+
+/* Dark theme adjustments */
+.giscusContainer :global(.giscus.dark) {
+  background: transparent;
+}
+
+/* Light theme adjustments */
+.giscusContainer :global(.giscus.light) {
+  background: transparent;
+}
