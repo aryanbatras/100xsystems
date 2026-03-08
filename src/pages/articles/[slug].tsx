@@ -205,7 +205,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         ...articleData,
         html: optimizedHtml
       },
-      revalidate: false
+      revalidate: 3600
     };
 
   } catch (error) {

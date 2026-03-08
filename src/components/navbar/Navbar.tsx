@@ -61,6 +61,14 @@ export function Navbar(): React.ReactElement {
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
 
+  const handleDropdownEnter = (dropdown: string) => {
+    setActiveDropdown(dropdown);
+  };
+
+  const handleDropdownLeave = () => {
+    setActiveDropdown(null);
+  };
+
   const handleLinkClick = () => {
     setActiveDropdown(null);
     setIsMenuOpen(false);
@@ -97,7 +105,11 @@ export function Navbar(): React.ReactElement {
               Home
             </Link>
 
-            <div className={styles.dropdown}>
+            <div 
+              className={styles.dropdown}
+              onMouseEnter={() => handleDropdownEnter("learn")}
+              onMouseLeave={handleDropdownLeave}
+            >
               <button
                 className={styles.dropdownToggle}
                 onClick={() => handleDropdownToggle("learn")}
@@ -130,7 +142,11 @@ export function Navbar(): React.ReactElement {
               Groups
             </Link>
 
-            <div className={styles.dropdown}>
+            <div 
+              className={styles.dropdown}
+              onMouseEnter={() => handleDropdownEnter("about")}
+              onMouseLeave={handleDropdownLeave}
+            >
               <button
                 className={styles.dropdownToggle}
                 onClick={() => handleDropdownToggle("about")}

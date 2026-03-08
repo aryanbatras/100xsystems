@@ -199,7 +199,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         articles,
         knowledgeGraph
       },
-      revalidate: false
+      revalidate: 3600
     };
 
   } catch (error) {

@@ -21,6 +21,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import styles from './Graph.module.css';
 import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
+import { StaticSiteGenerator } from '../../core/infrastructure/staticSiteGenerator';
 
 // Type definitions
 interface NodeData extends Record<string, unknown> {
@@ -431,15 +432,91 @@ export default function Graph({ nodes, edges }: { nodes: CustomNode[], edges: Ed
 
 export const getStaticProps: GetStaticProps = async () => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/graph`);
-    const data = await response.json();
+    console.log('🏗️ Building knowledge graph...');
+    
+    // Build the knowledge graph directly using static generation
+    const knowledgeGraph = await StaticSiteGenerator.buildKnowledgeGraph();
+    
+    // Transform the knowledge graph into React Flow format
+    const nodes: CustomNode[] = [];
+    const edges: Edge[] = [];
+    
+    // Position tracking for layout
+    const positions = new Map<string, { x: number; y: number }>();
+    let currentY = 0;
+    const rowHeight = 150;
+    const nodeSpacing = 250;
+    const categorySpacing = 400;
+
+    // Create roadmap nodes
+    Object.entries(knowledgeGraph.roadmaps).forEach(([roadmapSlug, roadmap], roadmapIndex) => {
+      const x = roadmapIndex * categorySpacing;
+      const y = currentY;
+      
+      positions.set(roadmapSlug, { x, y });
+      
+      const node: CustomNode = {
+        id: roadmapSlug,
+        position: { x, y },
+        data: {
+          label: roadmap.title,
+          type: 'roadmap' as const,
+          description: roadmap.description,
+          category: roadmap.category,
+          skills: roadmap.skills,
+          estimatedTime: roadmap.estimatedTime,
+        },
+        type: 'roadmap',
+      };
+      
+      nodes.push(node);
+      currentY += rowHeight;
+    });
+
+    // Create article nodes and connect them to roadmaps
+    Object.entries(knowledgeGraph.articles).forEach(([articleSlug, article], articleIndex) => {
+      // Find which roadmap this article belongs to
+      const roadmapSlug = article.roadmaps[0]; // Use first roadmap
+      const roadmapPosition = positions.get(roadmapSlug);
+      
+      if (roadmapPosition) {
+        const x = roadmapPosition.x + nodeSpacing + (articleIndex % 3) * 150;
+        const y = roadmapPosition.y + Math.floor(articleIndex / 3) * 100;
+        
+        positions.set(articleSlug, { x, y });
+        
+        const node: CustomNode = {
+          id: articleSlug,
+          position: { x, y },
+          data: {
+            label: articleSlug,
+            type: 'article' as const,
+            description: `Article in ${article.section}`,
+            difficulty: article.difficulty,
+            tags: article.tags,
+          },
+          type: 'article',
+        };
+        
+        nodes.push(node);
+        
+        // Create edge from roadmap to article
+        const edge: Edge = {
+          id: `${roadmapSlug}-${articleSlug}`,
+          source: roadmapSlug,
+          target: articleSlug,
+        };
+        
+        edges.push(edge);
+      }
+    });
     
     return {
       props: {
-        nodes: data.nodes,
-        edges: data.edges,
+        nodes,
+        edges,
       },
-      revalidate: 60, // Revalidate every minute
+      revalidate: 3600, 
     };
   } catch (error) {
     console.error('Failed to fetch graph data:', error);
