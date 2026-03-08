@@ -54,7 +54,7 @@ export const GiscusComments: React.FC<GiscusCommentsProps> = ({
   return (
     <div className={styles.giscusContainer}>
       <Giscus
-        repo={process.env.NEXT_PUBLIC_GISCUS_REPO}
+        repo={process.env.NEXT_PUBLIC_GISCUS_REPO as `${string}/${string}`}
         repoId={process.env.NEXT_PUBLIC_GISCUS_REPO_ID}
         category={categoryConfig.name}
         categoryId={categoryConfig.id}
