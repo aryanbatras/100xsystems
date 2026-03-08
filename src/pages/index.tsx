@@ -19,17 +19,19 @@ export default function Home() {
   const router = useRouter();
   const { user } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
     console.log('🔍 Router state:', {
       isReady: router.isReady,
       query: router.query,
       pathname: router.pathname,
-      user: !!user
+      user: !!user,
+      isRedirecting
     });
 
     // Check URL parameters for auth requirements
-    if (router.isReady) {
+    if (router.isReady && !isRedirecting) {
       const authRequired = router.query['auth-required'];
       const unauthorized = router.query['unauthorized'];
       const adminRequired = router.query['admin-required'];
@@ -40,6 +42,7 @@ export default function Home() {
       // If user is authenticated and there's a redirect path, redirect there
       if (authRequired === 'true' && user && redirectPath) {
         console.log('✅ Redirecting authenticated user to:', redirectPath);
+        setIsRedirecting(true);
         router.push(redirectPath as string);
         return;
       }
@@ -47,6 +50,9 @@ export default function Home() {
       // If user is authenticated and there's no redirect, just close any modal
       if (authRequired === 'true' && user) {
         console.log('✅ User authenticated, no redirect needed');
+        setIsRedirecting(true);
+        // Clear the URL parameters by replacing with clean URL
+        router.replace('/', undefined, { shallow: true });
         setIsAuthModalOpen(false);
         return;
       }
@@ -60,7 +66,7 @@ export default function Home() {
         console.error('❌ Admin access required');
       }
     }
-  }, [router.isReady, router.query, user]);
+  }, [router.isReady, router.query, user, isRedirecting]);
 
   // Force modal open if URL contains auth-required, unauthorized, or admin-required
   useEffect(() => {
