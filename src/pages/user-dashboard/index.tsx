@@ -22,9 +22,10 @@ export default function UserDashboard() {
   if (loading) {
     return (
       <>
-        {/* <Navbar /> */}
-        <div className={styles.loadingContainer}>
-          <div className={styles.spinner}></div>
+        <div className={styles.userDashboardContainer}>
+          <div className={styles.loadingContainer}>
+            <div className={styles.spinner}></div>
+          </div>
         </div>
       </>
     );
@@ -33,10 +34,11 @@ export default function UserDashboard() {
   if (!user) {
     return (
       <>
-        {/* <Navbar /> */}
-        <div className={styles.errorContainer}>
-          <h2 className={styles.errorTitle}>Authentication Required</h2>
-          <p className={styles.errorText}>Please sign in to access your dashboard.</p>
+        <div className={styles.userDashboardContainer}>
+          <div className={styles.errorContainer}>
+            <h2 className={styles.errorTitle}>Authentication Required</h2>
+            <p className={styles.errorText}>Please sign in to access your dashboard.</p>
+          </div>
         </div>
       </>
     );
@@ -44,68 +46,97 @@ export default function UserDashboard() {
 
   return (
     <>
-      {/* <Navbar /> */}
-      <div className={styles.page}>
-        <div className={styles.container}>
-          <div className={styles.dashboardHeader}>
+      <div className={styles.userDashboardContainer}>
+        <div className={styles.userDashboardWrapper}>
+          <header className={styles.userDashboardHeader}>
             <div className={styles.welcomeSection}>
-              <h1 className={styles.title}>
+              <h1>
                 Welcome back, {user.user_metadata?.full_name || user.email?.split('@')[0]}!
               </h1>
-              <p className={styles.subtitle}>
+              <p className={styles.userDashboardDescription}>
                 Track your learning progress, manage your profile, and achieve your goals.
               </p>
+              <div className={styles.quickActions}>
+                <a href="/articles" className={styles.quickAction}>
+                  <span className={styles.actionIcon}>📚</span>
+                  <span className={styles.actionText}>Browse Articles</span>
+                </a>
+                <a href="/roadmaps" className={styles.quickAction}>
+                  <span className={styles.actionIcon}>🗺️</span>
+                  <span className={styles.actionText}>View Roadmaps</span>
+                </a>
+                <a href="/groups" className={styles.quickAction}>
+                  <span className={styles.actionIcon}>👥</span>
+                  <span className={styles.actionText}>Join Groups</span>
+                </a>
+                <a href="/dsa" className={styles.quickAction}>
+                  <span className={styles.actionIcon}>💻</span>
+                  <span className={styles.actionText}>DSA Practice</span>
+                </a>
+                <a href="/graph" className={styles.quickAction}>
+                  <span className={styles.actionIcon}>🕸️</span>
+                  <span className={styles.actionText}>Knowledge Graph</span>
+                </a>
+              </div>
             </div>
-            <div className={styles.quickActions}>
-              <a href="/articles" className={styles.quickAction}>
-                <span className={styles.actionIcon}>📚</span>
-                <span className={styles.actionText}>Browse Articles</span>
-              </a>
-              <a href="/roadmaps" className={styles.quickAction}>
-                <span className={styles.actionIcon}>🗺️</span>
-                <span className={styles.actionText}>View Roadmaps</span>
-              </a>
-              <a href="/profile" className={styles.quickAction}>
-                <span className={styles.actionIcon}>👤</span>
-                <span className={styles.actionText}>Public Profile</span>
-              </a>
+          </header>
+
+          <main className={styles.userDashboardMain}>
+            <div className={styles.dashboardGrid}>
+              <section className={styles.dashboardSection}>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>Profile Overview</h2>
+                </div>
+                <div className={styles.sectionContent}>
+                  <ProfileSection />
+                </div>
+              </section>
+
+              <section className={styles.dashboardSection}>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>Learning Progress</h2>
+                </div>
+                <div className={styles.sectionContent}>
+                  <ProgressSection />
+                </div>
+              </section>
+
+              <section className={styles.dashboardSection}>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>Achievements</h2>
+                </div>
+                <div className={styles.sectionContent}>
+                  <AchievementsSection />
+                </div>
+              </section>
+
+              {/* Additional sections can be added here as we build them */}
+              {/* 
+              <section className={styles.dashboardSection}>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>Analytics</h2>
+                </div>
+                <div className={styles.sectionContent}>
+                  <AnalyticsSection />
+                </div>
+              </section>
+              */}
             </div>
-          </div>
+          </main>
 
-          <div className={styles.dashboardGrid}>
-            {/* Profile Section */}
-            <ProfileSection />
-
-            {/* Progress Section */}
-            <ProgressSection />
-
-            {/* Achievements Section */}
-            <AchievementsSection />
-
-            {/* Additional sections can be added here as we build them */}
-            {/* 
-            <AnalyticsSection />
-            <CommunitySection />
-            <CertificationsSection />
-            */}
-          </div>
-
-          {/* Footer */}
-          <div className={styles.dashboardFooter}>
+          {/* <footer className={styles.dashboardFooter}>
             <p className={styles.footerText}>
               Keep learning and growing! Every step counts towards becoming a 100x Engineer.
             </p>
-            <div className={styles.actionList}>
-              <a href="/profile" className={styles.actionLink}>{"->"} View Profile</a>
-              <a href="/articles" className={styles.actionLink}>{"->"} Browse Articles</a>
-              <a href="/roadmaps" className={styles.actionLink}>{"->"} View Roadmaps</a>
+            <div className={styles.footerLinks}>
+              <a href="/profile" className={styles.footerLink}>View Profile</a>
+              <a href="/articles" className={styles.footerLink}>Browse Articles</a>
+              <a href="/roadmaps" className={styles.footerLink}>View Roadmaps</a>
             </div>
-          </div>
+          </footer> */}
         </div>
       </div>
 
-      {/* Debug Panel - Only in development */}
-       <DatabaseDebugPanel />
     </>
   );
 }

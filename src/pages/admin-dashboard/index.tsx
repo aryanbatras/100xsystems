@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styles from './AdminDashboard.module.css';
+import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
 
 interface Article {
   slug: string;
@@ -116,68 +117,70 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className={styles.dashboardContainer}>
-      <div className={styles.dashboardWrapper}>
-        <header className={styles.dashboardHeader}>
-          <div className={styles.headerTop}>
-            <div className={styles.headerInfo}>
-              <h1>Admin Dashboard</h1>
-              <p>Manage your articles</p>
-            </div>
-            <button 
-              onClick={handleNewArticle}
-              className={styles.newArticleButton}
-            >
-              New Article
-            </button>
-          </div>
-          
-          <div className={styles.managementLinks}>
-            <Link href="/admin/roadmaps" className={styles.managementLink}>
-              🗺️ Manage Roadmaps
-            </Link>
-            <Link href="/admin/manifests" className={styles.managementLink}>
-              📋 Manage Manifests
-            </Link>
-          </div>
-        </header>
-
-        <main className={styles.dashboardMain}>
-          {articles.length === 0 ? (
-            <div className={styles.emptyState}>
-              <h2>No articles found</h2>
-              <p>Create your first article to get started</p>
+    <ProtectedRoute requireAdmin={true}>
+      <div className={styles.dashboardContainer}>
+        <div className={styles.dashboardWrapper}>
+          <header className={styles.dashboardHeader}>
+            <div className={styles.headerTop}>
+              <div className={styles.headerInfo}>
+                <h1>Admin Dashboard</h1>
+                <p>Manage your articles</p>
+              </div>
               <button 
                 onClick={handleNewArticle}
                 className={styles.newArticleButton}
               >
-                Create First Article
+                New Article
               </button>
             </div>
-          ) : (
-            <div className={styles.articleGrid}>
-              {articles.map((article) => (
-                <div
-                  key={article.slug}
-                  className={`${styles.articleCard} ${article.isLoading ? styles.loading : ''}`}
-                  onClick={() => !article.isLoading && handleArticleClick(article.slug)}
-                >
-                  <div className={styles.articleCardHeader}>
-                    <h3>{article.slug}</h3>
-                  </div>
-                  <div className={styles.articleCardFooter}>
-                    {article.isLoading ? (
-                      <div className={styles.cardLoading}>Loading...</div>
-                    ) : (
-                      <div className={styles.editIndicator}>Click to edit</div>
-                    )}
-                  </div>
-                </div>
-              ))}
+            
+            <div className={styles.managementLinks}>
+              <Link href="/admin/roadmaps" className={styles.managementLink}>
+                🗺️ Manage Roadmaps
+              </Link>
+              <Link href="/admin/manifests" className={styles.managementLink}>
+                📋 Manage Manifests
+              </Link>
             </div>
-          )}
-        </main>
+          </header>
+
+          <main className={styles.dashboardMain}>
+            {articles.length === 0 ? (
+              <div className={styles.emptyState}>
+                <h2>No articles found</h2>
+                <p>Create your first article to get started</p>
+                <button 
+                  onClick={handleNewArticle}
+                  className={styles.newArticleButton}
+                >
+                  Create First Article
+                </button>
+              </div>
+            ) : (
+              <div className={styles.articleGrid}>
+                {articles.map((article) => (
+                  <div
+                    key={article.slug}
+                    className={`${styles.articleCard} ${article.isLoading ? styles.loading : ''}`}
+                    onClick={() => !article.isLoading && handleArticleClick(article.slug)}
+                  >
+                    <div className={styles.articleCardHeader}>
+                      <h3>{article.slug}</h3>
+                    </div>
+                    <div className={styles.articleCardFooter}>
+                      {article.isLoading ? (
+                        <div className={styles.cardLoading}>Loading...</div>
+                      ) : (
+                        <div className={styles.editIndicator}>Click to edit</div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </main>
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }

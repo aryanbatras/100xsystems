@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { StaticSiteGenerator } from '../../core/infrastructure/staticSiteGenerator';
 import InlineSearch from '../../components/search/InlineSearch';
 import styles from './Articles.module.css';
+import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
 
 interface Article {
   slug: string;
@@ -26,7 +27,7 @@ export default function Articles({ articles }: ArticlesProps) {
   );
 
   return (
-    <>
+    <ProtectedRoute requireAuth={true}>
       <Head>
         <title>Articles - 100x Systems</title>
         <meta name="description" content="Explore our collection of articles on systems thinking, engineering, and innovation." />
@@ -93,7 +94,7 @@ export default function Articles({ articles }: ArticlesProps) {
           </main>
         </div>
       </div>
-    </>
+    </ProtectedRoute>
   );
 }
 

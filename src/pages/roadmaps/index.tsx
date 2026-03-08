@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { StaticSiteGenerator, KnowledgeGraph } from '../../core/infrastructure/staticSiteGenerator';
 import styles from './Roadmaps.module.css';
+import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
 
 interface RoadmapsProps {
   knowledgeGraph: KnowledgeGraph;
@@ -12,7 +13,7 @@ export default function Roadmaps({ knowledgeGraph }: RoadmapsProps) {
   const { roadmaps, relationships } = knowledgeGraph;
 
   return (
-    <>
+    <ProtectedRoute requireAuth={true}>
       <Head>
         <title>Learning Roadmaps - 100x Systems</title>
         <meta name="description" content="Explore our structured learning roadmaps for systems thinking, engineering, and innovation." />
@@ -98,7 +99,7 @@ export default function Roadmaps({ knowledgeGraph }: RoadmapsProps) {
           </main>
         </div>
       </div>
-    </>
+    </ProtectedRoute>
   );
 }
 

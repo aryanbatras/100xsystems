@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { HtmlToDeltaConverter } from '../../core/infrastructure/HtmlToDeltaConverter';
 import styles from './Parser.module.css';
+import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
 
 const CustomQuillEditor = dynamic(() => import("../../components/editor/CustomQuillEditor"), {
   ssr: false,
@@ -118,84 +119,86 @@ export default function ParserPage() {
   };
 
   return (
-    <div className={styles.parserContainer}>
-      <div className={styles.parserWrapper}>
-        <header className={styles.parserHeader}>
-          <h1>HTML to Quill Parser</h1>
-          <p>Paste published HTML to convert it back to Quill editor format</p>
-        </header>
+    <ProtectedRoute requireAdmin={true}>
+      <div className={styles.parserContainer}>
+        <div className={styles.parserWrapper}>
+          <header className={styles.parserHeader}>
+            <h1>HTML to Quill Parser</h1>
+            <p>Paste published HTML to convert it back to Quill editor format</p>
+          </header>
 
-        <main className={styles.parserMain}>
-          {!showEditor ? (
-            <div className={styles.inputSection}>
-              <div className={styles.inputHeader}>
-                <h2>HTML Input</h2>
-                <button 
-                  onClick={handleEditClick}
-                  disabled={!htmlInput.trim()}
-                  className={styles.editButton}
-                >
-                  Edit
-                </button>
-              </div>
-              <textarea
-                value={htmlInput}
-                onChange={(e) => setHtmlInput(e.target.value)}
-                placeholder="Paste your published HTML here..."
-                className={styles.htmlTextarea}
-                rows={20}
-              />
-            </div>
-          ) : (
-            <div className={styles.editorSection}>
-              <div className={styles.metadataPanel}>
-                <h3>Extracted Information</h3>
-                {metadata && (
-                  <div className={styles.metadataInfo}>
-                    <p><strong>Title:</strong> {metadata.title}</p>
-                    <p><strong>Slug:</strong> {metadata.slug}</p>
-                    <p><strong>Date:</strong> {metadata.date}</p>
-                    <p><strong>Images:</strong> {metadata.images?.length || 0}</p>
-                    {metadata.images && metadata.images.length > 0 && (
-                      <div className={styles.imageList}>
-                        <strong>Image URLs:</strong>
-                        <ul>
-                          {metadata.images.map((url: string, index: number) => (
-                            <li key={index}><a href={url} target="_blank" rel="noopener noreferrer">{url}</a></li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div className={styles.editorContainer}>
-                <CustomQuillEditor 
-                  value={editorDelta || ''}
-                  onChange={handleContentChange}
-                  title={metadata?.title || ''}
-                  onTitleChange={metadata ? () => {} : handleTitleChange}
-                  placeholder="Content loaded from HTML..."
-                  mode="parser"
-                  titleReadOnly={!!metadata}
+          <main className={styles.parserMain}>
+            {!showEditor ? (
+              <div className={styles.inputSection}>
+                <div className={styles.inputHeader}>
+                  <h2>HTML Input</h2>
+                  <button 
+                    onClick={handleEditClick}
+                    disabled={!htmlInput.trim()}
+                    className={styles.editButton}
+                  >
+                    Edit
+                  </button>
+                </div>
+                <textarea
+                  value={htmlInput}
+                  onChange={(e) => setHtmlInput(e.target.value)}
+                  placeholder="Paste your published HTML here..."
+                  className={styles.htmlTextarea}
+                  rows={20}
                 />
               </div>
-            </div>
-          )}
+            ) : (
+              <div className={styles.editorSection}>
+                <div className={styles.metadataPanel}>
+                  <h3>Extracted Information</h3>
+                  {metadata && (
+                    <div className={styles.metadataInfo}>
+                      <p><strong>Title:</strong> {metadata.title}</p>
+                      <p><strong>Slug:</strong> {metadata.slug}</p>
+                      <p><strong>Date:</strong> {metadata.date}</p>
+                      <p><strong>Images:</strong> {metadata.images?.length || 0}</p>
+                      {metadata.images && metadata.images.length > 0 && (
+                        <div className={styles.imageList}>
+                          <strong>Image URLs:</strong>
+                          <ul>
+                            {metadata.images.map((url: string, index: number) => (
+                              <li key={index}><a href={url} target="_blank" rel="noopener noreferrer">{url}</a></li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
 
-          {conversionLog.length > 0 && (
-            <div className={styles.logPanel}>
-              <h3>Conversion Log</h3>
-              <div className={styles.logContent}>
-                {conversionLog.map((log, index) => (
-                  <div key={index} className={styles.logEntry}>{log}</div>
-                ))}
+                <div className={styles.editorContainer}>
+                  <CustomQuillEditor 
+                    value={editorDelta || ''}
+                    onChange={handleContentChange}
+                    title={metadata?.title || ''}
+                    onTitleChange={metadata ? () => {} : handleTitleChange}
+                    placeholder="Content loaded from HTML..."
+                    mode="parser"
+                    titleReadOnly={!!metadata}
+                  />
+                </div>
               </div>
-            </div>
-          )}
-        </main>
+            )}
+
+            {conversionLog.length > 0 && (
+              <div className={styles.logPanel}>
+                <h3>Conversion Log</h3>
+                <div className={styles.logContent}>
+                  {conversionLog.map((log, index) => (
+                    <div key={index} className={styles.logEntry}>{log}</div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </main>
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }

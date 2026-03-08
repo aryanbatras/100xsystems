@@ -6,6 +6,7 @@ import { GroupsList } from '../../components/groups/GroupsList';
 import { CreateGroupModal } from '../../components/groups/CreateGroupModal';
 import { GroupEditSection } from '../../components/groups/GroupEditSection';
 import styles from './Groups.module.css';
+import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
 
 export default function GroupsPage() {
   const { user } = useAuth();
@@ -79,25 +80,8 @@ export default function GroupsPage() {
     }
   };
 
-  if (!user) {
-    return (
-      <>
-        {/* <Navbar /> */}
-        <div className={styles.page}>
-          <div className={styles.container}>
-            <div className={styles.errorContainer}>
-              <h2 className={styles.errorTitle}>Authentication Required</h2>
-              <p className={styles.errorText}>Please sign in to access study groups.</p>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  }
-
   return (
-    <>
-      
+    <ProtectedRoute requireAuth={true}>
       <div className={styles.page}>
         <div className={styles.container}>
           {/* Header with title */}
@@ -189,6 +173,6 @@ export default function GroupsPage() {
           )}
         </div>
       </div>
-    </>
+    </ProtectedRoute>
   );
 }
