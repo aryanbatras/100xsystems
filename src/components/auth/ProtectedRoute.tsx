@@ -29,7 +29,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
     // Handle unauthenticated users
     if (requireAuth && !isAuthenticated) {
-      router.push('/?auth-required=true');
+      const currentPath = router.pathname;
+      router.push('/?auth-required=true&redirect=' + encodeURIComponent(currentPath));
       return;
     }
 
@@ -45,18 +46,16 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Loading />;
   }
 
-  // Check if user is authenticated
+  // Final auth checks before rendering children
   const isAuthenticated = isUserAuthenticated(user);
-  
-  // Check if user is admin (for admin routes)
   const isAdmin = isAdminUser(user);
 
-  // Handle unauthenticated users
+  // Handle unauthenticated users (render fallback)
   if (requireAuth && !isAuthenticated) {
     return <Loading />;
   }
 
-  // Handle non-admin users trying to access admin routes
+  // Handle non-admin users trying to access admin routes (render fallback)
   if (requireAdmin && !isAdmin) {
     return <Loading />;
   }

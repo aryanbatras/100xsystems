@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from './AuthModal.module.css';
 
@@ -8,6 +9,7 @@ interface AuthModalProps {
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
+  const router = useRouter();
   const { loading, signInWithGitHub, signInWithGoogle } = useAuth();
 
   if (!isOpen) return null;
@@ -15,7 +17,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const handleGitHubSignIn = async () => {
     try {
       await signInWithGitHub();
-      onClose();
+      // Check if there's a redirect URL parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectPath = urlParams.get('redirect');
+      
+      if (redirectPath) {
+        router.push(redirectPath);
+      } else {
+        onClose();
+      }
     } catch (error) {
       console.error('GitHub sign in error:', error);
     }
@@ -24,7 +34,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
-      onClose();
+      // Check if there's a redirect URL parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectPath = urlParams.get('redirect');
+      
+      if (redirectPath) {
+        router.push(redirectPath);
+      } else {
+        onClose();
+      }
     } catch (error) {
       console.error('Google sign in error:', error);
     }

@@ -37,9 +37,9 @@ export async function middleware(request: NextRequest) {
     if (!authCookie?.value || !refreshCookie?.value) {
       // No session cookies found
       if (isAdminRoute) {
-        return NextResponse.redirect(new URL('/?admin-required=true', request.url));
+        return NextResponse.redirect(new URL('/?auth-required=true&redirect=' + encodeURIComponent(request.nextUrl.pathname), request.url));
       } else if (isAuthRoute) {
-        return NextResponse.redirect(new URL('/?auth-required=true', request.url));
+        return NextResponse.redirect(new URL('/?auth-required=true&redirect=' + encodeURIComponent(request.nextUrl.pathname), request.url));
       }
     }
 
@@ -52,9 +52,9 @@ export async function middleware(request: NextRequest) {
     if (error || !session?.user) {
       // Invalid session
       if (isAdminRoute) {
-        return NextResponse.redirect(new URL('/?admin-required=true', request.url));
+        return NextResponse.redirect(new URL('/?auth-required=true&redirect=' + encodeURIComponent(request.nextUrl.pathname), request.url));
       } else if (isAuthRoute) {
-        return NextResponse.redirect(new URL('/?auth-required=true', request.url));
+        return NextResponse.redirect(new URL('/?auth-required=true&redirect=' + encodeURIComponent(request.nextUrl.pathname), request.url));
       }
     }
 
@@ -72,11 +72,11 @@ export async function middleware(request: NextRequest) {
   } catch (error) {
     console.error('Middleware error:', error);
     
-    // If there's an error, redirect to home with error
+    // If there's an error, redirect to home with error and redirect
     if (isAdminRoute) {
-      return NextResponse.redirect(new URL('/?admin-required=true', request.url));
+      return NextResponse.redirect(new URL('/?auth-required=true&redirect=' + encodeURIComponent(request.nextUrl.pathname), request.url));
     } else if (isAuthRoute) {
-      return NextResponse.redirect(new URL('/?auth-required=true', request.url));
+      return NextResponse.redirect(new URL('/?auth-required=true&redirect=' + encodeURIComponent(request.nextUrl.pathname), request.url));
     }
     
     return NextResponse.next();
