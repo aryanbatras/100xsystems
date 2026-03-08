@@ -108,7 +108,7 @@ export const getStaticProps: GetStaticProps = async () => {
       props: {
         articles
       },
-      revalidate: 3600
+      revalidate: false
     };
 
   } catch (error) {

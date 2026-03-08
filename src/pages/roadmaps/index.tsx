@@ -112,7 +112,7 @@ export const getStaticProps: GetStaticProps = async () => {
       props: {
         knowledgeGraph
       },
-      revalidate: 3600
+      revalidate: false
     };
 
   } catch (error) {

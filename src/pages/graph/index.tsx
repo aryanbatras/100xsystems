@@ -516,7 +516,7 @@ export const getStaticProps: GetStaticProps = async () => {
         nodes,
         edges,
       },
-      revalidate: 3600, 
+      revalidate: false, 
     };
   } catch (error) {
     console.error('Failed to fetch graph data:', error);
