@@ -5,12 +5,6 @@ import { createClient } from '@supabase/supabase-js';
 // Admin emails that have access to admin routes
 const ADMIN_EMAILS = ['batraaryan03@gmail.com'];
 
-// Create Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -28,23 +22,41 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    // Get the session from the request
-    const authCookie = request.cookies.get('sb-access-token');
-    const refreshCookie = request.cookies.get('sb-refresh-token');
-    
-    if (!authCookie?.value || !refreshCookie?.value) {
-      // No session cookies found - redirect to home
+    // Create Supabase client for middleware
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        global: {
+          headers: {
+            // Forward all request headers
+            ...Object.fromEntries(request.headers.entries())
+          }
+        },
+        // Use cookies from request
+        auth: {
+          persistSession: false
+        }
+      }
+    );
+
+    // Get session from cookies
+    const accessToken = request.cookies.get('sb-access-token')?.value;
+    const refreshToken = request.cookies.get('sb-refresh-token')?.value;
+
+    if (!accessToken || !refreshToken) {
+      console.log(' Middleware: No auth cookies found');
       return NextResponse.redirect(new URL('/', request.url));
     }
 
     // Verify the session
     const { data: { session }, error } = await supabase.auth.setSession({
-      access_token: authCookie!.value,
-      refresh_token: refreshCookie!.value
+      access_token: accessToken,
+      refresh_token: refreshToken
     });
 
     if (error || !session?.user) {
-      // Invalid session - redirect to home
+      console.log(' Middleware: Invalid session', { error, user: session?.user });
       return NextResponse.redirect(new URL('/', request.url));
     }
 
@@ -53,11 +65,12 @@ export async function middleware(request: NextRequest) {
       const userEmail = session.user.email;
       
       if (!userEmail || !ADMIN_EMAILS.includes(userEmail)) {
-        // User is not an authorized admin - redirect to home
+        console.log(' Middleware: Admin access denied for email:', userEmail);
         return NextResponse.redirect(new URL('/', request.url));
       }
     }
 
+    console.log(' Middleware: Access granted for:', session.user.email);
     return NextResponse.next();
   } catch (error) {
     console.error('Middleware error:', error);
