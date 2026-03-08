@@ -7,26 +7,32 @@ export default function AuthCallback() {
 
   useEffect(() => {
     const handleAuthCallback = async () => {
+      console.log('🔍 AuthCallback: Processing auth callback...');
+      console.log('🔍 AuthCallback: Current URL:', window.location.href);
+      
       try {
         // Get the session after OAuth callback
         const { data, error } = await supabase.auth.getSession();
         
+        console.log('🔍 AuthCallback: getSession result:', { data, error });
+        
         if (error) {
-          console.error('Auth callback error:', error);
+          console.error('🔍 AuthCallback: Auth callback error:', error);
           router.push('/auth/login?error=auth_failed');
           return;
         }
 
         if (data.session) {
-          console.log('Successfully authenticated:', data.session.user);
+          console.log('🔍 AuthCallback: Successfully authenticated:', data.session.user);
           // User profile is automatically synced in AuthContext
           router.push('/user-dashboard');
         } else {
           // No session found, redirect to login
+          console.log('🔍 AuthCallback: No session found, redirecting to login');
           router.push('/auth/login');
         }
       } catch (err) {
-        console.error('Unexpected error in auth callback:', err);
+        console.error('🔍 AuthCallback: Unexpected error in auth callback:', err);
         router.push('/auth/login?error=unexpected_error');
       }
     };

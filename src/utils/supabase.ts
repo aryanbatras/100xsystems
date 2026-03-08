@@ -18,22 +18,38 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
 
 // Auth helper functions
 export const signInWithGitHub = async () => {
+  console.log('🔍 Supabase: Initiating GitHub OAuth...');
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'github',
     options: {
       redirectTo: `${window.location.origin}/auth/callback`
     }
   });
+  
+  if (error) {
+    console.error('🔍 Supabase: GitHub OAuth error:', error);
+  } else {
+    console.log('🔍 Supabase: GitHub OAuth redirect sent to:', `${window.location.origin}/auth/callback`);
+  }
+  
   return { error };
 };
 
 export const signInWithGoogle = async () => {
+  console.log('🔍 Supabase: Initiating Google OAuth...');
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
       redirectTo: `${window.location.origin}/auth/callback`
     }
   });
+  
+  if (error) {
+    console.error('🔍 Supabase: Google OAuth error:', error);
+  } else {
+    console.log('🔍 Supabase: Google OAuth redirect sent to:', `${window.location.origin}/auth/callback`);
+  }
+  
   return { error };
 };
 
@@ -54,17 +70,40 @@ export const getCurrentSession = async () => {
 
 // Database helper functions
 export const syncUserProfile = async (user: User) => {
-  const { error } = await supabase
-    .from('profiles')
-    .upsert({
+  try {
+    console.log('🔍 ProfileSync: Starting profile sync for user:', user.id);
+    console.log('🔍 ProfileSync: User metadata:', user.user_metadata);
+    
+    const profileData = {
       id: user.id,
       username: user.user_metadata?.user_name || user.user_metadata?.name || user.email?.split('@')[0],
       full_name: user.user_metadata?.full_name || user.user_metadata?.name,
       avatar_url: user.user_metadata?.avatar_url,
       github_username: user.user_metadata?.user_name,
-      google_username: user.user_metadata?.email,
       updated_at: new Date().toISOString()
-    });
-  
-  return { error };
+    };
+    
+    console.log('🔍 ProfileSync: Profile data to upsert:', profileData);
+    
+    const { data, error } = await supabase
+      .from('profiles')
+      .upsert(profileData, {
+        onConflict: 'id',
+        ignoreDuplicates: false
+      });
+    
+    console.log('🔍 ProfileSync: Upsert result:', { data, error });
+    
+    if (error) {
+      console.error('🔍 ProfileSync: Profile sync error:', error);
+      // Don't fail auth if profile sync fails
+    } else {
+      console.log('🔍 ProfileSync: Profile sync successful');
+    }
+    
+    return { error };
+  } catch (err) {
+    console.error('🔍 ProfileSync: Unexpected profile sync error:', err);
+    return { error: err };
+  }
 };
