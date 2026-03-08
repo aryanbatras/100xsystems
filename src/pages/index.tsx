@@ -30,7 +30,9 @@ export default function Home() {
 
     // Check URL parameters for auth requirements
     if (router.isReady) {
-      const { authRequired, unauthorized, adminRequired } = router.query;
+      const authRequired = router.query['auth-required'];
+      const unauthorized = router.query['unauthorized'];
+      const adminRequired = router.query['admin-required'];
       
       console.log('🔍 Auth check:', { authRequired, unauthorized, adminRequired, user: !!user });
       
@@ -64,7 +66,7 @@ export default function Home() {
         setIsAuthModalOpen(true);
       }
     }
-  }, [user]);
+  }, [user, router.query]);
 
   return (
     <>
