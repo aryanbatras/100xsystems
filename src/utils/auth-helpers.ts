@@ -29,7 +29,7 @@ export const isUserAuthenticated = (user: User | null): boolean => {
 };
 
 /**
- * Get user display name
+ * Get user display name for UI
  * @param user - The authenticated user
  * @returns string display name
  */
@@ -45,40 +45,38 @@ export const getUserDisplayName = (user: User | null): string => {
 };
 
 /**
- * Check if current route requires admin access
- * @param pathname - Current route path
- * @returns boolean indicating if route requires admin access
+ * Simple route-based protection functions
  */
-export const requiresAdminAccess = (pathname: string): boolean => {
+
+// Admin routes protection
+export const isAdminRoute = (pathname: string): boolean => {
   const adminRoutes = ['/admin-dashboard', '/admin', '/parser'];
   return adminRoutes.some(route => pathname.startsWith(route));
 };
 
-/**
- * Check if current route requires authentication
- * @param pathname - Current route path
- * @returns boolean indicating if route requires authentication
- */
-export const requiresAuthentication = (pathname: string): boolean => {
+// Authenticated routes protection  
+export const isAuthRoute = (pathname: string): boolean => {
   const authRoutes = ['/articles', '/roadmaps', '/groups', '/graph'];
   return authRoutes.some(route => pathname.startsWith(route));
 };
 
 /**
- * Get redirect URL for unauthorized access
- * @param isAuthRequired - Whether authentication is required
- * @param isAdminRequired - Whether admin access is required
- * @returns redirect URL string
+ * Block access to protected routes - stop user from proceeding
+ * @param pathname - Current route path
+ * @param user - The authenticated user
+ * @returns boolean indicating if access should be blocked
  */
-export const getUnauthorizedRedirectUrl = (
-  isAuthRequired: boolean, 
-  isAdminRequired: boolean
-): string => {
-  if (isAdminRequired) {
-    return '/?unauthorized=true';
+export const shouldBlockAccess = (pathname: string, user: User | null): boolean => {
+  // If user is not authenticated, block access to all protected routes
+  if (!isUserAuthenticated(user)) {
+    return isAdminRoute(pathname) || isAuthRoute(pathname);
   }
-  if (isAuthRequired) {
-    return '/?auth-required=true';
+  
+  // If user is authenticated but not admin, block access to admin routes only
+  if (!isAdminUser(user) && isAdminRoute(pathname)) {
+    return true;
   }
-  return '/';
+  
+  // User can access the route
+  return false;
 };

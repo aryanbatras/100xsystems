@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../contexts/AuthContext';
-import { isAdminUser, isUserAuthenticated } from '../../utils/auth-helpers';
+import { shouldBlockAccess } from '../../utils/auth-helpers';
 import { Loading } from '../loading/Loading';
 import { AuthModal } from './AuthModal';
 import styles from './ProtectedRoute.module.css';
@@ -18,22 +18,11 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requireAuth = false 
 }) => {
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-
-  // Show loading while checking auth
-  if (loading) {
-    return <Loading />;
-  }
-
-  // Check if user is authenticated
-  const isAuthenticated = isUserAuthenticated(user);
   
-  // Check if user is admin (for admin routes)
-  const isAdmin = isAdminUser(user);
-
-  // Handle unauthenticated users - show AuthModal
-  if (requireAuth && !isAuthenticated) {
+  // Block access if user shouldn't access this route
+  if (shouldBlockAccess(router.pathname, user)) {
     return (
       <>
         <div className={styles.container}>
@@ -65,28 +54,6 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       </>
     );
   }
-
-  // Handle non-admin users trying to access admin routes
-  if (requireAdmin && !isAdmin) {
-    return (
-      <div className={`${styles.container} ${styles.error}`}>
-        <div className={styles.content}>
-          <h1 className={styles.title}>Access Denied</h1>
-          <p className={styles.description}>
-            You don't have permission to access this admin area. This page is restricted to administrators only.
-          </p>
-          <div className={styles.actions}>
-            <button
-              onClick={() => router.push('/')}
-              className={styles.button}
-            >
-              Go to Home
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+  
   return <>{children}</>;
 };

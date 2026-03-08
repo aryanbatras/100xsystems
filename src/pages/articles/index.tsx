@@ -6,6 +6,7 @@ import { StaticSiteGenerator } from '../../core/infrastructure/staticSiteGenerat
 import InlineSearch from '../../components/search/InlineSearch';
 import styles from './Articles.module.css';
 import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
+import { isUserAuthenticated } from '../../utils/auth-helpers';
 
 interface Article {
   slug: string;
