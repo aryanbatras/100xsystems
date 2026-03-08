@@ -33,8 +33,23 @@ export default function Home() {
       const authRequired = router.query['auth-required'];
       const unauthorized = router.query['unauthorized'];
       const adminRequired = router.query['admin-required'];
+      const redirectPath = router.query['redirect'];
       
-      console.log('🔍 Auth check:', { authRequired, unauthorized, adminRequired, user: !!user });
+      console.log('🔍 Auth check:', { authRequired, unauthorized, adminRequired, user: !!user, redirectPath });
+      
+      // If user is authenticated and there's a redirect path, redirect there
+      if (authRequired === 'true' && user && redirectPath) {
+        console.log('✅ Redirecting authenticated user to:', redirectPath);
+        router.push(redirectPath as string);
+        return;
+      }
+      
+      // If user is authenticated and there's no redirect, just close any modal
+      if (authRequired === 'true' && user) {
+        console.log('✅ User authenticated, no redirect needed');
+        setIsAuthModalOpen(false);
+        return;
+      }
       
       if (authRequired === 'true' && !user) {
         console.log('✅ Opening auth modal for unauthenticated user');
