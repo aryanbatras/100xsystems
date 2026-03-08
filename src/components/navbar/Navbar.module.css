@@ -81,7 +81,7 @@
     background: var(--accent-yellow);
     transition: width 0.3s ease;
     position: absolute;
-    bottom: -8px;
+    bottom: -7px;
     left: 0;
   }
 
@@ -423,7 +423,7 @@
 .authButton {
   background: none;
   border: none;
-  color: var(--accent-yellow);
+  color: white;
   text-transform: uppercase;
   font-family: var(--font-samsung-sharp);
   font-weight: 500;
@@ -431,6 +431,24 @@
   cursor: pointer;
   padding: 0.5rem 0;
   font-size: 1.1rem;
+
+   
+  &::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 3px;
+    background: var(--accent-yellow);
+    transition: width 0.3s ease;
+    bottom: -8px;
+    left: 0;
+  }
+
+  &:hover {
+    &::after {
+      width: 100%;
+    }
+  }
 }
 
 .signOutButton {

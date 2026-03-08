@@ -186,7 +186,7 @@ export function Navbar(): React.ReactElement {
               <button
                 onClick={() => setIsAuthModalOpen(true)}
                 disabled={loading}
-                className={styles.authButton}
+                className={`${styles.authButton} ${isWhiteTheme ? styles.signOutWhite : ""}`}
               >
                 {loading ? "Signing in..." : "Sign In"}
               </button>

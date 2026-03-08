@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../contexts/AuthContext';
 import { isAdminUser, isUserAuthenticated } from '../../utils/auth-helpers';
 import { Loading } from '../loading/Loading';
+import { AuthModal } from './AuthModal';
+import styles from './ProtectedRoute.module.css';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -17,47 +19,73 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
   const router = useRouter();
   const { user, loading } = useAuth();
-
-  useEffect(() => {
-    if (loading) return;
-
-    // Check if user is authenticated
-    const isAuthenticated = isUserAuthenticated(user);
-    
-    // Check if user is admin (for admin routes)
-    const isAdmin = isAdminUser(user);
-
-    // Handle unauthenticated users
-    if (requireAuth && !isAuthenticated) {
-      const currentPath = router.pathname;
-      router.push('/?auth-required=true&redirect=' + encodeURIComponent(currentPath));
-      return;
-    }
-
-    // Handle non-admin users trying to access admin routes
-    if (requireAdmin && !isAdmin) {
-      router.push('/?unauthorized=true');
-      return;
-    }
-  }, [user, loading, router, requireAdmin, requireAuth]);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   // Show loading while checking auth
   if (loading) {
     return <Loading />;
   }
 
-  // Final auth checks before rendering children
+  // Check if user is authenticated
   const isAuthenticated = isUserAuthenticated(user);
+  
+  // Check if user is admin (for admin routes)
   const isAdmin = isAdminUser(user);
 
-  // Handle unauthenticated users (render fallback)
+  // Handle unauthenticated users - show AuthModal
   if (requireAuth && !isAuthenticated) {
-    return <Loading />;
+    return (
+      <>
+        <div className={styles.container}>
+          <div className={styles.content}>
+            <h1 className={styles.title}>Sign In Required</h1>
+            <p className={styles.description}>
+              Please sign in to access this page. You'll need to create an account or log in to continue.
+            </p>
+            <div className={styles.actions}>
+              <button
+                onClick={() => setIsAuthModalOpen(true)}
+                className={styles.button}
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => router.push('/')}
+                className={`${styles.button} ${styles.secondary}`}
+              >
+                Go to Home
+              </button>
+            </div>
+          </div>
+        </div>
+        <AuthModal 
+          isOpen={isAuthModalOpen} 
+          onClose={() => setIsAuthModalOpen(false)} 
+        />
+      </>
+    );
   }
 
-  // Handle non-admin users trying to access admin routes (render fallback)
+  // Handle non-admin users trying to access admin routes
   if (requireAdmin && !isAdmin) {
-    return <Loading />;
+    return (
+      <div className={`${styles.container} ${styles.error}`}>
+        <div className={styles.content}>
+          <h1 className={styles.title}>Access Denied</h1>
+          <p className={styles.description}>
+            You don't have permission to access this admin area. This page is restricted to administrators only.
+          </p>
+          <div className={styles.actions}>
+            <button
+              onClick={() => router.push('/')}
+              className={styles.button}
+            >
+              Go to Home
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return <>{children}</>;

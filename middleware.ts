@@ -2,29 +2,27 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Admin emails that have access to admin routes
+const ADMIN_EMAILS = ['batraaryan03@gmail.com'];
 
-// Admin email addresses that have access to admin routes
-const ADMIN_EMAILS: string[] = [
-  "batraaryan03@gmail.com"
-  // Add your admin email address here
-];
-
-// Routes that require admin access
-const ADMIN_ROUTES = ['/admin-dashboard', '/admin', '/parser'];
-
-// Routes that require user authentication
-const AUTH_ROUTES = ['/articles', '/roadmaps', '/groups', '/graph'];
+// Create Supabase client
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
-  // Check if the route requires protection
-  const isAdminRoute = ADMIN_ROUTES.some(route => pathname.startsWith(route));
-  const isAuthRoute = AUTH_ROUTES.some(route => pathname.startsWith(route));
-  
+
+  // Define protected routes
+  const adminRoutes = ['/admin-dashboard', '/admin', '/parser'];
+  const authRoutes = ['/articles', '/roadmaps', '/groups', '/graph'];
+
+  // Check if current path is protected
+  const isAdminRoute = adminRoutes.some(route => pathname.startsWith(route));
+  const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
+
+  // If not a protected route, continue
   if (!isAdminRoute && !isAuthRoute) {
     return NextResponse.next();
   }
@@ -35,12 +33,8 @@ export async function middleware(request: NextRequest) {
     const refreshCookie = request.cookies.get('sb-refresh-token');
     
     if (!authCookie?.value || !refreshCookie?.value) {
-      // No session cookies found
-      if (isAdminRoute) {
-        return NextResponse.redirect(new URL('/?auth-required=true&redirect=' + encodeURIComponent(request.nextUrl.pathname), request.url));
-      } else if (isAuthRoute) {
-        return NextResponse.redirect(new URL('/?auth-required=true&redirect=' + encodeURIComponent(request.nextUrl.pathname), request.url));
-      }
+      // No session cookies found - redirect to home
+      return NextResponse.redirect(new URL('/', request.url));
     }
 
     // Verify the session
@@ -50,12 +44,8 @@ export async function middleware(request: NextRequest) {
     });
 
     if (error || !session?.user) {
-      // Invalid session
-      if (isAdminRoute) {
-        return NextResponse.redirect(new URL('/?auth-required=true&redirect=' + encodeURIComponent(request.nextUrl.pathname), request.url));
-      } else if (isAuthRoute) {
-        return NextResponse.redirect(new URL('/?auth-required=true&redirect=' + encodeURIComponent(request.nextUrl.pathname), request.url));
-      }
+      // Invalid session - redirect to home
+      return NextResponse.redirect(new URL('/', request.url));
     }
 
     // Check admin authorization for admin routes
@@ -63,23 +53,16 @@ export async function middleware(request: NextRequest) {
       const userEmail = session.user.email;
       
       if (!userEmail || !ADMIN_EMAILS.includes(userEmail)) {
-        // User is not an authorized admin
-        return NextResponse.redirect(new URL('/?unauthorized=true', request.url));
+        // User is not an authorized admin - redirect to home
+        return NextResponse.redirect(new URL('/', request.url));
       }
     }
 
     return NextResponse.next();
   } catch (error) {
     console.error('Middleware error:', error);
-    
-    // If there's an error, redirect to home with error and redirect
-    if (isAdminRoute) {
-      return NextResponse.redirect(new URL('/?auth-required=true&redirect=' + encodeURIComponent(request.nextUrl.pathname), request.url));
-    } else if (isAuthRoute) {
-      return NextResponse.redirect(new URL('/?auth-required=true&redirect=' + encodeURIComponent(request.nextUrl.pathname), request.url));
-    }
-    
-    return NextResponse.next();
+    // If there's an error, redirect to home
+    return NextResponse.redirect(new URL('/', request.url));
   }
 }
 
