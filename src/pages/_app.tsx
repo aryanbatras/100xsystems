@@ -7,6 +7,30 @@ import ScrollSmootherProvider from "../components/scroll/ScrollSmootherProvider"
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { AuthProvider } from "../contexts/AuthContext";
+import { ChatProvider, useChat } from "../contexts/ChatContext";
+import AdvancedChatBot from "../components/ai/AdvancedChatBot";
+import ChatButton from "../components/ai/ChatButton";
+
+function ChatComponents() {
+  const { isChatOpen, toggleChat } = useChat();
+
+  return (
+    <>
+      <ChatButton 
+        isOpen={isChatOpen}
+        onToggle={toggleChat}
+      />
+      
+      <AdvancedChatBot 
+        articleSlug={useChat().articleSlug}
+        articleContent={useChat().articleContent}
+        selectedText={useChat().selectedText}
+        isOpen={isChatOpen}
+        onClose={useChat().closeChat}
+      />
+    </>
+  );
+}
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -25,16 +49,19 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <AuthProvider>
-      <ScrollSmootherProvider>
-        <Loading /> 
-          <Navbar />
-          <div id="smooth-wrapper">
-            <div id="smooth-content">
-              <Component {...pageProps} />
-              <Footer/>
+      <ChatProvider>
+        <ScrollSmootherProvider>
+          <Loading /> 
+            <Navbar />
+            <div id="smooth-wrapper">
+              <div id="smooth-content">
+                <Component {...pageProps} />
+                <Footer/>
+              </div>
             </div>
-          </div>
-        </ScrollSmootherProvider>
-    </AuthProvider>
+            <ChatComponents />
+          </ScrollSmootherProvider>
+        </ChatProvider>
+      </AuthProvider>
   );
 }

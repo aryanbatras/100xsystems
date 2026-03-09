@@ -99,7 +99,8 @@
 }
 
 .articleCard:hover {
-  /* No visual effects for professional look */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .articleCard a {
@@ -128,6 +129,7 @@
   margin-bottom: 1rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   font-weight: 300;

@@ -6,7 +6,8 @@ import { StaticSiteGenerator, ArticleManifest } from '../../core/infrastructure/
 import GiscusComments from '../../components/discussions/GiscusComments';
 import { DiscussionProvider } from '../../components/discussions/DiscussionProvider';
 import styles from './Articles.module.css';
-import SimpleChatBot from '../../components/ai/SimpleChatBot';
+import { useChat } from '../../contexts/ChatContext';
+import AdvancedChatBot from '../../components/ai/AdvancedChatBot';
 
 
 interface ArticleProps {
@@ -21,7 +22,11 @@ interface ArticleProps {
 export default function Article({ html, slug, title, description, date, manifest }: ArticleProps) {
   const discussionEnabled = manifest?.discussion?.enabled || false;
   const articleTitle = title || slug;
-  const [selectedText, setSelectedText] = useState('');
+  const { openChat, updateSelectedText, selectedText, isChatOpen, closeChat } = useChat();
+  
+  // State for dynamic width calculation
+  const [chatbotWidth, setChatbotWidth] = useState(520);
+  const [isDesktop, setIsDesktop] = useState(false);
   
   // Handle text selection
   useEffect(() => {
@@ -29,7 +34,7 @@ export default function Article({ html, slug, title, description, date, manifest
       const selection = window.getSelection();
       const text = selection?.toString().trim();
       if (text && text.length > 10) {
-        setSelectedText(text);
+        updateSelectedText(text);
       }
     };
 
@@ -40,7 +45,30 @@ export default function Article({ html, slug, title, description, date, manifest
       document.removeEventListener('mouseup', handleSelection);
       document.removeEventListener('keyup', handleSelection);
     };
+  }, [updateSelectedText]);
+  
+  // Check if desktop and calculate width
+  useEffect(() => {
+    const checkDesktop = () => {
+      const desktop = window.innerWidth >= 1024;
+      setIsDesktop(desktop);
+    };
+    
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
   }, []);
+
+  // Initialize chat with article data (but don't auto-open)
+  useEffect(() => {
+    if (slug && html) {
+      openChat(slug, html);
+    }
+  }, [slug, html, openChat]);
+  
+  // Calculate article width based on chatbot state
+  const articleWidth = isDesktop && isChatOpen ? `calc(100vw - ${chatbotWidth}px)` : '100%';
+  // const articleMaxWidth = isDesktop && isChatOpen ? `calc(100vw - ${chatbotWidth}px)` : '1000px';
 
   return (
     <>
@@ -59,7 +87,7 @@ export default function Article({ html, slug, title, description, date, manifest
         `}</style>
       </Head>
 
-      <div className={styles.articleContainer}>
+      <div className={styles.articleContainer} style={{ width: articleWidth }}>
         <div className={styles.articleWrapper}>
           <header className={styles.articleHeader}>
             <Link href="/articles" className={styles.backLink}>
@@ -76,15 +104,6 @@ export default function Article({ html, slug, title, description, date, manifest
               </p>
             )}
           </header>
-
-
-            <section className={styles.aiSection}>
-            <SimpleChatBot 
-              articleSlug={slug}
-              articleContent={html}
-              selectedText={selectedText}
-            />
-          </section>
 
           <main className={styles.articleContent}>
             <div 
@@ -195,6 +214,15 @@ export default function Article({ html, slug, title, description, date, manifest
             </Link>
           </footer>
         </div>
+        
+        {/* AI Chatbot */}
+        <AdvancedChatBot 
+          isOpen={isChatOpen}
+          onClose={closeChat}
+          articleSlug={slug}
+          articleContent={html}
+          selectedText={selectedText}
+        />
       </div>
     </>
   );
