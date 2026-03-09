@@ -59,7 +59,7 @@ export default async function handler(
     console.log('📂 Fetching resources from local files...');
 
     const categories = fs.readdirSync(CATEGORIES_DIR);
-    let allResources: Resource[] = [];
+    const allResources: Resource[] = [];
 
     for (const categoryDir of categories) {
       const categoryPath = path.join(CATEGORIES_DIR, categoryDir);

@@ -76,7 +76,7 @@ export class HtmlConverter {
     log('✅ Image renderer registered successfully', 'info');
 
     const conversionStartTime = Date.now();
-    let html = converter.convert();
+    const html = converter.convert();
     metrics.conversionTime = Date.now() - conversionStartTime;
 
     log(`✅ Delta conversion completed in ${metrics.conversionTime}ms`, 'success');

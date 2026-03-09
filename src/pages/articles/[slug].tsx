@@ -1,10 +1,13 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { StaticSiteGenerator, ArticleManifest } from '../../core/infrastructure/staticSiteGenerator';
 import GiscusComments from '../../components/discussions/GiscusComments';
 import { DiscussionProvider } from '../../components/discussions/DiscussionProvider';
 import styles from './Articles.module.css';
+import SimpleChatBot from '../../components/ai/SimpleChatBot';
+
 
 interface ArticleProps {
   html: string;
@@ -18,6 +21,26 @@ interface ArticleProps {
 export default function Article({ html, slug, title, description, date, manifest }: ArticleProps) {
   const discussionEnabled = manifest?.discussion?.enabled || false;
   const articleTitle = title || slug;
+  const [selectedText, setSelectedText] = useState('');
+  
+  // Handle text selection
+  useEffect(() => {
+    const handleSelection = () => {
+      const selection = window.getSelection();
+      const text = selection?.toString().trim();
+      if (text && text.length > 10) {
+        setSelectedText(text);
+      }
+    };
+
+    document.addEventListener('mouseup', handleSelection);
+    document.addEventListener('keyup', handleSelection);
+    
+    return () => {
+      document.removeEventListener('mouseup', handleSelection);
+      document.removeEventListener('keyup', handleSelection);
+    };
+  }, []);
 
   return (
     <>
@@ -53,6 +76,15 @@ export default function Article({ html, slug, title, description, date, manifest
               </p>
             )}
           </header>
+
+
+            <section className={styles.aiSection}>
+            <SimpleChatBot 
+              articleSlug={slug}
+              articleContent={html}
+              selectedText={selectedText}
+            />
+          </section>
 
           <main className={styles.articleContent}>
             <div 
@@ -139,6 +171,10 @@ export default function Article({ html, slug, title, description, date, manifest
               )}
             </div>
           )}
+
+          
+
+
 
           {/* Discussions Section */}
           {discussionEnabled && (
