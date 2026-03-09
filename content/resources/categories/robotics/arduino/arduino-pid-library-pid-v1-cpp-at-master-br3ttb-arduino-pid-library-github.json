@@ -1,0 +1,22 @@
+{
+  "id": "arduino-pid-library-pid-v1-cpp-at-master-br3ttb-arduino-pid-library-github",
+  "type": "resource",
+  "title": "Arduino-PID-Library/PID_v1.cpp at master · br3ttb/Arduino-PID-Library · GitHub",
+  "description": "Comprehensive resource on arduino-pid-library/pid_v1.cpp at master · br3ttb/arduino-pid-library · github",
+  "url": "https://github.com/br3ttb/Arduino-PID-Library/blob/master/PID_v1.cpp",
+  "category": "robotics",
+  "subcategory": "arduino",
+  "tags": [
+    "arduino"
+  ],
+  "difficulty": "advanced",
+  "quality": "silver",
+  "author": "br3ttb",
+  "publisher": "GitHub",
+  "whyRecommended": "Excellent resource for learning arduino in robotics",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

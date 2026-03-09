@@ -1,0 +1,23 @@
+{
+  "id": "react-tutorial-with-typescript-in-hindi-youtube",
+  "type": "resource",
+  "title": "React Tutorial with Typescript in Hindi - YouTube",
+  "description": "Comprehensive resource on react tutorial with typescript in hindi - youtube",
+  "url": "https://www.youtube.com/playlist?list=PLEtjGa9VEukNKslFyRlhODXXuKgRnvVyM",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend",
+    "tutorial"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "YouTube",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

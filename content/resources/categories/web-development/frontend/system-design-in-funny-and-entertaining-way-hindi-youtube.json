@@ -1,0 +1,22 @@
+{
+  "id": "system-design-in-funny-and-entertaining-way-hindi-youtube",
+  "type": "resource",
+  "title": "System Design in Funny And Entertaining Way - (Hindi) - YouTube",
+  "description": "Comprehensive resource on system design in funny and entertaining way - (hindi) - youtube",
+  "url": "https://www.youtube.com/playlist?list=PLpIkg8OmuX-KiAbBKuNidN-c66aHwBh3t",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "YouTube",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

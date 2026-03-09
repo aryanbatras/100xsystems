@@ -1,0 +1,22 @@
+{
+  "id": "flavio-copes",
+  "type": "resource",
+  "title": "Flavio Copes",
+  "description": "Comprehensive resource on flavio copes",
+  "url": "https://flaviocopes.com/access/",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

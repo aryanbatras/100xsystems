@@ -1,0 +1,22 @@
+{
+  "id": "building-scalable-java-microservices-with-spring-boot-and-spring-cloud-google-cloud-skills-boost",
+  "type": "resource",
+  "title": "Building Scalable Java Microservices with Spring Boot and Spring Cloud | Google Cloud Skills Boost",
+  "description": "Comprehensive resource on building scalable java microservices with spring boot and spring cloud | google cloud skills boost",
+  "url": "https://cloudskillsboost.google/course_templates/20",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Google Cloud Skills Boost",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "arduino-101-learn-arduino-beginners-youtube",
+  "type": "resource",
+  "title": "Arduino 101 - Learn Arduino For Beginners",
+  "description": "Comprehensive YouTube playlist for beginners to learn Arduino programming and projects",
+  "url": "https://www.youtube.com/playlist?list=PLlfy9GnSVerQjeoYfoYKiAbBKuNidN-c66aHwBh3t",
+  "category": "robotics",
+  "subcategory": "arduino",
+  "tags": ["arduino", "beginners", "tutorial", "youtube", "programming"],
+  "difficulty": "beginner",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "YouTube",
+  "whyRecommended": "Excellent structured playlist covering Arduino basics from scratch",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free",
+  "order": 0
+}

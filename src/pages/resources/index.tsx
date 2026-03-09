@@ -576,11 +576,16 @@ export default function Resources({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { req } = context;
+  const host = req.headers.host;
+  const protocol = req.headers['x-forwarded-proto'] || (host?.includes('localhost') ? 'http' : 'https');
+  const baseUrl = `${protocol}://${host}`;
+
   try {
     const [resourcesResponse, categoriesResponse] = await Promise.all([
-      fetch("http://localhost:3000/api/resources"),
-      fetch("http://localhost:3000/api/resources/categories"),
+      fetch(`${baseUrl}/api/resources`),
+      fetch(`${baseUrl}/api/resources/categories`),
     ]);
 
     if (!resourcesResponse.ok || !categoriesResponse.ok) {

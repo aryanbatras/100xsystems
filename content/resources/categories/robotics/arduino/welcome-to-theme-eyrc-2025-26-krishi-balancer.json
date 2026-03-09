@@ -1,0 +1,23 @@
+{
+  "id": "welcome-to-theme-eyrc-2025-26-krishi-balancer",
+  "type": "resource",
+  "title": "Welcome to theme! - eYRC 2025-26: Krishi Balancer",
+  "description": "Bookmark: Welcome to theme! - eYRC 2025-26: Krishi Balancer",
+  "url": "https://portal.e-yantra.org/theme-books/kb/index.html",
+  "category": "robotics",
+  "subcategory": "arduino",
+  "tags": [
+    "arduino"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Useful resource from bookmarks",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free",
+  "order": 83
+}

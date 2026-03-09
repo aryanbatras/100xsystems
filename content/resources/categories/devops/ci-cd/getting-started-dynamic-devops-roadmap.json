@@ -1,0 +1,23 @@
+{
+  "id": "getting-started-dynamic-devops-roadmap",
+  "type": "resource",
+  "title": "Getting Started | Dynamic DevOps Roadmap",
+  "description": "Bookmark: Getting Started | Dynamic DevOps Roadmap",
+  "url": "https://devopsroadmap.io/getting-started/",
+  "category": "devops",
+  "subcategory": "ci-cd",
+  "tags": [
+    "ci-cd"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Useful resource from bookmarks",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free",
+  "order": 92
+}

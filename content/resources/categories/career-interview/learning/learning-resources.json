@@ -1,0 +1,22 @@
+{
+  "id": "learning-resources",
+  "type": "resource",
+  "title": "Learning Resources",
+  "description": "Comprehensive resource on learning resources",
+  "url": "https://frontarm.com/learn",
+  "category": "career-interview",
+  "subcategory": "learning",
+  "tags": [
+    "learning"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Frontarm",
+  "whyRecommended": "Excellent resource for learning learning in career interview",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

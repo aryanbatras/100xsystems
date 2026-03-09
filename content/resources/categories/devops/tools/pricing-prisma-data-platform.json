@@ -1,0 +1,22 @@
+{
+  "id": "pricing-prisma-data-platform",
+  "type": "resource",
+  "title": "Pricing - Prisma Data Platform",
+  "description": "Comprehensive resource on pricing - prisma data platform",
+  "url": "https://www.prisma.io/pricing",
+  "category": "devops",
+  "subcategory": "tools",
+  "tags": [
+    "tools"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Prisma",
+  "whyRecommended": "Excellent resource for learning tools in devops",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

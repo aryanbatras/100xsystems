@@ -1,0 +1,22 @@
+{
+  "id": "build-your-own-react",
+  "type": "resource",
+  "title": "Build your own React",
+  "description": "Comprehensive resource on build your own react",
+  "url": "https://pomb.us/build-your-own-react/",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Pomb.us",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

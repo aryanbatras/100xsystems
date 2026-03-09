@@ -1,0 +1,22 @@
+{
+  "id": "arduino-programing-project-youtube",
+  "type": "resource",
+  "title": "Arduino programing project - YouTube",
+  "description": "Comprehensive resource on arduino programing project - youtube",
+  "url": "https://www.youtube.com/playlist?list=PLIoYP_-6o1reaGZX6DtqD6MxVF00zYWs6",
+  "category": "robotics",
+  "subcategory": "arduino",
+  "tags": [
+    "arduino"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "YouTube",
+  "whyRecommended": "Excellent resource for learning arduino in robotics",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

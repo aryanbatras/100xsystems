@@ -1,0 +1,23 @@
+{
+  "id": "bfe-dev-prepare-for-front-end-job-interviews",
+  "type": "resource",
+  "title": "BFE.dev - prepare for Front-End job interviews.",
+  "description": "Bookmark: BFE.dev - prepare for Front-End job interviews.",
+  "url": "https://bigfrontend.dev/",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Useful resource from bookmarks",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free",
+  "order": 143
+}

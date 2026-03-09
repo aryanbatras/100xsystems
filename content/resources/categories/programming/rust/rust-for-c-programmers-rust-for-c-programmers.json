@@ -1,0 +1,22 @@
+{
+  "id": "rust-for-c-programmers-rust-for-c-programmers",
+  "type": "resource",
+  "title": "Rust for C programmers - Rust for C-Programmers",
+  "description": "Comprehensive resource on rust for c programmers - rust for c-programmers",
+  "url": "https://rust-for-c-programmers.com/",
+  "category": "programming",
+  "subcategory": "rust",
+  "tags": [
+    "rust"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Rust for C Programmers",
+  "whyRecommended": "Excellent resource for learning rust in programming",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

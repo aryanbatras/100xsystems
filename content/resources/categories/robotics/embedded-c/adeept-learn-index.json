@@ -1,0 +1,22 @@
+{
+  "id": "adeept-learn-index",
+  "type": "resource",
+  "title": "Adeept - Learn - Index",
+  "description": "Comprehensive resource on adeept - learn - index",
+  "url": "https://http://www.adeept.com/learn/",
+  "category": "robotics",
+  "subcategory": "embedded-c",
+  "tags": [
+    "embedded-c"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Excellent resource for learning embedded c in robotics",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

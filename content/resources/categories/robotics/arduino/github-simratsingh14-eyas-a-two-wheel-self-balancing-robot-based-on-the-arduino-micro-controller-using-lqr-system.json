@@ -1,0 +1,22 @@
+{
+  "id": "github-simratsingh14-eyas-a-two-wheel-self-balancing-robot-based-on-the-arduino-micro-controller-using-lqr-system",
+  "type": "resource",
+  "title": "GitHub - simratsingh14/eyas: A two-wheel self-balancing robot based on the Arduino micro-controller using LQR System",
+  "description": "Comprehensive resource on github - simratsingh14/eyas: a two-wheel self-balancing robot based on the arduino micro-controller using lqr system",
+  "url": "https://github.com/simratsingh14/eyas/tree/master",
+  "category": "robotics",
+  "subcategory": "arduino",
+  "tags": [
+    "arduino"
+  ],
+  "difficulty": "intermediate",
+  "quality": "silver",
+  "author": "simratsingh14",
+  "publisher": "GitHub",
+  "whyRecommended": "Excellent resource for learning arduino in robotics",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

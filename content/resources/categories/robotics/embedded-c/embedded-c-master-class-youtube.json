@@ -1,0 +1,22 @@
+{
+  "id": "embedded-c-master-class-youtube",
+  "type": "resource",
+  "title": "Embedded C Master Class - YouTube",
+  "description": "Comprehensive resource on embedded c master class - youtube",
+  "url": "https://www.youtube.com/playlist?list=PLmdxycs9ZIme0IXa-2iedndBukUSAnCZ6",
+  "category": "robotics",
+  "subcategory": "embedded-c",
+  "tags": [
+    "embedded-c"
+  ],
+  "difficulty": "advanced",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "YouTube",
+  "whyRecommended": "Excellent resource for learning embedded c in robotics",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

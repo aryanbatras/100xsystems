@@ -1,0 +1,22 @@
+{
+  "id": "using-gitlab-ci-cd-with-a-bitbucket-cloud-repository-gitlab-docs",
+  "type": "resource",
+  "title": "Using GitLab CI/CD with a Bitbucket Cloud repository | GitLab Docs",
+  "description": "Comprehensive resource on using gitlab ci/cd with a bitbucket cloud repository | gitlab docs",
+  "url": "https://docs.gitlab.com/ci/ci_cd_for_external_repos/bitbucket_integration/",
+  "category": "devops",
+  "subcategory": "general",
+  "tags": [
+    "general"
+  ],
+  "difficulty": "intermediate",
+  "quality": "silver",
+  "author": "Unknown",
+  "publisher": "GitLab Docs",
+  "whyRecommended": "Excellent resource for learning general in devops",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

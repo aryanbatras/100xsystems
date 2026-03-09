@@ -1,0 +1,22 @@
+{
+  "id": "tom-wilson-medium",
+  "type": "resource",
+  "title": "Tom Wilson – Medium",
+  "description": "Comprehensive resource on tom wilson – medium",
+  "url": "https://medium.com/@tomw3115",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "silver",
+  "author": "Unknown",
+  "publisher": "Medium",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

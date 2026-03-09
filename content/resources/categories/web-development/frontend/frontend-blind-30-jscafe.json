@@ -1,0 +1,22 @@
+{
+  "id": "frontend-blind-30-jscafe",
+  "type": "resource",
+  "title": "Frontend Blind 30 | JsCafe",
+  "description": "Comprehensive resource on frontend blind 30 | jscafe",
+  "url": "https://www.jscafe.dev/frontend-blind-30",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "JsCafe",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

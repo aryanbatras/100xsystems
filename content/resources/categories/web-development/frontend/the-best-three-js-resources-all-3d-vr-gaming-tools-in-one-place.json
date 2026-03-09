@@ -1,0 +1,22 @@
+{
+  "id": "the-best-three-js-resources-all-3d-vr-gaming-tools-in-one-place",
+  "type": "resource",
+  "title": "The Best Three.js Resources: All 3D, VR & Gaming Tools in One Place",
+  "description": "Comprehensive resource on the best three.js resources: all 3d, vr & gaming tools in one place",
+  "url": "https://www.threejsresources.com/",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Three.js Resources",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

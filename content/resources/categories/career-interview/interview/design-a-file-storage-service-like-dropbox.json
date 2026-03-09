@@ -1,0 +1,23 @@
+{
+  "id": "design-a-file-storage-service-like-dropbox",
+  "type": "resource",
+  "title": "Design a File Storage Service Like Dropbox",
+  "description": "Bookmark: Design a File Storage Service Like Dropbox",
+  "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox",
+  "category": "career-interview",
+  "subcategory": "interview",
+  "tags": [
+    "interview"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Useful resource from bookmarks",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free",
+  "order": 19
+}

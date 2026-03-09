@@ -1,0 +1,22 @@
+{
+  "id": "how-to-deploy-java-on-amazon-ec2-spring-boot-edition",
+  "type": "resource",
+  "title": "How to deploy Java on Amazon EC2 (Spring Boot edition)",
+  "description": "Comprehensive resource on how to deploy java on amazon ec2 (spring boot edition)",
+  "url": "https://learnaws.io/blog/java-ec2-deployment",
+  "category": "web-development",
+  "subcategory": "backend",
+  "tags": [
+    "backend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "LearnAWS",
+  "whyRecommended": "Excellent resource for learning backend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

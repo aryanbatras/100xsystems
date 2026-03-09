@@ -1,0 +1,22 @@
+{
+  "id": "headless-cms-top-content-management-systems-jamstack",
+  "type": "resource",
+  "title": "Headless CMS - Top Content Management Systems | Jamstack",
+  "description": "Comprehensive resource on headless cms - top content management systems | jamstack",
+  "url": "https://jamstack.org/headless-cms/",
+  "category": "web-development",
+  "subcategory": "backend",
+  "tags": [
+    "backend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Jamstack",
+  "whyRecommended": "Excellent resource for learning backend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

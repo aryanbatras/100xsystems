@@ -1,0 +1,22 @@
+{
+  "id": "rag-system-easy-setup-docs-notion",
+  "type": "resource",
+  "title": "RAG System ( easy setup docs ) | Notion",
+  "description": "Comprehensive resource on rag system ( easy setup docs ) | notion",
+  "url": "https://www.notion.so/RAG-System-easy-setup-docs-4685ae8ac1fa82e485b081f72e7546f8",
+  "category": "devops",
+  "subcategory": "general",
+  "tags": [
+    "general"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Notion",
+  "whyRecommended": "Excellent resource for learning general in devops",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

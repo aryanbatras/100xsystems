@@ -1,0 +1,22 @@
+{
+  "id": "computer-science-extras-readings-md-at-master-ossu-computer-science",
+  "type": "resource",
+  "title": "computer-science/extras/readings.md at master · ossu/computer-science",
+  "description": "Comprehensive resource on computer-science/extras/readings.md at master · ossu/computer-science",
+  "url": "https://github.com/ossu/computer-science/blob/master/extras/readings.md",
+  "category": "foundation",
+  "subcategory": "computer-science",
+  "tags": [
+    "computer-science"
+  ],
+  "difficulty": "advanced",
+  "quality": "silver",
+  "author": "ossu",
+  "publisher": "GitHub",
+  "whyRecommended": "Excellent resource for learning computer science in foundation",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

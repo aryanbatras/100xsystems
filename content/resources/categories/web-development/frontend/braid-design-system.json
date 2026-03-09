@@ -1,0 +1,22 @@
+{
+  "id": "braid-design-system",
+  "type": "resource",
+  "title": "Braid Design System",
+  "description": "Comprehensive resource on braid design system",
+  "url": "https://seek-oss.github.io/braid-design-system",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Seek OSS",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

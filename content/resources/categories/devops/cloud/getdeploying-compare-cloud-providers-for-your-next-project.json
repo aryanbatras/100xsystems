@@ -1,0 +1,22 @@
+{
+  "id": "getdeploying-compare-cloud-providers-for-your-next-project",
+  "type": "resource",
+  "title": "GetDeploying | Compare cloud providers for your next project",
+  "description": "Comprehensive resource on getdeploying | compare cloud providers for your next project",
+  "url": "https://www.getdeploying.com/",
+  "category": "devops",
+  "subcategory": "cloud",
+  "tags": [
+    "cloud"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "GetDeploying",
+  "whyRecommended": "Excellent resource for learning cloud in devops",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

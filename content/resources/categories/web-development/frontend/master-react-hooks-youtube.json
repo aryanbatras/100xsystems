@@ -1,0 +1,22 @@
+{
+  "id": "master-react-hooks-youtube",
+  "type": "resource",
+  "title": "Master React Hooks - YouTube",
+  "description": "Comprehensive resource on master react hooks - youtube",
+  "url": "https://www.youtube.com/playlist?list=PLp18NAIKHWnstlf3dqt9WoKqNKOkYxRbY",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend"
+  ],
+  "difficulty": "advanced",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "YouTube",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

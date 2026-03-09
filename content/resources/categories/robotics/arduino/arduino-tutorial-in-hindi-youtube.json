@@ -1,0 +1,23 @@
+{
+  "id": "arduino-tutorial-in-hindi-youtube",
+  "type": "resource",
+  "title": "Arduino Tutorial In Hindi - YouTube",
+  "description": "Comprehensive resource on arduino tutorial in hindi - youtube",
+  "url": "https://www.youtube.com/playlist?list=PLG9nLVRjxsslf8j0vnhoeE61N2QMlrbZN",
+  "category": "robotics",
+  "subcategory": "arduino",
+  "tags": [
+    "arduino",
+    "tutorial"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "YouTube",
+  "whyRecommended": "Excellent resource for learning arduino in robotics",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

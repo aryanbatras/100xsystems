@@ -1,0 +1,22 @@
+{
+  "id": "getting-started-dynamic-devops-roadmap",
+  "type": "resource",
+  "title": "Getting Started | Dynamic DevOps Roadmap",
+  "description": "Comprehensive resource on getting started | dynamic devops roadmap",
+  "url": "https://devopsroadmap.io/getting-started/",
+  "category": "devops",
+  "subcategory": "general",
+  "tags": [
+    "general"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Excellent resource for learning general in devops",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "robin-weser-frontend-engineer-and-engineering-manager",
+  "type": "resource",
+  "title": "Robin Weser | Frontend Engineer and Engineering Manager",
+  "description": "Comprehensive resource on robin weser | frontend engineer and engineering manager",
+  "url": "https://weser.io/",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Robin Weser",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

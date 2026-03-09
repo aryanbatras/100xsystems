@@ -1,0 +1,22 @@
+{
+  "id": "linux-command-line-for-beginners-in-hindi-youtube",
+  "type": "resource",
+  "title": "Linux Command Line for Beginners in Hindi - YouTube",
+  "description": "Comprehensive resource on linux command line for beginners in hindi - youtube",
+  "url": "https://www.youtube.com/playlist?list=PLA3GkZPtsafbK3YyxdRzF5yh1TuwGn_Lu",
+  "category": "design",
+  "subcategory": "ui-ux",
+  "tags": [
+    "ui-ux"
+  ],
+  "difficulty": "beginner",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "YouTube",
+  "whyRecommended": "Excellent resource for learning ui ux in design",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

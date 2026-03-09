@@ -1,0 +1,22 @@
+{
+  "id": "rust-atomics-and-locks-by-mara-bos",
+  "type": "resource",
+  "title": "Rust Atomics and Locks by Mara Bos",
+  "description": "Comprehensive resource on rust atomics and locks by mara bos",
+  "url": "https://marabos.nl/atomics/",
+  "category": "programming",
+  "subcategory": "rust",
+  "tags": [
+    "rust"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Mara Bos",
+  "whyRecommended": "Excellent resource for learning rust in programming",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

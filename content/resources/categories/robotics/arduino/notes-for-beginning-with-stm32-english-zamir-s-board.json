@@ -1,0 +1,23 @@
+{
+  "id": "notes-for-beginning-with-stm32-english-zamir-s-board",
+  "type": "resource",
+  "title": "Notes for beginning with STM32 - English | Zamir's Board",
+  "description": "Bookmark: Notes for beginning with STM32 - English | Zamir's Board",
+  "url": "https://sztsian.github.io/embedded/2021/03/04/Notes-for-beginning-with-STM32-English.html",
+  "category": "robotics",
+  "subcategory": "arduino",
+  "tags": [
+    "arduino"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Useful resource from bookmarks",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free",
+  "order": 63
+}

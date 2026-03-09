@@ -1,0 +1,23 @@
+{
+  "id": "spring-mvc-a-comprehensive-guide-by-prabhakar-kulkarni-medium",
+  "type": "resource",
+  "title": "Spring MVC: A Comprehensive Guide | by Prabhakar Kulkarni | Medium",
+  "description": "Comprehensive resource on spring mvc: a comprehensive guide | by prabhakar kulkarni | medium",
+  "url": "https://medium.com/@kulkarniprabhakar2000/spring-mvc-a-comprehensive-guide-part-1-23c367520ac9",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend",
+    "guide"
+  ],
+  "difficulty": "intermediate",
+  "quality": "silver",
+  "author": "Prabhakar Kulkarni",
+  "publisher": "Medium",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

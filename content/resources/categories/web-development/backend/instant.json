@@ -1,0 +1,22 @@
+{
+  "id": "instant",
+  "type": "resource",
+  "title": "Instant",
+  "description": "Comprehensive resource on instant",
+  "url": "https://www.instantdb.com/",
+  "category": "web-development",
+  "subcategory": "backend",
+  "tags": [
+    "backend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "InstantDB",
+  "whyRecommended": "Excellent resource for learning backend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

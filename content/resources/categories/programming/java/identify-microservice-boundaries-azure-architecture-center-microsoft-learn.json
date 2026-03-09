@@ -1,0 +1,23 @@
+{
+  "id": "identify-microservice-boundaries-azure-architecture-center-microsoft-learn",
+  "type": "resource",
+  "title": "Identify microservice boundaries - Azure Architecture Center | Microsoft Learn",
+  "description": "Bookmark: Identify microservice boundaries - Azure Architecture Center | Microsoft Learn",
+  "url": "https://learn.microsoft.com/en-us/azure/architecture/microservices/model/microservice-boundaries",
+  "category": "programming",
+  "subcategory": "java",
+  "tags": [
+    "java"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Useful resource from bookmarks",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free",
+  "order": 31
+}

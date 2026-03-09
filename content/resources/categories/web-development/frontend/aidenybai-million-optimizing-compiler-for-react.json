@@ -1,0 +1,22 @@
+{
+  "id": "aidenybai-million-optimizing-compiler-for-react",
+  "type": "resource",
+  "title": "aidenybai/million: Optimizing compiler for React",
+  "description": "Comprehensive resource on aidenybai/million: optimizing compiler for react",
+  "url": "https://github.com/aidenybai/million",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "silver",
+  "author": "aidenybai",
+  "publisher": "GitHub",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

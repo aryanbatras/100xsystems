@@ -1,0 +1,23 @@
+{
+  "id": "ayush-s-portfolio",
+  "type": "resource",
+  "title": "Ayush's Portfolio",
+  "description": "Bookmark: Ayush's Portfolio",
+  "url": "https://ayushdhibardesigns.framer.website/",
+  "category": "design",
+  "subcategory": "ui-ux",
+  "tags": [
+    "ui-ux"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Useful resource from bookmarks",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free",
+  "order": 148
+}

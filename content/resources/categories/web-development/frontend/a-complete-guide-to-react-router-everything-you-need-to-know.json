@@ -1,0 +1,23 @@
+{
+  "id": "a-complete-guide-to-react-router-everything-you-need-to-know",
+  "type": "resource",
+  "title": "A Complete Guide to React Router: Everything You Need to Know",
+  "description": "Comprehensive resource on a complete guide to react router: everything you need to know",
+  "url": "https://ui.dev/react-router-tutorial",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend",
+    "guide"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "UI.dev",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

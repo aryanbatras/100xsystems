@@ -1,0 +1,22 @@
+{
+  "id": "unyaml-master-the-future-of-devops-and-cloud-native-with-unyaml",
+  "type": "resource",
+  "title": "UnYaml · Master the Future of DevOps and Cloud Native with UnYAML",
+  "description": "Comprehensive resource on unyaml · master the future of devops and cloud native with unyaml",
+  "url": "https://unyaml.com/",
+  "category": "devops",
+  "subcategory": "general",
+  "tags": [
+    "general"
+  ],
+  "difficulty": "advanced",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Excellent resource for learning general in devops",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

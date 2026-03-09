@@ -1,0 +1,22 @@
+{
+  "id": "danielmapar-linuxcommandline-basic-linux-command-line-https-www-udemy-com-linux-command-line-volume1",
+  "type": "resource",
+  "title": "danielmapar/LinuxCommandLine: Basic Linux Command Line: https://www.udemy.com/linux-command-line-volume1",
+  "description": "Comprehensive resource on danielmapar/linuxcommandline: basic linux command line: https://www.udemy.com/linux-command-line-volume1",
+  "url": "https://github.com/danielmapar/LinuxCommandLine",
+  "category": "design",
+  "subcategory": "ui-ux",
+  "tags": [
+    "ui-ux"
+  ],
+  "difficulty": "intermediate",
+  "quality": "silver",
+  "author": "danielmapar",
+  "publisher": "GitHub",
+  "whyRecommended": "Excellent resource for learning ui ux in design",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

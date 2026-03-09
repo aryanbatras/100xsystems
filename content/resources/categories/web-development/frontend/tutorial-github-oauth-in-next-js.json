@@ -1,0 +1,23 @@
+{
+  "id": "tutorial-github-oauth-in-next-js",
+  "type": "resource",
+  "title": "Tutorial: GitHub OAuth in Next.js",
+  "description": "Comprehensive resource on tutorial: github oauth in next.js",
+  "url": "https://lucia-auth.com/tutorials/github-oauth/nextjs",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend",
+    "tutorial"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Lucia Auth",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

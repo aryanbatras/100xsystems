@@ -1,0 +1,22 @@
+{
+  "id": "modern-data-structures-and-algorithms-in-rust",
+  "type": "resource",
+  "title": "Modern Data Structures and Algorithms in Rust",
+  "description": "Comprehensive resource on modern data structures and algorithms in rust",
+  "url": "https://dsar.rantai.dev/docs/dsar/",
+  "category": "programming",
+  "subcategory": "rust",
+  "tags": [
+    "rust"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Excellent resource for learning rust in programming",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "cicd-pipeline-using-springboot-jenkins-ansible-by-vivek-singh-medium",
+  "type": "resource",
+  "title": "CICD Pipeline using SpringBoot Jenkins Ansible | by Vivek Singh | Medium",
+  "description": "Comprehensive resource on cicd pipeline using springboot jenkins ansible | by vivek singh | medium",
+  "url": "https://veeevek.medium.com/cicd-pipeline-using-springboot-jenkins-ansible-6043a9444f03",
+  "category": "web-development",
+  "subcategory": "backend",
+  "tags": [
+    "backend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "silver",
+  "author": "Vivek Singh",
+  "publisher": "Medium",
+  "whyRecommended": "Excellent resource for learning backend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

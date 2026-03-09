@@ -1,0 +1,23 @@
+{
+  "id": "where-to-start-learning-robotics-r-robotics",
+  "type": "resource",
+  "title": "Where to start learning robotics : r/robotics",
+  "description": "Bookmark: Where to start learning robotics : r/robotics",
+  "url": "https://www.reddit.com/r/robotics/comments/1d12jia/where_to_start_learning_robotics/",
+  "category": "robotics",
+  "subcategory": "arduino",
+  "tags": [
+    "arduino"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Useful resource from bookmarks",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free",
+  "order": 43
+}

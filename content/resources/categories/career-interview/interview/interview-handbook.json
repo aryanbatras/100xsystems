@@ -1,0 +1,22 @@
+{
+  "id": "interview-handbook",
+  "type": "resource",
+  "title": "🛕 Interview Handbook",
+  "description": "Comprehensive resource on 🛕 interview handbook",
+  "url": "https://interviewhandbook.notion.site/",
+  "category": "career-interview",
+  "subcategory": "interview",
+  "tags": [
+    "interview"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Interview Handbook",
+  "whyRecommended": "Excellent resource for learning interview in career interview",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

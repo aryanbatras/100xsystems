@@ -1,0 +1,22 @@
+{
+  "id": "design-a-file-storage-service-like-dropbox",
+  "type": "resource",
+  "title": "Design a File Storage Service Like Dropbox",
+  "description": "Comprehensive resource on design a file storage service like dropbox",
+  "url": "https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

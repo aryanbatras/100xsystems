@@ -1,0 +1,22 @@
+{
+  "id": "lld-problem-sheet",
+  "type": "resource",
+  "title": "LLD Problem Sheet",
+  "description": "Comprehensive resource on lld problem sheet",
+  "url": "https://www.lldcoding.com/lld-problems-sheet",
+  "category": "programming",
+  "subcategory": "algorithms",
+  "tags": [
+    "algorithms"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Excellent resource for learning algorithms in programming",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

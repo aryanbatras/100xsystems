@@ -1,0 +1,22 @@
+{
+  "id": "stm32-series-in-hindi-youtube",
+  "type": "resource",
+  "title": "STM32 Series in Hindi - YouTube",
+  "description": "Comprehensive resource on stm32 series in hindi - youtube",
+  "url": "https://www.youtube.com/playlist?list=PLQb0NgQPF2X6Ty0P7850AJN4k7NgcNoia",
+  "category": "robotics",
+  "subcategory": "stm32",
+  "tags": [
+    "stm32"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "YouTube",
+  "whyRecommended": "Excellent resource for learning stm32 in robotics",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

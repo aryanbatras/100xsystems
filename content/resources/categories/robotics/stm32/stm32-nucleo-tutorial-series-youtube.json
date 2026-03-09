@@ -1,0 +1,23 @@
+{
+  "id": "stm32-nucleo-tutorial-series-youtube",
+  "type": "resource",
+  "title": "STM32 Nucleo tutorial series - YouTube",
+  "description": "Comprehensive resource on stm32 nucleo tutorial series - youtube",
+  "url": "https://www.youtube.com/playlist?list=PLr0mEvO7yBe6Ga7wJpRTZpxAYSvgWY0A-",
+  "category": "robotics",
+  "subcategory": "stm32",
+  "tags": [
+    "stm32",
+    "tutorial"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "YouTube",
+  "whyRecommended": "Excellent resource for learning stm32 in robotics",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "embedded-c-master-class-youtube",
+  "type": "resource",
+  "title": "Embedded C Master Class - YouTube",
+  "description": "Bookmark: Embedded C Master Class - YouTube",
+  "url": "https://www.youtube.com/playlist?list=PLmdxycs9ZIme0IXa-2iedndBukUSAnCZ6",
+  "category": "robotics",
+  "subcategory": "arduino",
+  "tags": [
+    "arduino"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Web",
+  "whyRecommended": "Useful resource from bookmarks",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free",
+  "order": 53
+}

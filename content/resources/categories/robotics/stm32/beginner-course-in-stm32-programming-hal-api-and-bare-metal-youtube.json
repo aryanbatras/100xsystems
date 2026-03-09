@@ -1,0 +1,23 @@
+{
+  "id": "beginner-course-in-stm32-programming-hal-api-and-bare-metal-youtube",
+  "type": "resource",
+  "title": "Beginner course in STM32 programming: HAL API and Bare metal - YouTube",
+  "description": "Comprehensive resource on beginner course in stm32 programming: hal api and bare metal - youtube",
+  "url": "https://www.youtube.com/playlist?list=PLmXXQ1iFwiyJFM2NJW1ybWX5Fu_9Oo7p1",
+  "category": "robotics",
+  "subcategory": "stm32",
+  "tags": [
+    "stm32",
+    "course"
+  ],
+  "difficulty": "beginner",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "YouTube",
+  "whyRecommended": "Excellent resource for learning stm32 in robotics",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

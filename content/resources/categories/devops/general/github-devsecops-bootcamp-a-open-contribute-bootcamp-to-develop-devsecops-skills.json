@@ -1,0 +1,22 @@
+{
+  "id": "github-devsecops-bootcamp-a-open-contribute-bootcamp-to-develop-devsecops-skills",
+  "type": "resource",
+  "title": "GitHub - devsecops/bootcamp: A open contribute bootcamp to develop DevSecOps skills...",
+  "description": "Comprehensive resource on github - devsecops/bootcamp: a open contribute bootcamp to develop devsecops skills...",
+  "url": "https://github.com/devsecops/bootcamp",
+  "category": "devops",
+  "subcategory": "general",
+  "tags": [
+    "general"
+  ],
+  "difficulty": "intermediate",
+  "quality": "silver",
+  "author": "devsecops",
+  "publisher": "GitHub",
+  "whyRecommended": "Excellent resource for learning general in devops",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

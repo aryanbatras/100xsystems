@@ -1,0 +1,23 @@
+{
+  "id": "react-three-fiber-tutorial-for-beginners-wael-yasmina",
+  "type": "resource",
+  "title": "React Three Fiber Tutorial for Beginners - Wael Yasmina",
+  "description": "Comprehensive resource on react three fiber tutorial for beginners - wael yasmina",
+  "url": "https://waelyasmina.net/articles/react-three-fiber-for-beginners/",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend",
+    "tutorial"
+  ],
+  "difficulty": "beginner",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Wael Yasmina",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

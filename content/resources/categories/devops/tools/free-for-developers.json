@@ -1,0 +1,22 @@
+{
+  "id": "free-for-developers",
+  "type": "resource",
+  "title": "Free for Developers",
+  "description": "Comprehensive resource on free for developers",
+  "url": "https://free-for.dev/#/",
+  "category": "devops",
+  "subcategory": "tools",
+  "tags": [
+    "tools"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Free for Dev",
+  "whyRecommended": "Excellent resource for learning tools in devops",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

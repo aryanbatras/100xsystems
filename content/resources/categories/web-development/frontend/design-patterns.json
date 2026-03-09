@@ -1,0 +1,22 @@
+{
+  "id": "design-patterns",
+  "type": "resource",
+  "title": "Design patterns",
+  "description": "Comprehensive resource on design patterns",
+  "url": "https://ui-patterns.com/patterns",
+  "category": "web-development",
+  "subcategory": "frontend",
+  "tags": [
+    "frontend"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "UI Patterns",
+  "whyRecommended": "Excellent resource for learning frontend in web development",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

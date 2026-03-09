@@ -1,0 +1,22 @@
+{
+  "id": "welcome-to-theme-eyrc-2025-26-krishi-balancer",
+  "type": "resource",
+  "title": "Welcome to theme! - eYRC 2025-26: Krishi Balancer",
+  "description": "Comprehensive resource on welcome to theme! - eyrc 2025-26: krishi balancer",
+  "url": "https://portal.e-yantra.org/theme-books/kb/index.html",
+  "category": "robotics",
+  "subcategory": "e-yantra",
+  "tags": [
+    "e-yantra"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "e-Yantra",
+  "whyRecommended": "Excellent resource for learning e yantra in robotics",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}

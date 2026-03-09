@@ -1,0 +1,22 @@
+{
+  "id": "pricing-upstash",
+  "type": "resource",
+  "title": "Pricing | Upstash",
+  "description": "Comprehensive resource on pricing | upstash",
+  "url": "https://upstash.com/pricing/redis",
+  "category": "devops",
+  "subcategory": "tools",
+  "tags": [
+    "tools"
+  ],
+  "difficulty": "intermediate",
+  "quality": "gold",
+  "author": "Unknown",
+  "publisher": "Upstash",
+  "whyRecommended": "Excellent resource for learning tools in devops",
+  "prerequisites": [],
+  "lastVerified": "2025-01-01",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free"
+}
