@@ -7,6 +7,7 @@ interface ChatRequest {
   model?: string;
   stream?: boolean;
   imageUrl?: string;
+  memoryContext?: string;
 }
 
 interface ChatResponse {
@@ -36,7 +37,7 @@ export default async function handler(
   }
 
   try {
-    const { question, selectedText, model = 'llama-3.3-70b-versatile', stream = false, imageUrl }: ChatRequest = req.body;
+    const { question, selectedText, model = 'llama-3.3-70b-versatile', stream = false, imageUrl, memoryContext }: ChatRequest = req.body;
 
     if (!question) {
       return res.status(400).json({ 
@@ -51,6 +52,8 @@ export default async function handler(
         role: 'system',
         content: `You are a system engineering tutor helping students understand technical articles. Answer questions accurately and concisely based on your knowledge of system design, software engineering, and computer science concepts.${
           selectedText ? `\n\nContext from the article:\n"${selectedText}"` : ''
+        }${
+          memoryContext ? `\n\nRelevant memories from past conversations:\n${memoryContext}` : ''
         }`
       }
     ];

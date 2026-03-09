@@ -1,5 +1,6 @@
 // File: src/pages/api/ai-chat.ts
 import { NextApiRequest, NextApiResponse } from 'next';
+import { createRateLimit, RATE_LIMITS, withRateLimit } from '../../utils/rateLimit';
 
 interface ChatRequest {
   question: string;
@@ -12,7 +13,9 @@ interface ChatResponse {
   error?: string;
 }
 
-export default async function handler(
+const rateLimiter = createRateLimit(RATE_LIMITS.AI_CHAT);
+
+async function chatHandler(
   req: NextApiRequest,
   res: NextApiResponse<ChatResponse>
 ) {
@@ -79,3 +82,5 @@ export default async function handler(
     });
   }
 }
+
+export default withRateLimit(rateLimiter, chatHandler);
