@@ -1,5 +1,14 @@
 import fs from 'fs';
 import path from 'path';
+import { 
+  Resource, 
+  ResourceCategory, 
+  ResourceKnowledgeGraph, 
+  ResourceSearchDocument,
+  ResourceType,
+  ValidationResult,
+  VerificationResult
+} from '../../types/resources';
 
 export interface ArticleMetadata {
   slug: string;
@@ -993,5 +1002,377 @@ export class StaticSiteGenerator {
     }
     
     return examples;
+  }
+
+  // ========== RESOURCE SYSTEM METHODS ==========
+
+  static async fetchResourceCategories(): Promise<Record<string, ResourceCategory>> {
+    const { githubUsername, githubRepo } = this.getGitHubConfig();
+    
+    try {
+      const categoriesDirUrl = `https://api.github.com/repos/${githubUsername}/${githubRepo}/contents/content/resources/categories`;
+      const response = await this.makeGitHubRequest(categoriesDirUrl);
+      
+      if (!response.ok) {
+        console.log('⚠️ Resources categories directory not found');
+        return {};
+      }
+      
+      const files = await response.json();
+      const categories: Record<string, ResourceCategory> = {};
+      
+      for (const file of files.filter((f: any) => f.name.endsWith('.json'))) {
+        try {
+          const fileUrl = `https://raw.githubusercontent.com/${githubUsername}/${githubRepo}/main/content/resources/categories/${file.name}`;
+          const contentResponse = await fetch(fileUrl);
+          
+          if (contentResponse.ok) {
+            const content = await contentResponse.json();
+            const categoryName = file.name.replace('.json', '');
+            categories[categoryName] = { ...content, category: categoryName };
+            console.log(`✅ Loaded resource category: ${categoryName}`);
+          }
+        } catch (error) {
+          console.warn(`⚠️ Failed to load resource category: ${file.name}`, error);
+        }
+      }
+      
+      return categories;
+    } catch (error) {
+      console.error('Error fetching resource categories:', error);
+      return {};
+    }
+  }
+
+  static async fetchResourcesByCategory(category: string): Promise<Resource[]> {
+    const { githubUsername, githubRepo } = this.getGitHubConfig();
+    
+    try {
+      const categoryUrl = `https://raw.githubusercontent.com/${githubUsername}/${githubRepo}/main/content/resources/categories/${category}.json`;
+      const response = await fetch(categoryUrl);
+      
+      if (!response.ok) {
+        console.warn(`⚠️ Resource category not found: ${category}`);
+        return [];
+      }
+      
+      const categoryData = await response.json();
+      const resources = categoryData.resources || [];
+      
+      console.log(`✅ Loaded ${resources.length} resources from category: ${category}`);
+      return resources;
+    } catch (error) {
+      console.error(`Error fetching resources for category ${category}:`, error);
+      return [];
+    }
+  }
+
+  static validateResourceSchema(resource: any): ValidationResult {
+    const errors: string[] = [];
+    const warnings: string[] = [];
+    
+    // Required fields
+    const requiredFields = ['id', 'type', 'title', 'description', 'url', 'category', 'whyRecommended'];
+    for (const field of requiredFields) {
+      if (!resource[field]) {
+        errors.push(`Missing required field: ${field}`);
+      }
+    }
+    
+    // Type validation
+    const validTypes: ResourceType[] = ['article', 'video', 'podcast', 'tool', 'course', 'book', 'documentation', 'tutorial', 'framework', 'library', 'platform', 'community', 'newsletter', 'blog', 'research-paper', 'cheat-sheet', 'template', 'extension', 'other'];
+    if (resource.type && !validTypes.includes(resource.type)) {
+      errors.push(`Invalid resource type: ${resource.type}`);
+    }
+    
+    // Quality validation
+    const validQualities = ['gold', 'silver', 'bronze'];
+    if (resource.quality && !validQualities.includes(resource.quality)) {
+      errors.push(`Invalid quality level: ${resource.quality}`);
+    }
+    
+    // Difficulty validation
+    const validDifficulties = ['beginner', 'intermediate', 'advanced'];
+    if (resource.difficulty && !validDifficulties.includes(resource.difficulty)) {
+      errors.push(`Invalid difficulty level: ${resource.difficulty}`);
+    }
+    
+    // URL validation
+    if (resource.url && !this.isValidUrl(resource.url)) {
+      errors.push(`Invalid URL format: ${resource.url}`);
+    }
+    
+    // Warnings
+    if (!resource.tags || resource.tags.length === 0) {
+      warnings.push('No tags provided - resource may be hard to discover');
+    }
+    
+    if (!resource.author && !resource.publisher) {
+      warnings.push('No author or publisher provided - reduces credibility');
+    }
+    
+    return {
+      isValid: errors.length === 0,
+      errors,
+      warnings
+    };
+  }
+
+  static async verifyResourceUrl(url: string): Promise<VerificationResult> {
+    try {
+      const startTime = Date.now();
+      const response = await fetch(url, { method: 'HEAD' });
+      const responseTime = Date.now() - startTime;
+      
+      return {
+        isValid: response.ok,
+        statusCode: response.status,
+        statusText: response.statusText,
+        responseTime
+      };
+    } catch (error) {
+      return {
+        isValid: false,
+        statusCode: 0,
+        statusText: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  }
+
+  static async buildResourceRelationships(resources: Resource[]): Promise<Record<string, string[]>> {
+    const relationships: Record<string, string[]> = {};
+    
+    for (const resource of resources) {
+      const related: string[] = [];
+      
+      // Add explicitly defined related resources
+      if (resource.relatedResources) {
+        related.push(...resource.relatedResources);
+      }
+      
+      // Find resources by category
+      const sameCategory = resources.filter(r => 
+        r.category === resource.category && 
+        r.id !== resource.id &&
+        r.tags.some(tag => resource.tags.includes(tag))
+      );
+      related.push(...sameCategory.map(r => r.id));
+      
+      // Find resources by type
+      const sameType = resources.filter(r => 
+        r.type === resource.type && 
+        r.id !== resource.id &&
+        r.tags.some(tag => resource.tags.includes(tag))
+      );
+      related.push(...sameType.map(r => r.id));
+      
+      // Find resources by tags
+      const sameTags = resources.filter(r => 
+        r.id !== resource.id &&
+        r.tags.some(tag => resource.tags.includes(tag))
+      );
+      related.push(...sameTags.map(r => r.id));
+      
+      // Remove duplicates and limit to 10 most related
+      relationships[resource.id] = [...new Set(related)].slice(0, 10);
+    }
+    
+    return relationships;
+  }
+
+  static async buildResourceKnowledgeGraph(): Promise<ResourceKnowledgeGraph> {
+    console.log('🏗️ Building resource knowledge graph...');
+    
+    const categories = await this.fetchResourceCategories();
+    const allResources: Resource[] = [];
+    
+    // Fetch all resources from all categories
+    for (const categorySlug of Object.keys(categories)) {
+      const resources = await this.fetchResourcesByCategory(categorySlug);
+      allResources.push(...resources);
+    }
+    
+    // Build relationships
+    const relationships = {
+      byCategory: {} as Record<string, Resource[]>,
+      bySubcategory: {} as Record<string, Resource[]>,
+      byType: {} as Record<ResourceType, Resource[]>,
+      byQuality: {} as Record<string, Resource[]>,
+      byTags: {} as Record<string, Resource[]>,
+      byAuthor: {} as Record<string, Resource[]>,
+      byPublisher: {} as Record<string, Resource[]>,
+      
+      resourceToResource: await this.buildResourceRelationships(allResources),
+      resourcePrerequisites: {} as Record<string, string[]>,
+      relatedByCategory: {} as Record<string, Resource[]>,
+      relatedByType: {} as Record<string, Resource[]>,
+      relatedByTags: {} as Record<string, Resource[]>,
+      
+      categoryToSubcategories: {} as Record<string, string[]>,
+      subcategoryToResources: {} as Record<string, Resource[]>
+    };
+    
+    // Organize resources by various dimensions
+    const allTags = new Set<string>();
+    const allAuthors = new Set<string>();
+    const allPublishers = new Set<string>();
+    const typeDistribution: Record<ResourceType, number> = {} as any;
+    const qualityDistribution: Record<string, number> = {};
+    const categoryDistribution: Record<string, number> = {};
+    
+    allResources.forEach(resource => {
+      // By category
+      if (!relationships.byCategory[resource.category]) {
+        relationships.byCategory[resource.category] = [];
+      }
+      relationships.byCategory[resource.category].push(resource);
+      
+      // By subcategory
+      if (resource.subcategory) {
+        if (!relationships.bySubcategory[resource.subcategory]) {
+          relationships.bySubcategory[resource.subcategory] = [];
+        }
+        relationships.bySubcategory[resource.subcategory].push(resource);
+      }
+      
+      // By type
+      if (!relationships.byType[resource.type]) {
+        relationships.byType[resource.type] = [];
+      }
+      relationships.byType[resource.type].push(resource);
+      
+      // By quality
+      if (!relationships.byQuality[resource.quality]) {
+        relationships.byQuality[resource.quality] = [];
+      }
+      relationships.byQuality[resource.quality].push(resource);
+      
+      // By tags
+      resource.tags.forEach(tag => {
+        allTags.add(tag);
+        if (!relationships.byTags[tag]) {
+          relationships.byTags[tag] = [];
+        }
+        relationships.byTags[tag].push(resource);
+      });
+      
+      // By author
+      if (resource.author) {
+        allAuthors.add(resource.author);
+        if (!relationships.byAuthor[resource.author]) {
+          relationships.byAuthor[resource.author] = [];
+        }
+        relationships.byAuthor[resource.author].push(resource);
+      }
+      
+      // By publisher
+      if (resource.publisher) {
+        allPublishers.add(resource.publisher);
+        if (!relationships.byPublisher[resource.publisher]) {
+          relationships.byPublisher[resource.publisher] = [];
+        }
+        relationships.byPublisher[resource.publisher].push(resource);
+      }
+      
+      // Collect analytics data
+      typeDistribution[resource.type] = (typeDistribution[resource.type] || 0) + 1;
+      qualityDistribution[resource.quality] = (qualityDistribution[resource.quality] || 0) + 1;
+      categoryDistribution[resource.category] = (categoryDistribution[resource.category] || 0) + 1;
+      
+      // Prerequisites
+      if (resource.prerequisites) {
+        relationships.resourcePrerequisites[resource.id] = resource.prerequisites;
+      }
+    });
+    
+    // Build category hierarchies
+    Object.values(categories).forEach(category => {
+      if (category.childCategories) {
+        relationships.categoryToSubcategories[category.category] = category.childCategories;
+      }
+    });
+    
+    const analytics = {
+      totalResources: allResources.length,
+      totalCategories: Object.keys(categories).length,
+      typeDistribution,
+      qualityDistribution,
+      categoryDistribution,
+      mostCommonTags: Array.from(allTags).slice(0, 20),
+      topAuthors: Array.from(allAuthors).slice(0, 10),
+      topPublishers: Array.from(allPublishers).slice(0, 10)
+    };
+    
+    console.log(`✅ Built resource knowledge graph: ${analytics.totalResources} resources, ${analytics.totalCategories} categories`);
+    
+    return {
+      resources: allResources.reduce((acc, resource) => {
+        acc[resource.id] = resource;
+        return acc;
+      }, {} as Record<string, Resource>),
+      categories,
+      relationships,
+      analytics
+    };
+  }
+
+  static async generateResourceSearchIndex(): Promise<ResourceSearchDocument[]> {
+    console.log('🔍 Building resource search index...');
+    
+    const knowledgeGraph = await this.buildResourceKnowledgeGraph();
+    const searchDocuments: ResourceSearchDocument[] = [];
+    
+    for (const resource of Object.values(knowledgeGraph.resources)) {
+      // Combine all searchable text
+      const searchableContent = [
+        resource.title,
+        resource.description,
+        resource.whyRecommended,
+        resource.author || '',
+        resource.publisher || '',
+        resource.tags.join(' '),
+        resource.category,
+        resource.subcategory || '',
+        resource.type,
+        JSON.stringify(resource.metadata || {})
+      ].join(' ').toLowerCase();
+      
+      searchDocuments.push({
+        id: resource.id,
+        title: resource.title,
+        description: resource.description,
+        url: resource.url,
+        category: resource.category,
+        subcategory: resource.subcategory,
+        tags: resource.tags,
+        difficulty: resource.difficulty,
+        quality: resource.quality,
+        type: resource.type,
+        author: resource.author,
+        publisher: resource.publisher,
+        format: resource.format,
+        accessType: resource.accessType,
+        verificationStatus: resource.verificationStatus,
+        content: searchableContent.substring(0, 2000),
+        fullContent: searchableContent,
+        allTags: resource.tags,
+        searchableMetadata: JSON.stringify(resource.metadata || {}),
+        relatedResourceCount: resource.relatedResources?.length || 0,
+        prerequisiteCount: resource.prerequisites?.length || 0,
+        wordCount: searchableContent.split(' ').length
+      });
+    }
+    
+    console.log(`✅ Built resource search index: ${searchDocuments.length} documents`);
+    return searchDocuments;
+  }
+
+  private static isValidUrl(url: string): boolean {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
   }
 }

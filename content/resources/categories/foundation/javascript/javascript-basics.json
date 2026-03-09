@@ -1,0 +1,21 @@
+{
+  "id": "javascript-basics",
+  "type": "course",
+  "title": "JavaScript Fundamentals",
+  "description": "Complete JavaScript basics course for beginners",
+  "url": "https://www.javascript.com/",
+  "category": "foundation",
+  "subcategory": "languages",
+  "tags": ["javascript", "basics", "beginner", "fundamentals"],
+  "difficulty": "beginner",
+  "quality": "gold",
+  "author": "JavaScript.com",
+  "publisher": "JavaScript.com",
+  "whyRecommended": "Best starting point for learning JavaScript from scratch",
+  "prerequisites": [],
+  "lastVerified": "2025-01-09",
+  "verificationStatus": "verified",
+  "language": "en",
+  "accessType": "free",
+  "order": 0
+}

@@ -26,6 +26,7 @@ export function Navbar(): React.ReactElement {
   const whiteThemeRoutes = [
     "/articles",
     "/roadmaps",
+    "/resources",
     "/groups",
     "/graph",
     "/parser",
@@ -107,6 +108,33 @@ export function Navbar(): React.ReactElement {
 
             <div 
               className={styles.dropdown}
+              onMouseEnter={() => handleDropdownEnter("resources")}
+              onMouseLeave={handleDropdownLeave}
+            >
+              <button
+                className={styles.dropdownToggle}
+                onClick={() => handleDropdownToggle("resources")}
+                aria-expanded={activeDropdown === "resources"}
+              >
+                Resources{" "}
+                <IoChevronDown
+                  className={`${styles.dropdownIcon} ${activeDropdown === "resources" ? styles.rotated : ""}`}
+                />
+              </button>
+              <div
+                className={`${styles.dropdownMenu} ${activeDropdown === "resources" ? styles.show : ""}`}
+              >
+                <Link href="/resources" className={styles.dropdownItem} onClick={handleLinkClick}>
+                  Resources
+                </Link>
+                <Link href="/dsa" className={styles.dropdownItem} onClick={handleLinkClick}>
+                  DSA
+                </Link>
+              </div>
+            </div>
+
+            <div 
+              className={styles.dropdown}
               onMouseEnter={() => handleDropdownEnter("learn")}
               onMouseLeave={handleDropdownLeave}
             >
@@ -129,18 +157,14 @@ export function Navbar(): React.ReactElement {
                 <Link href="/roadmaps" className={styles.dropdownItem} onClick={handleLinkClick}>
                   Roadmaps
                 </Link>
-                <Link href="/dsa" className={styles.dropdownItem} onClick={handleLinkClick}>
-                  DSA
-                </Link>
                 <Link href="/graph" className={styles.dropdownItem} onClick={handleLinkClick}>
-                  Graph
+                  Mindmap
+                </Link>
+                <Link href="/groups" className={styles.dropdownItem} onClick={handleLinkClick}>
+                  Groups
                 </Link>
               </div>
             </div>
-
-            <Link href="/groups" className={styles.navLink}>
-              Groups
-            </Link>
 
             <div 
               className={styles.dropdown}
@@ -193,9 +217,31 @@ export function Navbar(): React.ReactElement {
             )}
 
             {isAdmin && (
-              <Link href="/admin-dashboard" className={styles.adminLink}>
-                Admin
-              </Link>
+              <div className={styles.adminDropdown}>
+                <button
+                  className={styles.adminDropdownToggle}
+                  onClick={() => handleDropdownToggle("admin")}
+                  aria-expanded={activeDropdown === "admin"}
+                >
+                  Admin{" "}
+                  <IoChevronDown
+                    className={`${styles.dropdownIcon} ${activeDropdown === "admin" ? styles.rotated : ""}`}
+                  />
+                </button>
+                <div
+                  className={`${styles.dropdownMenu} ${activeDropdown === "admin" ? styles.show : ""}`}
+                >
+                  <Link href="/admin-dashboard" className={styles.dropdownItem} onClick={handleLinkClick}>
+                    Dashboard
+                  </Link>
+                  <Link href="/admin" className={styles.dropdownItem} onClick={handleLinkClick}>
+                    Articles
+                  </Link>
+                  {/* <Link href="/admin/resources" className={styles.dropdownItem} onClick={handleLinkClick}>
+                    Resources
+                  </Link> */}
+                </div>
+              </div>
             )}
           </div>
         </div>
@@ -226,17 +272,28 @@ export function Navbar(): React.ReactElement {
               >
                 Home
               </Link>
+            </div>
+
+            <div className={styles.mobileNavSection}>
+              <h3 className={styles.mobileNavTitle}>Resources (Free)</h3>
               <Link
-                href="/groups"
+                href="/resources"
                 className={styles.mobileLink}
                 onClick={() => setIsMenuOpen(false)}
               >
-                Groups
+                Resources
+              </Link>
+              <Link
+                href="/dsa"
+                className={styles.mobileLink}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                DSA
               </Link>
             </div>
 
             <div className={styles.mobileNavSection}>
-              <h3 className={styles.mobileNavTitle}>Learn</h3>
+              <h3 className={styles.mobileNavTitle}>Learn (Sign-in Required)</h3>
               <Link
                 href="/articles"
                 className={styles.mobileLink}
@@ -252,18 +309,18 @@ export function Navbar(): React.ReactElement {
                 Roadmaps
               </Link>
               <Link
-                href="/dsa"
-                className={styles.mobileLink}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                DSA
-              </Link>
-              <Link
                 href="/graph"
                 className={styles.mobileLink}
                 onClick={() => setIsMenuOpen(false)}
               >
-                Knowledge Graph
+                Mindmap
+              </Link>
+              <Link
+                href="/groups"
+                className={styles.mobileLink}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Groups
               </Link>
             </div>
 
@@ -325,9 +382,18 @@ export function Navbar(): React.ReactElement {
                   className={styles.mobileLink}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Admin
+                  Admin Dashboard
                 </Link>
               )}
+              {/* {isAdmin && (
+                <Link
+                  href="/admin/resources"
+                  className={styles.mobileLink}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Manage Resources
+                </Link>
+              )} */}
             </div>
           </div>
         </div>
