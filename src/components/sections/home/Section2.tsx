@@ -20,7 +20,7 @@ export default function Section2() {
             </AnimatedDescription>
             <div className={styles.ctaContainer}>
               <InteractiveButton 
-                href="/dashboard" 
+                href="/articles" 
                 variant="cta"
                 scrambleText={{
                   hover: "BEGIN JOURNEY",

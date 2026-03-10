@@ -14,7 +14,7 @@ export default function Section5() {
         </AnimatedDescription>
         <InteractiveButton 
           variant="cta" 
-          href="/paths"
+          href="/roadmaps"
           scrambleText={{
             hover: "START JOURNEY NOW",
             speed: 2,

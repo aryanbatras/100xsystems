@@ -92,13 +92,13 @@ export default function Section1() {
         
         <div className={styles.rubikVideoContent}>
           <div ref={titleRef} className={styles.rubikVideoTitle}>
-            <img
+            <Image
               src="/100xsystemsonlytitle.png"
               alt="100x Systems"
               width={400}
               height={80}
               className={styles.titleLogo}
-              loading="eager" 
+              priority
             />
           </div>
           <p ref={subtitleRef} className={styles.rubikVideoSubtitle}>
@@ -106,7 +106,7 @@ export default function Section1() {
           </p>
           <div className={styles.ctaButtons}>
             <InteractiveButton 
-              href="/dashboard" 
+              href="/articles" 
               variant="cta"
               scrambleText={{
                 hover: "BEGIN MASTERY",
@@ -118,7 +118,7 @@ export default function Section1() {
               Start Learning
             </InteractiveButton>
             <InteractiveButton 
-              href="/paths" 
+              href="/roadmaps" 
               variant="secondary"
               scrambleText={{
                 hover: "EXPLORE PATHS",

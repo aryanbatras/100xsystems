@@ -42,7 +42,7 @@ export default function Section10() {
               <AnimatedSection animationType="scaleIn" delay={1.1}>
                 <InteractiveButton 
                   variant="cta" 
-                  href="/paths"
+                  href="/roadmaps"
                   scrambleText={{
                     hover: "START JOURNEY NOW",
                     speed: 2,
