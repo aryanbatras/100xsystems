@@ -90,7 +90,7 @@ export default function Article({ html, slug, title, description, date, manifest
       <div className={styles.articleContainer} style={{ width: articleWidth }}>
         <div className={styles.articleWrapper}>
           <header className={styles.articleHeader}>
-            <Link href="/articles" className={styles.backLink}>
+            <Link href="/articles" className={styles.backLink} onClick={closeChat}>
               ← Back to Articles
             </Link>
             <h1 className={styles.articleTitle}>{title || slug}</h1>
@@ -209,7 +209,7 @@ export default function Article({ html, slug, title, description, date, manifest
           )}
 
           <footer className={styles.articleFooter}>
-            <Link href="/articles" className={styles.backLink}>
+            <Link href="/articles" className={styles.backLink} onClick={closeChat}>
               ← Back to Articles
             </Link>
           </footer>
