@@ -25,6 +25,8 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import styles from "./AdvancedChatBot.module.css";
 import { useMemory } from "../../hooks/useMemory";
+import { useAuth } from "../../contexts/AuthContext";
+import { AuthModal } from "../auth/AuthModal";
 
 interface Message {
   id: string;
@@ -105,6 +107,14 @@ export default function AdvancedChatBot({
   onClose,
   onClearContext,
 }: AdvancedChatBotProps) {
+  const { user, loading: authLoading } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  
+  // Simple client-side rate limiting
+  const [requestTimes, setRequestTimes] = useState<number[]>([]);
+  const RATE_LIMIT = 2; // 2 requests per minute
+  const RATE_WINDOW = 60000; // 1 minute in milliseconds
+  
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -323,8 +333,41 @@ export default function AdvancedChatBot({
     }
   };
 
+  // Calculate rate limit info
+  const now = Date.now();
+  const recentRequests = requestTimes.filter(time => now - time < RATE_WINDOW);
+  const remainingRequests = RATE_LIMIT - recentRequests.length;
+  
+  // Calculate when oldest request expires
+  let resetTime = 0;
+  if (recentRequests.length > 0) {
+    const oldestRequest = Math.min(...recentRequests);
+    resetTime = oldestRequest + RATE_WINDOW;
+  }
+
   const handleSendMessage = async () => {
     if (!input.trim() || isLoading) return;
+
+    // Simple client-side rate limiting
+    const now = Date.now();
+    const recentRequests = requestTimes.filter(time => now - time < RATE_WINDOW);
+    
+    if (recentRequests.length >= RATE_LIMIT) {
+      const oldestRequest = Math.min(...recentRequests);
+      const waitTime = Math.ceil((oldestRequest + RATE_WINDOW - now) / 1000);
+      
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        type: "ai",
+        content: `⚠️ Rate limit exceeded. Please wait ${waitTime} seconds before sending another message.`,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+      return;
+    }
+
+    // Update request times
+    setRequestTimes([...recentRequests, now]);
 
     // Debug logging
     console.log("Auto-context enabled:", settings.autoContext);
@@ -753,6 +796,16 @@ export default function AdvancedChatBot({
 
   if (!isOpen) return null;
 
+  // Show auth modal if user is not signed in
+  if (!authLoading && !user) {
+    return (
+      <AuthModal
+        isOpen={true}
+        onClose={onClose}
+      />
+    );
+  }
+
   return (
     <div className={styles.chatOverlay}>
       <div className={styles.chatSidebar}>
@@ -937,7 +990,7 @@ export default function AdvancedChatBot({
                 />
                 <span>Enable AI memory</span>
               </label>
-              <label className={styles.settingItem}>
+              {/* <label className={styles.settingItem}>
                 <input
                   type="checkbox"
                   checked={settings.showMemoryContext}
@@ -950,7 +1003,7 @@ export default function AdvancedChatBot({
                   disabled={!settings.memoryEnabled}
                 />
                 <span>Show memory context in responses</span>
-              </label>
+              </label> */}
               <label className={styles.settingItem}>
                 <input
                   type="checkbox"
@@ -1324,8 +1377,9 @@ export default function AdvancedChatBot({
 
           <button
             onClick={handleSendMessage}
-            disabled={isLoading || !input.trim()}
+            disabled={isLoading || !input.trim() || remainingRequests <= 0}
             className={styles.sendButton}
+            title={remainingRequests <= 0 ? "Rate limit exceeded" : `${remainingRequests} requests remaining`}
           >
             <IoMdSend />
           </button>
