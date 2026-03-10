@@ -127,7 +127,7 @@ export default function AdvancedChatBot({
   const [currentContext, setCurrentContext] = useState(selectedText || "");
 
   const [settings, setSettings] = useState<ChatSettings>({
-    autoContext: true,
+    autoContext: false,
     voiceEnabled: true,
     selectedModel: "meta-llama/llama-4-scout-17b-16e-instruct",
     ttsEnabled: false,
