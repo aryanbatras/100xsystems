@@ -1,10 +1,11 @@
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import Head from "next/head";
 import { useState, useEffect, useMemo } from "react";
 import Fuse from "fuse.js";
 import { Resource, ResourceCategory } from "../../types/resources";
 import styles from "./Resources.module.css";
 import { ProtectedRoute } from "../../components/auth/ProtectedRoute";
+import { StaticSiteGenerator } from "../../core/infrastructure/staticSiteGenerator";
 
 interface ResourcesProps {
   resources: Resource[];
@@ -576,45 +577,32 @@ export default function Resources({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { req } = context;
-  const host = req.headers.host;
-  const protocol = req.headers['x-forwarded-proto'] || (host?.includes('localhost') ? 'http' : 'https');
-  const baseUrl = `${protocol}://${host}`;
-
+export const getStaticProps: GetStaticProps = async () => {
   try {
-    const [resourcesResponse, categoriesResponse] = await Promise.all([
-      fetch(`${baseUrl}/api/resources`),
-      fetch(`${baseUrl}/api/resources/categories`),
+    console.log('🏗️ Building resources page...');
+    
+    // Fetch resources and categories at build time using StaticSiteGenerator
+    const [resources, categories] = await Promise.all([
+      StaticSiteGenerator.fetchAllResources(),
+      StaticSiteGenerator.fetchResourceCategories()
     ]);
 
-    if (!resourcesResponse.ok || !categoriesResponse.ok) {
-      throw new Error("Failed to fetch resources or categories");
-    }
-
-    const resources = await resourcesResponse.json();
-    const categories = await categoriesResponse.json();
-
-    console.log(
-      "✅ Generated resources page with",
-      resources.data?.length || 0,
-      "resources",
-    );
-    console.log("✅ Found categories:", Object.keys(categories.data || {}));
+    console.log(`✅ Generated resources page with ${resources.length} resources and ${Object.keys(categories).length} categories`);
 
     return {
       props: {
-        resources: resources.data || [],
-        categories: categories.data || {},
-      },
+        resources,
+        categories
+      }
     };
   } catch (error) {
-    console.error("❌ Error in getServerSideProps:", error);
+    console.error('❌ Error building resources page:', error);
+    
     return {
       props: {
         resources: [],
-        categories: {},
-      },
+        categories: {}
+      }
     };
   }
 };

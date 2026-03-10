@@ -1006,40 +1006,131 @@ export class StaticSiteGenerator {
 
   // ========== RESOURCE SYSTEM METHODS ==========
 
-  static async fetchResourceCategories(): Promise<Record<string, ResourceCategory>> {
-    const { githubUsername, githubRepo } = this.getGitHubConfig();
+  static async fetchAllResources(): Promise<Resource[]> {
+    console.log('🏗️ Building resources content...');
+    
+    const CATEGORIES_DIR = path.join(process.cwd(), 'content/resources/categories');
+    const allResources: Resource[] = [];
     
     try {
-      const categoriesDirUrl = `https://api.github.com/repos/${githubUsername}/${githubRepo}/contents/content/resources/categories`;
-      const response = await this.makeGitHubRequest(categoriesDirUrl);
-      
-      if (!response.ok) {
-        console.log('⚠️ Resources categories directory not found');
-        return {};
+      if (!fs.existsSync(CATEGORIES_DIR)) {
+        console.warn(`Resources directory not found: ${CATEGORIES_DIR}`);
+        return [];
       }
       
-      const files = await response.json();
-      const categories: Record<string, ResourceCategory> = {};
+      const categories = fs.readdirSync(CATEGORIES_DIR);
       
-      for (const file of files.filter((f: any) => f.name.endsWith('.json'))) {
-        try {
-          const fileUrl = `https://raw.githubusercontent.com/${githubUsername}/${githubRepo}/main/content/resources/categories/${file.name}`;
-          const contentResponse = await fetch(fileUrl);
+      for (const categoryDir of categories) {
+        const categoryPath = path.join(CATEGORIES_DIR, categoryDir);
+        if (fs.statSync(categoryPath).isDirectory()) {
+          // Get subcategories
+          const subcategories = fs.readdirSync(categoryPath);
           
-          if (contentResponse.ok) {
-            const content = await contentResponse.json();
-            const categoryName = file.name.replace('.json', '');
-            categories[categoryName] = { ...content, category: categoryName };
-            console.log(`✅ Loaded resource category: ${categoryName}`);
+          for (const subcategory of subcategories) {
+            const subcategoryPath = path.join(categoryPath, subcategory);
+            if (fs.statSync(subcategoryPath).isDirectory()) {
+              // Get resources from subcategory
+              const resources = this.getResourcesFromDirectory(subcategoryPath, categoryDir, subcategory);
+              allResources.push(...resources);
+            }
           }
-        } catch (error) {
-          console.warn(`⚠️ Failed to load resource category: ${file.name}`, error);
         }
       }
       
-      return categories;
+      // Sort by order, then quality, then title
+      const sortedResources = allResources.sort((a, b) => {
+        const orderA = a.order || 999;
+        const orderB = b.order || 999;
+        if (orderA !== orderB) {
+          return orderA - orderB;
+        }
+        
+        const qualityOrder = { gold: 0, silver: 1, bronze: 2 };
+        const qualityA = qualityOrder[a.quality as keyof typeof qualityOrder] ?? 3;
+        const qualityB = qualityOrder[b.quality as keyof typeof qualityOrder] ?? 3;
+        
+        if (qualityA !== qualityB) {
+          return qualityA - qualityB;
+        }
+        
+        return a.title.localeCompare(b.title);
+      });
+      
+      console.log(`✅ Built resources content: ${sortedResources.length} resources`);
+      return sortedResources;
+      
     } catch (error) {
-      console.error('Error fetching resource categories:', error);
+      console.error('Error building resources content:', error);
+      return [];
+    }
+  }
+
+  static getResourcesFromDirectory(dirPath: string, category: string, subcategory: string): Resource[] {
+    if (!fs.existsSync(dirPath)) {
+      return [];
+    }
+    
+    const resources: Resource[] = [];
+    const items = fs.readdirSync(dirPath);
+    
+    for (const item of items) {
+      const itemPath = path.join(dirPath, item);
+      const stat = fs.statSync(itemPath);
+      
+      // Only process JSON files
+      if (!stat.isDirectory() && item.endsWith('.json')) {
+        try {
+          const resource = JSON.parse(fs.readFileSync(itemPath, 'utf-8'));
+          // Ensure category and subcategory are set
+          resource.category = category;
+          resource.subcategory = subcategory;
+          resources.push(resource);
+        } catch (error) {
+          console.warn(`Error parsing resource file ${item}:`, error);
+        }
+      }
+    }
+    
+    return resources.sort((a, b) => (a.order || 0) - (b.order || 0));
+  }
+
+  static async fetchResourceCategories(): Promise<Record<string, any>> {
+    console.log('🏗️ Building resource categories...');
+    
+    const CATEGORIES_DIR = path.join(process.cwd(), 'content/resources/categories');
+    const categoriesData: Record<string, any> = {};
+    
+    try {
+      if (!fs.existsSync(CATEGORIES_DIR)) {
+        console.warn(`Resources directory not found: ${CATEGORIES_DIR}`);
+        return {};
+      }
+      
+      const categories = fs.readdirSync(CATEGORIES_DIR);
+      
+      for (const category of categories) {
+        const categoryPath = path.join(CATEGORIES_DIR, category);
+        if (fs.statSync(categoryPath).isDirectory()) {
+          // Get subcategories
+          const subcategories = fs.readdirSync(categoryPath)
+            .filter(item => fs.statSync(path.join(categoryPath, item)).isDirectory());
+          
+          categoriesData[category] = {
+            category,
+            displayName: category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+            description: `${category} resources and learning materials`,
+            icon: '📚',
+            subcategories,
+            allowedTypes: []
+          };
+        }
+      }
+      
+      console.log(`✅ Built resource categories: ${Object.keys(categoriesData).length} categories`);
+      return categoriesData;
+      
+    } catch (error) {
+      console.error('Error building resource categories:', error);
       return {};
     }
   }
