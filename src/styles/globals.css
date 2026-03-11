@@ -193,27 +193,27 @@ a {
   pointer-events: none !important;
 }
 
-@media (min-width: 1024px){
+/* @media (min-width: 1024px){ */
 
   /* Chatbot open styles - Dynamic width adjustment */
-body.chatbot-open {
+/* body.chatbot-open { */
   /* Target article pages with dynamic width */
   /* [class*="articleContainer"] {
     transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   } */
   
-  [class*="articleWrapper"] {
-    width: 100%;
-    max-width: none;
-  }
+  /* [class*="articleWrapper"] { */
+    /* width: 100%; */
+    /* max-width: none; */
+  /* } */
   
   /* Target by page module */
-  div[class*="Articles_"] {
-    width: calc(100vw - 750px);
+  /* div[class*="Articles_"] { */
+    /* width: calc(100vw - 750px); */
     /* max-width: calc(100vw - 520px); */
     /* transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); */
-  }
-}
+  /* } */
+/* } */
 
-}
+/* } */
 
