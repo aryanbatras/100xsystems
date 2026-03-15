@@ -510,7 +510,7 @@
 .mobileAuthButton {
   background: none;
   border: none;
-  color: var(--accent-yellow);
+  color: #1a1a1a;
   text-transform: uppercase;
   font-family: var(--font-samsung-sharp);
   font-weight: 500;
@@ -523,7 +523,7 @@
   transition: all 0.2s ease;
   
   &:hover {
-    background: rgba(250, 204, 21, 0.1);
+    background: rgba(0, 0, 0, 0.05);
     padding-left: 3rem;
   }
 }

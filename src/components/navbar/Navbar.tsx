@@ -108,6 +108,15 @@ export function Navbar(): React.ReactElement {
               Home
             </Link>
 
+            {/* Priority Links - Path & Roadmaps */}
+            <Link href="/path" className={styles.navLink}>
+              Path
+            </Link>
+
+            <Link href="/roadmaps" className={styles.navLink}>
+              Roadmaps
+            </Link>
+
             <div 
               className={styles.dropdown}
               onMouseEnter={() => handleDropdownEnter("resources")}
@@ -132,9 +141,6 @@ export function Navbar(): React.ReactElement {
                 <Link href="/dsa" className={styles.dropdownItem} onClick={handleLinkClick}>
                   DSA
                 </Link>
-                <Link href="/path" className={styles.dropdownItem} onClick={handleLinkClick}>
-                  Path
-                </Link>
               </div>
             </div>
 
@@ -158,9 +164,6 @@ export function Navbar(): React.ReactElement {
               >
                 <Link href="/articles" className={styles.dropdownItem} onClick={handleLinkClick}>
                   Articles
-                </Link>
-                <Link href="/roadmaps" className={styles.dropdownItem} onClick={handleLinkClick}>
-                  Roadmaps
                 </Link>
                 <Link href="/graph" className={styles.dropdownItem} onClick={handleLinkClick}>
                   Mindmap
@@ -268,6 +271,52 @@ export function Navbar(): React.ReactElement {
             <RxCross1 />
           </button>
           <div className={styles.mobileNav}>
+            {/* Account Section - Moved to Top */}
+            <div className={styles.mobileNavSection}>
+              <h3 className={styles.mobileNavTitle}>Account</h3>
+              {user ? (
+                <>
+                  <Link
+                    href="/user-dashboard"
+                    className={styles.mobileLink}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Welcome,{" "}
+                    {user.user_metadata?.full_name || user.email?.split("@")[0]}
+                  </Link>
+                  <button
+                    onClick={() => {
+                      signOut();
+                      setIsMenuOpen(false);
+                    }}
+                    className={styles.mobileSignOutButton}
+                  >
+                    Sign Out
+                  </button>
+                  {isAdmin && (
+                    <Link
+                      href="/admin-dashboard"
+                      className={styles.mobileLink}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Admin Dashboard
+                    </Link>
+                  )}
+                </>
+              ) : (
+                <button
+                  onClick={() => {
+                    setIsAuthModalOpen(true);
+                    setIsMenuOpen(false);
+                  }}
+                  disabled={loading}
+                  className={styles.mobileAuthButton}
+                >
+                  {loading ? "Signing in..." : "Sign In"}
+                </button>
+              )}
+            </div>
+
             <div className={styles.mobileNavSection}>
               <h3 className={styles.mobileNavTitle}>Navigation</h3>
               <Link
@@ -276,6 +325,25 @@ export function Navbar(): React.ReactElement {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
+              </Link>
+            </div>
+
+            {/* Priority Links - Path & Roadmaps */}
+            <div className={styles.mobileNavSection}>
+              <h3 className={styles.mobileNavTitle}>Learning Paths</h3>
+              <Link
+                href="/path"
+                className={styles.mobileLink}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Path
+              </Link>
+              <Link
+                href="/roadmaps"
+                className={styles.mobileLink}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Roadmaps
               </Link>
             </div>
 
@@ -295,13 +363,6 @@ export function Navbar(): React.ReactElement {
               >
                 DSA
               </Link>
-              <Link
-                href="/path"
-                className={styles.mobileLink}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Path
-              </Link>
             </div>
 
             <div className={styles.mobileNavSection}>
@@ -312,13 +373,6 @@ export function Navbar(): React.ReactElement {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Articles
-              </Link>
-              <Link
-                href="/roadmaps"
-                className={styles.mobileLink}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Roadmaps
               </Link>
               <Link
                 href="/graph"
@@ -352,60 +406,6 @@ export function Navbar(): React.ReactElement {
               >
                 Contact
               </Link>
-            </div>
-
-            <div className={styles.mobileNavSection}>
-              <h3 className={styles.mobileNavTitle}>Account</h3>
-              {user ? (
-                <>
-                  <Link
-                    href="/user-dashboard"
-                    className={styles.mobileLink}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Welcome,{" "}
-                    {user.user_metadata?.full_name || user.email?.split("@")[0]}
-                  </Link>
-                  <button
-                    onClick={() => {
-                      signOut();
-                      setIsMenuOpen(false);
-                    }}
-                    className={styles.mobileSignOutButton}
-                  >
-                    Sign Out
-                  </button>
-                </>
-              ) : (
-                <button
-                  onClick={() => {
-                    setIsAuthModalOpen(true);
-                    setIsMenuOpen(false);
-                  }}
-                  disabled={loading}
-                  className={styles.mobileAuthButton}
-                >
-                  {loading ? "Signing in..." : "Sign In"}
-                </button>
-              )}
-              {isAdmin && (
-                <Link
-                  href="/admin-dashboard"
-                  className={styles.mobileLink}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Admin Dashboard
-                </Link>
-              )}
-              {/* {isAdmin && (
-                <Link
-                  href="/admin/resources"
-                  className={styles.mobileLink}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Manage Resources
-                </Link>
-              )} */}
             </div>
           </div>
         </div>
