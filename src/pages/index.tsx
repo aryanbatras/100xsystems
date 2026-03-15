@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Section1 from '../components/sections/home/Section1';
 import Section2 from '../components/sections/home/Section2';
+import SectionBootcamp from '../components/sections/home/SectionBootcamp';
 import Section3 from '../components/sections/home/Section3';
 import Section4 from '../components/sections/home/Section4';
 import Section5 from '../components/sections/home/Section5';
@@ -26,6 +27,7 @@ export default function Home() {
         <div className={styles.container}>
           <Section1 />
           <Section2 />
+          <SectionBootcamp />
           <Section11 />
           <Section3 />
           {/* <Section4 /> */}

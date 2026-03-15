@@ -1,0 +1,333 @@
+.bootcampSection {
+  padding: 120px 0;
+  background: rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.bootcampContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.bootcampHeader {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.bootcampTitle {
+  font-size: 56px;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+
+.bootcampSubtitle {
+  font-size: 32px;
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  margin-bottom: 30px;
+  letter-spacing: -0.01em;
+}
+
+.bootcampDescription {
+  font-size: 20px;
+  line-height: 1.8;
+  color: #ffffff;
+  max-width: 800px;
+  margin: 0 auto;
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+  opacity: 0.9;
+}
+
+.bootcampCurriculum {
+  margin-bottom: 80px;
+}
+
+.curriculumHeader {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.curriculumHeader h3 {
+  font-size: 32px;
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  margin-bottom: 15px;
+  letter-spacing: -0.01em;
+}
+
+.curriculumContent {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.curriculumPhase {
+  padding: 25px 30px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.curriculumPhase:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.curriculumPhase h4 {
+  font-size: 20px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  margin-bottom: 12px;
+  letter-spacing: -0.005em;
+}
+
+.curriculumPhase p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #ffffff;
+  opacity: 0.8;
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+}
+
+.bootcampOffer {
+  text-align: center;
+  margin-bottom: 80px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  position: relative;
+}
+
+.offerContent {
+  position: relative;
+  z-index: 2;
+}
+
+.offerTitle {
+  font-size: 28px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  margin-bottom: 15px;
+}
+
+.offerDescription {
+  font-size: 18px;
+  font-family: var(--font-samsung-sharp);
+  line-height: 1.6;
+  color: #ffffff;
+  margin-bottom: 25px;
+  font-weight: 300;
+  opacity: 0.8;
+}
+
+.offerHighlight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.highlightText {
+  font-size: 24px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.highlightSubtext {
+  font-size: 14px;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  opacity: 0.6;
+  font-weight: 300;
+}
+
+.bootcampCTA {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+.ctaPrimary {
+  text-align: center;
+}
+
+.ctaButton {
+  margin-bottom: 15px;
+}
+
+.ctaNote {
+  font-size: 14px;
+  color: #ffffff;
+  opacity: 0.6;
+  font-weight: 300;
+}
+
+.ctaSecondary {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.contactRow {
+  display: flex;
+  justify-content: center;
+}
+
+.contactLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 25px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  transition: all 0.3s ease;
+  width: 100%;
+  justify-content: center;
+}
+
+.contactLink:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.contactIcon {
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+.bootcampTrust {
+  text-align: center;
+  padding: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.trustText {
+  font-size: 20px;
+  line-height: 1.6;
+  color: #ffffff;
+  font-style: italic;
+  opacity: 0.8;
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+}
+
+@media (max-width: 1024px) {
+  .bootcampContainer {
+    padding: 0 32px;
+  }
+  
+  .bootcampTitle {
+    font-size: 48px;
+  }
+  
+  .bootcampSubtitle {
+    font-size: 28px;
+  }
+  
+  .featureGrid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .bootcampSection {
+    padding: 80px 0;
+  }
+  
+  .bootcampContainer {
+    padding: 0 24px;
+  }
+  
+  .bootcampTitle {
+    font-size: 40px;
+  }
+  
+  .bootcampSubtitle {
+    font-size: 24px;
+  }
+  
+  .bootcampDescription {
+    font-size: 18px;
+  }
+  
+  .featureGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .featureItem {
+    padding: 20px;
+  }
+  
+  .bootcampOffer {
+    padding: 30px 20px;
+  }
+  
+  .offerTitle {
+    font-size: 24px;
+  }
+  
+  .highlightText {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bootcampContainer {
+    padding: 0 16px;
+  }
+  
+  .bootcampTitle {
+    font-size: 32px;
+  }
+  
+  .bootcampSubtitle {
+    font-size: 20px;
+  }
+  
+  .bootcampDescription {
+    font-size: 16px;
+  }
+  
+  .bootcampSection {
+    padding: 60px 0;
+  }
+  
+  .ctaSecondary {
+    max-width: 100%;
+  }
+}

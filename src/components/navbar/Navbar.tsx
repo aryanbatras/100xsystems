@@ -4,6 +4,7 @@ import styles from "./Navbar.module.css";
 import { RxCross1 } from "react-icons/rx";
 import { CgMenuHotdog } from "react-icons/cg";
 import { IoChevronDown } from "react-icons/io5";
+import { FaWhatsapp } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../../contexts/AuthContext";
@@ -413,6 +414,17 @@ export function Navbar(): React.ReactElement {
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
       />
+      
+      {/* WhatsApp Group Floating Button */}
+      <a
+        href="https://chat.whatsapp.com/L5DpJhAjRFi805IDntDXQa?mode=gi_t"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.whatsappFloat}
+        aria-label="Join our WhatsApp group"
+      >
+        <FaWhatsapp />
+      </a>
     </>
   );
 }
