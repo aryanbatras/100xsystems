@@ -7,7 +7,6 @@ import {
   SiPython, 
   SiDocker, 
   SiKubernetes, 
-  SiAmazon, 
   SiGooglecloud, 
   SiGit,
   SiLinux,
@@ -39,6 +38,7 @@ import {
   SiNotion,
   SiEraser
 } from 'react-icons/si';
+import { FaAws } from 'react-icons/fa';
 import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedCard from '../../animated/AnimatedCard';
 import InteractiveButton from '../../animated/InteractiveButton';
@@ -54,7 +54,7 @@ const techIcons = {
   python: SiPython,
   docker: SiDocker,
   kubernetes: SiKubernetes,
-  aws: SiAmazon,
+  aws: FaAws,
   gcp: SiGooglecloud,
   git: SiGit,
   linux: SiLinux,
