@@ -33,6 +33,7 @@ export function Navbar(): React.ReactElement {
     "/admin-dashboard",
     "/dsa",
     "/user-dashboard",
+    "/path",
   ];
 
   useEffect(() => {
@@ -129,6 +130,9 @@ export function Navbar(): React.ReactElement {
                 </Link>
                 <Link href="/dsa" className={styles.dropdownItem} onClick={handleLinkClick}>
                   DSA
+                </Link>
+                <Link href="/path" className={styles.dropdownItem} onClick={handleLinkClick}>
+                  Path
                 </Link>
               </div>
             </div>
@@ -289,6 +293,13 @@ export function Navbar(): React.ReactElement {
                 onClick={() => setIsMenuOpen(false)}
               >
                 DSA
+              </Link>
+              <Link
+                href="/path"
+                className={styles.mobileLink}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Path
               </Link>
             </div>
 

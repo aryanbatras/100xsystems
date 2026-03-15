@@ -10,6 +10,8 @@ import { AuthProvider } from "../contexts/AuthContext";
 import { ChatProvider, useChat } from "../contexts/ChatContext";
 import AdvancedChatBot from "../components/ai/AdvancedChatBot";
 import ChatButton from "../components/ai/ChatButton";
+import { TableOfContentsProvider, useTableOfContents } from "../contexts/TableOfContentsContext";
+import { GlobalTableOfContents } from "../components/path/GlobalTableOfContents";
 
 function ChatComponents() {
   const { isChatOpen, toggleChat } = useChat();
@@ -32,6 +34,19 @@ function ChatComponents() {
   );
 }
 
+function GlobalTOCComponent() {
+  const { tocItems, activeSection, onSectionClick, isGlobalTocVisible } = useTableOfContents();
+
+  return (
+    <GlobalTableOfContents
+      tocItems={tocItems}
+      activeSection={activeSection}
+      onSectionClick={onSectionClick}
+      isVisible={isGlobalTocVisible}
+    />
+  );
+}
+
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
@@ -50,17 +65,20 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
       <ChatProvider>
-        <ScrollSmootherProvider>
-          <Loading /> 
-            <Navbar />
-            <div id="smooth-wrapper">
-              <div id="smooth-content">
-                <Component {...pageProps} />
-                <Footer/>
+        <TableOfContentsProvider>
+          <ScrollSmootherProvider>
+            <Loading /> 
+              <Navbar />
+              <div id="smooth-wrapper">
+                <div id="smooth-content">
+                  <Component {...pageProps} />
+                  <Footer/>
+                </div>
               </div>
-            </div>
-            <ChatComponents />
-          </ScrollSmootherProvider>
+              <ChatComponents />
+              <GlobalTOCComponent />
+            </ScrollSmootherProvider>
+          </TableOfContentsProvider>
         </ChatProvider>
       </AuthProvider>
   );
