@@ -2,7 +2,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { StaticSiteGenerator, KnowledgeGraph, RoadmapMeta, ArticleManifest } from '../../core/infrastructure/staticSiteGenerator';
-import styles from './Roadmap.module.css';
+import styles from '../../styles/components/Roadmap.module.css';;
 
 interface RoadmapProps {
   roadmap: RoadmapMeta;
@@ -163,7 +163,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
       params: { roadmap }
     }));
 
-    console.log(`✅ Generated ${paths.length} roadmap paths for static site`);
 
     return {
       paths,
@@ -171,7 +170,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
     };
 
   } catch (error) {
-    console.error('❌ Error generating roadmap paths:', error);
     return {
       paths: [],
       fallback: false
@@ -191,7 +189,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
     const articles = knowledgeGraph.relationships.byRoadmap[roadmap] || [];
 
-    console.log(`✅ Generated static page for roadmap: ${roadmap}`);
 
     return {
       props: {
@@ -203,7 +200,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
 
   } catch (error) {
-    console.error(`❌ Error generating roadmap page for ${params?.roadmap}:`, error);
     return {
       notFound: true
     };

@@ -7,32 +7,22 @@ import ScrollSmootherProvider from "../components/scroll/ScrollSmootherProvider"
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { AuthProvider } from "../contexts/AuthContext";
-import { ChatProvider, useChat } from "../contexts/ChatContext";
-import AdvancedChatBot from "../components/ai/AdvancedChatBot";
-import ChatButton from "../components/ai/ChatButton";
+import { GlobalAuthModalProvider, useGlobalAuthModal } from "../contexts/GlobalAuthModalContext";
+import { AuthModal } from "../components/auth/AuthModal";
+import dynamic from 'next/dynamic';
 import { TableOfContentsProvider, useTableOfContents } from "../contexts/TableOfContentsContext";
 import { GlobalTableOfContents } from "../components/path/GlobalTableOfContents";
 
-function ChatComponents() {
-  const { isChatOpen, toggleChat } = useChat();
+// Dynamically import chat components to disable SSR
+const ChatComponents = dynamic(
+  () => import("../components/ai/ChatComponents"),
+  { ssr: false }
+);
 
-  return (
-    <>
-      <ChatButton 
-        isOpen={isChatOpen}
-        onToggle={toggleChat}
-      />
-      
-      <AdvancedChatBot 
-        articleSlug={useChat().articleSlug}
-        articleContent={useChat().articleContent}
-        selectedText={useChat().selectedText}
-        isOpen={isChatOpen}
-        onClose={useChat().closeChat}
-      />
-    </>
-  );
-}
+const ChatProvider = dynamic(
+  () => import("../contexts/ChatContext").then(mod => ({ default: mod.ChatProvider })),
+  { ssr: false }
+);
 
 function GlobalTOCComponent() {
   const { tocItems, activeSection, onSectionClick, isGlobalTocVisible } = useTableOfContents();
@@ -43,6 +33,17 @@ function GlobalTOCComponent() {
       activeSection={activeSection}
       onSectionClick={onSectionClick}
       isVisible={isGlobalTocVisible}
+    />
+  );
+}
+
+function GlobalAuthModal() {
+  const { isAuthModalOpen, closeAuthModal } = useGlobalAuthModal();
+  
+  return (
+    <AuthModal 
+      isOpen={isAuthModalOpen} 
+      onClose={closeAuthModal} 
     />
   );
 }
@@ -64,10 +65,11 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <AuthProvider>
-      <ChatProvider>
-        <TableOfContentsProvider>
-          <ScrollSmootherProvider>
-            <Loading /> 
+      <GlobalAuthModalProvider>
+        <ChatProvider>
+          <TableOfContentsProvider>
+            <ScrollSmootherProvider>
+              <Loading /> 
               <Navbar />
               <div id="smooth-wrapper">
                 <div id="smooth-content">
@@ -77,9 +79,11 @@ export default function App({ Component, pageProps }: AppProps) {
               </div>
               <ChatComponents />
               <GlobalTOCComponent />
+              <GlobalAuthModal />
             </ScrollSmootherProvider>
           </TableOfContentsProvider>
         </ChatProvider>
-      </AuthProvider>
+      </GlobalAuthModalProvider>
+    </AuthProvider>
   );
 }

@@ -2,7 +2,7 @@ import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
 import Image from 'next/image';
-import styles from './Journey.module.css';
+import styles from '../../styles/components/sections/paths/Journey.module.css';
 
 export default function Journey() {
   return (
@@ -69,9 +69,9 @@ export default function Journey() {
           
           <div className={styles.journeyRight}>
             <div className={styles.journeyImageWrapper}>
-              <video autoPlay muted loop playsInline className={styles.journeyVideo}>
-                <source src="/videos/abstract-light-color-animation-shapes-laptop-google-deepmind.mp4" type="video/mp4" />
-              </video>
+              <img     className={styles.journeyVideo}>
+                src="/videos/abstract-light-color-animation-shapes-laptop-google-deepmind.gif"
+              </img>
             </div>
           </div>
         </div>

@@ -72,52 +72,36 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
 
   const fetchData = useCallback(async () => {
     if (!user?.id) {
-      console.log('🚫 fetchData: No user ID, skipping');
       return;
     }
 
     try {
-      console.log('🚀 fetchData: Starting for user:', user.id);
       setLoading(true);
       setError(null);
 
-      // Minimal approach: only fetch what we absolutely need
-      const [
-        userCreatedGroup,
-        publicStudyGroups,
-      ] = await Promise.all([
-        CommunityService.getUserCreatedGroup(user.id),
-        CommunityService.getPublicStudyGroups(20),
-      ]);
+      // Fetch user's study groups
+      const userStudyGroups = await CommunityService.getUserStudyGroups(user.id);
+      setStudyGroups(userStudyGroups || []);
 
-      console.log('📊 fetchData: Results:', { 
-        userCreatedGroup, 
-        publicStudyGroupsCount: publicStudyGroups?.length 
-      });
+      // Find user created group
+      const createdGroup = userStudyGroups?.find(group => group.user_role === 'admin') || null;
+      setUserCreatedGroup(createdGroup);
 
-      setUserCreatedGroup(userCreatedGroup);
-      setPublicGroups(publicStudyGroups);
-      
-      // Set minimal defaults to avoid all complex queries
-      setStudyGroups([]);
-      setPosts([]);
-      setReplies([]);
-      setMentorshipConnections([]);
-      
-      const stats = {
-        studyGroupsCount: userCreatedGroup ? 1 : 0,
-        postsCount: 0,
-        repliesCount: 0,
-        mentorshipConnections: 0,
+      // Fetch public groups
+      const publicStudyGroups = await CommunityService.getPublicStudyGroups();
+      setPublicGroups(publicStudyGroups || []);
+
+      // Calculate stats
+      const newStats: CommunityStats = {
+        studyGroupsCount: userStudyGroups?.length || 0,
+        postsCount: 0, // TODO: Implement post counting
+        repliesCount: 0, // TODO: Implement reply counting
+        mentorshipConnections: 0, // TODO: Implement mentorship counting
       };
-      
-      console.log('📈 fetchData: Setting stats:', stats);
-      setStats(stats);
-      
-      console.log('✅ fetchData: Completed successfully');
+      setStats(newStats);
+
     } catch (err) {
-      console.error('💥 fetchData: Error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch community data');
+      setError('Failed to fetch community data');
     } finally {
       setLoading(false);
     }
@@ -139,7 +123,7 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
       }
       return false;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create study group');
+      setError('Failed to create study group');
       return false;
     }
   }, [user?.id]);
@@ -151,13 +135,12 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
       const success = await CommunityService.joinStudyGroup(groupId, user.id);
       
       if (success) {
-        // Refresh study groups to get updated data
         await fetchData();
         return true;
       }
       return false;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to join study group');
+      setError('Failed to join study group');
       return false;
     }
   }, [user?.id, fetchData]);
@@ -174,7 +157,7 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
       }
       return false;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to leave study group');
+      setError('Failed to leave study group');
       return false;
     }
   }, [user?.id]);
@@ -186,13 +169,12 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
       const newPost = await CommunityService.createPost(groupId, user.id, postData);
       
       if (newPost) {
-        // Refresh posts to get updated data
         await fetchData();
         return true;
       }
       return false;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create post');
+      setError('Failed to create post');
       return false;
     }
   }, [user?.id, fetchData]);
@@ -208,13 +190,12 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
       const newReply = await CommunityService.createReply(postId, user.id, replyText, parentReplyId);
       
       if (newReply) {
-        // Refresh replies to get updated data
         await fetchData();
         return true;
       }
       return false;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create reply');
+      setError('Failed to create reply');
       return false;
     }
   }, [user?.id, fetchData]);
@@ -233,7 +214,7 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
       }
       return false;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to like post');
+      setError('Failed to like post');
       return false;
     }
   }, []);
@@ -252,7 +233,7 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
       }
       return false;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to like reply');
+      setError('Failed to like reply');
       return false;
     }
   }, []);
@@ -268,14 +249,13 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
       const connection = await CommunityService.createMentorshipRequest(mentorId, user.id, roadmapSlug, goals);
       
       if (connection) {
-        // Fetch the full connection with profiles
         const connections = await CommunityService.getMentorshipConnections(user.id);
         setMentorshipConnections(connections);
         return true;
       }
       return false;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create mentorship request');
+      setError('Failed to create mentorship request');
       return false;
     }
   }, [user?.id]);
@@ -285,7 +265,6 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
       const updatedConnection = await CommunityService.updateMentorshipStatus(connectionId, status);
       
       if (updatedConnection) {
-        // Refresh connections to get updated profiles
         if (user?.id) {
           const connections = await CommunityService.getMentorshipConnections(user.id);
           setMentorshipConnections(connections);
@@ -294,7 +273,7 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
       }
       return false;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update mentorship status');
+      setError('Failed to update mentorship status');
       return false;
     }
   }, [user?.id]);
@@ -308,33 +287,22 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
     
     try {
       setIsCreatingGroup(true);
-      const newGroup = await CommunityService.createGroupWithGiscus(groupData, user.id);
-      
-      if (newGroup) {
-        setUserCreatedGroup(newGroup);
-        setStudyGroups(prev => [...prev, { ...newGroup, user_role: 'admin', joined_at: newGroup.created_at }]);
-        return true;
-      }
-      return false;
+      const success = await createStudyGroup(groupData);
+      return success;
     } catch (error) {
       setError('Failed to create group');
       return false;
     } finally {
       setIsCreatingGroup(false);
     }
-  }, [user?.id]);
+  }, [user?.id, createStudyGroup]);
 
   const deleteGroup = useCallback(async (groupId: string): Promise<boolean> => {
     if (!user?.id) return false;
     
     try {
-      const success = await CommunityService.deleteGroup(groupId, user.id);
-      
-      if (success) {
-        setUserCreatedGroup(null);
-        setStudyGroups(prev => prev.filter(g => g.id !== groupId));
-        return true;
-      }
+      // TODO: Implement deleteGroup method in CommunityService
+      setError('Delete group functionality not yet implemented');
       return false;
     } catch (error) {
       setError('Failed to delete group');
@@ -343,33 +311,18 @@ export const useUserCommunity = (): UseUserCommunityReturn => {
   }, [user?.id]);
 
   const updateGroup = useCallback(async (groupId: string, updateData: { 
-  description?: string; 
-  tags?: string[];
-  welcome_message?: string;
-  rules?: string;
-  is_private?: boolean;
-  is_active?: boolean;
-  max_members?: number;
-  roadmap_slug?: string;
-}): Promise<boolean> => {
+    description?: string; 
+    tags?: string[];
+    welcome_message?: string;
+    rules?: string;
+    is_private?: boolean;
+    is_active?: boolean;
+    max_members?: number;
+    roadmap_slug?: string;
+  }): Promise<boolean> => {
     try {
-      const updatedGroup = await CommunityService.updateGroup(groupId, updateData);
-      
-      if (updatedGroup) {
-        // Update study groups with the new data
-        setStudyGroups(prev => prev.map(g => 
-          g.id === groupId 
-            ? { ...g, ...updatedGroup }
-            : g
-        ));
-        
-        // Update user created group if it's the one being updated
-        if (userCreatedGroup?.id === groupId) {
-          setUserCreatedGroup({ ...userCreatedGroup, ...updatedGroup });
-        }
-        
-        return true;
-      }
+      // TODO: Implement updateGroup method in CommunityService
+      setError('Update group functionality not yet implemented');
       return false;
     } catch (error) {
       setError('Failed to update group');

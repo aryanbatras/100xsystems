@@ -11,8 +11,6 @@ export default async function handler(
   try {
     const { slug = 'aaa' } = req.query;
     
-    console.log('🧪 === DEBUG PARSING TEST START ===');
-    console.log(`📂 Testing article: ${slug}`);
     
     // Step 1: Load the HTML
     const loadResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/load-html?slug=${slug}`);
@@ -22,16 +20,13 @@ export default async function handler(
     }
     
     const loadData = await loadResponse.json();
-    console.log(`📄 HTML loaded successfully (${loadData.html.length} characters)`);
     
     // Step 2: Parse the HTML with full debugging
-    console.log('🔄 Starting HTML parsing...');
     const { HtmlToDeltaConverter } = await import('../../core/infrastructure/HtmlToDeltaConverter');
     
     const parsed = HtmlToDeltaConverter.parseHtml(loadData.html);
     const delta = HtmlToDeltaConverter.convertToDelta(loadData.html);
     
-    console.log('🧪 === DEBUG PARSING TEST END ===');
     
     return res.status(200).json({
       success: true,
@@ -50,7 +45,6 @@ export default async function handler(
     });
     
   } catch (error) {
-    console.error('❌ Debug parsing failed:', error);
     return res.status(500).json({ 
       error: 'Debug parsing failed', 
       details: error instanceof Error ? error.message : 'Unknown error'

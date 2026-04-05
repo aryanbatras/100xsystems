@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Hero.module.css';
+import styles from '../../../styles/components/sections/privacy/Hero.module.css';;
 
 export function PrivacyHero(): React.ReactElement {
   return (

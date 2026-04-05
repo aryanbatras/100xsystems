@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import styles from "./CustomQuillEditor.module.css";
+import styles from '../../styles/components/editor/CustomQuillEditor.module.css';;
 import "react-quill-new/dist/quill.bubble.css";
 import { useImageQueue } from "../../hooks/useImageQueue";
 import { usePublishing } from '../../hooks/usePublishing';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StudyGroupWithMembership } from '../../services/types/database';
 import { GroupCard } from './GroupCard';
-import styles from './Groups.module.css';
+import styles from '../../styles/components/groups/Groups.module.css';
 
 interface GroupsListProps {
   userCreatedGroup: StudyGroupWithMembership | null;
@@ -14,7 +14,7 @@ interface GroupsListProps {
   loading?: boolean;
 }
 
-export const GroupsList: React.FC<GroupsListProps> = ({
+export const GroupsList: React.FC<GroupsListProps> = function GroupsList({
   userCreatedGroup,
   joinedGroups,
   allGroups,
@@ -23,19 +23,7 @@ export const GroupsList: React.FC<GroupsListProps> = ({
   onEditGroup,
   onDeleteGroup,
   loading = false
-}) => {
-  console.log('🔍 GroupsList Debug:', {
-    userCreatedGroup: userCreatedGroup ? {
-      id: userCreatedGroup.id,
-      name: userCreatedGroup.name,
-      user_role: userCreatedGroup.user_role
-    } : null,
-    joinedGroupsCount: joinedGroups.length,
-    allGroupsCount: allGroups.length,
-    joinedGroupsRoles: joinedGroups.map(g => ({ id: g.id, name: g.name, user_role: g.user_role })),
-    allGroupsRoles: allGroups.map(g => ({ id: g.id, name: g.name, user_role: g.user_role }))
-  });
-
+}) {
   const joinedGroupsOnly = joinedGroups.filter(g => g.user_role !== 'admin');
   const availableGroups = allGroups.filter(group => 
     !joinedGroups.some(joined => joined.id === group.id) 

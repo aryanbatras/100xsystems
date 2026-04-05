@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import styles from './LivePreview.module.css';
+import styles from '../../styles/components/editor/LivePreview.module.css';
 
 interface LivePreviewProps {
   content: string;
@@ -43,7 +43,6 @@ export default function LivePreview({ content, isVisible, onClose, onRefreshQuil
   const handleRefreshQuill = () => {
     if (onRefreshQuill) {
       onRefreshQuill();
-      console.log('🔄 Refresh button clicked in Live Preview', 'info');
     }
   };
 
@@ -53,7 +52,6 @@ export default function LivePreview({ content, isVisible, onClose, onRefreshQuil
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy HTML:', err);
     }
   };
 

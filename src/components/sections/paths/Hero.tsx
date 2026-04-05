@@ -3,8 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
-import styles from './Hero.module.css';
-import { useVideoAutoplay } from '@/hooks/useVideoAutoplay';
+import styles from '../../styles/components/sections/paths/Hero.module.css';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -12,7 +11,7 @@ if (typeof window !== 'undefined') {
 
 export default function PathsHero() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const subtitleRef = useRef<HTMLDivElement>(null);
   const parallaxRef = useRef<HTMLDivElement>(null);
@@ -26,24 +25,7 @@ export default function PathsHero() {
     const subtitle = subtitleRef.current;
     const parallax = parallaxRef.current;
 
-    useVideoAutoplay(videoRef);
 
-    const handleUserInteraction = () => {
-      if (video) {
-        video.play().catch(error => {
-          console.log('Video play failed:', error);
-        });
-        document.removeEventListener('click', handleUserInteraction);
-        document.removeEventListener('keydown', handleUserInteraction);
-      }
-    };
-
-    if (video) {
-      video.play().catch(() => {
-        document.addEventListener('click', handleUserInteraction);
-        document.addEventListener('keydown', handleUserInteraction);
-      });
-    }
 
     if (title && parallax) {
       gsap.set(title, { 
@@ -85,23 +67,15 @@ export default function PathsHero() {
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
       gsap.killTweensOf([title, subtitle]);
-      document.removeEventListener('click', handleUserInteraction);
-      document.removeEventListener('keydown', handleUserInteraction);
     };
   }, []);
 
   return (
     <section className={styles.heroSection}>
       <div ref={parallaxRef} className={styles.heroBackground}>
-        <video 
-          autoPlay
-          muted 
-          loop 
-          playsInline 
+        <div 
           className={styles.heroBackgroundVideo}
-        >
-          <source src="/videos/shinning-mirror-advanced-abstract-google-deepmind.mp4" type="video/mp4" />
-        </video>
+        />
       </div>
       
       <div className={styles.heroOverlay}></div>

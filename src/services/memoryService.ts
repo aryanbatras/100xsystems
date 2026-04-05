@@ -119,7 +119,6 @@ class MemoryService {
       await this.addToIndexedDB(entry);
       await this.performMaintenance();
     } catch (error) {
-      console.error('Failed to store memory:', error);
     }
   }
 
@@ -383,7 +382,6 @@ class MemoryService {
         });
       }
     } catch (error) {
-      console.error('Failed to import memory:', error);
       throw new Error('Invalid memory data format');
     }
   }

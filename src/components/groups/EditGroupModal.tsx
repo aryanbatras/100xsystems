@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useUserCommunity } from '../../hooks/useUserCommunity';
-import styles from './Groups.module.css';
+import styles from '../../styles/components/groups/EditGroupModal.module.css';;
 
 interface EditGroupModalProps {
   groupId: string;

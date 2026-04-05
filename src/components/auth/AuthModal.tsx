@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../contexts/AuthContext';
-import styles from './AuthModal.module.css';
+import styles from '../../styles/components/auth/AuthModal.module.css';;
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -27,7 +27,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         onClose();
       }
     } catch (error) {
-      console.error('GitHub sign in error:', error);
     }
   };
 
@@ -44,7 +43,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         onClose();
       }
     } catch (error) {
-      console.error('Google sign in error:', error);
     }
   };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { PathNode } from '../../core/path/pathTypes';
-import styles from './PathTree.module.css';
+import styles from '../../styles/components/path/PathTree.module.css';;
 
 interface PathTreeProps {
   node: PathNode;

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../../contexts/AuthContext';
 import { Navbar } from '../../components/navbar/Navbar';
 import { supabase } from '../../utils/supabase';
-import styles from './Profile.module.css';
+import styles from '../../styles/pages/profile.module.css';
 
 export default function Profile() {
   const router = useRouter();
@@ -96,14 +96,12 @@ export default function Profile() {
       });
 
       if (error) {
-        console.error('Profile update error:', error);
         alert('Error updating profile. Please try again.');
       } else {
         setIsEditing(false);
         alert('Profile updated successfully!');
       }
     } catch (err) {
-      console.error('Unexpected error:', err);
       alert('An unexpected error occurred. Please try again.');
     }
   };

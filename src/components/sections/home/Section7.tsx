@@ -2,7 +2,7 @@ import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
 import Image from 'next/image';
-import styles from './Section7.module.css';
+import styles from '../../../styles/components/sections/home/Section7.module.css';;
 
 export default function Section7() {
   return (

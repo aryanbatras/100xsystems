@@ -1,7 +1,7 @@
 import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import Image from 'next/image';
-import styles from './LearningApproach.module.css';
+import styles from '../../styles/components/sections/paths/LearningApproach.module.css';
 
 export default function LearningApproach() {
   return (

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { StaticSiteGenerator, DSAContent, DSASection, DSACategory, DSAProblem } from '../../core/infrastructure/staticSiteGenerator';
 import { Navbar } from '../../components/navbar/Navbar';
-import styles from './index.module.css';
+import styles from '../../styles/pages/dsa.module.css';
 
 interface DSAProps {
   dsaContent: DSAContent;
@@ -191,22 +191,25 @@ export default function DSA({ dsaContent }: DSAProps) {
 export const getStaticProps: GetStaticProps = async () => {
   try {
     const dsaContent = await StaticSiteGenerator.fetchDSAProblems();
-    console.log(`✅ Generated DSA page with ${dsaContent.totalProblems} problems`);
 
-    return {
-      props: {
-        dsaContent
-      },
-      revalidate: false
-    };
-
-  } catch (error) {
-    console.error('❌ Error generating DSA page:', error);
     return {
       props: {
         dsaContent: {
-          sections: [],
-          totalProblems: 0
+          ...dsaContent,
+          generatedAt: new Date().toISOString()
+        }
+      },
+      revalidate: 3600 // Revalidate every hour
+    };
+
+  } catch (error) {
+    return {
+      props: {
+        dsaContent: {
+          categories: [],
+          totalProblems: 0,
+          generatedAt: new Date().toISOString(),
+          error: 'Failed to generate DSA content'
         }
       }
     };

@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Mission.module.css';
+import styles from '../../../styles/components/sections/team/Mission.module.css';;
 
 export function Mission(): React.ReactElement {
   return (

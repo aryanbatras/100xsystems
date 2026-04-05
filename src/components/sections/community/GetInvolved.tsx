@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import styles from './GetInvolved.module.css';
+import styles from '../../../styles/components/sections/community/GetInvolved.module.css';;
 
 export function GetInvolved(): React.ReactElement {
   return (

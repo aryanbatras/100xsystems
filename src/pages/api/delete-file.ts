@@ -68,7 +68,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
   } catch (error) {
-    console.error('Error deleting file:', error);
     return res.status(500).json({ 
       error: error instanceof Error ? error.message : 'Failed to delete file' 
     });

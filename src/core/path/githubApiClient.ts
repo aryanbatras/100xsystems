@@ -41,7 +41,6 @@ export class GitHubApiClient {
       const arrayBuffer = await response.arrayBuffer();
       return arrayBuffer;
     } catch (error) {
-      console.error('Error downloading repository tarball:', error);
       throw error;
     }
   }
@@ -52,7 +51,6 @@ export class GitHubApiClient {
       const response = await this.fetchFromGitHub(url);
       return response.ok;
     } catch (error) {
-      console.error('Repository check failed:', error);
       return false;
     }
   }

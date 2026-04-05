@@ -5,7 +5,7 @@ import { PathContent, PathNode } from '../../core/path/pathTypes';
 import { PathParser } from '../../core/path/pathParser';
 import { PathLayout } from '../../components/path/PathLayout';
 import { ContentLayout } from '../../components/path/ContentLayout';
-import styles from './[slug].module.css';
+import styles from '../../styles/pages/path/[slug].module.css';
 
 interface PathPageProps {
   pathContent: PathContent;
@@ -69,7 +69,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
     // Start with root and generate all paths
     generatePaths(pathContent.root);
 
-    console.log(`✅ Generated ${paths.length} path routes for static site`);
 
     return {
       paths,
@@ -77,7 +76,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
     };
 
   } catch (error) {
-    console.error('❌ Error generating path routes:', error);
     return {
       paths: [],
       fallback: false
@@ -122,13 +120,11 @@ export const getStaticProps: GetStaticProps<PathPageProps> = async ({ params }) 
     const currentNode = findNodeByPath(pathContent.root, slug);
     
     if (!currentNode) {
-      console.warn(`⚠️ No node found for path: ${pathString}`);
       return {
         notFound: true
       };
     }
 
-    console.log(`✅ Generated static page for path: ${pathString}`);
 
     return {
       props: {
@@ -141,7 +137,6 @@ export const getStaticProps: GetStaticProps<PathPageProps> = async ({ params }) 
 
   } catch (error) {
     const slug = (params as { slug?: string[] })?.slug || [];
-    console.error(`❌ Error generating path page for ${slug.join('/')}:`, error);
     return {
       notFound: true
     };

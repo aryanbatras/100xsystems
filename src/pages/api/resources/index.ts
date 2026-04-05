@@ -15,7 +15,6 @@ function readJsonFile(filePath: string): any {
   try {
     return JSON.parse(fs.readFileSync(filePath, 'utf8'));
   } catch (error) {
-    console.error(`Error reading file ${filePath}:`, error);
     return null;
   }
 }
@@ -56,7 +55,6 @@ export default async function handler(
   }
 
   try {
-    console.log('📂 Fetching resources from local files...');
 
     const categories = fs.readdirSync(CATEGORIES_DIR);
     const allResources: Resource[] = [];
@@ -96,7 +94,6 @@ export default async function handler(
       return a.title.localeCompare(b.title);
     });
 
-    console.log(`✅ Found ${sortedResources.length} resources`);
 
     res.status(200).json({
       success: true,
@@ -104,7 +101,6 @@ export default async function handler(
     });
 
   } catch (error) {
-    console.error('❌ Error fetching resources:', error);
     return res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred'

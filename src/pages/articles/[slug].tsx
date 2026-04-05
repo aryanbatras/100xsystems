@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { StaticSiteGenerator, ArticleManifest } from '../../core/infrastructure/staticSiteGenerator';
 import GiscusComments from '../../components/discussions/GiscusComments';
 import { DiscussionProvider } from '../../components/discussions/DiscussionProvider';
-import styles from './Articles.module.css';
+import styles from '../../styles/components/Articles.module.css';;
 import { useChat } from '../../contexts/ChatContext';
 import AdvancedChatBot from '../../components/ai/AdvancedChatBot';
 
@@ -236,7 +236,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
       params: { slug }
     }));
 
-    console.log(`✅ Generated ${paths.length} article paths for static site`);
 
     return {
       paths,
@@ -244,7 +243,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
     };
 
   } catch (error) {
-    console.error('❌ Error generating article paths:', error);
     return {
       paths: [],
       fallback: false
@@ -262,7 +260,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     StaticSiteGenerator.validateArticleSize(articleData.html, slug);
     const optimizedHtml = StaticSiteGenerator.optimizeHtmlForStatic(articleData.html);
 
-    console.log(`✅ Generated static page for article: ${slug}`);
 
     return {
       props: {
@@ -273,7 +270,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
 
   } catch (error) {
-    console.error(`❌ Error generating article page for ${params?.slug}:`, error);
     return {
       notFound: true
     };

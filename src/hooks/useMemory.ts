@@ -48,7 +48,6 @@ export const useMemory = (options: UseMemoryOptions = {}) => {
         entries: updatedEntries
       }));
     } catch (error) {
-      console.error('Failed to save memory:', error);
       setMemoryContext(prev => ({
         ...prev,
         error: error instanceof Error ? error.message : 'Failed to save memory'

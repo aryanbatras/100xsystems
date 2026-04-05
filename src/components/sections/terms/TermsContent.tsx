@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './TermsContent.module.css';
+import styles from '../../styles/components/sections/terms/TermsContent.module.css';
 
 export function TermsContent(): React.ReactElement {
   return (

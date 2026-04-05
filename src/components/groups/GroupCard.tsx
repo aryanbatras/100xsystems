@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { StudyGroupWithMembership } from '../../services/types/database';
-import styles from './Groups.module.css';
+import styles from '../../styles/components/groups/Groups.module.css';
 
 interface GroupCardProps {
   group: StudyGroupWithMembership;
@@ -23,21 +23,6 @@ export const GroupCard: React.FC<GroupCardProps> = ({
   const router = useRouter();
   const isAdmin = group.user_role === 'admin';
   const isMember = group.user_role !== undefined;
-
-  // Debug logs to inspect the actual values
-  console.log('🔍 GroupCard Debug:', {
-    groupName: group.name,
-    groupId: group.id,
-    user_role: group.user_role,
-    isAdmin,
-    isMember,
-    showJoinButton: !isMember && !isAdmin,
-    showEditButton: isAdmin,
-    showLeaveButton: isMember && !isAdmin,
-    timestamp: new Date().toISOString(),
-    groupObjectKeys: Object.keys(group),
-    fullGroup: group
-  });
 
   const handleCardClick = () => {
     router.push(`/groups/${group.id}`);

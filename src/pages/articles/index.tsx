@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { StaticSiteGenerator } from '../../core/infrastructure/staticSiteGenerator';
 import InlineSearch from '../../components/search/InlineSearch';
-import styles from './Articles.module.css';
+import styles from '../../styles/pages/Articles.module.css';
 import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
 import { isUserAuthenticated } from '../../utils/auth-helpers';
 
@@ -102,7 +102,6 @@ export default function Articles({ articles }: ArticlesProps) {
 export const getStaticProps: GetStaticProps = async () => {
   try {
     const articles = await StaticSiteGenerator.fetchAllArticlesMetadata();
-    console.log(`✅ Generated ${articles.length} articles for static site`);
 
     return {
       props: {
@@ -112,7 +111,6 @@ export const getStaticProps: GetStaticProps = async () => {
     };
 
   } catch (error) {
-    console.error('❌ Error generating articles page:', error);
     return {
       props: {
         articles: []

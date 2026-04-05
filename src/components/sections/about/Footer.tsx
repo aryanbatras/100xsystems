@@ -1,4 +1,4 @@
-import styles from './Footer.module.css';
+import styles from '../../styles/components/sections/about/Footer.module.css';
 
 export default function AboutFooter() {
   return (

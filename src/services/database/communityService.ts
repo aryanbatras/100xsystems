@@ -46,7 +46,6 @@ export class CommunityService {
         };
       }).filter(Boolean) as StudyGroupWithMembership[];
     } catch (error) {
-      console.error('Error fetching user study groups:', error);
       return [];
     }
   }
@@ -72,7 +71,6 @@ export class CommunityService {
 
       return data;
     } catch (error) {
-      console.error('Error creating study group:', error);
       return null;
     }
   }
@@ -94,7 +92,6 @@ export class CommunityService {
 
       return true;
     } catch (error) {
-      console.error('Error joining study group:', error);
       return false;
     }
   }
@@ -114,7 +111,6 @@ export class CommunityService {
 
       return true;
     } catch (error) {
-      console.error('Error leaving study group:', error);
       return false;
     }
   }
@@ -140,7 +136,6 @@ export class CommunityService {
 
       return true;
     } catch (error) {
-      console.error('Error adding study group member:', error);
       return false;
     }
   }
@@ -159,7 +154,6 @@ export class CommunityService {
           .eq('id', groupId);
       }
     } catch (error) {
-      console.error('Error updating group member count:', error);
     }
   }
 
@@ -191,7 +185,6 @@ export class CommunityService {
         author: profiles?.find(p => p.id === post.author_id) || null,
       })) || [];
     } catch (error) {
-      console.error('Error fetching study group posts:', error);
       return [];
     }
   }
@@ -215,7 +208,6 @@ export class CommunityService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error creating post:', error);
       return null;
     }
   }
@@ -232,7 +224,6 @@ export class CommunityService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching post replies:', error);
       return [];
     }
   }
@@ -262,7 +253,6 @@ export class CommunityService {
 
       return data;
     } catch (error) {
-      console.error('Error creating reply:', error);
       return null;
     }
   }
@@ -281,7 +271,6 @@ export class CommunityService {
           .eq('id', postId);
       }
     } catch (error) {
-      console.error('Error updating post reply count:', error);
     }
   }
 
@@ -291,7 +280,6 @@ export class CommunityService {
       if (error) throw error;
       return true;
     } catch (error) {
-      console.error('Error liking post:', error);
       return false;
     }
   }
@@ -302,7 +290,6 @@ export class CommunityService {
       if (error) throw error;
       return true;
     } catch (error) {
-      console.error('Error liking reply:', error);
       return false;
     }
   }
@@ -334,7 +321,6 @@ export class CommunityService {
         mentee: mentees.data?.find(p => p.id === connection.mentee_id) || null,
       })) || [];
     } catch (error) {
-      console.error('Error fetching mentorship connections:', error);
       return [];
     }
   }
@@ -361,7 +347,6 @@ export class CommunityService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error creating mentorship request:', error);
       return null;
     }
   }
@@ -392,7 +377,6 @@ export class CommunityService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating mentorship status:', error);
       return null;
     }
   }
@@ -410,7 +394,6 @@ export class CommunityService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching available mentors:', error);
       return [];
     }
   }
@@ -429,7 +412,6 @@ export class CommunityService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error searching study groups:', error);
       return [];
     }
   }
@@ -447,7 +429,6 @@ export class CommunityService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching public study groups:', error);
       return [];
     }
   }
@@ -470,14 +451,12 @@ export class CommunityService {
       if (error) throw error;
       return true;
     } catch (error) {
-      console.error('Error updating contribution score:', error);
       return false;
     }
   }
 
   static async getUserCreatedGroup(userId: string): Promise<StudyGroup | null> {
     try {
-      console.log('🔍 getUserCreatedGroup: Starting for user:', userId);
       
       const { data, error } = await supabase
         .from('study_groups')
@@ -485,25 +464,12 @@ export class CommunityService {
         .eq('creator_id', userId)
         .maybeSingle();
       
-      console.log('📊 getUserCreatedGroup: Response:', { 
-        data, 
-        error: error ? {
-          code: error.code,
-          message: error.message,
-          details: error.details,
-          hint: error.hint
-        } : null
-      });
-      
       if (error) {
-        console.error('❌ getUserCreatedGroup: Error:', error);
         throw error;
       }
       
-      console.log('✅ getUserCreatedGroup: Success, returning:', data);
       return data;
     } catch (error) {
-      console.error('💥 getUserCreatedGroup: Exception:', error);
       return null;
     }
   }
@@ -516,7 +482,6 @@ export class CommunityService {
       if (error) throw error;
       return data || false;
     } catch (error) {
-      console.error('Error checking group creation permission:', error);
       return false;
     }
   }
@@ -542,7 +507,6 @@ export class CommunityService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error creating group:', error);
       return null;
     }
   }
@@ -558,7 +522,6 @@ export class CommunityService {
       if (error) throw error;
       return true;
     } catch (error) {
-      console.error('Error deleting group:', error);
       return false;
     }
   }
@@ -584,7 +547,6 @@ export class CommunityService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating study group:', error);
       return null;
     }
   }
@@ -620,7 +582,6 @@ export class CommunityService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching group members:', error);
       return [];
     }
   }
@@ -646,7 +607,6 @@ export class CommunityService {
         mentorshipConnections: connections.length,
       };
     } catch (error) {
-      console.error('Error fetching community stats:', error);
       return {
         studyGroupsCount: 0,
         postsCount: 0,

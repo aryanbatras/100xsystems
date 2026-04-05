@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import styles from './Founder.module.css';
+import styles from '../../styles/components/sections/about/Founder.module.css';
 
 export default function Founder() {
   return (
@@ -7,7 +7,7 @@ export default function Founder() {
       <div className={styles.founderContent}>
         <div className={styles.founderLeft}>
           <Image
-            src="/aryan.png"
+            src="/aryan.webp"
             alt="Aryan Batra - Founder of 100xSystems"
             width={300}
             height={300}

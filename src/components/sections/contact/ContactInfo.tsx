@@ -1,5 +1,5 @@
 import CubeHover from '../../animation/CubeHover';
-import styles from './ContactInfo.module.css';
+import styles from '../../../styles/components/sections/contact/ContactInfo.module.css';;
 
 export default function ContactInfo() {
   return (

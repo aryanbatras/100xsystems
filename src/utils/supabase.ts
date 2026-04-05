@@ -18,7 +18,6 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
 
 // Auth helper functions
 export const signInWithGitHub = async () => {
-  console.log('🔍 Supabase: Initiating GitHub OAuth...');
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'github',
     options: {
@@ -27,16 +26,13 @@ export const signInWithGitHub = async () => {
   });
   
   if (error) {
-    console.error('🔍 Supabase: GitHub OAuth error:', error);
   } else {
-    console.log('🔍 Supabase: GitHub OAuth redirect sent to:', `${window.location.origin}/auth/callback`);
   }
   
   return { error };
 };
 
 export const signInWithGoogle = async () => {
-  console.log('🔍 Supabase: Initiating Google OAuth...');
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
@@ -45,9 +41,7 @@ export const signInWithGoogle = async () => {
   });
   
   if (error) {
-    console.error('🔍 Supabase: Google OAuth error:', error);
   } else {
-    console.log('🔍 Supabase: Google OAuth redirect sent to:', `${window.location.origin}/auth/callback`);
   }
   
   return { error };
@@ -71,8 +65,6 @@ export const getCurrentSession = async () => {
 // Database helper functions
 export const syncUserProfile = async (user: User) => {
   try {
-    console.log('🔍 ProfileSync: Starting profile sync for user:', user.id);
-    console.log('🔍 ProfileSync: User metadata:', user.user_metadata);
     
     const profileData = {
       id: user.id,
@@ -83,7 +75,6 @@ export const syncUserProfile = async (user: User) => {
       updated_at: new Date().toISOString()
     };
     
-    console.log('🔍 ProfileSync: Profile data to upsert:', profileData);
     
     const { data, error } = await supabase
       .from('profiles')
@@ -92,18 +83,14 @@ export const syncUserProfile = async (user: User) => {
         ignoreDuplicates: false
       });
     
-    console.log('🔍 ProfileSync: Upsert result:', { data, error });
     
     if (error) {
-      console.error('🔍 ProfileSync: Profile sync error:', error);
       // Don't fail auth if profile sync fails
     } else {
-      console.log('🔍 ProfileSync: Profile sync successful');
     }
     
     return { error };
   } catch (err) {
-    console.error('🔍 ProfileSync: Unexpected profile sync error:', err);
     return { error: err };
   }
 };

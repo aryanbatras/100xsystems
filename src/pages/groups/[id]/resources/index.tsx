@@ -4,7 +4,7 @@ import { useAuth } from '../../../../contexts/AuthContext';
 import { CommunityService } from '../../../../services/database/communityService';
 import { Navbar } from '../../../../components/navbar/Navbar';
 import { GiscusComments } from '../../../../components/giscus/GiscusComments';
-import styles from '../id.module.css';
+import styles from '../id.module.css';;
 
 const CATEGORIES = [
   { id: 'discussions', label: 'Discussions' },
@@ -33,7 +33,6 @@ export default function ResourcesPage() {
       setLoading(true);
       
       if (!user?.id) {
-        console.log('🚫 fetchGroup: No user ID, skipping');
         setGroup(null);
         setLoading(false);
         return;
@@ -51,7 +50,6 @@ export default function ResourcesPage() {
         setGroup(foundGroup || null);
       }
     } catch (error) {
-      console.error('Error fetching group:', error);
       setGroup(null);
     } finally {
       setLoading(false);
@@ -93,7 +91,6 @@ export default function ResourcesPage() {
   const isAdmin = user && group && group.creator_id === user.id;
 
   const handleJoinGroup = async () => {
-    console.log('Join group functionality coming soon');
   };
 
   return (

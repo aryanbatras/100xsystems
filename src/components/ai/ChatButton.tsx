@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { FaComments, FaTimes } from 'react-icons/fa';
-import styles from './ChatButton.module.css';
+import styles from '../../styles/components/ai/ChatButton.module.css';;
 import { ArticleRouteDialog } from './ArticleRouteDialog';
 
 interface ChatButtonProps {

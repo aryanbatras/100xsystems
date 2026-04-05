@@ -8,13 +8,10 @@ export class AchievementsService {
     
     switch (level) {
       case 'error':
-        console.error(logMessage, data);
         break;
       case 'warn':
-        console.warn(logMessage, data);
         break;
       default:
-        console.log(logMessage, data);
     }
   }
 
@@ -60,7 +57,6 @@ export class AchievementsService {
         achievement: ua.achievement as Achievement,
       })) || [];
     } catch (error) {
-      console.error('Error fetching user achievements:', error);
       return [];
     }
   }
@@ -82,7 +78,6 @@ export class AchievementsService {
         achievement: ua.achievement as Achievement,
       })) || [];
     } catch (error) {
-      console.error('Error fetching unlocked achievements:', error);
       return [];
     }
   }
@@ -101,7 +96,6 @@ export class AchievementsService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching locked achievements:', error);
       return [];
     }
   }
@@ -116,7 +110,6 @@ export class AchievementsService {
       if (error) throw error;
       return data?.map(ua => ua.achievement_id) || [];
     } catch (error) {
-      console.error('Error fetching user achievement IDs:', error);
       return [];
     }
   }
@@ -136,7 +129,6 @@ export class AchievementsService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error unlocking achievement:', error);
       return null;
     }
   }
@@ -160,7 +152,6 @@ export class AchievementsService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating achievement progress:', error);
       return null;
     }
   }
@@ -259,7 +250,6 @@ export class AchievementsService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating learning streak:', error);
       return null;
     }
   }
@@ -276,7 +266,6 @@ export class AchievementsService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching achievements by category:', error);
       return [];
     }
   }
@@ -293,7 +282,6 @@ export class AchievementsService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching achievements by difficulty:', error);
       return [];
     }
   }
@@ -310,7 +298,6 @@ export class AchievementsService {
       if (error) throw error;
       return data?.reduce((total: number, ua: any) => total + (ua.achievement?.points || 0), 0) || 0;
     } catch (error) {
-      console.error('Error calculating total points:', error);
       return 0;
     }
   }
@@ -350,7 +337,6 @@ export class AchievementsService {
 
       return newlyUnlocked;
     } catch (error) {
-      console.error('Error checking achievements:', error);
       return [];
     }
   }
@@ -372,7 +358,6 @@ export class AchievementsService {
         achievement: data.achievement as Achievement,
       };
     } catch (error) {
-      console.error('Error fetching achievement details:', error);
       return null;
     }
   }

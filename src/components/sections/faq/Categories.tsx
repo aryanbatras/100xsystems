@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Categories.module.css';
+import styles from '../../styles/components/sections/faq/Categories.module.css';
 
 export function Categories(): React.ReactElement {
   const categories = [

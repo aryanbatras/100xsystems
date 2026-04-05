@@ -1,7 +1,7 @@
 import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
-import styles from './VideoShowcase.module.css';
+import styles from '../../styles/components/sections/paths/VideoShowcase.module.css';
 
 export default function PathsVideoShowcase() {
   return (
@@ -18,15 +18,15 @@ export default function PathsVideoShowcase() {
             </AnimatedDescription>
           </div>
           <div className={styles.videoShowcaseVideo}>
-            <video 
-              autoPlay 
-              muted 
-              loop 
-              playsInline 
+            <img 
+               
+               
+               
+               
               className={styles.shiningMirrorVideo}
             >
-              <source src="/videos/shinning-mirror-advanced-abstract-google-deepmind.mp4" type="video/mp4" />
-            </video>
+              src="/videos/shinning-mirror-advanced-abstract-google-deepmind.gif"
+            </img>
           </div>
         </div>
       </section>

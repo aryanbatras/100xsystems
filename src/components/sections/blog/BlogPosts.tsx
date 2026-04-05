@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './BlogPosts.module.css';
+import styles from '../../../styles/components/sections/blog/BlogPosts.module.css';;
 
 export function BlogPosts(): React.ReactElement {
   return (

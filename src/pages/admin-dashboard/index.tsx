@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import styles from './AdminDashboard.module.css';
+import styles from '../../styles/pages/admin/AdminDashboard.module.css';
 import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
 
 interface Article {
@@ -35,16 +35,12 @@ export default function AdminDashboard() {
       }
     } catch (err) {
       setError('Network error occurred');
-      console.error('Error fetching articles:', err);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleArticleClick = async (slug: string) => {
-    console.log('🔍 === ADMIN DASHBOARD CLICK DEBUG START ===');
-    console.log('📂 Article clicked:', slug);
-    
     // Set loading state for this specific article
     setArticles(prev => prev.map(article => 
       article.slug === slug ? { ...article, isLoading: true } : article
@@ -52,41 +48,24 @@ export default function AdminDashboard() {
 
     try {
       // Fetch the HTML content
-      console.log('📄 Fetching HTML from API...');
       const response = await fetch(`/api/load-html?slug=${encodeURIComponent(slug)}`);
       const data = await response.json();
       
-      console.log('📊 API Response status:', response.ok);
-      console.log('📊 Data received:', !!data);
-      console.log('📊 HTML length:', data.html?.length || 0);
-      
       if (response.ok && data.html) {
-        console.log('💾 Storing HTML in sessionStorage...');
         sessionStorage.setItem('parserHtml', data.html);
-        
-        console.log('🔍 Verifying sessionStorage...');
-        const storedHtml = sessionStorage.getItem('parserHtml');
-        console.log('📊 Stored HTML length:', storedHtml?.length || 0);
-        console.log('📝 First 200 chars of stored HTML:', storedHtml?.substring(0, 200));
-        
-        console.log('🔄 Redirecting to parser...');
         router.push('/parser');
       } else {
-        console.error('❌ Failed to load article:', data.error);
         // Reset loading state
         setArticles(prev => prev.map(article => 
           article.slug === slug ? { ...article, isLoading: false } : article
         ));
       }
     } catch (err) {
-      console.error('❌ Error loading article:', err);
       // Reset loading state
       setArticles(prev => prev.map(article => 
         article.slug === slug ? { ...article, isLoading: false } : article
       ));
     }
-    
-    console.log('🔍 === ADMIN DASHBOARD CLICK DEBUG END ===');
   };
 
   const handleNewArticle = () => {

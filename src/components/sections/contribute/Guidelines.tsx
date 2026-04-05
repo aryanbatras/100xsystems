@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Guidelines.module.css';
+import styles from '../../../styles/components/sections/contribute/Guidelines.module.css';;
 
 export function Guidelines(): React.ReactElement {
   return (

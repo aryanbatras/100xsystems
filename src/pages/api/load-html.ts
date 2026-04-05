@@ -15,30 +15,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const githubToken = process.env.GITHUB_TOKEN;
     const githubRepo = process.env.GITHUB_REPO;
-    const githubOwner = process.env.GITHUB_USERNAME; // Use USERNAME instead of missing OWNER
-
-    // Debug logging
-    console.log('🔍 Load HTML API Debug:', {
-      slug,
-      hasToken: !!githubToken,
-      hasRepo: !!githubRepo,
-      hasOwner: !!githubOwner,
-      tokenLength: githubToken?.length
-    });
+    const githubOwner = process.env.GITHUB_USERNAME;
 
     if (!githubToken || !githubRepo || !githubOwner) {
-      console.error('❌ Missing GitHub environment variables:', {
-        GITHUB_TOKEN: !!githubToken,
-        GITHUB_REPO: !!githubRepo,
-         GITHUB_OWNER: !!githubOwner
-      });
       return res.status(500).json({ error: 'GitHub configuration missing' });
     }
 
     const filePath = `articles/${slug}/index.html`;
     const url = `https://api.github.com/repos/${githubOwner}/${githubRepo}/contents/${filePath}`;
 
-    console.log('🔍 Fetching from URL:', url);
 
     const response = await fetch(url, {
       headers: {
@@ -53,11 +38,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error('❌ GitHub API Error:', {
-        status: response.status,
-        statusText: response.statusText,
-        error: errorData
-      });
       return res.status(500).json({ error: `GitHub API error: ${response.status} - ${errorData}` });
     }
 
@@ -76,7 +56,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
   } catch (error) {
-    console.error('Error loading HTML:', error);
     return res.status(500).json({ 
       error: error instanceof Error ? error.message : 'Failed to load article' 
     });

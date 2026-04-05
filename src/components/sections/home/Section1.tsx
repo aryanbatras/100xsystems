@@ -1,12 +1,11 @@
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import InteractiveButton from '../../animated/InteractiveButton';
-import styles from './Section1.module.css';
-import cinematicStyles from './cinematic.module.css';
+import styles from '../../../styles/components/sections/home/Section1.module.css';;
+import cinematicStyles from '../../../styles/components/sections/home/cinematic.module.css';
 import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
-import { useVideoAutoplay } from '../../../hooks/useVideoAutoplay';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
@@ -16,12 +15,11 @@ if (typeof window !== 'undefined') {
 
 export default function Section1() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   
-  useVideoAutoplay(videoRef);
-
+  
   useEffect(() => {
     if (!sectionRef.current) return;
 
@@ -77,23 +75,17 @@ export default function Section1() {
   return (
     <>
       <div ref={sectionRef} className={styles.rubikVideoShowcase}>
-        <video
+        <div
           ref={videoRef}
           className={styles.rubikVideoBackground}
-          autoPlay
-          muted
-          loop
-          playsInline
-        >
-          <source src="/videos/man_solving_rubik_cube_1_minute_long_no_face.mp4" type="video/mp4" />
-        </video>
+        />
         
         <div className={styles.rubikVideoOverlay}></div>
         
         <div className={styles.rubikVideoContent}>
           <div ref={titleRef} className={styles.rubikVideoTitle}>
             <Image
-              src="/100xsystemsonlytitle.png"
+              src="/100xsystemsonlytitle.webp"
               alt="100x Systems"
               width={400}
               height={80}

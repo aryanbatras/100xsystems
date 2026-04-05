@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import styles from './Systems.module.css';
+import styles from '../../styles/components/sections/about/Systems.module.css';
 
 export default function Systems() {
   return (

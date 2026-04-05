@@ -23,10 +23,10 @@ import { IoMdSend } from "react-icons/io";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import styles from "./AdvancedChatBot.module.css";
+import styles from '../../styles/components/ai/AdvancedChatBot.module.css';;
 import { useMemory } from "../../hooks/useMemory";
 import { useAuth } from "../../contexts/AuthContext";
-import { AuthModal } from "../auth/AuthModal";
+import { useGlobalAuthModal } from "../../contexts/GlobalAuthModalContext";
 
 interface Message {
   id: string;
@@ -108,7 +108,7 @@ export default function AdvancedChatBot({
   onClearContext,
 }: AdvancedChatBotProps) {
   const { user, loading: authLoading } = useAuth();
-  const [showAuthModal, setShowAuthModal] = useState(false);
+  const { openAuthModal } = useGlobalAuthModal();
   
   // Simple client-side rate limiting
   const [requestTimes, setRequestTimes] = useState<number[]>([]);
@@ -139,8 +139,22 @@ export default function AdvancedChatBot({
   const [memorySearchQuery, setMemorySearchQuery] = useState("");
   const [showMemoryManager, setShowMemoryManager] = useState(false);
 
+  // Only use memory on client side to avoid IndexedDB server-side errors
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Check if user is authenticated and trigger auth modal if needed
+  useEffect(() => {
+    if (!authLoading && !user) {
+      openAuthModal();
+      onClose();
+    }
+  }, [authLoading, user, openAuthModal, onClose]);
+
   const memory = useMemory({
-    autoSave: settings.memoryEnabled,
+    autoSave: isClient && settings.memoryEnabled,
     maxRetrieved: 10,
   });
 
@@ -152,7 +166,6 @@ export default function AdvancedChatBot({
       setCopiedCode(text);
       setTimeout(() => setCopiedCode(null), 2000);
     } catch (err) {
-      console.error("Failed to copy text: ", err);
     }
   };
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -230,12 +243,6 @@ export default function AdvancedChatBot({
         requestBody.imageUrl = imageUrl;
       }
 
-      console.log("Sending to AI:", {
-        model: modelToUse,
-        hasImage: !!imageUrl,
-        hasMemory: !!memoryContext,
-      });
-
       const response = await fetch("/api/ai-chat-enhanced", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -294,7 +301,6 @@ export default function AdvancedChatBot({
                   });
                 }
               } catch (e) {
-                console.error("Error parsing chunk:", e);
               }
             }
           }
@@ -318,8 +324,6 @@ export default function AdvancedChatBot({
         await handleTextToSpeech(aiContent);
       }
     } catch (error) {
-      console.error("Error sending message:", error);
-
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: "ai",
@@ -369,18 +373,11 @@ export default function AdvancedChatBot({
     // Update request times
     setRequestTimes([...recentRequests, now]);
 
-    // Debug logging
-    console.log("Auto-context enabled:", settings.autoContext);
-    console.log("Selected text:", selectedText);
-    console.log("Input:", input);
-
     // Only include context if auto-context is enabled AND text is selected
     const messageContent =
       settings.autoContext && selectedText
         ? `**Context:** ${selectedText}\n\n${input}`
         : input;
-
-    console.log("Final message content:", messageContent);
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -409,62 +406,32 @@ export default function AdvancedChatBot({
   };
 
   const startRecording = async () => {
-    console.log("🎤 Starting voice recording...");
-
     try {
-      console.log("📱 Requesting microphone access...");
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      console.log("✅ Microphone access granted");
 
       // Try to get a supported MIME type
       let mimeType = "audio/webm";
       let options: MediaRecorderOptions = { mimeType };
 
       if (!MediaRecorder.isTypeSupported(mimeType)) {
-        console.log("⚠️ audio/webm not supported, trying audio/mp4...");
         mimeType = "audio/mp4";
         options = { mimeType };
 
         if (!MediaRecorder.isTypeSupported(mimeType)) {
-          console.log("⚠️ audio/mp4 not supported, using default");
           options = {};
           mimeType = "";
         }
       }
 
       const mediaRecorder = new MediaRecorder(stream, options);
-      console.log("🔴 MediaRecorder created:", {
-        mimeType: mediaRecorder.mimeType || "default",
-        state: mediaRecorder.state,
-        audioTracks: stream.getAudioTracks().length,
-        options: options,
-      });
-
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
-      console.log("🔄 Reset audio chunks array");
 
       mediaRecorder.ondataavailable = (event) => {
-        console.log("📊 Audio data available:", {
-          data: event.data,
-          size: event.data.size,
-          type: event.data.type,
-        });
         audioChunksRef.current.push(event.data);
-        console.log(
-          "📦 Audio chunks collected:",
-          audioChunksRef.current.length,
-        );
       };
 
       mediaRecorder.onstop = async () => {
-        console.log("⏹️ MediaRecorder stopped");
-        console.log("📋 Total audio chunks:", audioChunksRef.current.length);
-        console.log(
-          "💾 Chunk sizes:",
-          audioChunksRef.current.map((chunk) => chunk.size),
-        );
-
         // Use the actual MIME type from the recorder or first chunk
         const actualMimeType =
           mediaRecorder.mimeType ||
@@ -474,33 +441,13 @@ export default function AdvancedChatBot({
         const audioBlob = new Blob(audioChunksRef.current, {
           type: actualMimeType,
         });
-        console.log("🎵 Audio blob created:", {
-          size: audioBlob.size,
-          type: audioBlob.type,
-          chunks: audioChunksRef.current.length,
-          actualMimeType: actualMimeType,
-        });
 
         await handleVoiceTranscription(audioBlob);
       };
 
-      mediaRecorder.onerror = (event) => {
-        console.error("❌ MediaRecorder error:", event);
-        console.error("❌ Error details:", {
-          error: event.error,
-          message: event.error?.message,
-          name: event.error?.name,
-        });
-      };
-
-      console.log("▶️ Starting MediaRecorder...");
       mediaRecorder.start();
-      console.log("🎙️ Recording started successfully");
       setIsRecording(true);
     } catch (error) {
-      console.error("❌ Error accessing microphone:", error);
-      console.error("❌ Error details:", error);
-
       // Show user-friendly error
       alert(
         `Microphone access failed: ${error || "Unknown error"}. Please check your browser permissions.`,
@@ -509,42 +456,21 @@ export default function AdvancedChatBot({
   };
 
   const stopRecording = () => {
-    console.log("🛑 Stopping voice recording...");
-
     if (mediaRecorderRef.current && isRecording) {
-      console.log(
-        "⏹️ MediaRecorder state before stop:",
-        mediaRecorderRef.current.state,
-      );
-
       try {
         mediaRecorderRef.current.stop();
-        console.log("🔇 Stopping all audio tracks...");
         mediaRecorderRef.current.stream.getTracks().forEach((track) => {
-          console.log("🎵 Stopping track:", track.kind, track.label);
           track.stop();
         });
-        console.log("✅ Recording stopped successfully");
       } catch (error) {
-        console.error("❌ Error stopping recording:", error);
       }
 
       setIsRecording(false);
-    } else {
-      console.log("⚠️ No active recording to stop");
     }
   };
 
   const handleVoiceTranscription = async (audioBlob: Blob) => {
-    console.log("🤖 Starting voice transcription...");
-    console.log("📤 Audio blob details:", {
-      size: audioBlob.size,
-      type: audioBlob.type,
-      isBlob: audioBlob instanceof Blob,
-    });
-
     try {
-      console.log("📋 Creating FormData...");
       const formData = new FormData();
 
       // Create a proper file with the correct MIME type
@@ -560,44 +486,18 @@ export default function AdvancedChatBot({
       formData.append("file", audioBlob, fileName);
       formData.append("model", "whisper-large-v3-turbo");
 
-      console.log("📤 FormData created:", {
-        file: formData.get("file"),
-        fileName: fileName,
-        mimeType: audioBlob.type,
-        model: formData.get("model"),
-      });
-
-      console.log("🌐 Sending request to /api/voice-transcribe...");
-      const startTime = Date.now();
-
       const response = await fetch("/api/voice-transcribe", {
         method: "POST",
         body: formData,
       });
 
-      const endTime = Date.now();
-      console.log("📡 Response received:", {
-        status: response.status,
-        statusText: response.statusText,
-        ok: response.ok,
-        headers: Object.fromEntries(response.headers.entries()),
-        duration: `${endTime - startTime}ms`,
-      });
-
       if (!response.ok) {
-        console.error("❌ Transcription request failed:", {
-          status: response.status,
-          statusText: response.statusText,
-        });
-
         // Try to get error details from response
         let errorDetails = "Unknown error";
         try {
           const errorData = await response.json();
           errorDetails = errorData.error || JSON.stringify(errorData);
-          console.error("❌ Error response data:", errorData);
         } catch (e) {
-          console.error("❌ Could not parse error response:", e);
         }
 
         throw new Error(
@@ -605,24 +505,12 @@ export default function AdvancedChatBot({
         );
       }
 
-      console.log("✅ Parsing response JSON...");
       const data = await response.json();
-      console.log("📝 Transcription result:", {
-        text: data.text,
-        language: data.language,
-        duration: data.duration,
-      });
 
       if (data.text) {
-        console.log("✅ Setting input text:", data.text);
         setInput(data.text);
-      } else {
-        console.warn("⚠️ No transcription text received");
       }
     } catch (error) {
-      console.error("❌ Error transcribing voice:", error);
-      console.error("❌ Error details:", error);
-
       // Show user-friendly error
       alert(
         `Voice transcription failed: ${error || "Unknown error"}. Please try again.`,
@@ -655,7 +543,6 @@ export default function AdvancedChatBot({
 
       await audio.play();
     } catch (error) {
-      console.error("Error with TTS:", error);
     }
   };
 
@@ -668,12 +555,6 @@ export default function AdvancedChatBot({
     try {
       const formData = new FormData();
       formData.append("file", file);
-
-      console.log("Uploading image:", {
-        name: file.name,
-        size: file.size,
-        type: file.type,
-      });
 
       const response = await fetch("/api/image-upload", {
         method: "POST",
@@ -697,12 +578,9 @@ export default function AdvancedChatBot({
       setMessages((prev) => [...prev, userMessage]);
       setInput("");
 
-      console.log("Image uploaded successfully:", data.url);
-
       // Now send the message to AI
       await sendAIMessage(userMessage.content, data.url);
     } catch (error) {
-      console.error("Error uploading image:", error);
       alert(
         `Upload failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -774,7 +652,6 @@ export default function AdvancedChatBot({
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("Failed to export memory:", error);
     }
   };
 
@@ -789,21 +666,13 @@ export default function AdvancedChatBot({
       await memory.importMemories(text);
       alert("Memory imported successfully!");
     } catch (error) {
-      console.error("Failed to import memory:", error);
       alert("Failed to import memory. Please check the file format.");
     }
   };
 
-  if (!isOpen) return null;
-
-  // Show auth modal if user is not signed in
+  // Don't render if user is not authenticated
   if (!authLoading && !user) {
-    return (
-      <AuthModal
-        isOpen={true}
-        onClose={onClose}
-      />
-    );
+    return null;
   }
 
   return (
@@ -826,7 +695,6 @@ export default function AdvancedChatBot({
           <div className={styles.headerActions}>
             <button
               onClick={() => {
-                console.log("Memory button clicked");
                 setShowMemoryManager(!showMemoryManager);
                 setShowModelSelector(false);
                 setShowSettings(false);
@@ -838,7 +706,6 @@ export default function AdvancedChatBot({
             </button>
             <button
               onClick={() => {
-                console.log("Brain button clicked");
                 setShowModelSelector(!showModelSelector);
                 setShowSettings(false);
                 setShowMemoryManager(false);
@@ -850,7 +717,6 @@ export default function AdvancedChatBot({
             </button>
             <button
               onClick={() => {
-                console.log("Settings button clicked");
                 setShowSettings(!showSettings);
                 setShowModelSelector(false);
                 setShowMemoryManager(false);
@@ -968,11 +834,6 @@ export default function AdvancedChatBot({
                       ...prev,
                       autoContext: newAutoContext,
                     }));
-                    // When auto-context is turned off, user should manually clear selection
-                    console.log(
-                      "Auto-context",
-                      newAutoContext ? "enabled" : "disabled",
-                    );
                   }}
                 />
                 <span>Auto-use selected text as context</span>
@@ -990,20 +851,6 @@ export default function AdvancedChatBot({
                 />
                 <span>Enable AI memory</span>
               </label>
-              {/* <label className={styles.settingItem}>
-                <input
-                  type="checkbox"
-                  checked={settings.showMemoryContext}
-                  onChange={(e) =>
-                    setSettings((prev) => ({
-                      ...prev,
-                      showMemoryContext: e.target.checked,
-                    }))
-                  }
-                  disabled={!settings.memoryEnabled}
-                />
-                <span>Show memory context in responses</span>
-              </label> */}
               <label className={styles.settingItem}>
                 <input
                   type="checkbox"

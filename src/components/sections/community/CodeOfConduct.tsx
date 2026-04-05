@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './CodeOfConduct.module.css';
+import styles from '../../../styles/components/sections/community/CodeOfConduct.module.css';;
 
 export function CodeOfConduct(): React.ReactElement {
   return (

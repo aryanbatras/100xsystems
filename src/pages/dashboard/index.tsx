@@ -4,7 +4,7 @@ import Head from 'next/head';
 import InteractiveButton from '../../components/animated/InteractiveButton';
 import AnimatedSection from '../../components/animated/AnimatedSection';
 import AnimatedTitle from '../../components/animated/AnimatedTitle';
-import styles from './dashboard.module.css';
+import styles from '../../styles/pages/dashboard.module.css';
 
 interface SystemModule {
   id: string;

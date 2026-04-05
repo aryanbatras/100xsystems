@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-import styles from '../../styles/AnimatedTechGrid.module.css';
+import styles from '../../styles/components/animated/AnimatedTechGrid.module.css';;
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);

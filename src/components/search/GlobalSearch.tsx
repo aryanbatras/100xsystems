@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { SearchDocument, SearchResult, SearchFilters } from '../../types/search';
-import styles from './GlobalSearch.module.css';
+import styles from '../../styles/components/search/GlobalSearch.module.css';
 
 interface GlobalSearchProps {
   isOpen: boolean;
@@ -63,7 +63,6 @@ export default function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
         const data = await response.json();
         setResults(data.results);
       } catch (error) {
-        console.error('Search failed:', error);
       } finally {
         setLoading(false);
       }

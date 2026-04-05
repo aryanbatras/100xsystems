@@ -1,6 +1,6 @@
 import { useEffect, useRef, ReactNode, forwardRef } from 'react';
 import { gsap } from 'gsap';
-import styles from '../../styles/AnimatedButton.module.css';
+import styles from '../../styles/components/animated/AnimatedButton.module.css';;
 
 interface AnimatedButtonProps {
   children: ReactNode;

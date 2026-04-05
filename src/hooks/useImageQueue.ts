@@ -12,17 +12,14 @@ export const useImageQueue = (mounted: boolean) => {
     const timer = setTimeout(() => {
       const quill = quillRef.current;
       if (quill) {
-        console.log('Quill editor found, setting up listener');
 
         const handleTextChange = async (delta: any, oldDelta: any, source: string) => {
           if (source === 'user') {
-            console.log('Content changed by user!');
             
             const currentContent = quill.getContents();
             const allImages = await extractImagesFromDelta(currentContent);
             
             setImageQueue(allImages);
-            console.log('Images in queue:', allImages.length);
           }
         };
         
@@ -32,7 +29,6 @@ export const useImageQueue = (mounted: boolean) => {
           quill.off('text-change', handleTextChange);
         };
       } else {
-        console.log('Quill editor not found');
       }
     }, 100); 
     
@@ -40,7 +36,6 @@ export const useImageQueue = (mounted: boolean) => {
   }, [mounted]);
 
   useEffect(() => {
-    console.log('Queue updated - Total images:', imageQueue.length);
   }, [imageQueue]);
 
   return {

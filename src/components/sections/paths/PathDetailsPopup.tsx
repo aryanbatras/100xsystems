@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import styles from './PathDetailsPopup.module.css';
+import styles from '../../styles/components/sections/paths/PathDetailsPopup.module.css';
 
 interface PathDetailsPopupProps {
   isOpen: boolean;

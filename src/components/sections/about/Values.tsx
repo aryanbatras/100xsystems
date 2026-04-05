@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import styles from './Values.module.css';
+import styles from '../../styles/components/sections/about/Values.module.css';
 
 export default function Values() {
   return (

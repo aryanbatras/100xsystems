@@ -1,0 +1,75 @@
+.conductSection {
+  padding: 4rem 0;
+}
+
+.sectionTitle {
+  font-size: 2.5rem;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 3rem;
+  letter-spacing: -0.02em;
+}
+
+.conduct {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.description {
+  font-size: 1.2rem;
+  color: #cccccc;
+  line-height: 1.6;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.principles {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.principle {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.principle:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--accent-yellow);
+}
+
+.principleTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  font-family: var(--font-samsung-sharp);
+  color: var(--accent-yellow);
+  margin-bottom: 1rem;
+}
+
+.principleText {
+  font-size: 1rem;
+  color: #cccccc;
+  line-height: 1.6;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+@media (max-width: 768px) {
+  .conduct {
+    padding: 0 1rem;
+  }
+  
+  .principle {
+    padding: 1.5rem;
+  }
+}

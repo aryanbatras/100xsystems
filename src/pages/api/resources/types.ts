@@ -18,7 +18,6 @@ export default async function handler(
   }
 
   try {
-    console.log('📂 Fetching resource types...');
 
     const knowledgeGraph = await StaticSiteGenerator.buildResourceKnowledgeGraph();
     const types: ResourceType[] = [
@@ -27,7 +26,6 @@ export default async function handler(
       'blog', 'research-paper', 'cheat-sheet', 'template', 'extension', 'other'
     ];
 
-    console.log(`✅ Found ${types.length} resource types`);
 
     return res.status(200).json({
       success: true,
@@ -36,7 +34,6 @@ export default async function handler(
     });
 
   } catch (error) {
-    console.error('❌ Error fetching resource types:', error);
     return res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred'

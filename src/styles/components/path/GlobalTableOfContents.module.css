@@ -1,0 +1,107 @@
+.globalToc {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 800px;
+  max-height: 60vh;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+
+.globalTocSticky {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.globalTocHidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+  pointer-events: none;
+}
+
+.globalTocContent {
+  padding: 1rem;
+  overflow-y: auto;
+  max-height: 60vh;
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db #f3f4f6;
+}
+
+.globalTocContent::-webkit-scrollbar {
+  width: 6px;
+}
+
+.globalTocContent::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 3px;
+}
+
+.globalTocContent::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.tocItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.tocLink {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  margin: 0.125rem 0;
+  border: none;
+  background: transparent;
+  color: #4b5563;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tocLink:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.tocLink.active {
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.tocSublist {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .globalToc {
+    width: 95%;
+    max-height: 70vh;
+    bottom: 1rem;
+  }
+
+  .globalTocContent {
+    max-height: 70vh;
+    padding: 0.75rem;
+  }
+
+  .tocLink {
+    font-size: 0.8125rem;
+    padding: 0.4rem 0.6rem;
+  }
+}

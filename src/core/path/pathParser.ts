@@ -27,7 +27,6 @@ export class PathParser {
         content: markdownContent.trim()
       };
     } catch (error) {
-      console.error('Error parsing markdown:', error);
       return {
         metadata: {
           title: 'Untitled',
@@ -91,7 +90,6 @@ export class PathParser {
           });
           
           stream.on('error', (error) => {
-            console.error(`Error extracting file ${filePath}:`, error);
             next();
           });
         } else {
@@ -162,7 +160,6 @@ export class PathParser {
               node.children.push(childNode);
             }
           } catch (error) {
-            console.warn(`Skipping missing subfolder ${childPath}:`, error);
             // Continue with other subfolders even if this one fails
           }
         }
@@ -170,7 +167,6 @@ export class PathParser {
 
       return node;
     } catch (error) {
-      console.error(`Error building node from path ${dirPath}:`, error);
       return null;
     }
   }
@@ -204,13 +200,10 @@ export class PathParser {
       }
 
       // Download repository as tarball (single API call)
-      console.log('📦 Downloading repository tarball...');
       const tarball = await this.githubClient.downloadRepositoryAsTarball();
       
       // Extract all markdown files from tarball
-      console.log('📂 Extracting tarball...');
       this.fileContents = await this.extractTarball(tarball);
-      console.log(`✅ Extracted ${this.fileContents.size} files`);
 
       // Build the structure manually based on the actual repository structure
       const rootNode = await this.buildPathStructure();
@@ -230,11 +223,9 @@ export class PathParser {
         maxDepth
       };
 
-      console.log(`✅ Parsed path content: ${pathContent.totalNodes} nodes, max depth: ${maxDepth}`);
       return pathContent;
 
     } catch (error) {
-      console.error('❌ Error parsing path content:', error);
       throw error;
     }
   }

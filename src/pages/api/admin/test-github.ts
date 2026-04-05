@@ -17,10 +17,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const githubRepo = process.env.GITHUB_REPO;
   const githubBranch = process.env.GITHUB_BRANCH || 'main';
   
-  console.log('🔑 GitHub Token exists:', !!githubToken);
-  console.log('👤 GitHub Username:', githubUsername);
-  console.log('📦 GitHub Repo:', githubRepo);
-  console.log('🌿 GitHub Branch:', githubBranch);
   
   if (!githubToken || !githubUsername || !githubRepo) {
     return res.status(500).json({ 
@@ -64,7 +60,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
   } catch (error) {
-    console.error('GitHub test error:', error);
     return res.status(500).json({ 
       error: 'GitHub test failed',
       details: (error as Error).message

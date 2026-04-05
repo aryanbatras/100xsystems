@@ -3,7 +3,7 @@ import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
 import InteractiveButton from '../../animated/InteractiveButton';
 import { FaWhatsapp, FaPhone } from 'react-icons/fa';
-import styles from './SectionBootcamp.module.css';
+import styles from '../../../styles/components/sections/home/SectionBootcamp.module.css';;
 
 export default function SectionBootcamp() {
   return (
@@ -46,7 +46,7 @@ export default function SectionBootcamp() {
               
               <div className={styles.curriculumPhase}>
                 <h4>Design Patterns, Optimizations, Security</h4>
-                <p>Latest in ecosystem. Best software practices. Security loopholes. Optimizations and practical usecases of DSA.</p>
+                <p>Latest in ecosystem. Best software practices. Security holes. Optimizations and practical usecases of DSA.</p>
               </div>
               
               <div className={styles.curriculumPhase}>

@@ -1,0 +1,26 @@
+.techGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.techItem {
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0px;
+  font-size: 16px;
+  color: #ffffff;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+  text-align: center;
+  transition: opacity 0.3s ease;
+  position: relative;
+  cursor: default;
+}
+
+@media (max-width: 768px) {
+  .techGrid {
+    grid-template-columns: 1fr;
+  }
+}

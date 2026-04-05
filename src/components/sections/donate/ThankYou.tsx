@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './ThankYou.module.css';
+import styles from '../../styles/components/sections/donate/ThankYou.module.css';
 
 export function ThankYou(): React.ReactElement {
   return (

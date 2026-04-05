@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Steps.module.css';
+import styles from '../../../styles/components/sections/install/Steps.module.css';;
 
 export function InstallationSteps(): React.ReactElement {
   return (

@@ -2,7 +2,7 @@ import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
 import AnimatedTechGrid from '../../animated/AnimatedTechGrid';
-import styles from './Section9.module.css';
+import styles from '../../../styles/components/sections/home/Section9.module.css';;
 
 export default function Section9() {
   return (
@@ -11,9 +11,9 @@ export default function Section9() {
         <div className={styles.modernContent}>
           <div className={styles.modernImageWrapper} data-speed="0.85">
             <div className={styles.videoLeft}>
-              <video autoPlay muted loop playsInline className={styles.videoCard}>
-                <source src="/videos/black-glasses-how-does-llm-work-text-thought-video-google-deepmind.mp4" type="video/mp4" />
-              </video>
+              <div 
+                className={styles.videoCard}
+              />
             </div>
           </div>
           <AnimatedSection animationType="fadeInRight" delay={0.6}>

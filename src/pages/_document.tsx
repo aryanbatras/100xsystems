@@ -20,7 +20,7 @@ export default function Document() {
         <meta property="og:url" content="https://www.100xsystems.dev/" />
         <meta property="og:title" content="100xSystems - Transform Developers into 100xEngineers" />
         <meta property="og:description" content="Comprehensive platform for structured software engineering education and system optimization. Transform into a 100xEngineer through depth-first learning methodologies." />
-        <meta property="og:image" content="https://www.100xsystems.dev/100xsystems.png" />
+        <meta property="og:image" content="https://www.100xsystems.dev/100xsystems.webp" />
         <meta property="og:image:alt" content="100xSystems Logo" />
         <meta property="og:site_name" content="100xSystems" />
         <meta property="og:locale" content="en_US" />
@@ -30,7 +30,7 @@ export default function Document() {
         <meta property="twitter:url" content="https://www.100xsystems.dev/" />
         <meta property="twitter:title" content="100xSystems - Transform Developers into 100xEngineers" />
         <meta property="twitter:description" content="Comprehensive platform for structured software engineering education and system optimization. Transform into a 100xEngineer through depth-first learning methodologies." />
-        <meta property="twitter:image" content="https://www.100xsystems.dev/100xsystems.png" />
+        <meta property="twitter:image" content="https://www.100xsystems.dev/100xsystems.webp" />
         <meta property="twitter:image:alt" content="100xSystems Logo" />
         
         {/* Additional Meta Tags */}
@@ -42,8 +42,8 @@ export default function Document() {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         
         {/* Favicon */}
-        <link rel="icon" href="/100xsystemsblacklogo.png" />
-        <link rel="apple-touch-icon" href="/100xsystems.png" />
+        <link rel="icon" href="/100xsystemsblacklogo.webp" />
+        <link rel="apple-touch-icon" href="/100xsystems.webp" />
         
         {/* Canonical URL */}
         <link rel="canonical" href="https://www.100xsystems.dev/" />
@@ -63,7 +63,7 @@ export default function Document() {
               "@type": "EducationalOrganization",
               "name": "100xSystems",
               "url": "https://www.100xsystems.dev",
-              "logo": "https://www.100xsystems.dev/100xsystems.png",
+              "logo": "https://www.100xsystems.dev/100xsystems.webp",
               "description": "Comprehensive platform for structured software engineering education and system optimization, designed to transform developers into 100xEngineers through depth-first learning methodologies.",
               "sameAs": [
                 "https://www.linkedin.com/company/100xsystems/"

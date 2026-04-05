@@ -18,25 +18,15 @@ export class HtmlToDeltaConverter {
 
   static parseHtml(html: string, options: ConversionOptions = {}): ParsedContent {
     const startTime = Date.now();
-    console.log('🔍 === MAIN PARSE HTML DEBUG START ===');
-    console.log('📏 Input HTML length:', html.length);
-    console.log('🔍 First 300 chars of input HTML:', html.substring(0, 300));
-    console.log('� Last 300 chars of input HTML:', html.substring(html.length - 300));
     log('�🔄 Starting HTML to Delta parsing...', 'info');
 
     const metadata = this.extractMetadata(html);
-    console.log('📊 Metadata extraction result:', metadata);
     
     const content = this.extractQuillContent(html);
-    console.log('📊 Content extraction result length:', content.length);
-    console.log('📝 First 200 chars of extracted content:', content.substring(0, 200));
     
     const images = this.extractImageUrls(content);
-    console.log('📊 Image extraction result:', images);
 
     const processingTime = Date.now() - startTime;
-    console.log('⏱️ Processing completed in', processingTime, 'ms');
-    console.log('🔍 === MAIN PARSE HTML DEBUG END ===');
     
     log(`✅ HTML parsing completed in ${processingTime}ms`, 'success');
     log(`📝 Content length: ${content.length} characters`, 'info');
@@ -66,60 +56,40 @@ export class HtmlToDeltaConverter {
   private static extractMetadata(html: string): ArticleMetadata | null {
     try {
       // COMPREHENSIVE DEBUGGING LOGS
-      console.log('🔍 === METADATA EXTRACTION DEBUG START ===');
-      console.log('📏 HTML length:', html.length);
-      console.log('🔍 First 500 chars of HTML:', html.substring(0, 500));
-      console.log('🔍 Last 500 chars of HTML:', html.substring(html.length - 500));
       
       // Check for any script tags
       const allScriptMatches = html.match(/<script[^>]*>.*?<\/script>/gs) || [];
-      console.log('📜 All script tags found:', allScriptMatches.length);
       allScriptMatches.forEach((script, index) => {
-        console.log(`📜 Script ${index + 1}:`, script.substring(0, 200) + (script.length > 200 ? '...' : ''));
       });
       
       // Check for article-metadata specifically
       const metadataMatch1 = html.match(/<script[^>]*id="article-metadata"[^>]*type="application\/json"[^>]*>(.*?)<\/script>/s);
       const metadataMatch2 = html.match(/<script[^>]*type="application\/json"[^>]*id="article-metadata"[^>]*>(.*?)<\/script>/s);
       
-      console.log('🔍 Metadata match 1 (id first):', !!metadataMatch1);
-      console.log('🔍 Metadata match 2 (type first):', !!metadataMatch2);
       
       if (metadataMatch1) {
-        console.log('📝 Metadata content (match 1):', metadataMatch1[1].substring(0, 200));
       }
       if (metadataMatch2) {
-        console.log('📝 Metadata content (match 2):', metadataMatch2[1].substring(0, 200));
       }
       
       const metadataMatch = metadataMatch1 || metadataMatch2;
       
       if (!metadataMatch) {
-        console.log('❌ No metadata script tag found');
-        console.log('🔍 Checking for any JSON script tags...');
         const jsonScriptMatches = html.match(/<script[^>]*type="application\/json"[^>]*>(.*?)<\/script>/gs) || [];
-        console.log('📜 JSON script tags found:', jsonScriptMatches.length);
         jsonScriptMatches.forEach((script, index) => {
-          console.log(`📜 JSON Script ${index + 1}:`, script.substring(0, 200) + (script.length > 200 ? '...' : ''));
         });
         
-        console.log('🔍 Checking for any id="article-metadata"...');
         const idMatches = html.match(/<[^>]*id="article-metadata"[^>]*>/g) || [];
-        console.log('📜 Elements with id="article-metadata":', idMatches.length);
         idMatches.forEach((element, index) => {
-          console.log(`📜 Element ${index + 1}:`, element);
         });
         
-        console.log('🔍 === METADATA EXTRACTION DEBUG END ===');
         log('⚠️ No metadata script tag found', 'warning');
         return null;
       }
 
       const jsonContent = metadataMatch[1].trim();
-      console.log('📝 Raw JSON content:', jsonContent.substring(0, 200));
       
       const metadata = JSON.parse(jsonContent);
-      console.log('✅ Parsed metadata:', metadata);
       
       log('✅ Metadata extracted successfully', 'success');
       log(`📝 Title: ${metadata.title}`, 'info');
@@ -127,10 +97,8 @@ export class HtmlToDeltaConverter {
       log(`📅 Date: ${metadata.date}`, 'info');
       log(`🖼️ Images: ${metadata.images?.length || 0}`, 'info');
       
-      console.log('🔍 === METADATA EXTRACTION DEBUG END ===');
       return metadata;
     } catch (error) {
-      console.log('❌ Error parsing metadata:', error);
       log(`❌ Error extracting metadata: ${error}`, 'error');
       return null;
     }
@@ -138,65 +106,44 @@ export class HtmlToDeltaConverter {
 
   private static extractQuillContent(html: string): string {
     try {
-      console.log('🔍 === QUILL CONTENT EXTRACTION DEBUG START ===');
       
       // Check for any article tags
       const allArticleMatches = html.match(/<article[^>]*>.*?<\/article>/gs) || [];
-      console.log('📜 All article tags found:', allArticleMatches.length);
       allArticleMatches.forEach((article, index) => {
-        console.log(`📜 Article ${index + 1}:`, article.substring(0, 200) + (article.length > 200 ? '...' : ''));
       });
       
       // Check for ql-editor specifically
       const articleMatch = html.match(/<article[^>]*class="ql-editor"[^>]*>(.*?)<\/article>/s);
-      console.log('🔍 QL-editor article match:', !!articleMatch);
       
       if (articleMatch) {
-        console.log('📝 QL-editor content length:', articleMatch[1].length);
-        console.log('📝 First 200 chars of QL-editor content:', articleMatch[1].substring(0, 200));
       }
       
       if (!articleMatch) {
-        console.log('❌ No ql-editor article found, checking for other article patterns...');
         
         // Check for any article with class containing ql-editor
         const qlEditorArticleMatch = html.match(/<article[^>]*class="[^"]*ql-editor[^"]*"[^>]*>(.*?)<\/article>/s);
-        console.log('🔍 Article with ql-editor in class:', !!qlEditorArticleMatch);
         
         if (qlEditorArticleMatch) {
-          console.log('📝 Alternative QL-editor content length:', qlEditorArticleMatch[1].length);
-          console.log('📝 First 200 chars of alternative content:', qlEditorArticleMatch[1].substring(0, 200));
         }
         
         // Check for any div with ql-editor
         const qlEditorDivMatch = html.match(/<div[^>]*class="[^"]*ql-editor[^"]*"[^>]*>(.*?)<\/div>/s);
-        console.log('🔍 Div with ql-editor class:', !!qlEditorDivMatch);
         
         if (qlEditorDivMatch) {
-          console.log('📝 Div QL-editor content length:', qlEditorDivMatch[1].length);
-          console.log('📝 First 200 chars of div content:', qlEditorDivMatch[1].substring(0, 200));
         }
         
-        console.log('🔍 Using full HTML as fallback');
         const strippedContent = this.stripCustomElements(html);
-        console.log('📝 Stripped content length:', strippedContent.length);
-        console.log('📝 First 200 chars of stripped content:', strippedContent.substring(0, 200));
         
-        console.log('🔍 === QUILL CONTENT EXTRACTION DEBUG END ===');
         log('⚠️ No ql-editor article found, using full HTML', 'warning');
         return this.cleanQuillContent(strippedContent);
       }
 
       const content = articleMatch[1].trim();
-      console.log('📝 Final content length:', content.length);
-      console.log('📝 First 200 chars of final content:', content.substring(0, 200));
       
-      console.log('🔍 === QUILL CONTENT EXTRACTION DEBUG END ===');
       log('✅ Quill content extracted from article tag', 'success');
       
       return this.cleanQuillContent(content);
     } catch (error) {
-      console.log('❌ Error extracting content:', error);
       log(`❌ Error extracting content: ${error}`, 'error');
       return '';
     }

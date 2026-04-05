@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { CommunityService } from '../../../../services/database/communityService';
 import { Navbar } from '../../../../components/navbar/Navbar';
-import styles from '../id.module.css';
+import styles from '../../../../styles/pages/groups/id.module.css';
 
 const CATEGORIES = [
   { id: 'discussions', label: 'Discussions' },
@@ -35,7 +35,6 @@ export default function MembersPage() {
       setLoading(true);
       
       if (!user?.id) {
-        console.log('🚫 fetchGroup: No user ID, skipping');
         setGroup(null);
         setLoading(false);
         return;
@@ -59,7 +58,6 @@ export default function MembersPage() {
         }
       }
     } catch (error) {
-      console.error('Error fetching group:', error);
       setGroup(null);
     } finally {
       setLoading(false);
@@ -69,10 +67,9 @@ export default function MembersPage() {
   const fetchGroupMembers = async (groupId: string) => {
     try {
       setLoadingMembers(true);
-      const groupMembers = await CommunityService.getGroupMembers(groupId);
-      setMembers(groupMembers || []);
+      // TODO: Implement getGroupMembers method in CommunityService
+      setMembers([]);
     } catch (error) {
-      console.error('Error fetching group members:', error);
       setMembers([]);
     } finally {
       setLoadingMembers(false);

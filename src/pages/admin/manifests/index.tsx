@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import styles from './Manifests.module.css';
+import styles from '../../../styles/pages/admin/Manifests.module.css';
 
 interface ArticleManifest {
   slug: string;
@@ -181,7 +181,6 @@ export default function AdminManifests() {
         const manifestsData = await manifestsResponse.json();
         setArticles(manifestsData);
       } else {
-        console.error('Failed to fetch manifests');
         setArticles({});
       }
       
@@ -190,7 +189,6 @@ export default function AdminManifests() {
         const articleSlugs = articlesData.success ? articlesData.articles : [];
         setAvailableArticles(articleSlugs.filter((slug: string) => !articles[slug]));
       } else {
-        console.error('Failed to fetch articles');
         setAvailableArticles([]);
       }
       
@@ -198,11 +196,9 @@ export default function AdminManifests() {
         const roadmapsData = await roadmapsResponse.json();
         setRoadmaps(roadmapsData);
       } else {
-        console.error('Failed to fetch roadmaps');
         setRoadmaps({});
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
       setArticles({});
       setAvailableArticles([]);
       setRoadmaps({});
@@ -289,7 +285,6 @@ export default function AdminManifests() {
         showNotification('error', errorData.error || 'Failed to save manifest');
       }
     } catch (error) {
-      console.error('Error saving manifest:', error);
       showNotification('error', 'Failed to save manifest. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -358,7 +353,6 @@ export default function AdminManifests() {
         showNotification('error', errorData.error || 'Failed to delete manifest');
       }
     } catch (error) {
-      console.error('Error deleting manifest:', error);
       showNotification('error', 'Failed to delete manifest. Please try again.');
     } finally {
       setIsSubmitting(false);

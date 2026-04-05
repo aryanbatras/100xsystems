@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import Image from 'next/image';
-import styles from './AbstractGallery.module.css';
+import styles from '../../../styles/components/sections/home/AbstractGallery.module.css';;
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);

@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { CommunityService } from '../../../services/database/communityService';
 import { Navbar } from '../../../components/navbar/Navbar';
-import styles from './id.module.css';
+import styles from '../../styles/components/id.module.css';;
 
 export default function GroupPage() {
   const router = useRouter();

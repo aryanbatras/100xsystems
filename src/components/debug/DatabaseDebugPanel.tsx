@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { DatabaseTestUtil } from '../../utils/databaseTest';
-import styles from './DatabaseDebugPanel.module.css';
+import styles from '../../styles/components/debug/DatabaseDebugPanel.module.css';;
 
 export const DatabaseDebugPanel: React.FC = () => {
   const { user } = useAuth();
@@ -19,7 +19,6 @@ export const DatabaseDebugPanel: React.FC = () => {
       setDiagnostic(result);
       DatabaseTestUtil.printDiagnosticSummary(result);
     } catch (error) {
-      console.error('Diagnostic failed:', error);
     } finally {
       setIsRunning(false);
     }
@@ -36,7 +35,6 @@ export const DatabaseDebugPanel: React.FC = () => {
         await runDiagnostic();
       }
     } catch (error) {
-      console.error('Test data creation failed:', error);
     }
   };
 

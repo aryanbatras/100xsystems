@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './ContentLayout.module.css';
+import styles from '../../styles/components/path/TableOfContents.module.css';;
 
 interface TocItem {
   id: string;

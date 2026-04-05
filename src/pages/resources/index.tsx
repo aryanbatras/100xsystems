@@ -3,7 +3,7 @@ import Head from "next/head";
 import { useState, useEffect, useMemo } from "react";
 import Fuse from "fuse.js";
 import { Resource, ResourceCategory } from "../../types/resources";
-import styles from "./Resources.module.css";
+import styles from "../../styles/pages/Resources.module.css";
 import { ProtectedRoute } from "../../components/auth/ProtectedRoute";
 import { StaticSiteGenerator } from "../../core/infrastructure/staticSiteGenerator";
 
@@ -39,8 +39,6 @@ export default function Resources({
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
-    console.log("🔍 Categories data received:", categories);
-    console.log("🔍 Available categories:", Object.keys(categories));
   }, [categories]);
 
   const fuseOptions = {
@@ -423,7 +421,7 @@ export default function Resources({
                                           className={styles.minimalFavicon}
                                           onError={(e) =>
                                             (e.currentTarget.src =
-                                              "/placeholder-favicon.png")
+                                              "/placeholder-favicon.webp")
                                           }
                                         />
                                         <h3 className={styles.minimalTitle}>
@@ -439,7 +437,7 @@ export default function Resources({
                                             className={styles.resourceFavicon}
                                             onError={(e) =>
                                               (e.currentTarget.src =
-                                                "/placeholder-favicon.png")
+                                                "/placeholder-favicon.webp")
                                             }
                                           />
                                           <div className={styles.resourceTitle}>
@@ -579,7 +577,6 @@ export default function Resources({
 
 export const getStaticProps: GetStaticProps = async () => {
   try {
-    console.log('🏗️ Building resources page...');
     
     // Fetch resources and categories at build time using StaticSiteGenerator
     const [resources, categories] = await Promise.all([
@@ -587,7 +584,6 @@ export const getStaticProps: GetStaticProps = async () => {
       StaticSiteGenerator.fetchResourceCategories()
     ]);
 
-    console.log(`✅ Generated resources page with ${resources.length} resources and ${Object.keys(categories).length} categories`);
 
     return {
       props: {
@@ -596,7 +592,6 @@ export const getStaticProps: GetStaticProps = async () => {
       }
     };
   } catch (error) {
-    console.error('❌ Error building resources page:', error);
     
     return {
       props: {

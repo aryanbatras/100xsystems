@@ -12,13 +12,10 @@ export class DatabaseTestUtil {
     
     switch (level) {
       case 'error':
-        console.error(logMessage, data);
         break;
       case 'warn':
-        console.warn(logMessage, data);
         break;
       default:
-        console.log(logMessage, data);
     }
   }
 
@@ -321,35 +318,25 @@ export class DatabaseTestUtil {
   }
 
   static printDiagnosticSummary(diagnostic: Awaited<ReturnType<typeof this.runFullDiagnostic>>): void {
-    console.log('\n🔍 DATABASE DIAGNOSTIC SUMMARY');
-    console.log('=====================================');
     
     // Connection
-    console.log(`\n📡 Connection: ${diagnostic.connection ? '✅ CONNECTED' : '❌ FAILED'}`);
     
     // Tables
     const workingTables = diagnostic.tables.filter(t => t.exists).length;
-    console.log(`\n📊 Tables: ${workingTables}/${diagnostic.tables.length} accessible`);
     diagnostic.tables.filter(t => !t.exists).forEach(table => {
-      console.log(`   ❌ ${table.table}: ${table.error || 'Not accessible'}`);
     });
     
     // Services
     if (diagnostic.services) {
       const workingServices = Object.values(diagnostic.services).filter(s => s).length;
-      console.log(`\n🔧 Services: ${workingServices}/${Object.keys(diagnostic.services).length} working`);
       Object.entries(diagnostic.services).forEach(([service, working]) => {
-        console.log(`   ${working ? '✅' : '❌'} ${service}`);
       });
     }
     
     // RLS
     const workingRLS = diagnostic.rls.filter(r => r.success).length;
-    console.log(`\n🔒 RLS Policies: ${workingRLS}/${diagnostic.rls.length} working`);
     diagnostic.rls.filter(r => !r.success).forEach(rls => {
-      console.log(`   ❌ ${rls.table}.${rls.operation}: ${rls.error || 'Failed'}`);
     });
     
-    console.log('\n=====================================\n');
   }
 }

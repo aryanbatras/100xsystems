@@ -3,7 +3,7 @@ import CubeSmall from '../../animation/CubeSmall';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
 import InteractiveButton from '../../animated/InteractiveButton';
-import styles from './Section2.module.css';
+import styles from '../../../styles/components/sections/home/Section2.module.css';;
 
 export default function Section2() {
   return (

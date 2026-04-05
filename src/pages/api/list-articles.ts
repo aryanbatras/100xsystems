@@ -20,11 +20,8 @@ export default async function handler(
     const githubRepo = process.env.GITHUB_REPO;
     const githubBranch = process.env.GITHUB_BRANCH || 'main';
 
-    console.log('📂 Listing articles from GitHub...');
-    console.log(`🔍 Repository: ${githubUsername}/${githubRepo}`);
 
     if (!githubToken || !githubUsername || !githubRepo) {
-      console.error('❌ GitHub credentials not configured');
       return res.status(500).json({ 
         success: false, 
         error: 'GitHub credentials not configured' 
@@ -34,7 +31,6 @@ export default async function handler(
     // Get contents of articles directory
     const articlesDirUrl = `https://api.github.com/repos/${githubUsername}/${githubRepo}/contents/articles`;
     
-    console.log('🔍 Fetching articles directory:', articlesDirUrl);
 
     const response = await fetch(articlesDirUrl, {
       headers: {
@@ -45,12 +41,10 @@ export default async function handler(
 
     if (!response.ok) {
       if (response.status === 404) {
-        console.log('⚠️ Articles directory not found');
         return res.status(200).json({ success: true, articles: [] });
       }
       
       const errorData = await response.text();
-      console.error('❌ GitHub API error:', errorData);
       return res.status(500).json({ 
         success: false, 
         error: `GitHub API error: ${response.status} ${response.statusText}` 
@@ -60,7 +54,6 @@ export default async function handler(
     const data = await response.json();
     
     if (!Array.isArray(data)) {
-      console.error('❌ Unexpected response format:', data);
       return res.status(500).json({ 
         success: false, 
         error: 'Unexpected response format from GitHub API' 
@@ -73,7 +66,6 @@ export default async function handler(
       .map((item: any) => item.name)
       .sort((a: string, b: string) => a.localeCompare(b));
 
-    console.log(`✅ Found ${articles.length} articles:`, articles);
 
     return res.status(200).json({
       success: true,
@@ -81,7 +73,6 @@ export default async function handler(
     });
 
   } catch (error) {
-    console.error('❌ Error listing articles:', error);
     return res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred'

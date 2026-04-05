@@ -1,12 +1,12 @@
 import React from 'react';
-import styles from '../../../styles/ComingSoon.module.css';
+import styles from '../../../styles/ComingSoon.module.css';;
 
 export default function StructuralPatterns() {
   return (
     <div className={styles.container}>
-      <video className={styles.videoBackground} autoPlay loop muted playsInline>
-        <source src="/videos/abstract-light-color-animation-shapes-laptop-google-deepmind.mp4" type="video/mp4" />
-      </video>
+      <img className={styles.videoBackground}    >
+        src="/videos/abstract-light-color-animation-shapes-laptop-google-deepmind.gif"
+      </img>
       <div className={styles.content}>
         <h1 className={styles.title}>Structural Patterns</h1>
         <p className={styles.subtitle}>Coming Soon</p>

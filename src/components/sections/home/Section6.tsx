@@ -1,8 +1,8 @@
 import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
-import sharedStyles from './shared.module.css';
-import styles from './Section6.module.css';
+import sharedStyles from '../../../styles/components/sections/home/shared.module.css';
+import styles from '../../../styles/components/sections/home/Section6.module.css';;
 
 export default function Section6() {
   return (
@@ -10,9 +10,9 @@ export default function Section6() {
       <section className={styles.illustrationSection} data-speed="0.7">
         <div className={`${sharedStyles.videoSideBySide} ${styles.illustrationContent}`}>
           <div className={sharedStyles.videoLeft} data-speed="0.9">
-            <video autoPlay muted loop playsInline className={sharedStyles.videoCard}>
-              <source src="/videos/abstract-light-color-animation-shapes-laptop-google-deepmind.mp4" type="video/mp4" />
-            </video>
+            <div 
+              className={sharedStyles.videoCard}
+            />
           </div>
           <AnimatedSection animationType="fadeInRight" delay={0.4}>
             <div className={sharedStyles.videoRight}>

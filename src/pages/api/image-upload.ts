@@ -25,7 +25,6 @@ async function compressBase64Image(base64String: string): Promise<string> {
     // Convert back to base64
     return compressedBuffer.toString('base64');
   } catch (error) {
-    console.error('Sharp compression failed:', error);
     throw error;
   }
 }
@@ -90,15 +89,12 @@ export default async function handler(
       const originalBase64 = fileBuffer.toString('base64');
       
       // Compress image by 98% before uploading
-      console.log(' Compressing image before upload...');
       let compressedBase64: string;
       
       try {
         // Custom compression for base64 strings
         compressedBase64 = await compressBase64Image(originalBase64);
-        console.log(' Image compressed successfully');
       } catch (compressionError) {
-        console.error(' Compression failed, using original:', compressionError);
         compressedBase64 = originalBase64; // Fallback to original if compression fails
       }
       
@@ -121,7 +117,6 @@ export default async function handler(
         );
       } catch (dirError) {
         // Directory might already exist, that's fine
-        console.log('Directory creation result (might already exist):', dirError);
       }
       
       const githubResponse = await fetch(
@@ -142,7 +137,6 @@ export default async function handler(
 
       if (!githubResponse.ok) {
         const errorData = await githubResponse.json();
-        console.error('GitHub upload error:', errorData);
         throw new Error(`GitHub upload failed: ${errorData.message || 'Unknown error'}`);
       }
 
@@ -152,12 +146,6 @@ export default async function handler(
       // Clean up temporary file
       await unlink(file.filepath);
 
-      console.log('Image uploaded to GitHub:', {
-        filename: uniqueFilename,
-        githubUrl: rawUrl,
-        compressed: true
-      });
-
       return res.status(200).json({
         success: true,
         url: rawUrl,
@@ -165,12 +153,10 @@ export default async function handler(
       });
 
     } catch (githubError) {
-      console.error('GitHub upload failed:', githubError);
       throw new Error(`GitHub upload failed: ${githubError instanceof Error ? githubError.message : 'Unknown error'}`);
     }
 
   } catch (error) {
-    console.error('Image upload error:', error);
     
     if (error && typeof error === 'object' && 'code' in error) {
       // Formidable error

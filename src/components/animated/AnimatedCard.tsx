@@ -1,6 +1,6 @@
 import { useEffect, useRef, ReactNode } from 'react';
 import { gsap } from 'gsap';
-import styles from '../../styles/AnimatedCard.module.css';
+import styles from '../../styles/components/animated/AnimatedCard.module.css';;
 
 interface AnimatedCardProps {
   children: ReactNode;

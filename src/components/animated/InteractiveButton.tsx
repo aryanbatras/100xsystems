@@ -2,7 +2,7 @@ import { useEffect, useRef, ReactNode, forwardRef } from 'react';
 import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrambleTextPlugin } from 'gsap/dist/ScrambleTextPlugin';
-import styles from '../../styles/AnimatedButton.module.css';
+import styles from '../../styles/components/animated/AnimatedButton.module.css';;
 
 gsap.registerPlugin(ScrambleTextPlugin);
 

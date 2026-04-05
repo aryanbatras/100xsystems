@@ -1,0 +1,159 @@
+.page {
+  min-height: 100vh;
+  background: transparent;
+  color: #ffffff;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.page > * {
+  position: relative;
+  z-index: 2;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.sectionTitle {
+  font-size: 48px;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  margin-bottom: 60px;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.description {
+  font-size: 26px;
+  color: #ffffff;
+  line-height: 1.8;
+  max-width: 800px;
+  margin: 0 auto 80px auto;
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.videoCard {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+  border: 0px solid rgba(255, 255, 255, 0.1);
+  aspect-ratio: 16/9;
+}
+
+.videoCard video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.videoSideBySide {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.videoLeft {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+}
+
+.videoRight {
+  padding: 0 40px;
+}
+
+.illustrationPoints {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pointItem {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.pointNumber {
+  font-size: 32px;
+  font-weight: 100;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  opacity: 0.8;
+  min-width: 40px;
+}
+
+.pointText {
+  font-size: 20px;
+  color: #ffffff;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 32px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+  }
+
+  .videoSideBySide {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .videoRight {
+    padding: 0;
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 24px;
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+
+  .description {
+    font-size: 20px;
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 16px;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+}

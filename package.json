@@ -11,6 +11,9 @@
   "dependencies": {
     "@giscus/react": "^3.1.0",
     "@supabase/supabase-js": "^2.98.0",
+    "@tsparticles/engine": "^3.9.1",
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.9.1",
     "@types/formidable": "^3.5.0",
     "@types/lodash": "^4.17.24",
     "@types/react-syntax-highlighter": "^15.5.13",
@@ -18,6 +21,7 @@
     "@types/uuid": "^10.0.0",
     "@xyflow/react": "^12.10.1",
     "browser-image-compression": "^2.0.2",
+    "fluid-simulation-react": "^1.0.5",
     "formidable": "^3.5.4",
     "fuse.js": "^7.1.0",
     "gray-matter": "^4.0.3",
@@ -36,6 +40,7 @@
     "sharp": "^0.34.5",
     "styled-components": "^6.3.11",
     "tar-stream": "^3.1.8",
+    "tsparticles-slim": "^2.12.0",
     "turndown": "^7.2.2",
     "uuid": "^13.0.0"
   },
@@ -50,5 +55,11 @@
     "eslint-config-next": "16.1.6",
     "supabase": "^2.76.17",
     "typescript": "^5"
+  },
+  "overrides": {
+    "fluid-simulation-react": {
+      "react": "^19.2.3",
+      "react-dom": "^19.2.3"
+    }
   }
 }

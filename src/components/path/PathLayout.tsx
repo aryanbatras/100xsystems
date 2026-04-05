@@ -5,7 +5,7 @@ import { FiChevronRight, FiFolder } from 'react-icons/fi';
 import { IoBookOutline } from "react-icons/io5";
 import { PathNode } from '../../core/path/pathTypes';
 import { useTableOfContents } from '../../contexts/TableOfContentsContext';
-import styles from './PathLayout.module.css';
+import styles from '../../styles/components/path/PathLayout.module.css';;
 
 interface PathLayoutProps {
   node: PathNode;

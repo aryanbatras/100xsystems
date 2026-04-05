@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import styles from './Section11.module.css';
+import styles from '../../../styles/components/sections/home/Section11.module.css';;
 
 export default function Section11() {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -58,7 +58,7 @@ export default function Section11() {
             {[...Array(12)].map((_, index) => (
               <div key={index} className={styles.marqueeItem}>
                 <Image
-                  src="/100xsystemsonlytitle.png"
+                  src="/100xsystemsonlytitle.webp"
                   alt="100x Systems"
                   width={500}
                   height={100}
@@ -75,7 +75,7 @@ export default function Section11() {
             {[...Array(12)].map((_, index) => (
               <div key={index} className={styles.marqueeItem}>
                 <Image
-                  src="/100xsystemsonlytitle.png"
+                  src="/100xsystemsonlytitle.webp"
                   alt="100x Systems"
                   width={500}
                   height={100}

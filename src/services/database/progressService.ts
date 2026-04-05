@@ -8,13 +8,10 @@ export class ProgressService {
     
     switch (level) {
       case 'error':
-        console.error(logMessage, data);
         break;
       case 'warn':
-        console.warn(logMessage, data);
         break;
       default:
-        console.log(logMessage, data);
     }
   }
 
@@ -93,7 +90,6 @@ export class ProgressService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating progress:', error);
       return null;
     }
   }
@@ -141,7 +137,6 @@ export class ProgressService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching progress by content type:', error);
       return [];
     }
   }
@@ -158,7 +153,6 @@ export class ProgressService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching completed content:', error);
       return [];
     }
   }
@@ -175,7 +169,6 @@ export class ProgressService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching bookmarked content:', error);
       return [];
     }
   }
@@ -192,7 +185,6 @@ export class ProgressService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching in-progress content:', error);
       return [];
     }
   }
@@ -219,7 +211,6 @@ export class ProgressService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error starting learning session:', error);
       return null;
     }
   }
@@ -246,7 +237,6 @@ export class ProgressService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error ending learning session:', error);
       return null;
     }
   }
@@ -263,7 +253,6 @@ export class ProgressService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching learning sessions:', error);
       return [];
     }
   }
@@ -279,7 +268,6 @@ export class ProgressService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching user notes:', error);
       return [];
     }
   }
@@ -309,7 +297,6 @@ export class ProgressService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error creating note:', error);
       return null;
     }
   }
@@ -329,7 +316,6 @@ export class ProgressService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating note:', error);
       return null;
     }
   }
@@ -344,7 +330,6 @@ export class ProgressService {
       if (error) throw error;
       return true;
     } catch (error) {
-      console.error('Error deleting note:', error);
       return false;
     }
   }
@@ -366,7 +351,6 @@ export class ProgressService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching notes by content:', error);
       return [];
     }
   }
@@ -408,7 +392,6 @@ export class ProgressService {
 
       return stats;
     } catch (error) {
-      console.error('Error fetching progress stats:', error);
       return {
         totalCompleted: 0,
         totalInProgress: 0,

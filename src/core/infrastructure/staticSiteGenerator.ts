@@ -224,7 +224,6 @@ export class StaticSiteGenerator {
 
     if (!response.ok) {
       if (response.status === 404) {
-        console.log('⚠️ Articles directory not found');
         return [];
       }
       
@@ -284,7 +283,6 @@ export class StaticSiteGenerator {
         };
       }
     } catch (error) {
-      console.error(`Error fetching metadata for ${slug}:`, error);
       return {
         slug,
         title: slug.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
@@ -366,9 +364,7 @@ export class StaticSiteGenerator {
     const sizeInKB = sizeInBytes / 1024;
     
     if (sizeInKB > 128) {
-      console.warn(`⚠️ Article "${slug}" is ${sizeInKB.toFixed(1)}kB which exceeds the 128kB threshold for optimal performance`);
     } else {
-      console.log(`✅ Article "${slug}" is ${sizeInKB.toFixed(1)}kB - within optimal size range`);
     }
   }
 
@@ -394,16 +390,13 @@ export class StaticSiteGenerator {
             const content = await contentResponse.json();
             const slug = file.name.replace('.json', '');
             roadmaps[slug] = { ...content, slug };
-            console.log(`✅ Loaded roadmap meta: ${slug}`);
           }
         } catch (error) {
-          console.warn(`⚠️ Failed to load roadmap meta: ${file.name}`, error);
         }
       }
       
       return roadmaps;
     } catch (error) {
-      console.error('Error fetching roadmap meta:', error);
       return {};
     }
   }
@@ -425,11 +418,9 @@ export class StaticSiteGenerator {
           const manifest = await response.json();
           return { slug, manifest: { ...manifest, slug } };
         } else {
-          console.warn(`⚠️ No manifest found for ${slug}`);
           return null;
         }
       } catch (error) {
-        console.error(`Error fetching manifest for ${slug}:`, error);
         return null;
       }
     });
@@ -439,7 +430,6 @@ export class StaticSiteGenerator {
     results.forEach((result) => {
       if (result) {
         manifests[result.slug] = result.manifest;
-        console.log(`✅ Loaded manifest: ${result.slug}`);
       }
     });
     
@@ -448,7 +438,6 @@ export class StaticSiteGenerator {
 
   // Stage 3: Build knowledge graph combining all metadata
   static async buildKnowledgeGraph(): Promise<KnowledgeGraph> {
-    console.log('🏗️ Building knowledge graph...');
     
     // Execute all three stages in parallel for maximum performance
     const [roadmaps, manifests] = await Promise.all([
@@ -577,7 +566,6 @@ export class StaticSiteGenerator {
       learningPaths: this.generateLearningPaths(manifests, relationships) // Generate recommended paths
     };
     
-    console.log(`✅ Built knowledge graph: ${analytics.totalRoadmaps} roadmaps, ${analytics.totalArticles} articles`);
     
     return {
       roadmaps,
@@ -626,7 +614,6 @@ export class StaticSiteGenerator {
         return { ...articleData, manifest: { ...manifest, slug } };
       }
     } catch (error) {
-      console.warn(`⚠️ No manifest found for ${slug}`);
     }
     
     return articleData;
@@ -634,7 +621,6 @@ export class StaticSiteGenerator {
 
   // Search index generation for Fuse.js
   static async generateSearchIndex(): Promise<SearchDocument[]> {
-    console.log('🔍 Building search index...');
     
     const articles = await this.fetchAllArticlesMetadata();
     const searchDocuments: SearchDocument[] = [];
@@ -674,13 +660,10 @@ export class StaticSiteGenerator {
           wordCount: cleanText.split(' ').length
         });
         
-        console.log(`✅ Processed article for search: ${article.slug}`);
       } catch (error) {
-        console.warn(`⚠️ Failed to process article ${article.slug} for search:`, error);
       }
     }
     
-    console.log(`✅ Built search index: ${searchDocuments.length} documents`);
     return searchDocuments;
   }
   
@@ -751,13 +734,11 @@ export class StaticSiteGenerator {
       
       return { frontmatter: parsed, body };
     } catch (error) {
-      console.warn('Error parsing frontmatter:', error);
       return { frontmatter: {}, body: content };
     }
   }
 
   static async fetchDSAProblems(): Promise<DSAContent> {
-    console.log('🏗️ Building DSA content...');
     
     const sections: DSASection[] = [];
     let totalProblems = 0;
@@ -805,13 +786,11 @@ export class StaticSiteGenerator {
         section.categories = categories as never[]; // Type assertion to fix TypeScript error
         totalProblems += categories.reduce((sum, cat) => sum + cat.problems.length, 0);
       } catch (error) {
-        console.warn(`⚠️ Failed to load section ${section.name}:`, error);
       }
     }
     
     sections.push(...sectionStructure);
     
-    console.log(`✅ Built DSA content: ${totalProblems} problems across ${sections.length} sections`);
     
     return {
       sections,
@@ -839,7 +818,6 @@ export class StaticSiteGenerator {
           }
         }
       } catch (error) {
-        console.warn(`Error fetching categories for ${sectionPath}:`, error);
       }
     
     return categories;
@@ -905,7 +883,6 @@ export class StaticSiteGenerator {
       // Sort by order
       problems.sort((a, b) => a.order - b.order);
     } catch (error) {
-      console.warn(`Error fetching problems for ${categoryName}:`, error);
     }
     
     return problems;
@@ -916,14 +893,12 @@ export class StaticSiteGenerator {
     
     try {
       if (!fs.existsSync(fullPath)) {
-        console.warn(`Directory does not exist: ${fullPath}`);
         return [];
       }
       
       const files = fs.readdirSync(fullPath);
       return files.filter(file => file.endsWith('.md')).sort();
     } catch (error) {
-      console.warn(`Error reading directory ${fullPath}:`, error);
       return [];
     }
   }
@@ -933,7 +908,6 @@ export class StaticSiteGenerator {
       const fullPath = path.join(process.cwd(), categoryPath, filename);
       
       if (!fs.existsSync(fullPath)) {
-        console.warn(`File does not exist: ${fullPath}`);
         return null;
       }
       
@@ -965,7 +939,6 @@ export class StaticSiteGenerator {
         tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : []
       };
     } catch (error) {
-      console.warn(`Error parsing problem ${filename}:`, error);
       return null;
     }
   }
@@ -1007,14 +980,12 @@ export class StaticSiteGenerator {
   // ========== RESOURCE SYSTEM METHODS ==========
 
   static async fetchAllResources(): Promise<Resource[]> {
-    console.log('🏗️ Building resources content...');
     
     const CATEGORIES_DIR = path.join(process.cwd(), 'content/resources/categories');
     const allResources: Resource[] = [];
     
     try {
       if (!fs.existsSync(CATEGORIES_DIR)) {
-        console.warn(`Resources directory not found: ${CATEGORIES_DIR}`);
         return [];
       }
       
@@ -1056,11 +1027,9 @@ export class StaticSiteGenerator {
         return a.title.localeCompare(b.title);
       });
       
-      console.log(`✅ Built resources content: ${sortedResources.length} resources`);
       return sortedResources;
       
     } catch (error) {
-      console.error('Error building resources content:', error);
       return [];
     }
   }
@@ -1086,7 +1055,6 @@ export class StaticSiteGenerator {
           resource.subcategory = subcategory;
           resources.push(resource);
         } catch (error) {
-          console.warn(`Error parsing resource file ${item}:`, error);
         }
       }
     }
@@ -1095,14 +1063,12 @@ export class StaticSiteGenerator {
   }
 
   static async fetchResourceCategories(): Promise<Record<string, any>> {
-    console.log('🏗️ Building resource categories...');
     
     const CATEGORIES_DIR = path.join(process.cwd(), 'content/resources/categories');
     const categoriesData: Record<string, any> = {};
     
     try {
       if (!fs.existsSync(CATEGORIES_DIR)) {
-        console.warn(`Resources directory not found: ${CATEGORIES_DIR}`);
         return {};
       }
       
@@ -1126,11 +1092,9 @@ export class StaticSiteGenerator {
         }
       }
       
-      console.log(`✅ Built resource categories: ${Object.keys(categoriesData).length} categories`);
       return categoriesData;
       
     } catch (error) {
-      console.error('Error building resource categories:', error);
       return {};
     }
   }
@@ -1143,17 +1107,14 @@ export class StaticSiteGenerator {
       const response = await fetch(categoryUrl);
       
       if (!response.ok) {
-        console.warn(`⚠️ Resource category not found: ${category}`);
         return [];
       }
       
       const categoryData = await response.json();
       const resources = categoryData.resources || [];
       
-      console.log(`✅ Loaded ${resources.length} resources from category: ${category}`);
       return resources;
     } catch (error) {
-      console.error(`Error fetching resources for category ${category}:`, error);
       return [];
     }
   }
@@ -1272,7 +1233,6 @@ export class StaticSiteGenerator {
   }
 
   static async buildResourceKnowledgeGraph(): Promise<ResourceKnowledgeGraph> {
-    console.log('🏗️ Building resource knowledge graph...');
     
     const categories = await this.fetchResourceCategories();
     const allResources: Resource[] = [];
@@ -1394,7 +1354,6 @@ export class StaticSiteGenerator {
       topPublishers: Array.from(allPublishers).slice(0, 10)
     };
     
-    console.log(`✅ Built resource knowledge graph: ${analytics.totalResources} resources, ${analytics.totalCategories} categories`);
     
     return {
       resources: allResources.reduce((acc, resource) => {
@@ -1408,7 +1367,6 @@ export class StaticSiteGenerator {
   }
 
   static async generateResourceSearchIndex(): Promise<ResourceSearchDocument[]> {
-    console.log('🔍 Building resource search index...');
     
     const knowledgeGraph = await this.buildResourceKnowledgeGraph();
     const searchDocuments: ResourceSearchDocument[] = [];
@@ -1454,7 +1412,6 @@ export class StaticSiteGenerator {
       });
     }
     
-    console.log(`✅ Built resource search index: ${searchDocuments.length} documents`);
     return searchDocuments;
   }
 

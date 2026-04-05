@@ -6,7 +6,7 @@ import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { PathNode } from '../../core/path/pathTypes';
 import { useTableOfContents } from '../../contexts/TableOfContentsContext';
 import { TableOfContents } from './TableOfContents';
-import styles from './ContentLayout.module.css';
+import styles from '../../styles/components/path/ContentLayout.module.css';;
 
 interface TocItem {
   id: string;

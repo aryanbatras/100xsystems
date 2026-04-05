@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import styles from './ContentLayout.module.css';
+import styles from '../../styles/components/path/GlobalTableOfContents.module.css';;
 
 interface TocItem {
   id: string;
@@ -69,7 +69,6 @@ export const GlobalTableOfContents: React.FC<GlobalTableOfContentsProps> = ({
       <button
         className={`${styles.tocLink} ${activeSection === item.id ? styles.active : ''}`}
         onClick={() => {
-          // console.log('Clicked TOC item:', item.id, item.title);
           onSectionClick(item.id);
         }}
         style={{ paddingLeft: `${depth * 1 + 0.5}rem` }}

@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import Image from 'next/image';
-import styles from './Mission.module.css';
-import cinematicStyles from './cinematic.module.css';
+import styles from '../../../styles/components/sections/about/Mission.module.css';;
+import cinematicStyles from '../../../styles/components/sections/about/cinematic.module.css';
 import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
@@ -17,16 +17,16 @@ export default function Mission() {
         <div className={styles.missionSection}>
           <div className={styles.videoSideBySide}>
             <div className={styles.videoLeft}>
-              <video
+              <img
                 ref={videoRef}
                 className={styles.missionVideo}
-                autoPlay
-                muted
-                loop
-                playsInline
+                
+                
+                
+                
               >
-                <source src="/videos/abstract-light-color-files-tasks-animation-google-deepmind.mp4" type="video/mp4" />
-              </video>
+                src="/videos/abstract-light-color-files-tasks-animation-google-deepmind.gif"
+              </img>
             </div>
             <div className={styles.videoRight}>
               <AnimatedTitle variant="section" delay={0.1} className={styles.sectionTitle}>

@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import styles from "./Navbar.module.css";
+import styles from '../../styles/components/navbar/Navbar.module.css';;
 import { RxCross1 } from "react-icons/rx";
 import { CgMenuHotdog } from "react-icons/cg";
 import { IoChevronDown } from "react-icons/io5";
@@ -8,23 +8,24 @@ import { FaWhatsapp } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../../contexts/AuthContext";
+import { useGlobalAuthModal } from "../../contexts/GlobalAuthModalContext";
 import { isAdminUser } from "../../utils/auth-helpers";
-import { AuthModal } from "../auth/AuthModal";
 
 export function Navbar(): React.ReactElement {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isWhiteTheme, setIsWhiteTheme] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const router = useRouter();
   const { user, loading, signOut, signInWithGitHub } = useAuth();
+  const { openAuthModal } = useGlobalAuthModal();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   // Check if user is admin
   const isAdmin = isAdminUser(user);
 
   // Routes that should use white theme
   const whiteThemeRoutes = [
+    "/new-ai-dashboard",
     "/articles",
     "/roadmaps",
     "/resources",
@@ -92,8 +93,8 @@ export function Navbar(): React.ReactElement {
           <img
             src={
               isWhiteTheme
-                ? "/100xsystemsblacklogo.png"
-                : "/100xsystemsonlytitle.png"
+                ? "/100xsystemsblacklogo.webp"
+                : "/100xsystemsonlytitle.webp"
             }
             alt="100X Systems"
             className={styles.titleImage}
@@ -106,6 +107,11 @@ export function Navbar(): React.ReactElement {
           <div className={styles.navLinks}>
             <Link href="/" className={styles.navLink}>
               Home
+            </Link>
+
+            {/* AI Chat - Priority Link */}
+            <Link href="/new-ai-dashboard" className={styles.navLink}>
+              AI Chat
             </Link>
 
             {/* Priority Links - Path & Roadmaps */}
@@ -216,7 +222,7 @@ export function Navbar(): React.ReactElement {
               </div>
             ) : (
               <button
-                onClick={() => setIsAuthModalOpen(true)}
+                onClick={openAuthModal}
                 disabled={loading}
                 className={`${styles.authButton} ${isWhiteTheme ? styles.signOutWhite : ""}`}
               >
@@ -306,7 +312,7 @@ export function Navbar(): React.ReactElement {
               ) : (
                 <button
                   onClick={() => {
-                    setIsAuthModalOpen(true);
+                    openAuthModal();
                     setIsMenuOpen(false);
                   }}
                   disabled={loading}
@@ -325,6 +331,13 @@ export function Navbar(): React.ReactElement {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
+              </Link>
+              <Link
+                href="/new-ai-dashboard"
+                className={styles.mobileLink}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                AI Chat
               </Link>
             </div>
 
@@ -410,10 +423,6 @@ export function Navbar(): React.ReactElement {
           </div>
         </div>
       )}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-      />
       
       {/* WhatsApp Group Floating Button */}
       <a

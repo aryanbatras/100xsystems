@@ -13,7 +13,6 @@ export class AnalyticsService {
       if (error && error.code !== 'PGRST116') throw error;
       return data || null;
     } catch (error) {
-      console.error('Error fetching user analytics:', error);
       return null;
     }
   }
@@ -33,7 +32,6 @@ export class AnalyticsService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating user analytics:', error);
       return null;
     }
   }
@@ -75,7 +73,6 @@ export class AnalyticsService {
         preferredDifficulty: analytics.preferred_difficulty,
       };
     } catch (error) {
-      console.error('Error fetching learning insights:', error);
       return {
         weeklyActivity: {},
         learningVelocity: {},
@@ -101,7 +98,6 @@ export class AnalyticsService {
       if (error && error.code !== 'PGRST116') throw error;
       return data || null;
     } catch (error) {
-      console.error('Error fetching content analytics:', error);
       return null;
     }
   }
@@ -126,7 +122,6 @@ export class AnalyticsService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating content analytics:', error);
       return null;
     }
   }
@@ -142,7 +137,6 @@ export class AnalyticsService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching popular content:', error);
       return [];
     }
   }
@@ -158,7 +152,6 @@ export class AnalyticsService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching trending content:', error);
       return [];
     }
   }
@@ -168,7 +161,6 @@ export class AnalyticsService {
       const analytics = await this.getUserAnalytics(userId);
       return analytics?.current_level || 1;
     } catch (error) {
-      console.error('Error fetching user level:', error);
       return 1;
     }
   }
@@ -186,7 +178,6 @@ export class AnalyticsService {
       if (error) throw error;
       return true;
     } catch (error) {
-      console.error('Error updating user level:', error);
       return false;
     }
   }
@@ -219,7 +210,6 @@ export class AnalyticsService {
       const analytics = await this.getUserAnalytics(userId);
       return analytics?.weekly_activity || {};
     } catch (error) {
-      console.error('Error fetching weekly activity:', error);
       return {};
     }
   }
@@ -228,7 +218,6 @@ export class AnalyticsService {
     try {
       await this.updateUserAnalytics(userId, { weekly_activity: activity });
     } catch (error) {
-      console.error('Error updating weekly activity:', error);
     }
   }
 
@@ -237,7 +226,6 @@ export class AnalyticsService {
       const analytics = await this.getUserAnalytics(userId);
       return analytics?.learning_velocity || {};
     } catch (error) {
-      console.error('Error fetching learning velocity:', error);
       return {};
     }
   }
@@ -246,7 +234,6 @@ export class AnalyticsService {
     try {
       await this.updateUserAnalytics(userId, { learning_velocity: velocity });
     } catch (error) {
-      console.error('Error updating learning velocity:', error);
     }
   }
 
@@ -255,7 +242,6 @@ export class AnalyticsService {
       const analytics = await this.getUserAnalytics(userId);
       return analytics?.skill_proficiency || {};
     } catch (error) {
-      console.error('Error fetching skill proficiency:', error);
       return {};
     }
   }
@@ -264,7 +250,6 @@ export class AnalyticsService {
     try {
       await this.updateUserAnalytics(userId, { skill_proficiency: proficiency });
     } catch (error) {
-      console.error('Error updating skill proficiency:', error);
     }
   }
 
@@ -273,7 +258,6 @@ export class AnalyticsService {
       const analytics = await this.getUserAnalytics(userId);
       return analytics?.retention_rate || 0;
     } catch (error) {
-      console.error('Error fetching retention rate:', error);
       return 0;
     }
   }
@@ -282,7 +266,6 @@ export class AnalyticsService {
     try {
       await this.updateUserAnalytics(userId, { retention_rate: rate });
     } catch (error) {
-      console.error('Error updating retention rate:', error);
     }
   }
 
@@ -291,7 +274,6 @@ export class AnalyticsService {
       const analytics = await this.getUserAnalytics(userId);
       return analytics?.average_session_duration || 0;
     } catch (error) {
-      console.error('Error fetching average session duration:', error);
       return 0;
     }
   }
@@ -300,7 +282,6 @@ export class AnalyticsService {
     try {
       await this.updateUserAnalytics(userId, { average_session_duration: duration });
     } catch (error) {
-      console.error('Error updating average session duration:', error);
     }
   }
 
@@ -309,7 +290,6 @@ export class AnalyticsService {
       const analytics = await this.getUserAnalytics(userId);
       return analytics?.most_active_hour || 0;
     } catch (error) {
-      console.error('Error fetching most active hour:', error);
       return 0;
     }
   }
@@ -318,7 +298,6 @@ export class AnalyticsService {
     try {
       await this.updateUserAnalytics(userId, { most_active_hour: hour });
     } catch (error) {
-      console.error('Error updating most active hour:', error);
     }
   }
 
@@ -327,7 +306,6 @@ export class AnalyticsService {
       const analytics = await this.getUserAnalytics(userId);
       return analytics?.favorite_category || null;
     } catch (error) {
-      console.error('Error fetching favorite category:', error);
       return null;
     }
   }
@@ -336,7 +314,6 @@ export class AnalyticsService {
     try {
       await this.updateUserAnalytics(userId, { favorite_category: category });
     } catch (error) {
-      console.error('Error updating favorite category:', error);
     }
   }
 
@@ -345,7 +322,6 @@ export class AnalyticsService {
       const analytics = await this.getUserAnalytics(userId);
       return analytics?.preferred_difficulty || null;
     } catch (error) {
-      console.error('Error fetching preferred difficulty:', error);
       return null;
     }
   }
@@ -354,7 +330,6 @@ export class AnalyticsService {
     try {
       await this.updateUserAnalytics(userId, { preferred_difficulty: difficulty as any });
     } catch (error) {
-      console.error('Error updating preferred difficulty:', error);
     }
   }
 
@@ -369,7 +344,6 @@ export class AnalyticsService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching certifications:', error);
       return [];
     }
   }
@@ -385,7 +359,6 @@ export class AnalyticsService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching user certifications:', error);
       return [];
     }
   }
@@ -407,7 +380,6 @@ export class AnalyticsService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error starting certification:', error);
       return null;
     }
   }
@@ -444,7 +416,6 @@ export class AnalyticsService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating certification progress:', error);
       return null;
     }
   }
@@ -461,7 +432,6 @@ export class AnalyticsService {
       if (error && error.code !== 'PGRST116') throw error;
       return data || null;
     } catch (error) {
-      console.error('Error fetching certification progress:', error);
       return null;
     }
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Options.module.css';
+import styles from '../../styles/components/sections/donate/Options.module.css';
 
 export function DonationOptions(): React.ReactElement {
   return (

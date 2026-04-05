@@ -13,18 +13,15 @@ async function loadSearchIndex(): Promise<ResourceSearchDocument[]> {
   
   // Return cached index if still valid
   if (searchIndex && indexLastUpdated && (now - indexLastUpdated) < INDEX_CACHE_DURATION) {
-    console.log(`🔍 Using cached resource search index: ${searchIndex.length} documents`);
     return searchIndex;
   }
   
-  console.log('🔍 Building resource search index...');
   const startTime = Date.now();
   
   searchIndex = await StaticSiteGenerator.generateResourceSearchIndex();
   indexLastUpdated = now;
   
   const buildTime = Date.now() - startTime;
-  console.log(`✅ Resource search index built: ${searchIndex.length} documents in ${buildTime}ms`);
   
   return searchIndex;
 }
@@ -124,7 +121,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
     
   } catch (error) {
-    console.error('Resource search error:', error);
     return res.status(500).json({ error: 'Resource search failed' });
   }
 }

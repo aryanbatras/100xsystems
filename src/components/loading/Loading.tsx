@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from "./Loader.module.css";
+import styles from '../../styles/components/loading/Loader.module.css';;
 import Image from "next/image";
 import LoaderAnimation from "./LoaderAnimation";
 import { useLoadingScreen } from "../../hooks/useLoadingScreen";
@@ -12,7 +12,7 @@ export function Loading(): React.ReactElement | null {
       <div className={styles.contentContainer}>
         <LoaderAnimation />
         <img
-          src="/100xsystemsonlytitle.png"
+          src="/100xsystemsonlytitle.webp"
           alt="100x Systems"
           width={800}
           height={800}

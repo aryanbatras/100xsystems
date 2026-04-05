@@ -2,7 +2,7 @@ import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
 import InteractiveButton from '../../animated/InteractiveButton';
-import styles from './Section5.module.css';
+import styles from '../../../styles/components/sections/home/Section5.module.css';;
 
 export default function Section5() {
   return (

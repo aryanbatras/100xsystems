@@ -3,7 +3,7 @@ import AnimatedCard from '../../animated/AnimatedCard';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
 import Image from 'next/image';
-import styles from './Section8.module.css';
+import styles from '../../../styles/components/sections/home/Section8.module.css';;
 
 export default function Section8() {
   return (

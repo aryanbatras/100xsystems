@@ -6,8 +6,21 @@ interface ChatRequest {
   selectedText?: string;
   model?: string;
   stream?: boolean;
-  imageUrl?: string;
+  imageUrl?: string; // Deprecated, kept for backward compatibility
+  images?: string[]; // New field for multiple base64 images
   memoryContext?: string;
+  feedbackData?: Array<{
+    messageId: string;
+    liked: boolean;
+    disliked: boolean;
+    replied: boolean;
+  }>;
+  responseFeedbackData?: Array<{
+    messageId: string;
+    responseContent: string;
+    feedback: 'liked' | 'disliked';
+    timestamp: string;
+  }>;
 }
 
 interface ChatResponse {
@@ -37,7 +50,7 @@ export default async function handler(
   }
 
   try {
-    const { question, selectedText, model = 'llama-3.3-70b-versatile', stream = false, imageUrl, memoryContext }: ChatRequest = req.body;
+    const { question, selectedText, model = 'llama-3.3-70b-versatile', stream = false, imageUrl, images, memoryContext, feedbackData, responseFeedbackData }: ChatRequest = req.body;
 
     if (!question) {
       return res.status(400).json({ 
@@ -46,34 +59,54 @@ export default async function handler(
       });
     }
 
+    // Process response feedback for AI learning
+    let feedbackContext = '';
+    if (responseFeedbackData && responseFeedbackData.length > 0) {
+      console.log(' AI Learning from Response Feedback:', responseFeedbackData);
+      feedbackContext = responseFeedbackData.map((item: any) => 
+        `User ${item.feedback}: ${item.responseContent?.substring(0, 100)}... (Message ID: ${item.messageId})`
+      ).join('\n');
+    }
+
     // Build messages array
     const messages: any[] = [
       {
         role: 'system',
         content: `You are a system engineering tutor helping students understand technical articles. Answer questions accurately and concisely based on your knowledge of system design, software engineering, and computer science concepts.${
-          selectedText ? `\n\nContext from the article:\n"${selectedText}"` : ''
+          selectedText ? `\n\nContext from article:\n"${selectedText}"` : ''
         }${
           memoryContext ? `\n\nRelevant memories from past conversations:\n${memoryContext}` : ''
+        }${
+          feedbackContext ? `\n\nRecent Response Feedback:\n${feedbackContext}` : ''
         }`
       }
     ];
 
     // Handle image input if using multimodal model
-    if (imageUrl && model.includes('llama-4-scout')) {
+    const hasImages = (images && images.length > 0) || imageUrl;
+    const imageUrls = images || (imageUrl ? [imageUrl] : []);
+    
+    if (hasImages && model.includes('llama-4-scout')) {
+      const content: any[] = [
+        {
+          type: 'text',
+          text: question
+        }
+      ];
+      
+      // Add all images to the content array
+      imageUrls.forEach((imgUrl: string) => {
+        content.push({
+          type: 'image_url',
+          image_url: {
+            url: imgUrl
+          }
+        });
+      });
+      
       messages.push({
         role: 'user',
-        content: [
-          {
-            type: 'text',
-            text: question
-          },
-          {
-            type: 'image_url',
-            image_url: {
-              url: imageUrl
-            }
-          }
-        ]
+        content
       });
     } else {
       messages.push({
@@ -118,7 +151,6 @@ export default async function handler(
         res.write('data: [DONE]\n\n');
         res.end();
       } catch (streamError) {
-        console.error('Streaming error:', streamError);
         res.write(`data: ${JSON.stringify({
           error: 'Streaming interrupted'
         })}\n\n`);
@@ -143,7 +175,6 @@ export default async function handler(
     }
 
   } catch (error) {
-    console.error('AI Chat Error:', error);
     
     if (!res.headersSent) {
       return res.status(500).json({

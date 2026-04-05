@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import styles from './TeamMembers.module.css';
+import styles from '../../../styles/components/sections/team/TeamMembers.module.css';;
 
 export function TeamMembers(): React.ReactElement {
   return (

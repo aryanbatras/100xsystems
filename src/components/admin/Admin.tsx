@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import styles from './Admin.module.css';
+import styles from '../../styles/components/admin/Admin.module.css';;
 import { ArticleUpdater } from '../../core/infrastructure/ArticleUpdater';
 import { useArticleUpdate } from '../../hooks/useArticleUpdate';
 import { QuillDelta, ArticleMetadata } from '../../shared/types';
@@ -55,11 +55,9 @@ export default function Admin({
         setExistingMetadata(articleData.metadata);
         setIsEditMode(true);
       } else {
-        console.error('Article not found:', articleSlug);
         // Optionally redirect to create mode or show error
       }
     } catch (error) {
-      console.error('Error loading article:', error);
     } finally {
       setIsLoading(false);
     }
@@ -84,13 +82,10 @@ export default function Admin({
       
       if (result.success) {
         // Show success message or redirect
-        console.log('Article updated successfully:', result.url);
       } else {
         // Show error message
-        console.error('Update failed:', result.error);
       }
     } catch (error) {
-      console.error('Error during save:', error);
     }
   };
 

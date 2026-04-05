@@ -1,7 +1,7 @@
 import { useEffect, useRef, ReactNode } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-import styles from '../../styles/AnimatedSection.module.css';
+import styles from '../../styles/components/animated/AnimatedSection.module.css';;
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -11,7 +11,7 @@ interface AnimatedSectionProps {
   children: ReactNode;
   className?: string;
   animationType?: 'fadeInUp' | 'fadeInLeft' | 'fadeInRight' | 'scaleIn' | 'rotateIn';
-  delay?: number;
+  delay?: number; 
   stagger?: number;
 }
 

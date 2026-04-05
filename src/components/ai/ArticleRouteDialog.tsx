@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { FaRobot, FaBookOpen, FaArrowRight } from 'react-icons/fa';
-import styles from './ArticleRouteDialog.module.css';
+import styles from '../../styles/components/ai/ArticleRouteDialog.module.css';;
 
 interface ArticleRouteDialogProps {
   isOpen: boolean;

@@ -2,7 +2,7 @@ import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { StaticSiteGenerator, KnowledgeGraph } from '../../core/infrastructure/staticSiteGenerator';
-import styles from './Roadmaps.module.css';
+import styles from '../../styles/pages/Roadmaps.module.css';
 import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
 
 interface RoadmapsProps {
@@ -106,7 +106,6 @@ export default function Roadmaps({ knowledgeGraph }: RoadmapsProps) {
 export const getStaticProps: GetStaticProps = async () => {
   try {
     const knowledgeGraph = await StaticSiteGenerator.buildKnowledgeGraph();
-    console.log(`✅ Generated roadmaps page with ${Object.keys(knowledgeGraph.roadmaps).length} roadmaps`);
 
     return {
       props: {
@@ -116,7 +115,6 @@ export const getStaticProps: GetStaticProps = async () => {
     };
 
   } catch (error) {
-    console.error('❌ Error generating roadmaps page:', error);
     return {
       props: {
         knowledgeGraph: {

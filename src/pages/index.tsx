@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Section0 from '../components/sections/home/Section0';
 import Section1 from '../components/sections/home/Section1';
 import Section2 from '../components/sections/home/Section2';
 import SectionBootcamp from '../components/sections/home/SectionBootcamp';
@@ -12,19 +13,20 @@ import Section8 from '../components/sections/home/Section8';
 import Section9 from '../components/sections/home/Section9';
 import Section10 from '../components/sections/home/Section10';
 import Section11 from '../components/sections/home/Section11';
-import { AuthModal } from '../components/auth/AuthModal';
 import { useAuth } from '../contexts/AuthContext';
-import styles from '../components/sections/home/shared.module.css';
+import styles from '../styles/components/sections/home/shared.module.css';
+import SectionMain from '../components/sections/home/SectionMain';
 
 export default function Home() {
   const router = useRouter();
   const { user } = useAuth();
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   return (
     <>
       <div className={styles.page}>
         <div className={styles.container}>
+         <SectionMain />
+          {/* <Section0 /> */}
           <Section1 />
           <Section2 />
           <SectionBootcamp />
@@ -39,7 +41,6 @@ export default function Home() {
           <Section10 />
         </div>
       </div>
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </>
   );
 }

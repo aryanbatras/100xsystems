@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { PathExplorer } from '../../components/path/PathExplorer';
 import { PathContent } from '../../core/path/pathTypes';
 import { PathParser } from '../../core/path/pathParser';
-import styles from './index.module.css';
+import styles from '../../styles/pages/path/index.module.css';
 
 interface PathProps {
   pathContent: PathContent;
@@ -34,7 +34,6 @@ export const getStaticProps: GetStaticProps = async () => {
     const parser = new PathParser();
     const pathContent = await parser.parsePathContent();
     
-    console.log(`✅ Generated Path page with ${pathContent.totalNodes} nodes`);
 
     return {
       props: {
@@ -44,7 +43,6 @@ export const getStaticProps: GetStaticProps = async () => {
     };
 
   } catch (error) {
-    console.error('❌ Error generating Path page:', error);
     
     // Return fallback content
     const fallbackContent: PathContent = {

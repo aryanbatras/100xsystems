@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import styles from './Terminal.module.css';
+import styles from '../../styles/components/editor/Terminal.module.css';
 
 export interface TerminalLog {
   id: string;
@@ -105,7 +105,6 @@ export default function Terminal({ logs, isVisible, onClear, onClose }: Terminal
         document.title = originalTitle;
       }, 2000);
     }).catch(err => {
-      console.error('Failed to copy logs:', err);
     });
   };
 

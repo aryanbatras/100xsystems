@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import styles from './GetStarted.module.css';
+import styles from '../../../styles/components/sections/contribute/GetStarted.module.css';;
 
 export function GetStarted(): React.ReactElement {
   return (

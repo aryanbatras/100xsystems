@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './PrivacyContent.module.css';
+import styles from '../../styles/components/sections/privacy/PrivacyContent.module.css';
 
 export function PrivacyContent(): React.ReactElement {
   return (

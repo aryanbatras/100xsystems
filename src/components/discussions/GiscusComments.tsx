@@ -91,7 +91,6 @@ export default function GiscusComments({
   }), [repo, repoId, category, categoryId, title, currentTheme, lang]);
 
   if (!repoId || !categoryId) {
-    console.warn('Giscus configuration missing. Please set NEXT_PUBLIC_GISCUS_REPO_ID and NEXT_PUBLIC_GISCUS_CATEGORY_ID environment variables.');
     return (
       <div className={`comments-placeholder ${className}`} ref={containerRef}>
         <p>Comments are not configured yet. Please check back later.</p>

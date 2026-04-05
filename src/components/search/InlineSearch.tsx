@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { SearchDocument, SearchResult, SearchFilters } from '../../types/search';
-import styles from './InlineSearch.module.css';
+import styles from '../../styles/components/search/InlineSearch.module.css';
 
 interface InlineSearchProps {
   articles: any[];
@@ -34,7 +34,6 @@ export default function InlineSearch({ articles }: InlineSearchProps) {
       });
       setIsIndexReady(status.isReady);
     } catch (error) {
-      console.error('Failed to check search status:', error);
     }
   };
 
@@ -62,7 +61,6 @@ export default function InlineSearch({ articles }: InlineSearchProps) {
           checkSearchStatus();
         }
       } catch (error) {
-        console.error('Search failed:', error);
       } finally {
         setLoading(false);
       }

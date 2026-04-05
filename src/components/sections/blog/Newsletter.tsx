@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Newsletter.module.css';
+import styles from '../../styles/components/sections/blog/Newsletter.module.css';
 
 export function Newsletter(): React.ReactElement {
   return (

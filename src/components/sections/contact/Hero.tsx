@@ -1,4 +1,4 @@
-import styles from './Hero.module.css';
+import styles from '../../../styles/components/sections/contact/Hero.module.css';;
 
 export default function ContactHero() {
   return (

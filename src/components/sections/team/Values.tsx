@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Values.module.css';
+import styles from '../../../styles/components/sections/team/Values.module.css';;
 
 export function Values(): React.ReactElement {
   const values = [

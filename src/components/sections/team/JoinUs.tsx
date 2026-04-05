@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import styles from './JoinUs.module.css';
+import styles from '../../../styles/components/sections/team/JoinUs.module.css';;
 
 export function JoinUs(): React.ReactElement {
   return (

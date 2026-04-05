@@ -1,4 +1,4 @@
-import styles from './CubeAnimation.module.css';
+import styles from '../../styles/components/animation/CubeAnimation.module.css';;
 
 const CubeAnimation = () => {
   return (

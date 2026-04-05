@@ -3,7 +3,7 @@ import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
 import InteractiveButton from '../../animated/InteractiveButton';
 import Image from 'next/image';
-import styles from './Section10.module.css';
+import styles from '../../../styles/components/sections/home/Section10.module.css';;
 
 export default function Section10() {
   return (

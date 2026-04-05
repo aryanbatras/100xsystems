@@ -30,9 +30,6 @@ export default async function handler(
       });
     }
 
-    console.log('📤 Publishing HTML to GitHub...');
-    console.log(`📂 Slug: ${slug}`);
-    console.log(`📏 HTML length: ${html.length} characters`);
 
     // GitHub API configuration
     const githubToken = process.env.GITHUB_TOKEN;
@@ -61,10 +58,8 @@ export default async function handler(
       if (existingFileResponse.ok) {
         const existingFile = await existingFileResponse.json();
         sha = existingFile.sha;
-        console.log('📝 Updating existing file');
       }
     } catch (error) {
-      console.log('📝 Creating new file');
     }
 
     // Encode HTML content to base64
@@ -88,16 +83,12 @@ export default async function handler(
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error('❌ GitHub API error:', errorData);
       throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
     }
 
     const result = await response.json();
     const publicUrl = `https://raw.githubusercontent.com/${githubUsername}/${githubRepo}/${githubBranch}/${filePath}`;
 
-    console.log('✅ HTML published successfully!');
-    console.log(`🔗 URL: ${publicUrl}`);
-    console.log(`📊 Size: ${html.length} bytes`);
 
     return res.status(200).json({
       success: true,
@@ -106,7 +97,6 @@ export default async function handler(
     });
 
   } catch (error) {
-    console.error('❌ Publishing failed:', error);
     return res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

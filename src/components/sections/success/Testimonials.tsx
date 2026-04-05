@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Testimonials.module.css';
+import styles from '../../styles/components/sections/success/Testimonials.module.css';
 
 export function Testimonials(): React.ReactElement {
   return (

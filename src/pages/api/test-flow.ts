@@ -9,10 +9,8 @@ export default async function handler(
   }
 
   try {
-    console.log('🧪 Testing complete admin dashboard flow...');
     
     // Step 1: Test listing articles
-    console.log('📂 Step 1: Testing list-articles API...');
     const listResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/list-articles`);
     const listData = await listResponse.json();
     
@@ -23,11 +21,9 @@ export default async function handler(
       });
     }
     
-    console.log(`✅ Found ${listData.articles.length} articles`);
     const firstArticle = listData.articles[0];
     
     // Step 2: Test loading HTML for first article
-    console.log(`📄 Step 2: Testing load-html API for ${firstArticle}...`);
     const loadResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/load-html?slug=${firstArticle}`);
     const loadData = await loadResponse.json();
     
@@ -38,21 +34,14 @@ export default async function handler(
       });
     }
     
-    console.log(`✅ Successfully loaded HTML for ${firstArticle} (${loadData.html.length} characters)`);
     
     // Step 3: Test HTML parsing
-    console.log('🔄 Step 3: Testing HTML parsing...');
     const { HtmlToDeltaConverter } = await import('../../core/infrastructure/HtmlToDeltaConverter');
     
     try {
       const parsed = HtmlToDeltaConverter.parseHtml(loadData.html);
       const delta = HtmlToDeltaConverter.convertToDelta(loadData.html);
       
-      console.log(`✅ Successfully parsed HTML`);
-      console.log(`📝 Content length: ${parsed.content.length} characters`);
-      console.log(`🖼️ Images found: ${parsed.images.length}`);
-      console.log(`📋 Metadata: ${parsed.metadata ? 'Found' : 'Not found'}`);
-      console.log(`🔄 Delta operations: ${delta.ops?.length || 0}`);
       
       return res.status(200).json({
         success: true,
@@ -70,7 +59,6 @@ export default async function handler(
       });
       
     } catch (parseError) {
-      console.error('❌ HTML parsing failed:', parseError);
       return res.status(500).json({ 
         error: 'HTML parsing failed', 
         details: parseError instanceof Error ? parseError.message : 'Unknown error'
@@ -78,7 +66,6 @@ export default async function handler(
     }
     
   } catch (error) {
-    console.error('❌ Test flow failed:', error);
     return res.status(500).json({ 
       error: 'Test flow failed', 
       details: error instanceof Error ? error.message : 'Unknown error'

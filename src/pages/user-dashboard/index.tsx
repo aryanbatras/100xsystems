@@ -6,7 +6,7 @@ import { ProfileSection } from '../../components/dashboard/ProfileSection/Profil
 import { ProgressSection } from '../../components/dashboard/ProgressSection/ProgressSection';
 import { AchievementsSection } from '../../components/dashboard/AchievementsSection/AchievementsSection';
 import { DatabaseDebugPanel } from '../../components/debug/DatabaseDebugPanel';
-import styles from './UserDashboard.module.css';
+import styles from '../../styles/pages/UserDashboard.module.css';
 
 export default function UserDashboard() {
   const router = useRouter();

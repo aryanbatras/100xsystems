@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import Image from 'next/image';
-import styles from './Hero.module.css';
-import cinematicStyles from './cinematic.module.css';
+import styles from '../../../styles/components/sections/about/Hero.module.css';;
+import cinematicStyles from '../../../styles/components/sections/about/cinematic.module.css';
 import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
@@ -14,16 +14,16 @@ export default function AboutHero() {
   return (
     <>
       <div className={styles.heroSection}>
-        <video
+        <img
           ref={videoRef}
           className={styles.heroVideoBackground}
-          autoPlay
-          muted
-          loop
-          playsInline
+          
+          
+          
+          
         >
-          <source src="/videos/black-boxes-advanced-abstract-animation-google-deepmind.mp4" type="video/mp4" />
-        </video>
+          src="/videos/black-boxes-advanced-abstract-animation-google-deepmind.gif"
+        </img>
         
         <div className={styles.heroOverlay}></div>
         

@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Prerequisites.module.css';
+import styles from '../../../styles/components/sections/install/Prerequisites.module.css';;
 
 export function Prerequisites(): React.ReactElement {
   return (

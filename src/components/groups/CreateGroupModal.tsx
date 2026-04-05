@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StudyGroup } from '../../services/types/database';
-import styles from './Groups.module.css';
+import styles from '../../styles/components/groups/Groups.module.css';
 
 interface CreateGroupModalProps {
   onClose: () => void;

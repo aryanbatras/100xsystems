@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
+import { useGlobalAuthModal } from '../../../contexts/GlobalAuthModalContext';
 import { Navbar } from '../../../components/navbar/Navbar';
-import { AuthModal } from '../../../components/auth/AuthModal';
 import { supabase } from '../../../utils/supabase';
-import styles from './Login.module.css';
+import styles from '../../../styles/pages/auth/Login.module.css';
 
 export default function LoginPage() {
   const router = useRouter();
   const { loading } = useAuth();
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const { openAuthModal } = useGlobalAuthModal();
 
   useEffect(() => {
     // Check if user is already authenticated
@@ -49,7 +49,7 @@ export default function LoginPage() {
 
             <div className={styles.providers}>
               <button
-                onClick={() => setIsAuthModalOpen(true)}
+                onClick={openAuthModal}
                 disabled={loading}
                 className={styles.providerButton}
               >
@@ -77,7 +77,6 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </>
   );
 }

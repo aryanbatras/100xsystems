@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './WaysToContribute.module.css';
+import styles from '../../../styles/components/sections/contribute/WaysToContribute.module.css';;
 
 export function WaysToContribute(): React.ReactElement {
   return (

@@ -1,0 +1,44 @@
+.cinematicSection {
+  padding: 120px 0;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.cinematicContainer {
+  padding: 0 40px;
+}
+
+.cinematicHeader {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.cinematicTitle {
+  font-size: clamp(36px, 5vw, 48px);
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  margin-bottom: 40px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.cinematicDescription {
+  font-size: clamp(18px, 2.5vw, 22px);
+  color: #cccccc;
+  line-height: 1.6;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .cinematicContainer {
+    padding: 0 20px;
+  }
+  
+  .cinematicHeader {
+    margin-bottom: 60px;
+  }
+}

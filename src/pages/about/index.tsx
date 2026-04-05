@@ -12,7 +12,7 @@ import AboutCTA from "../../components/sections/about/CTA";
 import Wallpaper from "../../components/sections/about/Wallpaper";
 import Values from "../../components/sections/about/Values";
 import AboutFooter from "../../components/sections/about/Footer";
-import styles from "../../components/sections/about/shared.module.css";
+import styles from "../../components/sections/about/shared.module.css";;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

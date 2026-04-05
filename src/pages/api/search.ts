@@ -13,18 +13,15 @@ async function loadSearchIndex(): Promise<SearchDocument[]> {
   
   // Return cached index if still valid
   if (searchIndex && indexLastUpdated && (now - indexLastUpdated) < INDEX_CACHE_DURATION) {
-    console.log(`🔍 Using cached search index: ${searchIndex.length} documents`);
     return searchIndex;
   }
   
-  console.log('🔍 Building search index...');
   const startTime = Date.now();
   
   searchIndex = await StaticSiteGenerator.generateSearchIndex();
   indexLastUpdated = now;
   
   const buildTime = Date.now() - startTime;
-  console.log(`✅ Search index built: ${searchIndex.length} documents in ${buildTime}ms`);
   
   return searchIndex;
 }
@@ -100,7 +97,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
     
   } catch (error) {
-    console.error('Search error:', error);
     return res.status(500).json({ error: 'Search failed' });
   }
 }

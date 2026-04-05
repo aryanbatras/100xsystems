@@ -52,7 +52,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    console.log('🔗 Building knowledge graph for React Flow...');
     
     // Build the knowledge graph using existing infrastructure
     const knowledgeGraph = await StaticSiteGenerator.buildKnowledgeGraph();
@@ -405,7 +404,6 @@ export default async function handler(
     analytics.totalNodes = nodes.length;
     analytics.totalEdges = edges.length;
 
-  console.log(`✅ Generated React Flow graph with ${nodes.length} nodes and ${edges.length} edges`);
 
     return res.status(200).json({
       nodes,
@@ -413,7 +411,6 @@ export default async function handler(
       analytics,
     });
   } catch (error: any) {
-    console.error('❌ Error generating graph:', error);
     return res.status(500).json({ 
       error: 'Failed to generate knowledge graph',
       details: error instanceof Error ? error.message : 'Unknown error'

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PathNode, PathContent } from '../../core/path/pathTypes';
 import { PathLayout } from './PathLayout';
 import { ContentLayout } from './ContentLayout';
-import styles from './PathExplorer.module.css';
+import styles from '../../styles/components/path/PathExplorer.module.css';;
 
 interface PathExplorerProps {
   pathContent: PathContent;

@@ -52,7 +52,6 @@ export default async function handler(
     res.send(buffer);
 
   } catch (error) {
-    console.error('TTS Error:', error);
     
     if (error instanceof Error) {
       return res.status(500).json({ error: error.message });

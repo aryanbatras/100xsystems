@@ -2,7 +2,7 @@ import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedCard from '../../animated/AnimatedCard';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
-import styles from './Section4.module.css';
+import styles from '../../../styles/components/sections/home/Section4.module.css';;
 
 export default function Section4() {
   return (

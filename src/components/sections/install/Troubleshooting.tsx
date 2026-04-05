@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Troubleshooting.module.css';
+import styles from '../../../styles/components/sections/install/Troubleshooting.module.css';;
 
 export function Troubleshooting(): React.ReactElement {
   return (

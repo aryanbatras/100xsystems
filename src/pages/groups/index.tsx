@@ -5,7 +5,7 @@ import { Navbar } from '../../components/navbar/Navbar';
 import { GroupsList } from '../../components/groups/GroupsList';
 import { CreateGroupModal } from '../../components/groups/CreateGroupModal';
 import { GroupEditSection } from '../../components/groups/GroupEditSection';
-import styles from './Groups.module.css';
+import styles from '../../styles/pages/groups/Groups.module.css';
 import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
 
 export default function GroupsPage() {
@@ -30,13 +30,7 @@ export default function GroupsPage() {
   const [filteredGroups, setFilteredGroups] = useState(publicGroups);
 
   useEffect(() => {
-    console.log('🎯 GroupsPage: State updated:', { 
-      user: user?.id, 
-      userCreatedGroup: userCreatedGroup?.id,
-      canCreateGroup, 
-      isCreatingGroup, 
-      loading 
-    });
+    // Debug effect removed
   }, [user?.id, userCreatedGroup, canCreateGroup, isCreatingGroup, loading]);
 
   useEffect(() => {
@@ -62,21 +56,21 @@ export default function GroupsPage() {
   const handleDeleteGroup = async (groupId: string) => {
     const success = await deleteGroup(groupId);
     if (success) {
-      console.log('Group deleted successfully');
+      // Group deleted successfully
     }
   };
 
   const handleJoinGroup = async (groupId: string) => {
     const success = await joinStudyGroup(groupId);
     if (success) {
-      console.log('Joined group successfully');
+      // Joined group successfully
     }
   };
 
   const handleLeaveGroup = async (groupId: string) => {
     const success = await leaveStudyGroup(groupId);
     if (success) {
-      console.log('Left group successfully');
+      // Left group successfully
     }
   };
 
@@ -140,10 +134,9 @@ export default function GroupsPage() {
               onUpdateGroup={async (updatedGroup: any) => {
                 const success = await updateGroup(userCreatedGroup.id, updatedGroup);
                 if (success) {
-                  console.log('Group updated successfully');
                   setEditingGroupId(null);
                 } else {
-                  console.error('Failed to update group');
+                  // Failed to update group
                 }
               }}
             />

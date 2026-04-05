@@ -19,7 +19,7 @@ import {
   Position,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import styles from './Graph.module.css';
+import styles from '../../styles/pages/Graph.module.css';
 import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
 import { StaticSiteGenerator } from '../../core/infrastructure/staticSiteGenerator';
 
@@ -432,7 +432,6 @@ export default function Graph({ nodes, edges }: { nodes: CustomNode[], edges: Ed
 
 export const getStaticProps: GetStaticProps = async () => {
   try {
-    console.log('🏗️ Building knowledge graph...');
     
     // Build the knowledge graph directly using static generation
     const knowledgeGraph = await StaticSiteGenerator.buildKnowledgeGraph();
@@ -519,7 +518,6 @@ export const getStaticProps: GetStaticProps = async () => {
       revalidate: false, 
     };
   } catch (error) {
-    console.error('Failed to fetch graph data:', error);
     return {
       props: {
         nodes: [],

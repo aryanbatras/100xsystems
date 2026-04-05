@@ -8,13 +8,10 @@ export class ProfilesService {
     
     switch (level) {
       case 'error':
-        console.error(logMessage, data);
         break;
       case 'warn':
-        console.warn(logMessage, data);
         break;
       default:
-        console.log(logMessage, data);
     }
   }
 

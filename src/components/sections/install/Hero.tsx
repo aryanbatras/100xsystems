@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Hero.module.css';
+import styles from '../../../styles/components/sections/install/Hero.module.css';;
 
 export function InstallHero(): React.ReactElement {
   return (

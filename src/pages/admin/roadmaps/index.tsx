@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import styles from './Roadmaps.module.css';
+import styles from '../../../styles/pages/admin/Roadmaps.module.css';
 
 interface RoadmapMeta {
   slug: string;
@@ -155,11 +155,9 @@ export default function AdminRoadmaps() {
         const data = await response.json();
         setRoadmaps(data);
       } else {
-        console.error('Failed to fetch roadmaps');
         setRoadmaps({});
       }
     } catch (error) {
-      console.error('Error fetching roadmaps:', error);
       setRoadmaps({});
     } finally {
       setIsLoading(false);
@@ -245,7 +243,6 @@ export default function AdminRoadmaps() {
         showNotification('error', errorData.error || 'Failed to save roadmap');
       }
     } catch (error) {
-      console.error('Error saving roadmap:', error);
       showNotification('error', 'Failed to save roadmap. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -314,7 +311,6 @@ export default function AdminRoadmaps() {
         showNotification('error', errorData.error || 'Failed to delete roadmap');
       }
     } catch (error) {
-      console.error('Error deleting roadmap:', error);
       showNotification('error', 'Failed to delete roadmap. Please try again.');
     } finally {
       setIsSubmitting(false);

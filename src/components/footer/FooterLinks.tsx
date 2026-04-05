@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import styles from './FooterLinks.module.css';
+import styles from '../../styles/components/footer/FooterLinks.module.css';;
 
 export function FooterLinks(): React.ReactElement {
   return (
