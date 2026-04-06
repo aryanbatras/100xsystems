@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
 import {
   FaUserCircle,
@@ -25,15 +25,32 @@ import {
   FaThumbsUp,
   FaThumbsDown,
   FaEllipsisH,
+  FaPencilRuler,
 } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import styles from '../../styles/components/ai/NewAIChatBot.module.css';
+import { DiagramParser } from '../../core/ai/diagramParser';
+import { DIAGRAM_GENERATION_PROMPT } from '../../core/ai/diagramPrompt';
+import { MERMAID_GENERATION_PROMPT } from '../../core/ai/mermaidPrompt';
+import { DIAGRAM_KEYWORDS } from '../../core/ai/diagramConfig';
+
+// Import Excalidraw CSS exactly like in test component
+import '@excalidraw/excalidraw/index.css';
 
 // Dynamically import React Quill to avoid SSR issues
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
+
+// Dynamically import Excalidraw component like in test component
+const ExcalidrawComponent = dynamic(
+  async () => {
+    const { default: Excalidraw } = await import('../excalidraw/Excalidraw');
+    return Excalidraw;
+  },
+  { ssr: false }
+);
 
 interface Message {
   id: string;
@@ -92,6 +109,10 @@ export default function NewAIChatBot() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showAllHistory, setShowAllHistory] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [isDrawMode, setIsDrawMode] = useState(false);
+  const [diagramElements, setDiagramElements] = useState<any[]>([]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isGeneratingDiagram, setIsGeneratingDiagram] = useState(false);
   
   const [settings, setSettings] = useState<ChatSettings>({
     voiceEnabled: true,
@@ -105,6 +126,200 @@ export default function NewAIChatBot() {
   const [feedbackInput, setFeedbackInput] = useState('');
   const RATE_LIMIT = 5;
   const RATE_WINDOW = 60000;
+
+  // Initialize diagram parser
+  const diagramParser = useRef(new DiagramParser()).current;
+
+  // Handle fullscreen toggle for Excalidraw
+  const handleFullscreenToggle = useCallback((fullscreen: boolean) => {
+    setIsFullscreen(fullscreen);
+  }, []);
+
+  // Handle AI response with diagram parsing
+  const handleAIResponse = useCallback(async (aiContent: string, theme: string = 'dark') => {
+    console.log('🎨 === AI RESPONSE HANDLING START ===');
+    console.log('🎨 handleAIResponse called with content length:', aiContent.length);
+    console.log('🎨 Content preview:', aiContent.substring(0, 200) + '...');
+    console.log('🎨 Theme:', theme);
+    
+    const parsed = await diagramParser.parseAIResponse(aiContent, theme);
+    
+    console.log('📊 Parsed result:', {
+      hasContent: !!parsed.content,
+      hasDiagram: !!parsed.diagram,
+      elementCount: parsed.diagram?.elements?.length || 0,
+      diagramType: parsed.diagram?.diagramType
+    });
+    
+    if (parsed.diagram) {
+      console.log('📝 Diagram elements preview:', parsed.diagram.elements.slice(0, 2));
+    }
+    
+    // Set text response
+    const aiMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      type: "ai",
+      content: parsed.content,
+      timestamp: new Date(),
+    };
+    
+    console.log('💬 Adding AI message to chat:', aiMessage.id);
+    setMessages(prev => [...prev, aiMessage]);
+    
+    // Handle diagram generation
+    if (parsed.diagram && parsed.diagram.elements.length > 0) {
+      console.log('🔄 === DIAGRAM GENERATION START ===');
+      console.log('🔄 Starting diagram generation with', parsed.diagram.elements.length, 'elements');
+      setIsGeneratingDiagram(true);
+      
+      try {
+        console.log('🔄 Calling convertToExcalidraw...');
+        const excalidrawElements = await diagramParser.convertToExcalidraw(parsed.diagram.elements);
+        
+        console.log('✅ === CONVERSION COMPLETE ===');
+        console.log('✅ Conversion result:', {
+          success: excalidrawElements.length > 0,
+          elementCount: excalidrawElements.length,
+          firstElement: excalidrawElements[0],
+          allElements: excalidrawElements
+        });
+        
+        if (excalidrawElements.length > 0) {
+          console.log('🔄 === UPDATING REACT STATE ===');
+          console.log('🔄 Accumulating', excalidrawElements.length, 'new elements');
+          
+          // Use accumulation instead of replacement
+          handleNewAIGeneratedElements(excalidrawElements);
+          
+          console.log('🔄 Setting isDrawMode to true');
+          setIsDrawMode(true); // Auto-switch to draw mode
+          
+          console.log('🎨 Showing success notification');
+          showNotification('🎨 Diagram added! Elements accumulated.');
+          
+          console.log('✅ === STATE UPDATE COMPLETE ===');
+          console.log('✅ Current state:', {
+            diagramElementsLength: diagramElements.length,
+            isDrawMode: true,
+            isGeneratingDiagram: false
+          });
+        } else {
+          console.log('❌ No elements returned from conversion');
+          showNotification('⚠️ Diagram generation failed. Showing text response only.');
+        }
+      } catch (error) {
+        console.error('❌ === CONVERSION ERROR ===');
+        console.error('❌ Diagram conversion failed:', error);
+        showNotification('⚠️ Diagram conversion failed. Please try again.');
+      } finally {
+        console.log('🏁 === DIAGRAM GENERATION END ===');
+        setIsGeneratingDiagram(false);
+      }
+    } else {
+      console.log('ℹ️ No diagram found in AI response');
+    }
+    
+    console.log('🎨 === AI RESPONSE HANDLING END ===');
+  }, [diagramParser]);
+
+  // Show notification helper
+  const showNotification = (message: string) => {
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    notification.style.cssText = `
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background: rgba(250, 204, 21, 0.9);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+      z-index: 9999;
+      animation: slideIn 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 3000);
+  };
+
+  // Check if user is requesting a diagram
+  const isDiagramRequest = useCallback((content: string) => {
+    console.log('🔍 === DIAGRAM REQUEST CHECK ===');
+    console.log('🔍 Checking content:', content);
+    const isRequest = diagramParser.isDiagramRequest(content);
+    console.log('🔍 Is diagram request:', isRequest);
+    return isRequest;
+  }, [diagramParser]);
+
+  // Auto-collapse sidebar when entering draw mode
+  useEffect(() => {
+    console.log('🔄 === SIDEBAR EFFECT ===');
+    console.log('🔄 isDrawMode changed:', isDrawMode);
+    
+    if (isDrawMode) {
+      console.log('🔄 Collapsing sidebar for draw mode');
+      setSidebarOpen(false);
+    }
+  }, [isDrawMode]);
+
+  // Track diagramElements state changes
+  useEffect(() => {
+    console.log('📊 === DIAGRAM ELEMENTS STATE CHANGE ===');
+    console.log('📊 diagramElements length:', diagramElements.length);
+    console.log('📊 diagramElements:', diagramElements);
+    console.log('📊 isDrawMode:', isDrawMode);
+  }, [diagramElements, isDrawMode]);
+
+  // Track previous elements to detect user changes vs initialization
+  const prevElementsRef = useRef<any[]>([]);
+  const isExcalidrawInitialized = useRef(false);
+  const accumulatedElementsRef = useRef<any[]>([]);
+  
+  useEffect(() => {
+    prevElementsRef.current = diagramElements;
+  }, [diagramElements]);
+
+  // Accumulate new AI elements instead of replacing
+  const handleNewAIGeneratedElements = useCallback((newElements: any[]) => {
+    console.log('🔄 === ACCUMULATING ELEMENTS ===');
+    console.log('🔄 Previous elements:', accumulatedElementsRef.current.length);
+    console.log('🔄 New elements:', newElements.length);
+    
+    // Combine existing elements with new AI elements
+    const combinedElements = [...accumulatedElementsRef.current, ...newElements];
+    accumulatedElementsRef.current = combinedElements;
+    
+    console.log('🔄 Combined elements:', combinedElements.length);
+    setDiagramElements(combinedElements);
+  }, []);
+
+  // Reset accumulation when user wants to start fresh
+  const resetDiagram = useCallback(() => {
+    console.log('🔄 === RESETTING DIAGRAM ===');
+    accumulatedElementsRef.current = [];
+    setDiagramElements([]);
+    setIsDrawMode(false);
+  }, []);
+
+  // Track isDrawMode state changes  
+  useEffect(() => {
+    console.log('🎨 === DRAW MODE STATE CHANGE ===');
+    console.log('🎨 isDrawMode:', isDrawMode);
+    console.log('🎨 diagramElements length:', diagramElements.length);
+    
+    // Reset Excalidraw initialization flag when entering draw mode
+    if (isDrawMode) {
+      isExcalidrawInitialized.current = false;
+      console.log('🔧 Reset Excalidraw initialization flag for new draw mode');
+    }
+  }, [isDrawMode]);
 
   const convertHtmlToMarkdown = (html: string): string => {
     if (typeof window === 'undefined') return html;
@@ -448,6 +663,12 @@ export default function NewAIChatBot() {
     console.log('🚀 AI Dashboard - Sending message with images:', images?.length || 0);
     console.log('🚀 AI Dashboard - Message content:', messageContent.substring(0, 100));
     
+    // Check if user is requesting a diagram
+    const wantsDiagram = isDiagramRequest(messageContent);
+    const wantsMermaid = diagramParser.isMermaidRequest(messageContent);
+    console.log('🎨 Diagram request detected:', wantsDiagram);
+    console.log('🐳 Mermaid request detected:', wantsMermaid);
+    
     // Get ALL feedback data (both message feedback and response feedback)
     const currentFeedback = Array.from(feedbackData.entries()).map(([messageId, feedback]) => ({
       messageId,
@@ -474,13 +695,16 @@ export default function NewAIChatBot() {
         .join('\n\n');
 
       const requestBody: any = {
-        question: messageContent,
+        question: wantsMermaid ? `${MERMAID_GENERATION_PROMPT}\n\nUser request: ${messageContent}` : 
+                  wantsDiagram ? `${DIAGRAM_GENERATION_PROMPT}\n\nUser request: ${messageContent}` : messageContent,
         model: modelToUse,
         stream: true,
         memoryContext: memoryContext || undefined,
         images: images || undefined,
         feedbackData: currentFeedback, // Send message feedback
-        responseFeedbackData: responseFeedbackData // Send response feedback
+        responseFeedbackData: responseFeedbackData, // Send response feedback
+        diagramMode: wantsDiagram || wantsMermaid, // Tell AI to expect diagram generation
+        mermaidMode: wantsMermaid // Tell AI to generate Mermaid syntax
       };
       
       console.log('🚀 AI Dashboard - Request body:', JSON.stringify(requestBody, null, 2));
@@ -548,6 +772,12 @@ export default function NewAIChatBot() {
           }
         }
       }
+
+      // Process complete response for diagram parsing
+      console.log('📞 === CALLING handleAIResponse ===');
+      console.log('📞 AI content length:', aiContent.length);
+      console.log('📞 AI content preview:', aiContent.substring(0, 300) + '...');
+      await handleAIResponse(aiContent, 'dark'); // Use dark theme consistently
 
       // Save final AI message to conversation
       setConversations(prev => prev.map(c => 
@@ -954,9 +1184,16 @@ export default function NewAIChatBot() {
             <img src="/100xsystems.webp" alt="100x AI" className={styles.headerLogo} />
             <span>100x AI</span>
           </div>
-          {/* <button onClick={clearChat} className={styles.clearButton}>
-            <FaTrash />
-          </button> */}
+          <button
+            onClick={() => setIsDrawMode(!isDrawMode)}
+            className={`${styles.drawModeButton} ${isDrawMode ? styles.drawModeActive : ''}`}
+            title={isDrawMode ? "Exit Draw Mode" : "AI Draw Mode"}
+          >
+            {isDrawMode ? <FaTimes /> : <FaPencilRuler />}
+            <span className={styles.drawModeButtonText}>
+              {isDrawMode ? "Exit Draw" : "AI Draw"}
+            </span>
+          </button>
         </div>
 
         {/* Settings Panel */}
@@ -1002,11 +1239,15 @@ export default function NewAIChatBot() {
           </div>
         )}
 
-        {/* Messages */}
-    <div 
-          className={styles.messagesContainer}
-          onWheel={(e) => e.stopPropagation()}
-        >
+        {/* Split Layout Container */}
+        <div className={`${styles.splitContainer} ${isDrawMode ? styles.splitMode : styles.fullMode}`}>
+          {/* Chat Panel (30% when in draw mode, 100% otherwise) */}
+          <div className={`${styles.chatPanel} ${isDrawMode ? styles.chatPanelSplit : styles.chatPanelFull}`}>
+            {/* Messages */}
+            <div 
+              className={styles.messagesContainer}
+              onWheel={(e) => e.stopPropagation()}
+            >
           {messages.length === 0 ? (
             <div className={styles.emptyState}>
               <img src="/100xsystems.webp" alt="100x AI" className={styles.emptyLogo} />
@@ -1208,6 +1449,103 @@ export default function NewAIChatBot() {
         </div>
       </div>
 
+          {/* Excalidraw Panel (70% when in draw mode, hidden otherwise) */}
+          {isDrawMode && (
+            <div className={styles.excalidrawPanel}>
+              <div className={styles.excalidrawPanelHeader}>
+                <h3>Diagram Canvas</h3>
+                <div className={styles.excalidrawPanelControls}>
+                  {isGeneratingDiagram && (
+                    <div className={styles.diagramLoadingIndicator}>
+                      <div className={styles.spinner}></div>
+                      <span>Generating diagram...</span>
+                    </div>
+                  )}
+                  <button className={styles.excalidrawControlButton} title="Clear Canvas" onClick={resetDiagram}>
+                    <FaTrash />
+                  </button>
+                  <button className={styles.excalidrawControlButton} title="Export Diagram">
+                    <FaCopy />
+                  </button>
+                </div>
+              </div>
+              <div className={styles.excalidrawCanvas}>
+                {(() => {
+                  console.log('🎨 === EXCALIDRAW COMPONENT RENDER ===');
+                  console.log('🎨 isDrawMode:', isDrawMode);
+                  console.log('🎨 diagramElements length:', diagramElements.length);
+                  console.log('🎨 diagramElements:', diagramElements);
+                  console.log('🎨 isFullscreen:', isFullscreen);
+                  console.log('🎨 isGeneratingDiagram:', isGeneratingDiagram);
+                  return null;
+                })()}
+                <ExcalidrawComponent
+                  height={isFullscreen ? '100vh' : '100%'}
+                  width={isFullscreen ? '100vw' : '100%'}
+                  theme="dark"
+                  zenModeEnabled={true}
+                  autoFocus={true}
+                  name="AI Generated Diagram"
+                  onFullscreenToggle={handleFullscreenToggle}
+                  isFullscreen={isFullscreen}
+                  initialData={{
+                    elements: diagramElements,
+                    appState: {
+                      viewBackgroundColor: '#1a1a1a',
+                      currentItemStrokeColor: '#ffffff',
+                      currentItemBackgroundColor: 'transparent',
+                      currentItemFontColor: '#ffffff',
+                    },
+                  }}
+                  onSceneChange={(elements: any, appState: any, files: any) => {
+                    console.log('🔄 === EXCALIDRAW SCENE CHANGE ===');
+                    console.log('🔄 Scene changed:', { 
+                      elementCount: elements.length, 
+                      theme: appState.theme,
+                      zenMode: appState.zenModeEnabled,
+                      elements: elements
+                    });
+                    
+                    // Mark Excalidraw as initialized on first change
+                    if (!isExcalidrawInitialized.current) {
+                      console.log('🔧 Excalidraw initialized, ignoring first scene change');
+                      isExcalidrawInitialized.current = true;
+                      // Don't update state on initialization - just set the reference
+                      prevElementsRef.current = elements;
+                      return;
+                    }
+                    
+                    // Only update state if user actually made changes OR if we're clearing from non-empty to empty
+                    const currentElements = prevElementsRef.current;
+                    const elementsChanged = JSON.stringify(currentElements) !== JSON.stringify(elements);
+                    const isClearingEmpty = currentElements.length > 0 && elements.length === 0;
+                    
+                    console.log('🔄 Change detection:', {
+                      prevCount: currentElements.length,
+                      newCount: elements.length,
+                      elementsChanged: elementsChanged,
+                      isClearingEmpty: isClearingEmpty
+                    });
+                    
+                    // Update accumulated elements when user makes changes
+                    if (elementsChanged && !isClearingEmpty) {
+                      console.log('🔄 Updating accumulated elements due to user change');
+                      accumulatedElementsRef.current = elements;
+                      setDiagramElements(elements);
+                    } else {
+                      console.log('🔄 Ignoring scene change - initialization or empty clearing');
+                    }
+                  }}
+                  onExport={(exportData: any) => {
+                    console.log('🔄 === EXCALIDRAW EXPORT ===');
+                    console.log('🔄 Excalidraw export:', exportData);
+                  }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
       {/* Feedback Modal */}
       {feedbackModal.isOpen && (
         <div className={styles.feedbackModal}>
@@ -1247,5 +1585,6 @@ export default function NewAIChatBot() {
         </div>
       )}
     </div>
+     </div>
   );
 }

@@ -1,4 +1,4 @@
-import styles from '../../styles/components/sections/about/CTA.module.css';
+import styles from '../../../styles/components/sections/about/CTA.module.css';
 
 export default function AboutCTA() {
   return (

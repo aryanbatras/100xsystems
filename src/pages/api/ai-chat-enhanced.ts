@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Groq from 'groq-sdk';
+import { AI_SYSTEM_PROMPT, DIAGRAM_KEYWORDS } from '../../core/ai/diagramConfig';
 
 interface ChatRequest {
   question: string;
@@ -21,6 +22,7 @@ interface ChatRequest {
     feedback: 'liked' | 'disliked';
     timestamp: string;
   }>;
+  diagramMode?: boolean; // New field for diagram generation
 }
 
 interface ChatResponse {
@@ -50,7 +52,7 @@ export default async function handler(
   }
 
   try {
-    const { question, selectedText, model = 'llama-3.3-70b-versatile', stream = false, imageUrl, images, memoryContext, feedbackData, responseFeedbackData }: ChatRequest = req.body;
+    const { question, selectedText, model = 'llama-3.3-70b-versatile', stream = false, imageUrl, images, memoryContext, feedbackData, responseFeedbackData, diagramMode }: ChatRequest = req.body;
 
     if (!question) {
       return res.status(400).json({ 
@@ -58,6 +60,11 @@ export default async function handler(
         error: 'Missing question' 
       });
     }
+
+    // Check if user is requesting a diagram
+    const isDiagramRequest = diagramMode || DIAGRAM_KEYWORDS.some(keyword => 
+      question.toLowerCase().includes(keyword)
+    );
 
     // Process response feedback for AI learning
     let feedbackContext = '';
@@ -68,16 +75,18 @@ export default async function handler(
       ).join('\n');
     }
 
-    // Build messages array
+    // Build messages array with enhanced system prompt for diagrams
     const messages: any[] = [
       {
         role: 'system',
-        content: `You are a system engineering tutor helping students understand technical articles. Answer questions accurately and concisely based on your knowledge of system design, software engineering, and computer science concepts.${
+        content: `${AI_SYSTEM_PROMPT}${
           selectedText ? `\n\nContext from article:\n"${selectedText}"` : ''
         }${
           memoryContext ? `\n\nRelevant memories from past conversations:\n${memoryContext}` : ''
         }${
           feedbackContext ? `\n\nRecent Response Feedback:\n${feedbackContext}` : ''
+        }${
+          isDiagramRequest ? `\n\nIMPORTANT: The user is requesting a diagram. Please generate a valid JSON response with diagram data following the ExcalidrawElementSkeleton specification.` : ''
         }`
       }
     ];

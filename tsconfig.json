@@ -26,7 +26,10 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
-, "src/components/loading/LoaderAnimation.jsx", "src/components/animation/CubeAnimation.jsx", "src/components/animation/CubeSmall.jsx"  ],
+    ".next/types/**/*.ts",
+    "src/components/loading/LoaderAnimation.jsx",
+    "src/components/animation/CubeAnimation.jsx",
+    "src/components/animation/CubeSmall.jsx"
+  ],
   "exclude": ["node_modules"]
 }

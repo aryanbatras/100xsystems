@@ -11,6 +11,34 @@
   overflow: hidden;
 }
 
+/* Diagram Loading Indicator */
+.diagramLoadingIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(250, 204, 21, 0.1);
+  border: 1px solid rgba(250, 204, 21, 0.3);
+  border-radius: 6px;
+  color: #facc15;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(250, 204, 21, 0.3);
+  border-top: 2px solid #facc15;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* Sidebar */
 .sidebar {
   width: 280px;
@@ -1039,5 +1067,162 @@
   to {
     transform: translateX(0) translateY(0);
     opacity: 1;
+  }
+}
+
+/* Split Layout Styles for AI Draw Mode */
+.splitContainer {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.splitMode {
+  flex-direction: row;
+}
+
+.fullMode {
+  flex-direction: column;
+}
+
+.chatPanel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  transition: all 0.3s ease;
+}
+
+.chatPanelSplit {
+  width: 30%;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  order: 1; /* Chat on left */
+}
+
+.chatPanelFull {
+  width: 100%;
+  border-right: none;
+}
+
+.excalidrawPanel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: #1a1a1a;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  width: 70%;
+  order: 2; /* Excalidraw on right */
+}
+
+.excalidrawPanelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.excalidrawPanelHeader h3 {
+  margin: 0;
+  color: #facc15;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.excalidrawPanelControls {
+  display: flex;
+  gap: 8px;
+}
+
+.excalidrawControlButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+}
+
+.excalidrawControlButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.excalidrawCanvas {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.drawModeButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.drawModeButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.drawModeActive {
+  background: #facc15;
+  color: #000000;
+  border-color: #facc15;
+}
+
+.drawModeButtonText {
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .chatPanelSplit {
+    width: 40%;
+  }
+  
+  .excalidrawPanel {
+    width: 60%;
+  }
+  
+  .drawModeButtonText {
+    display: none;
+  }
+  
+  .drawModeButton {
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .splitMode {
+    flex-direction: column;
+  }
+  
+  .chatPanelSplit {
+    width: 100%;
+    height: 50%;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .excalidrawPanel {
+    width: 100%;
+    height: 50%;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 }

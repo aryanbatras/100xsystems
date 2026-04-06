@@ -54,6 +54,27 @@ const ExcalidrawComponent: React.FC<ExcalidrawProps> = ({
   const [elementCount, setElementCount] = useState(0);
   const [isZenMode, setIsZenMode] = useState(zenModeEnabled);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const prevInitialDataRef = useRef<any>(null);
+
+  // Update Excalidraw scene when initialData changes
+  useEffect(() => {
+    if (excalidrawAPI && initialData && initialData !== prevInitialDataRef.current) {
+      console.log('🔄 === EXCALIDRAW INITIAL DATA CHANGED ===');
+      console.log('🔄 New elements:', initialData.elements?.length || 0);
+      
+      // Update the scene with new elements
+      if (initialData.elements && initialData.elements.length > 0) {
+        excalidrawAPI.updateScene({
+          elements: initialData.elements,
+          appState: initialData.appState || {}
+        });
+        
+        console.log('✅ Excalidraw scene updated with new elements');
+      }
+      
+      prevInitialDataRef.current = initialData;
+    }
+  }, [excalidrawAPI, initialData]);
 
   // Update library when API is ready - using imported libraries
   useEffect(() => {
@@ -221,19 +242,14 @@ const ExcalidrawComponent: React.FC<ExcalidrawProps> = ({
           theme={theme}
           zenModeEnabled={isZenMode}
           autoFocus={autoFocus}
-          initialData={{
-            elements: [],
-            appState: {},
-            files: {},
-            libraryItems: systemDesignLibrary.library as any
-          }}
+          initialData={initialData}
           onLibraryChange={(items) => {
             console.log('Library updated:', items);
           }}
           UIOptions={{
             canvasActions: {
               changeViewBackgroundColor: false,
-              clearCanvas: false,
+              clearCanvas: true,
               loadScene: true,
               saveToActiveFile: true,
               toggleTheme: false,

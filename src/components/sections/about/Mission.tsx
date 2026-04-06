@@ -8,7 +8,7 @@ import AnimatedDescription from '../../animated/AnimatedDescription';
 import { useVideoAutoplay } from '../../../hooks/useVideoAutoplay';
 
 export default function Mission() {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<any>(null);
   useVideoAutoplay(videoRef);
 
   return (

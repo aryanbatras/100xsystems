@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.18.0",
+    "@excalidraw/mermaid-to-excalidraw": "^2.2.2",
     "@giscus/react": "^3.1.0",
     "@supabase/supabase-js": "^2.98.0",
     "@tsparticles/engine": "^3.9.1",
@@ -38,6 +39,7 @@
     "react-markdown": "^10.1.0",
     "react-quill-new": "^3.8.3",
     "react-syntax-highlighter": "^16.1.1",
+    "roughjs": "^4.6.6",
     "sharp": "^0.34.5",
     "styled-components": "^6.3.11",
     "tar-stream": "^3.1.8",
@@ -61,6 +63,16 @@
     "fluid-simulation-react": {
       "react": "^19.2.3",
       "react-dom": "^19.2.3"
+    },
+    "@excalidraw/mermaid-to-excalidraw": {
+      "react": "^19.2.3",
+      "react-dom": "^19.2.3",
+      "roughjs": "^4.6.6"
+    },
+    "@excalidraw/excalidraw": {
+      "react": "^19.2.3",
+      "react-dom": "^19.2.3",
+      "roughjs": "^4.6.6"
     }
   }
 }
