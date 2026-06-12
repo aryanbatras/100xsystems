@@ -12,10 +12,8 @@ const ReactQuill = dynamic(() => import('react-quill-new'), {
   loading: () => <div className={styles.editorLoading} />,
 });
 
-// Import CSS on client side only
-if (typeof window !== 'undefined') {
-  require('react-quill-new/dist/quill.bubble.css');
-}
+// Import Quill bubble theme CSS (extracted at build time, no SSR issues)
+import 'react-quill-new/dist/quill.bubble.css';
 
 // Hero Input Component - React Quill Bubble Editor with Attachment
 function HeroInput() {
