@@ -28,11 +28,23 @@ class MemoryService {
   private readonly CLEANUP_THRESHOLD = 0.8; // Clean at 80% capacity
 
   constructor() {
-    this.initializeIndexedDB();
+    // IndexedDB is lazily initialized — not called in constructor 
+    // to avoid crashes during SSR/SSG where indexedDB is not available.
   }
 
+  private dbPromise: Promise<IDBDatabase> | null = null;
+
   private async initializeIndexedDB(): Promise<IDBDatabase> {
-    return new Promise((resolve, reject) => {
+    if (this.dbPromise) {
+      return this.dbPromise;
+    }
+
+    this.dbPromise = new Promise((resolve, reject) => {
+      if (typeof indexedDB === 'undefined') {
+        reject(new Error('indexedDB is not available (server-side render)'));
+        return;
+      }
+
       const request = indexedDB.open(this.STORAGE_KEYS.INDEXED_DB, 1);
 
       request.onerror = () => reject(request.error);
@@ -54,6 +66,8 @@ class MemoryService {
         }
       };
     });
+
+    return this.dbPromise;
   }
 
   private getSessionId(): string {
