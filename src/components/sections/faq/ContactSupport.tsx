@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import styles from '../../styles/components/sections/faq/ContactSupport.module.css';
+import styles from '../../../styles/components/sections/faq/ContactSupport.module.css';
 
 export function ContactSupport(): React.ReactElement {
   return (

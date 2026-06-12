@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import styles from '../../styles/components/sections/success/CallToAction.module.css';
+import styles from '../../../styles/components/sections/success/CallToAction.module.css';
 
 export function CallToAction(): React.ReactElement {
   return (

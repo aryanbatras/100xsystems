@@ -44,7 +44,7 @@ import AnimatedCard from '../../animated/AnimatedCard';
 import InteractiveButton from '../../animated/InteractiveButton';
 import Image from 'next/image';
 import PathDetailsPopup from './PathDetailsPopup';
-import styles from '../../styles/components/sections/paths/PathCards.module.css';
+import styles from '../../../styles/components/sections/paths/PathCards.module.css';
 
 const techIcons = {
   javascript: SiJavascript,

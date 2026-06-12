@@ -4,7 +4,7 @@ import { useAuth } from '../../../../contexts/AuthContext';
 import { CommunityService } from '../../../../services/database/communityService';
 import { Navbar } from '../../../../components/navbar/Navbar';
 import { GiscusComments } from '../../../../components/giscus/GiscusComments';
-import styles from '../id.module.css';;
+import styles from '../../id.module.css';
 
 const CATEGORIES = [
   { id: 'discussions', label: 'Discussions' },

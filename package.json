@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack -H 0.0.0.0",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint"
   },
@@ -45,7 +45,6 @@
     "sharp": "^0.34.5",
     "styled-components": "^6.3.11",
     "tar-stream": "^3.1.8",
-    "tsparticles-slim": "^2.12.0",
     "turndown": "^7.2.2",
     "uuid": "^13.0.0",
     "vis-data": "^8.0.3",
@@ -54,7 +53,7 @@
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/node": "^20",
-    "@types/react": "^19.2.14",
+    "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@types/sharp": "^0.31.1",
     "babel-plugin-react-compiler": "1.0.0",
@@ -64,6 +63,13 @@
     "typescript": "^5"
   },
   "overrides": {
+    "react-graph-vis": {
+      "react": "^19.2.3",
+      "react-dom": "^19.2.3",
+      "vis-data": "^8.0.3",
+      "vis-network": "^10.0.2",
+      "uuid": "^13.0.0"
+    },
     "fluid-simulation-react": {
       "react": "^19.2.3",
       "react-dom": "^19.2.3"

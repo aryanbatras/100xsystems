@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import styles from '../../styles/components/sections/about/Difference.module.css';
+import styles from '../../../styles/components/sections/about/Difference.module.css';
 
 export default function Difference() {
   return (

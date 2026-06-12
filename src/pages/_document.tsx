@@ -6,7 +6,7 @@ export default function Document() {
       <Head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        
+        <meta name="google-adsense-account" content="ca-pub-6524892676012386" />
         {/* Primary Meta Tags */}
         <meta name="title" content="100xSystems - Transform Developers into 100xEngineers" />
         <meta name="description" content="Comprehensive platform for structured software engineering education and system optimization. Transform into a 100xEngineer through depth-first learning methodologies, machine-readable configurations, and scalable system patterns." />
@@ -53,6 +53,12 @@ export default function Document() {
         <meta name="coverage" content="Worldwide" />
         <meta name="distribution" content="Global" />
         <meta name="rating" content="General" />
+
+        <script 
+          async 
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6524892676012386"
+          crossOrigin="anonymous"
+        />
         
         {/* Schema.org structured data */}
         <script

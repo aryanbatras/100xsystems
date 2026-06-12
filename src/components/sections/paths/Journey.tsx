@@ -2,7 +2,7 @@ import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
 import Image from 'next/image';
-import styles from '../../styles/components/sections/paths/Journey.module.css';
+import styles from '../../../styles/components/sections/paths/Journey.module.css';
 
 export default function Journey() {
   return (

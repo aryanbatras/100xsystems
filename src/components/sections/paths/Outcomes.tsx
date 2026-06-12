@@ -2,7 +2,7 @@ import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedCard from '../../animated/AnimatedCard';
 import Image from 'next/image';
-import styles from '../../styles/components/sections/paths/Outcomes.module.css';
+import styles from '../../../styles/components/sections/paths/Outcomes.module.css';
 
 export default function Outcomes() {
   return (

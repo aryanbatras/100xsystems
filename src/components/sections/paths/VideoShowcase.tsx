@@ -1,7 +1,7 @@
 import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
-import styles from '../../styles/components/sections/paths/VideoShowcase.module.css';
+import styles from '../../../styles/components/sections/paths/VideoShowcase.module.css';
 
 export default function PathsVideoShowcase() {
   return (

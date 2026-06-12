@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Giscus from '@giscus/react';
-import styles from '../../styles/components/giscus/GiscusComments.module.css';;
+import styles from '../../styles/components/giscus/giscus.module.css';
 
 interface GiscusCommentsProps {
   groupId: string;

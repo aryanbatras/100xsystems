@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../styles/components/sections/terms/Hero.module.css';
+import styles from '../../../styles/components/sections/terms/Hero.module.css';
 
 export function TermsHero(): React.ReactElement {
   return (

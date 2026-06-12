@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../styles/components/sections/privacy/ContactInfo.module.css';
+import styles from '../../../styles/components/sections/privacy/ContactInfo.module.css';
 
 export function ContactInfo(): React.ReactElement {
   return (

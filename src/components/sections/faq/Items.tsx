@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from '../../styles/components/sections/faq/Items.module.css';
+import styles from '../../../styles/components/sections/faq/Items.module.css';
 
 export function Items(): React.ReactElement {
   const [openItems, setOpenItems] = useState<number[]>([]);

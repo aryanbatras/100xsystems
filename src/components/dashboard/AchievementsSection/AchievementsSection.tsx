@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useUserAchievements } from '../../../hooks/useUserAchievements';
 import { Achievement, UserAchievementWithAchievement } from '../../../services/types/database';
-import styles from '../../styles/components/dashboard/AchievementsSection.module.css';;
+import styles from '../../../styles/components/dashboard/AchievementsSection.module.css';
 
 export const AchievementsSection: React.FC = () => {
   const { 

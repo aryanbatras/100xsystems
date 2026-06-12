@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import styles from '../../styles/components/sections/about/Pathway.module.css';
+import styles from '../../../styles/components/sections/about/Pathway.module.css';
 
 export default function Pathway() {
   return (

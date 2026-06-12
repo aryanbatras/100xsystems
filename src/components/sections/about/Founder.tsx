@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import styles from '../../styles/components/sections/about/Founder.module.css';
+import styles from '../../../styles/components/sections/about/Founder.module.css';
 
 export default function Founder() {
   return (

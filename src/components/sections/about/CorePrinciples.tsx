@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import styles from '../../styles/components/sections/about/CorePrinciples.module.css';
+import styles from '../../../styles/components/sections/about/CorePrinciples.module.css';
 
 export default function CorePrinciples() {
   return (

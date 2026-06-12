@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useUserProfile } from '../../../hooks/useUserProfile';
-import styles from '../../styles/components/dashboard/ProfileSection.module.css';;
+import styles from '../../../styles/components/dashboard/ProfileSection.module.css';
 
 export const ProfileSection: React.FC = () => {
   const { profile, preferences, loading, error, updateProfile, updatePreferences, uploadAvatar } = useUserProfile();

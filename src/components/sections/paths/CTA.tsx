@@ -2,7 +2,7 @@ import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
 import InteractiveButton from '../../animated/InteractiveButton';
-import styles from '../../styles/components/sections/paths/CTA.module.css';
+import styles from '../../../styles/components/sections/paths/CTA.module.css';
 
 export default function CTA() {
   return (

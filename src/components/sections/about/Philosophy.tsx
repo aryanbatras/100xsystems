@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import styles from '../../styles/components/sections/about/Philosophy.module.css';
+import styles from '../../../styles/components/sections/about/Philosophy.module.css';
 
 export default function Philosophy() {
   return (

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import styles from '../../styles/components/sections/about/Innovation.module.css';
+import styles from '../../../styles/components/sections/about/Innovation.module.css';
 
 export default function Innovation() {
   return (

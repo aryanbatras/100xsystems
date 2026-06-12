@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../styles/components/sections/donate/Impact.module.css';
+import styles from '../../../styles/components/sections/donate/Impact.module.css';
 
 export function Impact(): React.ReactElement {
   return (
