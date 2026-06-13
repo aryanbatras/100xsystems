@@ -11,7 +11,6 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { HtmlToDeltaConverter } from '../../infrastructure/converters/htmlToDeltaConverter';
-import { ProtectedRoute } from '../../presentation/components/auth/ProtectedRoute';
 import styles from '../../presentation/_styles/pages/parser.module.css';
 
 const CustomQuillEditor = dynamic(() => import("../../presentation/components/editor/CustomQuillEditor"), {
@@ -91,7 +90,6 @@ export default function ParserPage() {
   };
 
   return (
-    <ProtectedRoute requireAdmin={true}>
       <div className={styles.parserContainer}>
         <div className={styles.parserWrapper}>
           <header className={styles.parserHeader}>
@@ -170,7 +168,7 @@ export default function ParserPage() {
             )}
           </main>
         </div>
+
       </div>
-    </ProtectedRoute>
   );
 }

@@ -8,7 +8,6 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../../presentation/contexts/AuthContext';
 import { AnalyticsService } from '../../infrastructure/database/analyticsService';
 import { UserAnalytics, Certification, UserCertification } from '../types/database.types';
 
@@ -59,7 +58,6 @@ export interface UseUserAnalyticsReturn {
  * @public
  */
 export const useUserAnalytics = (): UseUserAnalyticsReturn => {
-  const { user } = useAuth();
   const [analytics, setAnalytics] = useState<UserAnalytics | null>(null);
   const [insights, setInsights] = useState<LearningInsights>({
     weeklyActivity: {}, learningVelocity: {}, skillProficiency: {},
@@ -70,59 +68,26 @@ export const useUserAnalytics = (): UseUserAnalyticsReturn => {
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [userCertifications, setUserCertifications] = useState<UserCertification[]>([]);
   const [popularContent, setPopularContent] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
-    if (!user?.id) return;
-    try {
-      setLoading(true); setError(null);
-      const [userAnalytics, userInsights, userLevel, allCertifications, userCerts, popular] = await Promise.all([
-        AnalyticsService.getUserAnalytics(user.id),
-        AnalyticsService.getLearningInsights(user.id),
-        AnalyticsService.getUserLevel(user.id),
-        AnalyticsService.getAllCertifications(),
-        AnalyticsService.getUserCertifications(user.id),
-        AnalyticsService.getPopularContent(10),
-      ]);
-      setAnalytics(userAnalytics); setInsights(userInsights); setLevel(userLevel);
-      setCertifications(allCertifications); setUserCertifications(userCerts); setPopularContent(popular);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch analytics');
-    } finally { setLoading(false); }
-  }, [user?.id]);
+    setLoading(false);
+  }, []);
 
   const updateAnalytics = useCallback(async (updates: Partial<UserAnalytics>): Promise<boolean> => {
-    if (!user?.id) return false;
-    try {
-      const updatedAnalytics = await AnalyticsService.updateUserAnalytics(user.id, updates);
-      if (updatedAnalytics) { setAnalytics(updatedAnalytics); return true; }
-      return false;
-    } catch (err) { setError(err instanceof Error ? err.message : 'Failed to update analytics'); return false; }
-  }, [user?.id]);
+    return false;
+  }, []);
 
   const startCertification = useCallback(async (certificationId: string): Promise<UserCertification | null> => {
-    if (!user?.id) return null;
-    try {
-      const certification = await AnalyticsService.startCertification(user.id, certificationId);
-      if (certification) { setUserCertifications(prev => [certification, ...prev]); }
-      return certification;
-    } catch (err) { setError(err instanceof Error ? err.message : 'Failed to start certification'); return null; }
-  }, [user?.id]);
+    return null;
+  }, []);
 
   const updateCertificationProgress = useCallback(async (
     certificationId: string, progress: number, assessmentResults?: Record<string, any>
   ): Promise<boolean> => {
-    if (!user?.id) return false;
-    try {
-      const updatedCertification = await AnalyticsService.updateCertificationProgress(user.id, certificationId, progress, assessmentResults);
-      if (updatedCertification) {
-        setUserCertifications(prev => prev.map(cert => cert.certification_id === certificationId ? updatedCertification : cert));
-        return true;
-      }
-      return false;
-    } catch (err) { setError(err instanceof Error ? err.message : 'Failed to update certification'); return false; }
-  }, [user?.id]);
+    return false;
+  }, []);
 
   const refreshAnalytics = useCallback(async () => { await fetchData(); }, [fetchData]);
 

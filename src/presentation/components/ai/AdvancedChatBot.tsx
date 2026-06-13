@@ -1,32 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import {
-  FaUserCircle,
-  FaMicrophone,
-  FaMicrophoneSlash,
-  FaImage,
-  FaCog,
-  FaTimes,
-  FaPaperPlane,
-  FaVolumeUp,
-  FaVolumeMute,
-  FaRobot,
-  FaBrain,
-  FaCopy,
-  FaMemory,
-  FaSearch,
-  FaTrash,
-  FaDownload,
-  FaUpload,
-  FaTimesCircle,
-} from "react-icons/fa";
+import { FaUserCircle, FaMicrophone, FaMicrophoneSlash, FaImage, FaCog, FaTimes, FaVolumeUp, FaVolumeMute, FaRobot, FaBrain, FaCopy, FaMemory, FaSearch, FaTrash, FaDownload, FaUpload, FaTimesCircle } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import styles from '../../_styles/components/ai/AdvancedChatBot.module.css';;
 import { useMemory } from "../../../application/hooks";
-import { useAuth } from "../../../presentation/contexts/AuthContext";
-import { useGlobalAuthModal } from "../../../presentation/contexts/GlobalAuthModalContext";
+import styles from '../../_styles/components/ai/AdvancedChatBot.module.css';;
 
 interface Message {
   id: string;
@@ -107,9 +86,8 @@ export default function AdvancedChatBot({
   onClose,
   onClearContext,
 }: AdvancedChatBotProps) {
-  const { user, loading: authLoading } = useAuth();
-  const { openAuthModal } = useGlobalAuthModal();
-  
+  const { user, loading: authLoading } = { user: null, loading: false };
+
   // Simple client-side rate limiting
   const [requestTimes, setRequestTimes] = useState<number[]>([]);
   const RATE_LIMIT = 2; // 2 requests per minute
@@ -145,13 +123,10 @@ export default function AdvancedChatBot({
     setIsClient(true);
   }, []);
 
-  // Check if user is authenticated and trigger auth modal if needed
+  // Check if user is authenticated
   useEffect(() => {
-    if (!authLoading && !user) {
-      openAuthModal();
-      onClose();
-    }
-  }, [authLoading, user, openAuthModal, onClose]);
+    // No auth required - removed auth modal trigger
+  }, []);
 
   const memory = useMemory({
     autoSave: isClient && settings.memoryEnabled,
@@ -670,8 +645,8 @@ export default function AdvancedChatBot({
     }
   };
 
-  // Don't render if user is not authenticated
-  if (!authLoading && !user) {
+  // Don't render if user is not authenticated - auth removed
+  if (false) {
     return null;
   }
 

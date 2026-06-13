@@ -3,8 +3,6 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styles from '../../presentation/_styles/pages/admin/AdminDashboard.module.css';
-import { ProtectedRoute } from '../../presentation/components/auth/ProtectedRoute';
-
 interface Article {
   slug: string;
   isLoading?: boolean;
@@ -96,7 +94,6 @@ export default function AdminDashboard() {
   }
 
   return (
-    <ProtectedRoute requireAdmin={true}>
       <div className={styles.dashboardContainer}>
         <div className={styles.dashboardWrapper}>
           <header className={styles.dashboardHeader}>
@@ -160,6 +157,5 @@ export default function AdminDashboard() {
           </main>
         </div>
       </div>
-    </ProtectedRoute>
   );
 }

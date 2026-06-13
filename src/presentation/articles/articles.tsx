@@ -12,7 +12,6 @@ import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import InlineSearch from '../../presentation/components/search/InlineSearch';
-import { ProtectedRoute } from '../../presentation/components/auth/ProtectedRoute';
 import styles from '../../presentation/_styles/pages/Articles.module.css';
 
 /** @public */
@@ -41,7 +40,7 @@ export default function ArticlesPage({ articles }: { articles: ArticleItem[] }) 
   );
 
   return (
-    <ProtectedRoute requireAuth={true}>
+      <>
       <Head>
         <title>Articles - 100x Systems</title>
         <meta name="description" content="Explore our collection of articles on systems thinking, engineering, and innovation." />
@@ -105,6 +104,6 @@ export default function ArticlesPage({ articles }: { articles: ArticleItem[] }) 
           </main>
         </div>
       </div>
-    </ProtectedRoute>
+    </>
   );
 }

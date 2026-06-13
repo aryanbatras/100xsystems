@@ -1,6 +1,4 @@
 import React from 'react';
-import FluidAnimation from '../../particles/FluidAnimation';
-import KnowledgeGraphParticles from '../../particles/KnowledgeGraphParticles';
 import styles from '../../../_styles/components/sections/home/Section0.module.css';
 
 export default function Section0() {

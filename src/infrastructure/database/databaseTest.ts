@@ -1,4 +1,4 @@
-import { supabase } from '../supabase/client';
+import { supabase } from '../supabase';
 import { ProfilesService } from './profilesService';
 import { ProgressService } from './progressService';
 import { AchievementsService } from './achievementsService';

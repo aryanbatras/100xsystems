@@ -1,19 +1,7 @@
-import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import Image from 'next/image';
 import styles from '../../../_styles/components/sections/home/AbstractGallery.module.css';;
 
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
 export default function AbstractGallery() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const descriptionRef = useRef<HTMLParagraphElement>(null);
-  const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const abstractImages = [
     {
@@ -48,123 +36,14 @@ export default function AbstractGallery() {
     }
   ];
 
-  useEffect(() => {
-    if (!sectionRef.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(titleRef.current,
-        {
-          opacity: 0,
-          y: 100
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.2,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: titleRef.current,
-            start: 'top 80%',
-            end: 'bottom 20%',
-            toggleActions: 'play none none reverse'
-          }
-        }
-      );
-
-      gsap.fromTo(descriptionRef.current,
-        {
-          opacity: 0,
-          y: 50
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          delay: 0.3,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: descriptionRef.current,
-            start: 'top 80%',
-            end: 'bottom 20%',
-            toggleActions: 'play none none reverse'
-          }
-        }
-      );
-
-      imageRefs.current.forEach((ref, index) => {
-        if (!ref) return;
-
-        gsap.fromTo(ref,
-          {
-            opacity: 0,
-            scale: 0.8,
-            y: 100
-          },
-          {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            duration: 1.2,
-            delay: index * 0.15,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: ref,
-              start: 'top 85%',
-              end: 'bottom 15%',
-              toggleActions: 'play none none reverse'
-            }
-          }
-        );
-
-        gsap.to(ref.querySelector('img'), {
-          yPercent: -20,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: ref,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1
-          }
-        });
-      });
-
-      contentRefs.current.forEach((ref, index) => {
-        if (!ref) return;
-
-        gsap.fromTo(ref,
-          {
-            opacity: 0,
-            x: index % 2 === 0 ? -50 : 50
-          },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 1,
-            delay: 0.8 + index * 0.1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: ref,
-              start: 'top 80%',
-              end: 'bottom 20%',
-              toggleActions: 'play none none reverse'
-            }
-          }
-        );
-      });
-
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <div ref={sectionRef} className={styles.abstractGallery}>
+    <div className={styles.abstractGallery}>
       <div className={styles.galleryContainer}>
         <div className={styles.galleryHeader}>
-          <h2 ref={titleRef} className={styles.galleryTitle}>
+          <h2 className={styles.galleryTitle}>
             Abstract Systems Visualization
           </h2>
-          <p ref={descriptionRef} className={styles.galleryDescription}>
+          <p className={styles.galleryDescription}>
             Explore the intricate beauty of software architecture through abstract visualizations. 
             Each image represents a different facet of systems thinking, from data flow patterns 
             to modular design principles.
@@ -175,7 +54,6 @@ export default function AbstractGallery() {
           {abstractImages.map((image, index) => (
             <div
               key={index}
-              ref={el => { imageRefs.current[index] = el; }}
               className={styles.galleryImageCard}
             >
               <div className={styles.galleryImageWrapper}>
@@ -188,9 +66,7 @@ export default function AbstractGallery() {
                   priority={index < 3}
                 />
               </div>
-              <div
-                ref={el => { contentRefs.current[index] = el; }}
-                className={styles.galleryContent}
+              <div className={styles.galleryContent}
               >
                 <h3 className={styles.galleryImageTitle}>{image.title}</h3>
                 <p className={styles.galleryImageDescription}>{image.description}</p>

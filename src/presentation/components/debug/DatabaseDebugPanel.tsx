@@ -1,21 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../../presentation/contexts/AuthContext';
+import React, { useState } from 'react';
 import { DatabaseTestUtil } from '../../../infrastructure/database/databaseTest';
 import styles from '../../_styles/components/debug/DatabaseDebugPanel.module.css';;
 
 export const DatabaseDebugPanel: React.FC = () => {
-  const { user } = useAuth();
   const [isExpanded, setIsExpanded] = useState(false);
   const [diagnostic, setDiagnostic] = useState<any>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [testDataCreated, setTestDataCreated] = useState(false);
 
   const runDiagnostic = async () => {
-    if (!user?.id) return;
-    
     setIsRunning(true);
     try {
-      const result = await DatabaseTestUtil.runFullDiagnostic(user.id);
+      const result = await DatabaseTestUtil.runFullDiagnostic('debug');
       setDiagnostic(result);
       DatabaseTestUtil.printDiagnosticSummary(result);
     } catch (error) {
@@ -25,29 +21,18 @@ export const DatabaseDebugPanel: React.FC = () => {
   };
 
   const createTestData = async () => {
-    if (!user?.id) return;
-    
     try {
-      const success = await DatabaseTestUtil.createTestData(user.id);
+      const success = await DatabaseTestUtil.createTestData('debug');
       setTestDataCreated(success);
       if (success) {
-        // Run diagnostic again to see the test data
         await runDiagnostic();
       }
     } catch (error) {
     }
   };
 
-  useEffect(() => {
-    if (isExpanded && user?.id && !diagnostic) {
-      runDiagnostic();
-    }
-  }, [isExpanded, user?.id]);
-
-  if (!user) return null;
-
   return (
-    <div className={styles.debugPanel}>
+      <div className={styles.debugPanel}>
       <button
         className={styles.toggleButton}
         onClick={() => setIsExpanded(!isExpanded)}
@@ -131,12 +116,6 @@ export const DatabaseDebugPanel: React.FC = () => {
               )}
             </div>
           )}
-
-          <div className={styles.footer}>
-            <p>User ID: {user.id}</p>
-            <p>Email: {user.email}</p>
-            <p>Provider: {user.app_metadata?.provider || 'Unknown'}</p>
-          </div>
         </div>
       )}
     </div>

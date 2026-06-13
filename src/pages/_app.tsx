@@ -3,12 +3,8 @@ import type { AppProps } from "next/app";
 import { Loading } from "../presentation/components/loading/Loading"
 import { Navbar } from "../presentation/components/navbar/Navbar";
 import { Footer } from "../presentation/components/footer/Footer";
-import ScrollSmootherProvider from "../presentation/components/scroll/ScrollSmootherProvider";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { AuthProvider } from "../presentation/contexts/AuthContext";
-import { GlobalAuthModalProvider, useGlobalAuthModal } from "../presentation/contexts/GlobalAuthModalContext";
-import { AuthModal } from "../presentation/components/auth/AuthModal";
 import dynamic from 'next/dynamic';
 import { TableOfContentsProvider, useTableOfContents } from "../presentation/contexts/TableOfContentsContext";
 import { GlobalTableOfContents } from "../presentation/components/path/GlobalTableOfContents";
@@ -37,17 +33,6 @@ function GlobalTOCComponent() {
   );
 }
 
-function GlobalAuthModal() {
-  const { isAuthModalOpen, closeAuthModal } = useGlobalAuthModal();
-  
-  return (
-    <AuthModal 
-      isOpen={isAuthModalOpen} 
-      onClose={closeAuthModal} 
-    />
-  );
-}
-
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
@@ -64,26 +49,15 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [router.events]);
 
   return (
-    <AuthProvider>
-      <GlobalAuthModalProvider>
-        <ChatProvider>
-          <TableOfContentsProvider>
-            <ScrollSmootherProvider>
-              <Loading /> 
-              <Navbar />
-              <div id="smooth-wrapper">
-                <div id="smooth-content">
-                  <Component {...pageProps} />
-                  <Footer/>
-                </div>
-              </div>
-              <ChatComponents />
-              <GlobalTOCComponent />
-              <GlobalAuthModal />
-            </ScrollSmootherProvider>
-          </TableOfContentsProvider>
-        </ChatProvider>
-      </GlobalAuthModalProvider>
-    </AuthProvider>
+    <ChatProvider>
+      <TableOfContentsProvider>
+        <Loading /> 
+        <Navbar />
+        <Component {...pageProps} />
+        <Footer/>
+        <ChatComponents />
+        <GlobalTOCComponent />
+      </TableOfContentsProvider>
+    </ChatProvider>
   );
 }

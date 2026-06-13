@@ -7,21 +7,14 @@ import { IoChevronDown } from "react-icons/io5";
 import { FaWhatsapp } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
-import { useAuth } from "../../../presentation/contexts/AuthContext";
-import { useGlobalAuthModal } from "../../../presentation/contexts/GlobalAuthModalContext";
-import { isAdminUser } from "../../../infrastructure/auth/authHelpers";
+
 
 export function Navbar(): React.ReactElement {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isWhiteTheme, setIsWhiteTheme] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const { user, loading, signOut, signInWithGitHub } = useAuth();
-  const { openAuthModal } = useGlobalAuthModal();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-
-  // Check if user is admin
-  const isAdmin = isAdminUser(user);
 
   // Routes that should use white theme
   const whiteThemeRoutes = [
@@ -207,56 +200,7 @@ export function Navbar(): React.ReactElement {
               </div>
             </div>
 
-            {user ? (
-              <div className={styles.userSection}>
-                <Link href="/user-dashboard" className={styles.userLink}>
-                  Welcome,{" "}
-                  {user.user_metadata?.full_name || user.email?.split("@")[0]}
-                </Link>
-                <button
-                  onClick={signOut}
-                  className={`${styles.signOutButton} ${isWhiteTheme ? styles.signOutWhite : ""}`}
-                >
-                  Sign Out
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={openAuthModal}
-                disabled={loading}
-                className={`${styles.authButton} ${isWhiteTheme ? styles.signOutWhite : ""}`}
-              >
-                {loading ? "Signing in..." : "Sign In"}
-              </button>
-            )}
 
-            {isAdmin && (
-              <div className={styles.adminDropdown}>
-                <button
-                  className={styles.adminDropdownToggle}
-                  onClick={() => handleDropdownToggle("admin")}
-                  aria-expanded={activeDropdown === "admin"}
-                >
-                  Admin{" "}
-                  <IoChevronDown
-                    className={`${styles.dropdownIcon} ${activeDropdown === "admin" ? styles.rotated : ""}`}
-                  />
-                </button>
-                <div
-                  className={`${styles.dropdownMenu} ${activeDropdown === "admin" ? styles.show : ""}`}
-                >
-                  <Link href="/admin-dashboard" className={styles.dropdownItem} onClick={handleLinkClick}>
-                    Dashboard
-                  </Link>
-                  <Link href="/admin" className={styles.dropdownItem} onClick={handleLinkClick}>
-                    Articles
-                  </Link>
-                  {/* <Link href="/admin/resources" className={styles.dropdownItem} onClick={handleLinkClick}>
-                    Resources
-                  </Link> */}
-                </div>
-              </div>
-            )}
           </div>
         </div>
         {!isMenuOpen ? (
@@ -277,52 +221,6 @@ export function Navbar(): React.ReactElement {
             <RxCross1 />
           </button>
           <div className={styles.mobileNav}>
-            {/* Account Section - Moved to Top */}
-            <div className={styles.mobileNavSection}>
-              <h3 className={styles.mobileNavTitle}>Account</h3>
-              {user ? (
-                <>
-                  <Link
-                    href="/user-dashboard"
-                    className={styles.mobileLink}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Welcome,{" "}
-                    {user.user_metadata?.full_name || user.email?.split("@")[0]}
-                  </Link>
-                  <button
-                    onClick={() => {
-                      signOut();
-                      setIsMenuOpen(false);
-                    }}
-                    className={styles.mobileSignOutButton}
-                  >
-                    Sign Out
-                  </button>
-                  {isAdmin && (
-                    <Link
-                      href="/admin-dashboard"
-                      className={styles.mobileLink}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Admin Dashboard
-                    </Link>
-                  )}
-                </>
-              ) : (
-                <button
-                  onClick={() => {
-                    openAuthModal();
-                    setIsMenuOpen(false);
-                  }}
-                  disabled={loading}
-                  className={styles.mobileAuthButton}
-                >
-                  {loading ? "Signing in..." : "Sign In"}
-                </button>
-              )}
-            </div>
-
             <div className={styles.mobileNavSection}>
               <h3 className={styles.mobileNavTitle}>Navigation</h3>
               <Link

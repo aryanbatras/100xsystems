@@ -8,7 +8,6 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../../presentation/contexts/AuthContext';
 import { ProfilesService } from '../../infrastructure/database/profilesService';
 import { Profile, UserPreferences, ProfileWithPreferences } from '../types/database.types';
 
@@ -41,72 +40,26 @@ export interface UseUserProfileReturn {
  * @public
  */
 export const useUserProfile = (): UseUserProfileReturn => {
-  const { user } = useAuth();
   const [profile, setProfile] = useState<ProfileWithPreferences | null>(null);
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchProfile = useCallback(async () => {
-    if (!user?.id) return;
-    try {
-      setLoading(true);
-      setError(null);
-      const profileData = await ProfilesService.getProfileWithPreferences(user.id);
-      if (profileData) {
-        setProfile(profileData);
-        setPreferences(profileData.preferences);
-      } else {
-        setError('Profile not found');
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch profile');
-    } finally {
-      setLoading(false);
-    }
-  }, [user?.id]);
+    setLoading(false);
+  }, []);
 
   const updateProfile = useCallback(async (updates: Partial<Profile>): Promise<boolean> => {
-    if (!user?.id || !profile) return false;
-    try {
-      const updatedProfile = await ProfilesService.updateProfile(user.id, updates);
-      if (updatedProfile) {
-        setProfile(prev => prev ? { ...prev, ...updatedProfile } : null);
-        return true;
-      }
-      return false;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update profile');
-      return false;
-    }
-  }, [user?.id, profile]);
+    return false;
+  }, []);
 
   const updatePreferences = useCallback(async (updates: Partial<UserPreferences>): Promise<boolean> => {
-    if (!user?.id) return false;
-    try {
-      const updatedPreferences = preferences
-        ? await ProfilesService.updatePreferences(user.id, updates)
-        : await ProfilesService.createPreferences(user.id, updates);
-      if (updatedPreferences) {
-        setPreferences(updatedPreferences);
-        return true;
-      }
-      return false;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update preferences');
-      return false;
-    }
-  }, [user?.id, preferences]);
+    return false;
+  }, []);
 
   const uploadAvatar = useCallback(async (file: File): Promise<string | null> => {
-    if (!user?.id) return null;
-    try {
-      return await ProfilesService.uploadAvatar(user.id, file);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to upload avatar');
-      return null;
-    }
-  }, [user?.id]);
+    return null;
+  }, []);
 
   const refreshProfile = useCallback(async () => {
     await fetchProfile();

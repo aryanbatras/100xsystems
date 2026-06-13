@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import InteractiveButton from '../../animated/InteractiveButton';
 import styles from '../../../_styles/components/sections/home/Section1.module.css';;
@@ -6,84 +5,17 @@ import cinematicStyles from '../../../_styles/components/sections/home/cinematic
 import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 export default function Section1() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const subtitleRef = useRef<HTMLParagraphElement>(null);
-  
-  
-  useEffect(() => {
-    if (!sectionRef.current) return;
-
-    const section = sectionRef.current;
-    const video = videoRef.current;
-    const title = titleRef.current;
-    const subtitle = subtitleRef.current;
-
-    if (video) {
-      gsap.set(video, { 
-        scale: 1,
-        opacity: 1,
-      });
-    }
-
-    if (title) {
-      gsap.set(title, { 
-        opacity: 1, 
-        y: 0
-      });
-    }
-
-    if (subtitle) {
-      gsap.set(subtitle, { 
-        opacity: 0.9, 
-        y: 0
-      });
-    }
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: '5% 5%',
-        end: '75% 50%',
-        scrub: 1.8
-      }
-    });
-
-    if (video) {
-      tl.to(video, {
-        scale: 1.3,
-        y: 100,
-        ease: 'ease'
-      }, 0);
-    }
-
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      gsap.killTweensOf([video, title, subtitle]);
-    };
-  }, []);
-
   return (
     <>
-      <div ref={sectionRef} className={styles.rubikVideoShowcase}>
-        <div
-          ref={videoRef}
-          className={styles.rubikVideoBackground}
-        />
+      <div className={styles.rubikVideoShowcase}>
+        <div className={styles.rubikVideoBackground} />
         
         <div className={styles.rubikVideoOverlay}></div>
         
         <div className={styles.rubikVideoContent}>
-          <div ref={titleRef} className={styles.rubikVideoTitle}>
+          <div className={styles.rubikVideoTitle}>
             <Image
               src="/100xsystemsonlytitle.webp"
               alt="100x Systems"
@@ -93,7 +25,7 @@ export default function Section1() {
               priority
             />
           </div>
-          <p ref={subtitleRef} className={styles.rubikVideoSubtitle}>
+          <p className={styles.rubikVideoSubtitle}>
             Master Rubik's Cube of Software Engineering
           </p>
           <div className={styles.ctaButtons}>

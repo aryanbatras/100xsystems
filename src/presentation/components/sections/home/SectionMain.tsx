@@ -2,8 +2,6 @@ import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { FaMicrophone } from 'react-icons/fa';
-import FluidAnimation from '../../particles/FluidAnimation';
-import KnowledgeGraphParticles from '../../particles/KnowledgeGraphParticles';
 import styles from '../../../_styles/components/sections/home/SectionMain.module.css';
 
 // Dynamically import ReactQuill to avoid SSR issues
@@ -242,16 +240,6 @@ function HeroInput() {
 export default function SectionMain() {
   return (
     <div className={styles.sectionMain}>
-      {/* Fluid Animation - Bottom Layer */}
-      <div className={styles.fluidLayer}>
-        <FluidAnimation id="section-main-fluid-animation" useCustomColors={true} />
-      </div>
-
-      {/* Knowledge Graph - Middle Layer */}
-      <div className={styles.knowledgeGraphLayer}>
-        <KnowledgeGraphParticles id="section-main-knowledge-graph" />
-      </div>
-      
       {/* Content */}
       <div className={styles.content}>
         {/* Logo */}

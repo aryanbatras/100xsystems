@@ -13,13 +13,11 @@ import Section8 from '../presentation/components/sections/home/Section8';
 import Section9 from '../presentation/components/sections/home/Section9';
 import Section10 from '../presentation/components/sections/home/Section10';
 import Section11 from '../presentation/components/sections/home/Section11';
-import { useAuth } from '../presentation/contexts/AuthContext';
 import styles from '../presentation/_styles/components/sections/home/shared.module.css';
 import SectionMain from '../presentation/components/sections/home/SectionMain';
 
 export default function Home() {
   const router = useRouter();
-  const { user } = useAuth();
 
   return (
     <>

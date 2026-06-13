@@ -8,7 +8,6 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../../presentation/contexts/AuthContext';
 import { CommunityService } from '../../infrastructure/database/communityService';
 import {
   StudyGroup,
@@ -71,133 +70,60 @@ export interface UseUserCommunityReturn {
  * @public
  */
 export const useUserCommunity = (): UseUserCommunityReturn => {
-  const { user } = useAuth();
   const [studyGroups, setStudyGroups] = useState<StudyGroupWithMembership[]>([]);
   const [posts, setPosts] = useState<CommunityPostWithAuthor[]>([]);
   const [replies, setReplies] = useState<CommunityReply[]>([]);
   const [mentorshipConnections, setMentorshipConnections] = useState<MentorshipConnectionWithProfiles[]>([]);
   const [publicGroups, setPublicGroups] = useState<any[]>([]);
   const [stats, setStats] = useState<CommunityStats>({ studyGroupsCount: 0, postsCount: 0, repliesCount: 0, mentorshipConnections: 0 });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userCreatedGroup, setUserCreatedGroup] = useState<StudyGroup | null>(null);
   const [isCreatingGroup, setIsCreatingGroup] = useState(false);
 
   const fetchData = useCallback(async () => {
-    if (!user?.id) return;
-    try {
-      setLoading(true);
-      setError(null);
-      const userStudyGroups = await CommunityService.getUserStudyGroups(user.id);
-      setStudyGroups(userStudyGroups || []);
-      const createdGroup = userStudyGroups?.find(group => group.user_role === 'admin') || null;
-      setUserCreatedGroup(createdGroup);
-      const publicStudyGroups = await CommunityService.getPublicStudyGroups();
-      setPublicGroups(publicStudyGroups || []);
-      setStats({
-        studyGroupsCount: userStudyGroups?.length || 0,
-        postsCount: 0, repliesCount: 0, mentorshipConnections: 0,
-      });
-    } catch (err) {
-      setError('Failed to fetch community data');
-    } finally {
-      setLoading(false);
-    }
-  }, [user?.id]);
+    setLoading(false);
+  }, []);
 
   const createStudyGroup = useCallback(async (groupData: Partial<any>): Promise<boolean> => {
-    if (!user?.id) return false;
-    try {
-      const newGroup = await CommunityService.createStudyGroup(groupData, user.id);
-      if (newGroup) {
-        setStudyGroups(prev => [{ ...newGroup, user_role: 'admin', joined_at: new Date().toISOString() }, ...prev]);
-        return true;
-      }
-      return false;
-    } catch { setError('Failed to create study group'); return false; }
-  }, [user?.id]);
+    return false;
+  }, []);
 
   const joinStudyGroup = useCallback(async (groupId: string): Promise<boolean> => {
-    if (!user?.id) return false;
-    try {
-      const success = await CommunityService.joinStudyGroup(groupId, user.id);
-      if (success) { await fetchData(); return true; }
-      return false;
-    } catch { setError('Failed to join study group'); return false; }
-  }, [user?.id, fetchData]);
+    return false;
+  }, []);
 
   const leaveStudyGroup = useCallback(async (groupId: string): Promise<boolean> => {
-    if (!user?.id) return false;
-    try {
-      const success = await CommunityService.leaveStudyGroup(groupId, user.id);
-      if (success) { setStudyGroups(prev => prev.filter(g => g.id !== groupId)); return true; }
-      return false;
-    } catch { setError('Failed to leave study group'); return false; }
-  }, [user?.id]);
+    return false;
+  }, []);
 
   const createPost = useCallback(async (groupId: string, postData: Partial<any>): Promise<boolean> => {
-    if (!user?.id) return false;
-    try {
-      const newPost = await CommunityService.createPost(groupId, user.id, postData);
-      if (newPost) { await fetchData(); return true; }
-      return false;
-    } catch { setError('Failed to create post'); return false; }
-  }, [user?.id, fetchData]);
+    return false;
+  }, []);
 
   const createReply = useCallback(async (postId: string, replyText: string, parentReplyId?: string): Promise<boolean> => {
-    if (!user?.id) return false;
-    try {
-      const newReply = await CommunityService.createReply(postId, user.id, replyText, parentReplyId);
-      if (newReply) { await fetchData(); return true; }
-      return false;
-    } catch { setError('Failed to create reply'); return false; }
-  }, [user?.id, fetchData]);
+    return false;
+  }, []);
 
   const likePost = useCallback(async (postId: string): Promise<boolean> => {
-    try {
-      const success = await CommunityService.likePost(postId);
-      if (success) { setPosts(prev => prev.map(p => p.id === postId ? { ...p, like_count: p.like_count + 1 } : p)); return true; }
-      return false;
-    } catch { setError('Failed to like post'); return false; }
+    return false;
   }, []);
 
   const likeReply = useCallback(async (replyId: string): Promise<boolean> => {
-    try {
-      const success = await CommunityService.likeReply(replyId);
-      if (success) { setReplies(prev => prev.map(r => r.id === replyId ? { ...r, like_count: r.like_count + 1 } : r)); return true; }
-      return false;
-    } catch { setError('Failed to like reply'); return false; }
+    return false;
   }, []);
 
   const createMentorshipRequest = useCallback(async (mentorId: string, roadmapSlug?: string, goals?: string[]): Promise<boolean> => {
-    if (!user?.id) return false;
-    try {
-      const connection = await CommunityService.createMentorshipRequest(mentorId, user.id, roadmapSlug, goals);
-      if (connection) {
-        const connections = await CommunityService.getMentorshipConnections(user.id);
-        setMentorshipConnections(connections); return true;
-      }
-      return false;
-    } catch { setError('Failed to create mentorship request'); return false; }
-  }, [user?.id]);
+    return false;
+  }, []);
 
   const updateMentorshipStatus = useCallback(async (connectionId: string, status: any): Promise<boolean> => {
-    try {
-      const updatedConnection = await CommunityService.updateMentorshipStatus(connectionId, status);
-      if (updatedConnection && user?.id) {
-        const connections = await CommunityService.getMentorshipConnections(user.id);
-        setMentorshipConnections(connections); return true;
-      }
-      return false;
-    } catch { setError('Failed to update mentorship status'); return false; }
-  }, [user?.id]);
+    return false;
+  }, []);
 
   const createGroupWithGiscus = useCallback(async (groupData: Partial<StudyGroup>): Promise<boolean> => {
-    if (!user?.id) return false;
-    try { setIsCreatingGroup(true); return await createStudyGroup(groupData); }
-    catch { setError('Failed to create group'); return false; }
-    finally { setIsCreatingGroup(false); }
-  }, [user?.id, createStudyGroup]);
+    return false;
+  }, []);
 
   const refreshCommunity = useCallback(async () => { await fetchData(); }, [fetchData]);
   const canCreateGroup = !userCreatedGroup;

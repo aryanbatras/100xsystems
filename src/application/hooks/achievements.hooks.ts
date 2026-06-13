@@ -8,7 +8,6 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../../presentation/contexts/AuthContext';
 import { AchievementsService } from '../../infrastructure/database/achievementsService';
 import { UserAchievementWithAchievement, Achievement, LearningStreak } from '../types/database.types';
 
@@ -43,61 +42,24 @@ export interface UseUserAchievementsReturn {
  * @public
  */
 export const useUserAchievements = (): UseUserAchievementsReturn => {
-  const { user } = useAuth();
   const [achievements, setAchievements] = useState<UserAchievementWithAchievement[]>([]);
   const [lockedAchievements, setLockedAchievements] = useState<Achievement[]>([]);
   const [streak, setStreak] = useState<LearningStreak | null>(null);
   const [totalPoints, setTotalPoints] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
-    if (!user?.id) return;
-    try {
-      setLoading(true); setError(null);
-      const [userAchievements, lockedAchievs, userStreak, points] = await Promise.all([
-        AchievementsService.getUserAchievements(user.id),
-        AchievementsService.getLockedAchievements(user.id),
-        AchievementsService.getLearningStreak(user.id),
-        AchievementsService.getTotalPoints(user.id),
-      ]);
-      setAchievements(userAchievements);
-      setLockedAchievements(lockedAchievs);
-      setStreak(userStreak);
-      setTotalPoints(points);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch achievements');
-    } finally { setLoading(false); }
-  }, [user?.id]);
+    setLoading(false);
+  }, []);
 
   const updateStreak = useCallback(async () => {
-    if (!user?.id) return;
-    try {
-      const updatedStreak = await AchievementsService.updateLearningStreak(user.id);
-      if (updatedStreak) setStreak(updatedStreak);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update streak');
-    }
-  }, [user?.id]);
+    // No auth - streak updates unavailable
+  }, []);
 
   const checkAndUnlockAchievements = useCallback(async (): Promise<UserAchievementWithAchievement[]> => {
-    if (!user?.id) return [];
-    try {
-      const newlyUnlocked = await AchievementsService.checkAndUnlockAchievements(user.id);
-      if (newlyUnlocked.length > 0) {
-        setAchievements(prev => [...newlyUnlocked, ...prev]);
-        setLockedAchievements(prev =>
-          prev.filter(locked => !newlyUnlocked.some(u => u.achievement_id === locked.id))
-        );
-        const newPoints = await AchievementsService.getTotalPoints(user.id);
-        setTotalPoints(newPoints);
-      }
-      return newlyUnlocked;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to check achievements');
-      return [];
-    }
-  }, [user?.id]);
+    return [];
+  }, []);
 
   const getAchievementsByCategory = useCallback((category: Achievement['category']): Achievement[] => {
     return achievements.map(ua => ua.achievement).filter(a => a.category === category);

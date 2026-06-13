@@ -7,9 +7,7 @@
  * @packageDocumentation
  */
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../../presentation/contexts/AuthContext';
 import { ProfileSection } from '../../presentation/components/dashboard/ProfileSection/ProfileSection';
 import { ProgressSection } from '../../presentation/components/dashboard/ProgressSection/ProgressSection';
 import { AchievementsSection } from '../../presentation/components/dashboard/AchievementsSection/AchievementsSection';
@@ -17,13 +15,8 @@ import styles from '../../presentation/_styles/pages/UserDashboard.module.css';
 
 export default function UserDashboard() {
   const router = useRouter();
-  const { user, loading } = useAuth();
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/auth/login');
-    }
-  }, [user, loading, router]);
+  const user = null;
+  const loading = false;
 
   if (loading) {
     return (
@@ -51,9 +44,7 @@ export default function UserDashboard() {
       <div className={styles.userDashboardWrapper}>
         <header className={styles.userDashboardHeader}>
           <div className={styles.welcomeSection}>
-            <h1>
-              Welcome back, {user.user_metadata?.full_name || user.email?.split('@')[0]}!
-            </h1>
+            <h1>Welcome back!</h1>
             <p className={styles.userDashboardDescription}>
               Track your learning progress, manage your profile, and achieve your goals.
             </p>

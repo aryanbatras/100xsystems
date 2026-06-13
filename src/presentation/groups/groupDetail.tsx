@@ -10,8 +10,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../../presentation/contexts/AuthContext';
-import { CommunityService } from '../../infrastructure/database/communityService';
 import styles from '../../presentation/_styles/pages/groups/id.module.css';
 
 /** @public */
@@ -130,34 +128,8 @@ export function GroupHeader({ group, activeCategory }: { group: any; activeCateg
  * Hook to fetch a group by ID and return loading/error/group state.
  */
 export function useGroupFetcher(groupId: string | undefined) {
-  const { user } = useAuth();
   const [group, setGroup] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!groupId || !user?.id) {
-      setLoading(false);
-      return;
-    }
-    fetchGroup();
-  }, [groupId, user?.id]);
-
-  const fetchGroup = async () => {
-    try {
-      setLoading(true);
-      const userGroup = await CommunityService.getUserCreatedGroup(user!.id);
-      if (userGroup && userGroup.id === groupId) {
-        setGroup(userGroup);
-      } else {
-        const publicGroups = await CommunityService.getPublicStudyGroups(100);
-        setGroup(publicGroups.find((g: any) => g.id === groupId) || null);
-      }
-    } catch {
-      setGroup(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [loading, setLoading] = useState(false);
 
   return { group, loading };
 }

@@ -8,10 +8,7 @@
  */
 
 'use client';
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { useAuth } from '../../presentation/contexts/AuthContext';
-import { supabase } from '../../infrastructure/supabase';
+import React, { useState } from 'react';
 import { PageFrame } from '../components/components.layout';
 import { PageHeader, Input, Button } from '../components/components.atomic';
 
@@ -19,8 +16,8 @@ import { PageHeader, Input, Button } from '../components/components.atomic';
  * Profile page component
  */
 export default function ProfilePage() {
-  const router = useRouter();
-  const { user, loading } = useAuth();
+  const user = null;
+  const loading = false;
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     username: '', full_name: '', bio: '', github_username: '',
@@ -29,36 +26,11 @@ export default function ProfilePage() {
     is_mentor: false, mentorship_areas: [] as string[], is_public: true
   });
 
-  useEffect(() => {
-    if (!loading && !user) router.push('/auth/login');
-  }, [user, loading, router]);
-
-  useEffect(() => {
-    if (user) {
-      const meta = user.user_metadata || {};
-      setFormData(prev => ({
-        ...prev,
-        username: meta.username || '', full_name: meta.full_name || '',
-        bio: meta.bio || '', github_username: meta.github_username || meta.user_name || '',
-        linkedin_url: meta.linkedin_url || '', website_url: meta.website_url || '',
-        location: meta.location || '', timezone: meta.timezone || 'UTC',
-        preferred_language: meta.preferred_language || 'en',
-        is_mentor: meta.is_mentor || false, is_public: meta.is_public !== undefined ? meta.is_public : true,
-      }));
-    }
-  }, [user]);
-
-  if (loading) return <PageFrame><div className="flex justify-center py-12"><div className="animate-spin h-8 w-8 border-4 border-[#572EFF] border-t-transparent rounded-full" /></div></PageFrame>;
-  if (!user) return <PageFrame><div className="text-center py-12"><h2 className="text-xl font-semibold mb-2">Authentication Required</h2><p className="text-gray-500">Please sign in to view your profile.</p></div></PageFrame>;
+  if (loading) return <PageFrame>Loading...</PageFrame>;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
-    try {
-      const { error } = await supabase.auth.updateUser({ data: formData });
-      if (error) alert('Error updating profile.');
-      else { setIsEditing(false); alert('Profile updated!'); }
-    } catch { alert('An error occurred.'); }
+    alert('Profile form submitted (auth removed - no submit action)');
   };
 
   const updateField = (field: string, value: any) => setFormData(prev => ({ ...prev, [field]: value }));
@@ -74,7 +46,7 @@ export default function ProfilePage() {
       />
       <form onSubmit={handleSubmit} className="max-w-2xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input label="Email" value={user.email || ''} disabled />
+          <Input label="Email" disabled />
           <Input label="Username" name="username" value={formData.username} onChange={(e) => updateField(e.target.name, e.target.value)} disabled={!isEditing} />
           <Input label="Full Name" name="full_name" value={formData.full_name} onChange={(e) => updateField(e.target.name, e.target.value)} disabled={!isEditing} />
           <div className="md:col-span-2 flex flex-col gap-1">

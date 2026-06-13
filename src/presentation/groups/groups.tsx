@@ -9,12 +9,9 @@
 
 'use client';
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../presentation/contexts/AuthContext';
-import { CommunityService } from '../../infrastructure/database/communityService';
 import { GroupsList } from '../../presentation/components/groups/GroupsList';
 import { CreateGroupModal } from '../../presentation/components/groups/CreateGroupModal';
 import { GroupEditSection } from '../../presentation/components/groups/GroupEditSection';
-import { ProtectedRoute } from '../../presentation/components/auth/ProtectedRoute';
 import styles from '../../presentation/_styles/pages/groups/Groups.module.css';
 
 /**
@@ -26,7 +23,7 @@ import styles from '../../presentation/_styles/pages/groups/Groups.module.css';
  * AuthContext for user identity. Protected behind authentication.
  */
 export default function GroupsPage() {
-  const { user } = useAuth();
+  const user = null;
   const [userCreatedGroup, setUserCreatedGroup] = useState<any>(null);
   const [studyGroups, setStudyGroups] = useState<any[]>([]);
   const [publicGroups, setPublicGroups] = useState<any[]>([]);
@@ -40,25 +37,18 @@ export default function GroupsPage() {
   const [filteredGroups, setFilteredGroups] = useState<any[]>([]);
 
   useEffect(() => {
-    if (user?.id) {
+    if (false) {
       loadGroups();
     } else {
       setLoading(false);
     }
-  }, [user?.id]);
+  }, []);
 
   const loadGroups = async () => {
     try {
       setLoading(true);
-      const [userGroup, joined, allPublic] = await Promise.all([
-        CommunityService.getUserCreatedGroup(user!.id),
-        CommunityService.getUserStudyGroups(user!.id),
-        CommunityService.getPublicStudyGroups(100),
-      ]);
-      setUserCreatedGroup(userGroup);
-      setStudyGroups(joined);
-      setPublicGroups(allPublic);
-      setCanCreateGroup(!userGroup);
+      setStudyGroups([]);
+      setPublicGroups([]);
     } catch (error) {
       // Error loading groups
     } finally {
@@ -77,63 +67,15 @@ export default function GroupsPage() {
   }, [searchQuery, publicGroups]);
 
   const createGroupWithGiscus = async (groupData: any) => {
-    try {
-      setIsCreatingGroup(true);
-      const newGroup = await CommunityService.createGroupWithGiscus(groupData, user!.id);
-      if (newGroup) {
-        await loadGroups();
-        return true;
-      }
-      return false;
-    } catch {
-      return false;
-    } finally {
-      setIsCreatingGroup(false);
-    }
+    return false;
   };
 
-  const joinStudyGroup = async (groupId: string) => {
-    try {
-      await CommunityService.joinStudyGroup(groupId, user!.id);
-      await loadGroups();
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  const leaveStudyGroup = async (groupId: string) => {
-    try {
-      await CommunityService.leaveStudyGroup(groupId, user!.id);
-      await loadGroups();
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  const deleteGroupFn = async (groupId: string) => {
-    try {
-      await CommunityService.deleteGroup(groupId, user!.id);
-      await loadGroups();
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  const updateGroupFn = async (groupId: string, groupData: any) => {
-    try {
-      await CommunityService.updateGroup(groupId, groupData);
-      await loadGroups();
-      return true;
-    } catch {
-      return false;
-    }
-  };
+  const joinStudyGroup = async (groupId: string) => { return false; };
+  const leaveStudyGroup = async (groupId: string) => { return false; };
+  const deleteGroupFn = async (groupId: string) => { return false; };
+  const updateGroupFn = async (groupId: string, groupData: any) => { return false; };
 
   return (
-    <ProtectedRoute requireAuth={true}>
       <div className={styles.page}>
         <div className={styles.container}>
           {/* Header */}
@@ -210,7 +152,7 @@ export default function GroupsPage() {
             />
           )}
         </div>
+
       </div>
-    </ProtectedRoute>
   );
 }

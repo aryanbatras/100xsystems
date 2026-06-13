@@ -10,7 +10,6 @@
 'use client';
 import Head from 'next/head';
 import Link from 'next/link';
-import { ProtectedRoute } from '../../presentation/components/auth/ProtectedRoute';
 import type { KnowledgeGraph } from '../../infrastructure/staticSiteGenerator';
 import styles from '../../presentation/_styles/pages/Roadmaps.module.css';
 
@@ -27,7 +26,7 @@ export default function RoadmapsPage({ knowledgeGraph }: { knowledgeGraph: Knowl
   const { roadmaps, relationships } = knowledgeGraph;
 
   return (
-    <ProtectedRoute requireAuth={true}>
+      <>
       <Head>
         <title>Learning Roadmaps - 100x Systems</title>
         <meta name="description" content="Explore our structured learning roadmaps for systems thinking, engineering, and innovation." />
@@ -109,6 +108,6 @@ export default function RoadmapsPage({ knowledgeGraph }: { knowledgeGraph: Knowl
           </main>
         </div>
       </div>
-    </ProtectedRoute>
+    </>
   );
 }

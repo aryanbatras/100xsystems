@@ -20,7 +20,6 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import styles from '../../presentation/_styles/pages/Graph.module.css';
-import { ProtectedRoute } from '../../presentation/components/auth/ProtectedRoute';
 import { StaticSiteGenerator } from '../../infrastructure/staticSiteGenerator';
 
 // Type definitions
@@ -402,31 +401,29 @@ function KnowledgeGraphFlow({ initialNodes, initialEdges }: { initialNodes: Cust
 
 export default function Graph({ nodes, edges }: { nodes: CustomNode[], edges: Edge[] }) {
   return (
-    <ProtectedRoute requireAuth={true}>
-      <ReactFlowProvider>
-        <Head>
-          <title>Knowledge Graph - 100x Systems</title>
-          <meta name="description" content="Interactive visualization of learning roadmaps and articles relationships" />
-          <meta property="og:title" content="Knowledge Graph - 100x Systems" />
-          <meta property="og:description" content="Interactive visualization of learning roadmaps and articles relationships" />
-          <meta property="og:type" content="website" />
-        </Head>
+    <ReactFlowProvider>
+      <Head>
+        <title>Knowledge Graph - 100x Systems</title>
+        <meta name="description" content="Interactive visualization of learning roadmaps and articles relationships" />
+        <meta property="og:title" content="Knowledge Graph - 100x Systems" />
+        <meta property="og:description" content="Interactive visualization of learning roadmaps and articles relationships" />
+        <meta property="og:type" content="website" />
+      </Head>
 
-        <div className={styles.graphContainer}>
-          <div className={styles.graphWrapper}>
-            <header className={styles.graphHeader}>
-              <h1>Knowledge Graph</h1>
-              <p className={styles.graphDescription}>
-                Interactive visualization of learning roadmaps and articles relationships. 
-                Explore connections between different learning paths and discover related content.
-              </p>
-            </header>
+      <div className={styles.graphContainer}>
+        <div className={styles.graphWrapper}>
+          <header className={styles.graphHeader}>
+            <h1>Knowledge Graph</h1>
+            <p className={styles.graphDescription}>
+              Interactive visualization of learning roadmaps and articles relationships. 
+              Explore connections between different learning paths and discover related content.
+            </p>
+          </header>
 
-            <KnowledgeGraphFlow initialNodes={nodes} initialEdges={edges} />
-          </div>
+          <KnowledgeGraphFlow initialNodes={nodes} initialEdges={edges} />
         </div>
-      </ReactFlowProvider>
-    </ProtectedRoute>
+      </div>
+    </ReactFlowProvider>
   );
 }
 
