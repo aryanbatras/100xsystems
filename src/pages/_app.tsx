@@ -1,4 +1,4 @@
-import "../styles/globals.css";
+import "../presentation/_styles/globals.css";
 import type { AppProps } from "next/app";
 import { Loading } from "../presentation/components/loading/Loading"
 import { Navbar } from "../presentation/components/navbar/Navbar";

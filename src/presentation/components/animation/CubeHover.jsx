@@ -1,4 +1,4 @@
-import styles from '../../styles/components/animation/CubeHover.module.css';;
+import styles from '../../_styles/components/animation/CubeHover.module.css';;
 
 const CubeHover = () => {
   return (

@@ -1,4 +1,4 @@
-import styles from '../../styles/components/loading/LoaderAnimation.module.css';;
+import styles from '../../_styles/components/loading/LoaderAnimation.module.css';;
 
 const LoaderAnimation = () => {
   return (

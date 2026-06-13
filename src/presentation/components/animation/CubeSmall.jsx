@@ -1,4 +1,4 @@
-import styles from '../../styles/components/animation/CubeSmall.module.css';;
+import styles from '../../_styles/components/animation/CubeSmall.module.css';;
 
 const CubeSmall = () => {
   return (
