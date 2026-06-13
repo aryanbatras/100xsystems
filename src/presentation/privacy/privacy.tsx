@@ -7,7 +7,7 @@
  * @packageDocumentation
  */
 
-import styles from '../../styles/pages/Privacy.module.css';
+import styles from '../../presentation/_styles/pages/Privacy.module.css';
 
 export default function Privacy() {
   return (

@@ -11,10 +11,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import InteractiveButton from '../../components/animated/InteractiveButton';
-import AnimatedSection from '../../components/animated/AnimatedSection';
-import AnimatedTitle from '../../components/animated/AnimatedTitle';
-import styles from '../../styles/pages/dashboard.module.css';
+import InteractiveButton from '../../presentation/components/animated/InteractiveButton';
+import AnimatedSection from '../../presentation/components/animated/AnimatedSection';
+import AnimatedTitle from '../../presentation/components/animated/AnimatedTitle';
+import styles from '../../presentation/_styles/pages/dashboard.module.css';
 
 /** @public */
 interface SystemModule {

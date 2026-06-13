@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../../../contexts/AuthContext';
-import { useGlobalAuthModal } from '../../../contexts/GlobalAuthModalContext';
-import { Navbar } from '../../../components/navbar/Navbar';
+import { useAuth } from '../../../presentation/contexts/AuthContext';
+import { useGlobalAuthModal } from '../../../presentation/contexts/GlobalAuthModalContext';
+import { Navbar } from '../../../presentation/components/navbar/Navbar';
 import { supabase } from '../../../infrastructure/supabase/client';
-import styles from '../../../styles/pages/auth/Login.module.css';
+import styles from '../../../presentation/_styles/pages/auth/Login.module.css';
 
 export default function LoginPage() {
   const router = useRouter();

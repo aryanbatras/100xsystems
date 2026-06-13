@@ -8,7 +8,7 @@ export default ResourcesPage;
 
 import { GetStaticProps } from 'next';
 import { StaticSiteGenerator } from '../../infrastructure/staticSiteGenerator';
-import { Resource } from '../../types/resources';
+import { Resource } from '../../application/types/resources';
 import type { ResourcesCategoryInfo } from '../../presentation/resources/resources';
 
 export const getStaticProps: GetStaticProps<{

@@ -9,10 +9,10 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../presentation/contexts/AuthContext';
 import { signInWithGitHub, signInWithGoogle } from '../../infrastructure/supabase';
-import { Navbar } from '../../components/navbar/Navbar';
-import { Footer } from '../../components/footer/Footer';
+import { Navbar } from '../../presentation/components/navbar/Navbar';
+import { Footer } from '../../presentation/components/footer/Footer';
 
 export default function Login() {
   const router = useRouter();

@@ -9,11 +9,11 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../../contexts/AuthContext';
-import { ProfileSection } from '../../components/dashboard/ProfileSection/ProfileSection';
-import { ProgressSection } from '../../components/dashboard/ProgressSection/ProgressSection';
-import { AchievementsSection } from '../../components/dashboard/AchievementsSection/AchievementsSection';
-import styles from '../../styles/pages/UserDashboard.module.css';
+import { useAuth } from '../../presentation/contexts/AuthContext';
+import { ProfileSection } from '../../presentation/components/dashboard/ProfileSection/ProfileSection';
+import { ProgressSection } from '../../presentation/components/dashboard/ProgressSection/ProgressSection';
+import { AchievementsSection } from '../../presentation/components/dashboard/AchievementsSection/AchievementsSection';
+import styles from '../../presentation/_styles/pages/UserDashboard.module.css';
 
 export default function UserDashboard() {
   const router = useRouter();

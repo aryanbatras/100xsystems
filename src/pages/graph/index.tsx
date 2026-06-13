@@ -19,8 +19,8 @@ import {
   Position,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import styles from '../../styles/pages/Graph.module.css';
-import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
+import styles from '../../presentation/_styles/pages/Graph.module.css';
+import { ProtectedRoute } from '../../presentation/components/auth/ProtectedRoute';
 import { StaticSiteGenerator } from '../../infrastructure/staticSiteGenerator';
 
 // Type definitions

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import styles from '../../../styles/pages/admin/Manifests.module.css';
+import styles from '../../../presentation/_styles/pages/admin/Manifests.module.css';
 
 interface ArticleManifest {
   slug: string;

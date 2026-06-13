@@ -11,9 +11,9 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import InlineSearch from '../../components/search/InlineSearch';
-import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
-import styles from '../../styles/pages/Articles.module.css';
+import InlineSearch from '../../presentation/components/search/InlineSearch';
+import { ProtectedRoute } from '../../presentation/components/auth/ProtectedRoute';
+import styles from '../../presentation/_styles/pages/Articles.module.css';
 
 /** @public */
 export interface ArticleItem {

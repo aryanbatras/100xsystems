@@ -17,7 +17,7 @@ import { ImageProcessor } from '../../infrastructure/imageProcessor';
 import { GitHubPublisher } from '../../infrastructure/api/githubPublisher';
 import { SlugGenerator } from '../domain/slugGenerator';
 import { QuillDelta, UploadedImage } from '../types/shared.types';
-import { log } from '../../shared/utils';
+import { log } from '../../infrastructure/utils';
 
 /**
  * Generates a URL-safe slug from an article title.

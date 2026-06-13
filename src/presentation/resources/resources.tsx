@@ -11,8 +11,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import Head from 'next/head';
 import Fuse from 'fuse.js';
-import { Resource } from '../../types/resources';
-import styles from '../../styles/pages/Resources.module.css';
+import { Resource } from '../../application/types/resources';
+import styles from '../../presentation/_styles/pages/Resources.module.css';
 
 /** @public */
 export interface ResourcesCategoryInfo {

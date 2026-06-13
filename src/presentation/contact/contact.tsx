@@ -8,10 +8,10 @@
  */
 
 'use client';
-import ContactHero from "../../components/sections/contact/Hero";
-import ContactInfo from "../../components/sections/contact/ContactInfo";
-import ContactForm from "../../components/sections/contact/ContactForm";
-import styles from "../../styles/components/sections/contact/shared.module.css";
+import ContactHero from "../../presentation/components/sections/contact/Hero";
+import ContactInfo from "../../presentation/components/sections/contact/ContactInfo";
+import ContactForm from "../../presentation/components/sections/contact/ContactForm";
+import styles from "../../presentation/_styles/components/sections/contact/shared.module.css";
 
 /**
  * Contact page — user support and inquiry form.

@@ -8,8 +8,8 @@
  * @packageDocumentation
  */
 
-import { QuillDelta, QuillOperation, ArticleMetadata, UploadedImage } from '../../shared/types';
-import { log } from '../../shared/utils';
+import { QuillDelta, QuillOperation, ArticleMetadata, UploadedImage } from '../../application/types/shared.types';
+import { log } from '../../infrastructure/utils';
 
 export interface ParsedContent {
   content: string;

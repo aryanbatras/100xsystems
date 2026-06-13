@@ -7,7 +7,7 @@
  * @packageDocumentation
  */
 
-import styles from '../../styles/pages/Terms.module.css';
+import styles from '../../presentation/_styles/pages/Terms.module.css';
 
 export default function Terms() {
   return (

@@ -12,7 +12,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { GroupHeader, GroupLoading, GroupNotFound, useGroupFetcher } from './groupDetail';
-import styles from '../../styles/pages/groups/id.module.css';
+import styles from '../../presentation/_styles/pages/groups/id.module.css';
 
 /**
  * Group Members page — browse members with profile information.

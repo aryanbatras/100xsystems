@@ -13,7 +13,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GroupLoading } from './groupDetail';
-import styles from '../../styles/pages/groups/id.module.css';
+import styles from '../../presentation/_styles/pages/groups/id.module.css';
 
 /**
  * Group detail redirect page — redirects to discussions by default.

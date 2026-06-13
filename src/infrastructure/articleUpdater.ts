@@ -13,7 +13,7 @@ import { ImageProcessor } from './imageProcessor';
 import { HtmlConverter } from './converters/htmlConverter';
 import { HtmlToDeltaConverter } from './converters/htmlToDeltaConverter';
 import { QuillDelta, UploadedImage, ArticleMetadata, PublishResult, ImageData } from '../application/types/shared.types';
-import { log } from '../shared/utils';
+import { log } from '../infrastructure/utils';
 
 export interface ImageComparison {
   toUpload: ImageData[];

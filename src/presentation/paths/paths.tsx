@@ -9,13 +9,13 @@
 
 'use client';
 
-import PathsHero from "../../components/sections/paths/Hero";
-import LearningApproach from "../../components/sections/paths/LearningApproach";
-import Journey from "../../components/sections/paths/Journey";
-import PathCards from "../../components/sections/paths/PathCards";
-import Outcomes from "../../components/sections/paths/Outcomes";
-import PathsVideoShowcase from "../../components/sections/paths/VideoShowcase";
-import styles from "../../styles/components/sections/paths/shared.module.css";
+import PathsHero from "../../presentation/components/sections/paths/Hero";
+import LearningApproach from "../../presentation/components/sections/paths/LearningApproach";
+import Journey from "../../presentation/components/sections/paths/Journey";
+import PathCards from "../../presentation/components/sections/paths/PathCards";
+import Outcomes from "../../presentation/components/sections/paths/Outcomes";
+import PathsVideoShowcase from "../../presentation/components/sections/paths/VideoShowcase";
+import styles from "../../presentation/_styles/components/sections/paths/shared.module.css";
 
 /**
  * Learning Paths page — structured learning journeys for systems engineering.

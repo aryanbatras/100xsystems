@@ -8,8 +8,8 @@
 
 import { useState, useCallback } from 'react';
 import { ArticleUpdater, UpdateOptions } from '../../infrastructure/articleUpdater';
-import { QuillDelta, ArticleMetadata, PublishingState } from '../../shared/types';
-import { log } from '../../shared/utils';
+import { QuillDelta, ArticleMetadata, PublishingState } from '../../application/types/shared.types';
+import { log } from '../../infrastructure/utils';
 
 /**
  * Options for the useArticleUpdate hook.

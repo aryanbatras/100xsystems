@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Fuse from 'fuse.js';
 import { StaticSiteGenerator } from '../../infrastructure/staticSiteGenerator';
-import { SearchDocument, SearchResult, SearchFilters } from '../../types/search';
+import { SearchDocument, SearchResult, SearchFilters } from '../../application/types/search';
 
 // Load search index at build time with caching
 let searchIndex: SearchDocument[] | null = null;

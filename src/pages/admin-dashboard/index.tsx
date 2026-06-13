@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import styles from '../../styles/pages/admin/AdminDashboard.module.css';
-import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
+import styles from '../../presentation/_styles/pages/admin/AdminDashboard.module.css';
+import { ProtectedRoute } from '../../presentation/components/auth/ProtectedRoute';
 
 interface Article {
   slug: string;

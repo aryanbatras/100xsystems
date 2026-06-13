@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../presentation/contexts/AuthContext';
 import { AnalyticsService } from '../../infrastructure/database/analyticsService';
 import { UserAnalytics, Certification, UserCertification } from '../types/database.types';
 

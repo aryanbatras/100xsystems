@@ -9,12 +9,12 @@
 
 'use client';
 import dynamic from 'next/dynamic';
-import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
+import { ProtectedRoute } from '../../presentation/components/auth/ProtectedRoute';
 
 /**
  * Dynamically import Admin component with SSR disabled (Quill editor needs browser DOM).
  */
-const Admin = dynamic(() => import("../../components/admin/Admin"), {
+const Admin = dynamic(() => import("../../presentation/components/admin/Admin"), {
   ssr: false
 });
 

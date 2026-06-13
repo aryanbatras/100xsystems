@@ -9,9 +9,9 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../../contexts/AuthContext';
-import { Navbar } from '../../components/navbar/Navbar';
-import { Footer } from '../../components/footer/Footer';
+import { useAuth } from '../../presentation/contexts/AuthContext';
+import { Navbar } from '../../presentation/components/navbar/Navbar';
+import { Footer } from '../../presentation/components/footer/Footer';
 
 export default function AuthPage() {
   const router = useRouter();

@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Section0 from '../components/sections/home/Section0';
-import Section1 from '../components/sections/home/Section1';
-import Section2 from '../components/sections/home/Section2';
-import SectionBootcamp from '../components/sections/home/SectionBootcamp';
-import Section3 from '../components/sections/home/Section3';
-import Section4 from '../components/sections/home/Section4';
-import Section5 from '../components/sections/home/Section5';
-import Section6 from '../components/sections/home/Section6';
-import Section7 from '../components/sections/home/Section7';
-import Section8 from '../components/sections/home/Section8';
-import Section9 from '../components/sections/home/Section9';
-import Section10 from '../components/sections/home/Section10';
-import Section11 from '../components/sections/home/Section11';
-import { useAuth } from '../contexts/AuthContext';
-import styles from '../styles/components/sections/home/shared.module.css';
-import SectionMain from '../components/sections/home/SectionMain';
+import Section0 from '../presentation/components/sections/home/Section0';
+import Section1 from '../presentation/components/sections/home/Section1';
+import Section2 from '../presentation/components/sections/home/Section2';
+import SectionBootcamp from '../presentation/components/sections/home/SectionBootcamp';
+import Section3 from '../presentation/components/sections/home/Section3';
+import Section4 from '../presentation/components/sections/home/Section4';
+import Section5 from '../presentation/components/sections/home/Section5';
+import Section6 from '../presentation/components/sections/home/Section6';
+import Section7 from '../presentation/components/sections/home/Section7';
+import Section8 from '../presentation/components/sections/home/Section8';
+import Section9 from '../presentation/components/sections/home/Section9';
+import Section10 from '../presentation/components/sections/home/Section10';
+import Section11 from '../presentation/components/sections/home/Section11';
+import { useAuth } from '../presentation/contexts/AuthContext';
+import styles from '../presentation/_styles/components/sections/home/shared.module.css';
+import SectionMain from '../presentation/components/sections/home/SectionMain';
 
 export default function Home() {
   const router = useRouter();

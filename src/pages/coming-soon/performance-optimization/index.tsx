@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../../styles/ComingSoon.module.css';;
+import styles from '../../../presentation/_styles/ComingSoon.module.css';;
 
 export default function PerformanceOptimization() {
   return (

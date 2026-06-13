@@ -9,20 +9,20 @@
 
 'use client';
 import { Geist } from "next/font/google";
-import AboutHero from "../../components/sections/about/Hero";
-import Innovation from "../../components/sections/about/Innovation";
-import Founder from "../../components/sections/about/Founder";
-import Systems from "../../components/sections/about/Systems";
-import Mission from "../../components/sections/about/Mission";
-import CorePrinciples from "../../components/sections/about/CorePrinciples";
-import Philosophy from "../../components/sections/about/Philosophy";
-import Pathway from "../../components/sections/about/Pathway";
-import Difference from "../../components/sections/about/Difference";
-import AboutCTA from "../../components/sections/about/CTA";
-import Wallpaper from "../../components/sections/about/Wallpaper";
-import Values from "../../components/sections/about/Values";
-import AboutFooter from "../../components/sections/about/Footer";
-import styles from "../../styles/components/sections/about/shared.module.css";
+import AboutHero from "../../presentation/components/sections/about/Hero";
+import Innovation from "../../presentation/components/sections/about/Innovation";
+import Founder from "../../presentation/components/sections/about/Founder";
+import Systems from "../../presentation/components/sections/about/Systems";
+import Mission from "../../presentation/components/sections/about/Mission";
+import CorePrinciples from "../../presentation/components/sections/about/CorePrinciples";
+import Philosophy from "../../presentation/components/sections/about/Philosophy";
+import Pathway from "../../presentation/components/sections/about/Pathway";
+import Difference from "../../presentation/components/sections/about/Difference";
+import AboutCTA from "../../presentation/components/sections/about/CTA";
+import Wallpaper from "../../presentation/components/sections/about/Wallpaper";
+import Values from "../../presentation/components/sections/about/Values";
+import AboutFooter from "../../presentation/components/sections/about/Footer";
+import styles from "../../presentation/_styles/components/sections/about/shared.module.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

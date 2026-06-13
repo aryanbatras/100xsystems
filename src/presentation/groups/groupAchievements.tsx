@@ -9,9 +9,9 @@
 
 'use client';
 import { useRouter } from 'next/router';
-import { GiscusComments } from '../../components/giscus/GiscusComments';
+import { GiscusComments } from '../../presentation/components/giscus/GiscusComments';
 import { GroupHeader, GroupLoading, GroupNotFound, useGroupFetcher } from './groupDetail';
-import styles from '../../styles/pages/groups/id.module.css';
+import styles from '../../presentation/_styles/pages/groups/id.module.css';
 
 /**
  * Group Achievements page — celebrates group milestones and accomplishments.

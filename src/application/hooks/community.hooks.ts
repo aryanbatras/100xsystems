@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../presentation/contexts/AuthContext';
 import { CommunityService } from '../../infrastructure/database/communityService';
 import {
   StudyGroup,

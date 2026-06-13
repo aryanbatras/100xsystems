@@ -17,8 +17,8 @@ import {
   ConversionResult,
   PerformanceMetrics
 } from '../../application/types/shared.types';
-import { log } from '../../shared/utils';
-import { DateUtils } from '../../shared/utils';
+import { log } from '../../infrastructure/utils';
+import { DateUtils } from '../../infrastructure/utils';
 
 export class HtmlConverter {
   private static readonly DEFAULT_CONFIG: QuillConverterConfig = {

@@ -9,13 +9,13 @@
 
 'use client';
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../presentation/contexts/AuthContext';
 import { CommunityService } from '../../infrastructure/database/communityService';
-import { GroupsList } from '../../components/groups/GroupsList';
-import { CreateGroupModal } from '../../components/groups/CreateGroupModal';
-import { GroupEditSection } from '../../components/groups/GroupEditSection';
-import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
-import styles from '../../styles/pages/groups/Groups.module.css';
+import { GroupsList } from '../../presentation/components/groups/GroupsList';
+import { CreateGroupModal } from '../../presentation/components/groups/CreateGroupModal';
+import { GroupEditSection } from '../../presentation/components/groups/GroupEditSection';
+import { ProtectedRoute } from '../../presentation/components/auth/ProtectedRoute';
+import styles from '../../presentation/_styles/pages/groups/Groups.module.css';
 
 /**
  * Groups page — discover, create, and manage study groups.

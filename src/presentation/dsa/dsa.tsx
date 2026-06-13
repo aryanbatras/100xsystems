@@ -12,7 +12,7 @@ import { useState } from 'react';
 import Head from 'next/head';
 import ReactMarkdown from 'react-markdown';
 import { DSAContent, DSASection, DSACategory, DSAProblem } from '../../infrastructure/staticSiteGenerator';
-import styles from '../../styles/pages/dsa.module.css';
+import styles from '../../presentation/_styles/pages/dsa.module.css';
 
 export interface DSAProps {
   dsaContent: DSAContent;

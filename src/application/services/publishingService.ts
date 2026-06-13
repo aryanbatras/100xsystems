@@ -16,7 +16,7 @@ import { HtmlConverter } from '../../infrastructure/converters/htmlConverter';
 import { ImageProcessor } from '../../infrastructure/imageProcessor';
 import { GitHubPublisher } from '../../infrastructure/api/githubPublisher';
 import { SlugGenerator } from '../domain/slugGenerator';
-import { log } from '../../shared/utils';
+import { log } from '../../infrastructure/utils';
 
 /**
  * Input parameters for the publishing workflow.

@@ -3,11 +3,11 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { StaticSiteGenerator, ArticleManifest } from '../../infrastructure/staticSiteGenerator';
-import GiscusComments from '../../components/discussions/GiscusComments';
-import { DiscussionProvider } from '../../components/discussions/DiscussionProvider';
-import styles from '../../styles/components/Articles.module.css';;
-import { useChat } from '../../contexts/ChatContext';
-import AdvancedChatBot from '../../components/ai/AdvancedChatBot';
+import GiscusComments from '../../presentation/components/discussions/GiscusComments';
+import { DiscussionProvider } from '../../presentation/components/discussions/DiscussionProvider';
+import styles from '../../presentation/_styles/components/Articles.module.css';;
+import { useChat } from '../../presentation/contexts/ChatContext';
+import AdvancedChatBot from '../../presentation/components/ai/AdvancedChatBot';
 
 
 interface ArticleProps {

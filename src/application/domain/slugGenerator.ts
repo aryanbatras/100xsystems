@@ -12,7 +12,7 @@
  * @packageDocumentation
  */
 
-import { log } from '../../shared/utils';
+import { log } from '../../infrastructure/utils';
 
 /**
  * Generates and validates URL-safe slugs from article titles.

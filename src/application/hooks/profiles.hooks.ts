@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../presentation/contexts/AuthContext';
 import { ProfilesService } from '../../infrastructure/database/profilesService';
 import { Profile, UserPreferences, ProfileWithPreferences } from '../types/database.types';
 

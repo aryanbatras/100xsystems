@@ -10,10 +10,10 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../presentation/contexts/AuthContext';
 import { supabase } from '../../infrastructure/supabase';
-import { PageFrame } from '../_components/components.layout';
-import { PageHeader, Input, Button } from '../_components/components.atomic';
+import { PageFrame } from '../components/components.layout';
+import { PageHeader, Input, Button } from '../components/components.atomic';
 
 /**
  * Profile page component

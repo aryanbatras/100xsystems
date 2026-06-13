@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../presentation/contexts/AuthContext';
 import { ProgressService } from '../../infrastructure/database/progressService';
 import { UserProgress, UserProgressWithContent, LearningSession, UserNote } from '../types/database.types';
 

@@ -10,7 +10,7 @@
 import { useState, useEffect } from 'react';
 import { extractImagesFromDelta, uploadImagesToGitHub } from '../publishing/imageProcessing';
 import { generateSlug, generateHTML, publishHTMLToGitHub } from '../publishing/htmlGenerator';
-import { log, clearLogs as clearAllLogs, getLogs } from '../../shared/utils/logger';
+import { log, clearLogs as clearAllLogs, getLogs } from '../../infrastructure/utils/logger';
 import { LogEntry, PublishingState } from '../types/shared.types';
 
 /**

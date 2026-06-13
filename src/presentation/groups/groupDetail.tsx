@@ -10,9 +10,9 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../presentation/contexts/AuthContext';
 import { CommunityService } from '../../infrastructure/database/communityService';
-import styles from '../../styles/pages/groups/id.module.css';
+import styles from '../../presentation/_styles/pages/groups/id.module.css';
 
 /** @public */
 export const CATEGORIES = [

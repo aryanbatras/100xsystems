@@ -8,7 +8,7 @@
  */
 
 import { useState } from 'react';
-import ObsidianKnowledgeGraph from '../../components/graph/ObsidianKnowledgeGraph';
+import ObsidianKnowledgeGraph from '../../presentation/components/graph/ObsidianKnowledgeGraph';
 
 export default function TestPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);

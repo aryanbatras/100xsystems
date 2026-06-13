@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { StaticSiteGenerator } from '../../../infrastructure/staticSiteGenerator';
-import { ResourceType } from '../../../types/resources';
+import { ResourceType } from '../../../application/types/resources';
 
 interface TypesResponse {
   success: boolean;

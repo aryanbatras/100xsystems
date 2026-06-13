@@ -1,26 +1,26 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { Loading } from "../components/loading/Loading"
-import { Navbar } from "../components/navbar/Navbar";
-import { Footer } from "../components/footer/Footer";
-import ScrollSmootherProvider from "../components/scroll/ScrollSmootherProvider";
+import { Loading } from "../presentation/components/loading/Loading"
+import { Navbar } from "../presentation/components/navbar/Navbar";
+import { Footer } from "../presentation/components/footer/Footer";
+import ScrollSmootherProvider from "../presentation/components/scroll/ScrollSmootherProvider";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { AuthProvider } from "../contexts/AuthContext";
-import { GlobalAuthModalProvider, useGlobalAuthModal } from "../contexts/GlobalAuthModalContext";
-import { AuthModal } from "../components/auth/AuthModal";
+import { AuthProvider } from "../presentation/contexts/AuthContext";
+import { GlobalAuthModalProvider, useGlobalAuthModal } from "../presentation/contexts/GlobalAuthModalContext";
+import { AuthModal } from "../presentation/components/auth/AuthModal";
 import dynamic from 'next/dynamic';
-import { TableOfContentsProvider, useTableOfContents } from "../contexts/TableOfContentsContext";
-import { GlobalTableOfContents } from "../components/path/GlobalTableOfContents";
+import { TableOfContentsProvider, useTableOfContents } from "../presentation/contexts/TableOfContentsContext";
+import { GlobalTableOfContents } from "../presentation/components/path/GlobalTableOfContents";
 
 // Dynamically import chat components to disable SSR
 const ChatComponents = dynamic(
-  () => import("../components/ai/ChatComponents"),
+  () => import("../presentation/components/ai/ChatComponents"),
   { ssr: false }
 );
 
 const ChatProvider = dynamic(
-  () => import("../contexts/ChatContext").then(mod => ({ default: mod.ChatProvider })),
+  () => import("../presentation/contexts/ChatContext").then(mod => ({ default: mod.ChatProvider })),
   { ssr: false }
 );
 

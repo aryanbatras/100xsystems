@@ -9,7 +9,7 @@
  */
 
 import { PublishResult } from '../../application/types/shared.types';
-import { log } from '../../shared/utils';
+import { log } from '../../infrastructure/utils';
 
 export class GitHubPublisher {
   static async publishHTML(slug: string, html: string): Promise<PublishResult> {

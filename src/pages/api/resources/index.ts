@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { Resource } from '../../../types/resources';
+import { Resource } from '../../../application/types/resources';
 import fs from 'fs';
 import path from 'path';
 

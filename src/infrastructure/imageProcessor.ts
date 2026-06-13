@@ -10,8 +10,8 @@
 
 import imageCompression from "browser-image-compression";
 import { ImageData, UploadedImage } from '../application/types/shared.types';
-import { log } from '../shared/utils';
-import { DateUtils } from '../shared/utils';
+import { log } from '../infrastructure/utils';
+import { DateUtils } from '../infrastructure/utils';
 
 export class ImageProcessor {
   private static readonly COMPRESSION_OPTIONS = {

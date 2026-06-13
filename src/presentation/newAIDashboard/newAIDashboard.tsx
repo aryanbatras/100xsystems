@@ -8,7 +8,7 @@
  */
 
 import Head from 'next/head';
-import NewAIChatBot from '../../components/ai/NewAIChatBot';
+import NewAIChatBot from '../../presentation/components/ai/NewAIChatBot';
 
 export default function NewAIDashboard() {
   return (
