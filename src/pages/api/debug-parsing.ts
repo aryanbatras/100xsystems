@@ -22,7 +22,7 @@ export default async function handler(
     const loadData = await loadResponse.json();
     
     // Step 2: Parse the HTML with full debugging
-    const { HtmlToDeltaConverter } = await import('../../core/infrastructure/HtmlToDeltaConverter');
+    const { HtmlToDeltaConverter } = await import('../../infrastructure/converters/htmlToDeltaConverter');
     
     const parsed = HtmlToDeltaConverter.parseHtml(loadData.html);
     const delta = HtmlToDeltaConverter.convertToDelta(loadData.html);

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { log } from "../../../lib/logger";
+import { log } from "../../../shared/utils/logger";
 import styles from "../../../styles/components/editor/CustomQuillEditor.module.css";;
 
 interface TitleInputProps {

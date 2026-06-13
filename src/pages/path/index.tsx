@@ -1,8 +1,8 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import { PathExplorer } from '../../components/path/PathExplorer';
-import { PathContent } from '../../core/path/pathTypes';
-import { PathParser } from '../../core/path/pathParser';
+import { PathContent } from '../../application/path/pathTypes';
+import { PathParser } from '../../application/path/pathParser';
 import styles from '../../styles/pages/path/index.module.css';
 
 interface PathProps {

@@ -3,7 +3,8 @@ import styles from '../../styles/components/editor/CustomQuillEditor.module.css'
 import "react-quill-new/dist/quill.bubble.css";
 import { useImageQueue, usePublishing, useArticleUpdate } from "../../application/hooks";
 import { ArticleUpdater } from '../../infrastructure/articleUpdater';
-import { log, LogLevel } from "../../lib/logger";
+import { log } from "../../shared/utils/logger";
+import type { LogLevel } from "../../shared/types";
 import { PublishingState } from "../../shared/types";
 import Terminal from "./Terminal";
 import LivePreview from "./LivePreview";

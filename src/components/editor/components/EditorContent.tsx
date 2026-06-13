@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import ReactQuill from "react-quill-new";
-import { log } from "../../../lib/logger";
+import { log } from "../../../shared/utils/logger";
 import { setupClipboardHandlers } from "../modules/clipboardHandlers";
 
 interface EditorContentProps {

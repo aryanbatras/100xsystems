@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PathNode, PathContent } from '../../core/path/pathTypes';
+import { PathNode, PathContent } from '../../application/path/pathTypes';
 import { PathLayout } from './PathLayout';
 import { ContentLayout } from './ContentLayout';
 import styles from '../../styles/components/path/PathExplorer.module.css';;

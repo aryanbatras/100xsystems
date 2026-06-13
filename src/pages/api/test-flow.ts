@@ -36,7 +36,7 @@ export default async function handler(
     
     
     // Step 3: Test HTML parsing
-    const { HtmlToDeltaConverter } = await import('../../core/infrastructure/HtmlToDeltaConverter');
+    const { HtmlToDeltaConverter } = await import('../../infrastructure/converters/htmlToDeltaConverter');
     
     try {
       const parsed = HtmlToDeltaConverter.parseHtml(loadData.html);

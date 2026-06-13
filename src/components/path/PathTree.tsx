@@ -1,5 +1,5 @@
 import React from 'react';
-import { PathNode } from '../../core/path/pathTypes';
+import { PathNode } from '../../application/path/pathTypes';
 import styles from '../../styles/components/path/PathTree.module.css';;
 
 interface PathTreeProps {

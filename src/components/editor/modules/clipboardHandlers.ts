@@ -1,4 +1,4 @@
-import { log } from "../../../lib/logger";
+import { log } from "../../../shared/utils/logger";
 import ReactQuill from "react-quill-new";
 
 export const createTableMatchers = () => {

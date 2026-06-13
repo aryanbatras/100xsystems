@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { PathNode } from '../../core/path/pathTypes';
+import { PathNode } from '../../application/path/pathTypes';
 import styles from '../../styles/components/path/PathContent.module.css';;
 
 interface PathContentProps {

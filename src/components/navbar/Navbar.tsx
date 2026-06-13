@@ -9,7 +9,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../../contexts/AuthContext";
 import { useGlobalAuthModal } from "../../contexts/GlobalAuthModalContext";
-import { isAdminUser } from "../../utils/auth-helpers";
+import { isAdminUser } from "../../infrastructure/auth/authHelpers";
 
 export function Navbar(): React.ReactElement {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

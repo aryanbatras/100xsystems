@@ -32,10 +32,10 @@ import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import styles from '../../styles/components/ai/NewAIChatBot.module.css';
-import { DiagramParser } from '../../core/ai/diagramParser';
-import { DIAGRAM_GENERATION_PROMPT } from '../../core/ai/diagramPrompt';
-import { MERMAID_GENERATION_PROMPT } from '../../core/ai/mermaidPrompt';
-import { DIAGRAM_KEYWORDS } from '../../core/ai/diagramConfig';
+import { DiagramParser } from '../../application/ai/diagramParser';
+import { DIAGRAM_GENERATION_PROMPT } from '../../application/ai/diagramPrompt';
+import { MERMAID_GENERATION_PROMPT } from '../../application/ai/mermaidPrompt';
+import { DIAGRAM_KEYWORDS } from '../../application/ai/diagramConfig';
 
 // Import Excalidraw CSS exactly like in test component
 import '@excalidraw/excalidraw/index.css';

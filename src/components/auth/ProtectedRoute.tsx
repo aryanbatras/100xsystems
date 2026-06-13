@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGlobalAuthModal } from '../../contexts/GlobalAuthModalContext';
-import { shouldBlockAccess } from '../../utils/auth-helpers';
+import { shouldBlockAccess } from '../../infrastructure/auth/authHelpers';
 import styles from '../../styles/components/auth/ProtectedRoute.module.css';;
 
 interface ProtectedRouteProps {

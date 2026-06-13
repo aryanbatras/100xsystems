@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { FiChevronRight, FiFolder } from 'react-icons/fi';
 import { IoBookOutline } from "react-icons/io5";
-import { PathNode } from '../../core/path/pathTypes';
+import { PathNode } from '../../application/path/pathTypes';
 import { useTableOfContents } from '../../contexts/TableOfContentsContext';
 import styles from '../../styles/components/path/PathLayout.module.css';;
 

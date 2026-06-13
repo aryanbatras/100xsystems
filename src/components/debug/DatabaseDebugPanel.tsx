@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { DatabaseTestUtil } from '../../utils/databaseTest';
+import { DatabaseTestUtil } from '../../infrastructure/database/databaseTest';
 import styles from '../../styles/components/debug/DatabaseDebugPanel.module.css';;
 
 export const DatabaseDebugPanel: React.FC = () => {

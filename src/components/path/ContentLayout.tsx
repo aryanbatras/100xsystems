@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { PathNode } from '../../core/path/pathTypes';
+import { PathNode } from '../../application/path/pathTypes';
 import { useTableOfContents } from '../../contexts/TableOfContentsContext';
 import { TableOfContents } from './TableOfContents';
 import styles from '../../styles/components/path/ContentLayout.module.css';;

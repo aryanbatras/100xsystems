@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useGlobalAuthModal } from '../../../contexts/GlobalAuthModalContext';
 import { Navbar } from '../../../components/navbar/Navbar';
-import { supabase } from '../../../utils/supabase';
+import { supabase } from '../../../infrastructure/supabase/client';
 import styles from '../../../styles/pages/auth/Login.module.css';
 
 export default function LoginPage() {

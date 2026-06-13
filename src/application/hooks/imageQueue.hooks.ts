@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { extractImagesFromDelta } from '../../features/publishing/useImageProcessing';
+import { extractImagesFromDelta } from '../../application/publishing/imageProcessing';
 import Quill from 'quill';
 
 /**

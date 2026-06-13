@@ -1,8 +1,8 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import { GetStaticPropsContext } from 'next';
-import { PathContent, PathNode } from '../../core/path/pathTypes';
-import { PathParser } from '../../core/path/pathParser';
+import { PathContent, PathNode } from '../../application/path/pathTypes';
+import { PathParser } from '../../application/path/pathParser';
 import { PathLayout } from '../../components/path/PathLayout';
 import { ContentLayout } from '../../components/path/ContentLayout';
 import styles from '../../styles/pages/path/[slug].module.css';

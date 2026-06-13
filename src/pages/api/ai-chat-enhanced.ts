@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Groq from 'groq-sdk';
-import { AI_SYSTEM_PROMPT, DIAGRAM_KEYWORDS } from '../../core/ai/diagramConfig';
+import { AI_SYSTEM_PROMPT, DIAGRAM_KEYWORDS } from '../../application/ai/diagramConfig';
 
 interface ChatRequest {
   question: string;
