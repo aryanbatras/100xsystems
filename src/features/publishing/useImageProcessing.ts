@@ -1,4 +1,4 @@
-import { ImageProcessor } from '../../core/infrastructure';
+import { ImageProcessor } from '../../infrastructure/imageProcessor';
 import { ImageData, UploadedImage } from '../../shared/types';
 
 export type { ImageData, UploadedImage };

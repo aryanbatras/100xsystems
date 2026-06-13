@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useUserProgress } from '../../../hooks/useUserProgress';
-import { UserProgressWithContent } from '../../../services/types/database';
+import { useUserProgress } from '../../../application/hooks';
+import { UserProgressWithContent } from '../../../application/types/database.types';
 import styles from '../../../styles/components/dashboard/ProgressSection.module.css';
 
 export const ProgressSection: React.FC = () => {

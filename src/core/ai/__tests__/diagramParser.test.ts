@@ -46,7 +46,7 @@ const mockAIResponse = `{
 }`;
 
 // Test function
-export function testDiagramParser() {
+export async function testDiagramParser() {
   console.log('🧪 Testing Diagram Parser...');
   
   const parser = new DiagramParser();
@@ -55,8 +55,8 @@ export function testDiagramParser() {
   const isDiagramRequest = parser.isDiagramRequest("Create a flowchart for user login");
   console.log('✅ Diagram request detection:', isDiagramRequest);
   
-  // Test AI response parsing
-  const parsed = parser.parseAIResponse(mockAIResponse);
+  // Test AI response parsing — must await the async method
+  const parsed = await parser.parseAIResponse(mockAIResponse);
   console.log('✅ Parsed response:', {
     hasContent: !!parsed.content,
     hasDiagram: !!parsed.diagram,

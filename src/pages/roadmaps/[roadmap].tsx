@@ -1,7 +1,7 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { StaticSiteGenerator, KnowledgeGraph, RoadmapMeta, ArticleManifest } from '../../core/infrastructure/staticSiteGenerator';
+import { StaticSiteGenerator, KnowledgeGraph, RoadmapMeta, ArticleManifest } from '../../infrastructure/staticSiteGenerator';
 import styles from '../../styles/components/Roadmap.module.css';;
 
 interface RoadmapProps {

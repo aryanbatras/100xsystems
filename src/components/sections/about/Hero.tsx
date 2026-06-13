@@ -5,7 +5,7 @@ import cinematicStyles from '../../../styles/components/sections/about/cinematic
 import AnimatedSection from '../../animated/AnimatedSection';
 import AnimatedTitle from '../../animated/AnimatedTitle';
 import AnimatedDescription from '../../animated/AnimatedDescription';
-import { useVideoAutoplay } from '../../../hooks/useVideoAutoplay';
+import { useVideoAutoplay } from '../../../application/hooks';
 
 export default function AboutHero() {
   const videoRef = useRef<any>(null);

@@ -21,7 +21,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import styles from '../../styles/pages/Graph.module.css';
 import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
-import { StaticSiteGenerator } from '../../core/infrastructure/staticSiteGenerator';
+import { StaticSiteGenerator } from '../../infrastructure/staticSiteGenerator';
 
 // Type definitions
 interface NodeData extends Record<string, unknown> {

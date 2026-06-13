@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import styles from '../../styles/components/editor/CustomQuillEditor.module.css';;
 import "react-quill-new/dist/quill.bubble.css";
-import { useImageQueue } from "../../hooks/useImageQueue";
-import { usePublishing } from '../../hooks/usePublishing';
-import { useArticleUpdate } from '../../hooks/useArticleUpdate';
-import { ArticleUpdater } from '../../core/infrastructure/ArticleUpdater';
+import { useImageQueue, usePublishing, useArticleUpdate } from "../../application/hooks";
+import { ArticleUpdater } from '../../infrastructure/articleUpdater';
 import { log, LogLevel } from "../../lib/logger";
 import { PublishingState } from "../../shared/types";
 import Terminal from "./Terminal";

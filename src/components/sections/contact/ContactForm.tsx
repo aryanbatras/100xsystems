@@ -1,4 +1,4 @@
-import { useContactForm } from '../../../hooks/useContactForm';
+import { useContactForm } from '../../../application/hooks';
 import styles from '../../../styles/components/sections/contact/ContactForm.module.css';;
 
 export default function ContactForm() {

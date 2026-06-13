@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StudyGroup } from '../../services/types/database';
+import { StudyGroup } from '../../application/types/database.types';
 import styles from '../../styles/components/groups/Groups.module.css';
 
 interface CreateGroupModalProps {

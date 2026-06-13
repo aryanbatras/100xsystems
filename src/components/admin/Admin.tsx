@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import styles from '../../styles/components/admin/Admin.module.css';;
-import { ArticleUpdater } from '../../core/infrastructure/ArticleUpdater';
-import { useArticleUpdate } from '../../hooks/useArticleUpdate';
+import { ArticleUpdater } from '../../infrastructure/articleUpdater';
+import { useArticleUpdate } from '../../application/hooks';
 import { QuillDelta, ArticleMetadata } from '../../shared/types';
 
 // Dynamically import QuillEditor with SSR disabled

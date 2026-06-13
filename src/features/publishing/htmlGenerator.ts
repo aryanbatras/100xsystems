@@ -1,6 +1,6 @@
-import { HtmlConverter } from '../../core/infrastructure';
-import { ImageProcessor } from '../../core/infrastructure';
-import { GitHubPublisher } from '../../core/infrastructure';
+import { HtmlConverter } from '../../infrastructure/converters';
+import { ImageProcessor } from '../../infrastructure/imageProcessor';
+import { GitHubPublisher } from '../../infrastructure/api/githubPublisher';
 import { SlugGenerator } from '../../core/domain';
 import { QuillDelta, UploadedImage } from '../../shared/types';
 import { log } from '../../shared/utils';

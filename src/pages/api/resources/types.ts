@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { StaticSiteGenerator } from '../../../core/infrastructure/staticSiteGenerator';
+import { StaticSiteGenerator } from '../../../infrastructure/staticSiteGenerator';
 import { ResourceType } from '../../../types/resources';
 
 interface TypesResponse {

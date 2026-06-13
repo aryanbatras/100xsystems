@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { StaticSiteGenerator } from '../../core/infrastructure/staticSiteGenerator';
+import { StaticSiteGenerator } from '../../infrastructure/staticSiteGenerator';
 
 interface GraphNode {
   id: string;

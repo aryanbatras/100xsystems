@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StudyGroupWithMembership } from '../../services/types/database';
+import { StudyGroupWithMembership } from '../../application/types/database.types';
 import styles from '../../styles/components/groups/GroupEditSection.module.css';;
 
 interface GroupEditSectionProps {

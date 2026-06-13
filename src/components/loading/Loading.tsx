@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../../styles/components/loading/Loader.module.css';;
 import Image from "next/image";
 import LoaderAnimation from "./LoaderAnimation";
-import { useLoadingScreen } from "../../hooks/useLoadingScreen";
+import { useLoadingScreen } from "../../application/hooks";
 
 export function Loading(): React.ReactElement | null {
   const { isLoading } = useLoadingScreen();

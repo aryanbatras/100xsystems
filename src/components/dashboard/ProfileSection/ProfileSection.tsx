@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useUserProfile } from '../../../hooks/useUserProfile';
+import { useUserProfile } from '../../../application/hooks';
 import styles from '../../../styles/components/dashboard/ProfileSection.module.css';
 
 export const ProfileSection: React.FC = () => {

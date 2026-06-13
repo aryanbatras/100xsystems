@@ -1,9 +1,9 @@
 import { supabase } from './supabase';
-import { ProfilesService } from '../services/database/profilesService';
-import { ProgressService } from '../services/database/progressService';
-import { AchievementsService } from '../services/database/achievementsService';
-import { AnalyticsService } from '../services/database/analyticsService';
-import { CommunityService } from '../services/database/communityService';
+import { ProfilesService } from '../infrastructure/database/profilesService';
+import { ProgressService } from '../infrastructure/database/progressService';
+import { AchievementsService } from '../infrastructure/database/achievementsService';
+import { AnalyticsService } from '../infrastructure/database/analyticsService';
+import { CommunityService } from '../infrastructure/database/communityService';
 
 export class DatabaseTestUtil {
   private static log(message: string, data?: any, level: 'info' | 'warn' | 'error' = 'info') {

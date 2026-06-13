@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useUserAchievements } from '../../../hooks/useUserAchievements';
-import { Achievement, UserAchievementWithAchievement } from '../../../services/types/database';
+import { useUserAchievements } from '../../../application/hooks';
+import { Achievement, UserAchievementWithAchievement } from '../../../application/types/database.types';
 import styles from '../../../styles/components/dashboard/AchievementsSection.module.css';
 
 export const AchievementsSection: React.FC = () => {

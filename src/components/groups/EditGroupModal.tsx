@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useUserCommunity } from '../../hooks/useUserCommunity';
+import { useUserCommunity } from '../../application/hooks';
 import styles from '../../styles/components/groups/EditGroupModal.module.css';;
 
 interface EditGroupModalProps {

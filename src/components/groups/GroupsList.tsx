@@ -1,5 +1,5 @@
 import React from 'react';
-import { StudyGroupWithMembership } from '../../services/types/database';
+import { StudyGroupWithMembership } from '../../application/types/database.types';
 import { GroupCard } from './GroupCard';
 import styles from '../../styles/components/groups/Groups.module.css';
 

@@ -1,15 +1,5 @@
-import dynamic from 'next/dynamic';
-import { ProtectedRoute } from '../../components/auth/ProtectedRoute';
-
-// Dynamically import Admin component with SSR disabled
-const Admin = dynamic(() => import("../../components/admin/Admin"), {
-  ssr: false
-});
-
-export default function AdminPage() {
-  return (
-    <ProtectedRoute requireAdmin={true}>
-      <Admin />
-    </ProtectedRoute>
-  );
-}
+/**
+ * Admin page — Framework layer (thin re-export)
+ * All presentation logic lives in src/presentation/admin/
+ */
+export { default } from '../../presentation/admin';

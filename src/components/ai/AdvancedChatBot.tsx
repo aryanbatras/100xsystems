@@ -24,7 +24,7 @@ import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import styles from '../../styles/components/ai/AdvancedChatBot.module.css';;
-import { useMemory } from "../../hooks/useMemory";
+import { useMemory } from "../../application/hooks";
 import { useAuth } from "../../contexts/AuthContext";
 import { useGlobalAuthModal } from "../../contexts/GlobalAuthModalContext";
 

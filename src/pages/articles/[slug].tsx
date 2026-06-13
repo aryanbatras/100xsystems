@@ -2,7 +2,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { StaticSiteGenerator, ArticleManifest } from '../../core/infrastructure/staticSiteGenerator';
+import { StaticSiteGenerator, ArticleManifest } from '../../infrastructure/staticSiteGenerator';
 import GiscusComments from '../../components/discussions/GiscusComments';
 import { DiscussionProvider } from '../../components/discussions/DiscussionProvider';
 import styles from '../../styles/components/Articles.module.css';;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { StudyGroupWithMembership } from '../../services/types/database';
+import { StudyGroupWithMembership } from '../../application/types/database.types';
 import styles from '../../styles/components/groups/Groups.module.css';
 
 interface GroupCardProps {

@@ -1,42 +1,5 @@
-import { Geist } from "next/font/google";
-import AboutHero from "../../components/sections/about/Hero";
-import Innovation from "../../components/sections/about/Innovation";
-import Founder from "../../components/sections/about/Founder";
-import Systems from "../../components/sections/about/Systems";
-import Mission from "../../components/sections/about/Mission";
-import CorePrinciples from "../../components/sections/about/CorePrinciples";
-import Philosophy from "../../components/sections/about/Philosophy";
-import Pathway from "../../components/sections/about/Pathway";
-import Difference from "../../components/sections/about/Difference";
-import AboutCTA from "../../components/sections/about/CTA";
-import Wallpaper from "../../components/sections/about/Wallpaper";
-import Values from "../../components/sections/about/Values";
-import AboutFooter from "../../components/sections/about/Footer";
-import styles from "../../styles/components/sections/about/shared.module.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-export default function About() {
-  return (
-    <div className={`${geistSans.variable} ${styles.page}`}>
-      <AboutHero />
-      <div className={styles.container}>
-        <Innovation />
-        <Founder />
-        <Systems />
-        <Mission />
-        <CorePrinciples />
-        <Philosophy />
-        <Pathway />
-        <Difference />
-        <AboutCTA />
-        <Wallpaper />
-        <Values />
-        <AboutFooter />
-      </div>
-    </div>
-  );
-}
+/**
+ * About page — Framework layer (thin re-export)
+ * All presentation logic lives in src/presentation/about/
+ */
+export { default } from '../../presentation/about';
