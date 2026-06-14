@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect, useRef } from 'react';
 import { CgMenuHotdog } from 'react-icons/cg';
-import { FaWhatsapp } from 'react-icons/fa';
 import { IoChevronDown } from 'react-icons/io5';
 import { RxCross1 } from 'react-icons/rx';
 /**
@@ -114,14 +113,14 @@ export function Navbar(): React.ReactElement {
         </Link>
         <div className={styles.navContainer} ref={dropdownRef}>
           <div className={styles.navLinks}>
-            <Link href="/" className={styles.navLink}>
-              Home
-            </Link>
+              {/* <Link href="/" className={styles.navLink}>
+                Home
+              </Link> */}
 
             {/* AI Chat - Priority Link */}
-            <Link href="/new-ai-dashboard" className={styles.navLink}>
+            {/* <Link href="/new-ai-dashboard" className={styles.navLink}>
               AI Chat
-            </Link>
+            </Link> */}
 
             {/* Priority Links - Path & Roadmaps */}
             <Link href="/path" className={styles.navLink}>
@@ -189,7 +188,7 @@ export function Navbar(): React.ReactElement {
               </div>
             </div>
 
-            <div 
+            {/* <div 
               className={styles.dropdown}
               onMouseEnter={() => handleDropdownEnter("about")}
               onMouseLeave={handleDropdownLeave}
@@ -214,7 +213,7 @@ export function Navbar(): React.ReactElement {
                   Contact
                 </Link>
               </div>
-            </div>
+            </div> */}
 
 
           </div>
@@ -334,20 +333,12 @@ export function Navbar(): React.ReactElement {
                 Contact
               </Link>
             </div>
+            
           </div>
         </div>
       )}
       
-      {/* WhatsApp Group Floating Button */}
-      <a
-        href="https://chat.whatsapp.com/L5DpJhAjRFi805IDntDXQa?mode=gi_t"
-        target="_blank"
-        rel="noopener noreferrer"
-        className={styles.whatsappFloat}
-        aria-label="Join our WhatsApp group"
-      >
-        <FaWhatsapp />
-      </a>
+
     </>
   );
 }

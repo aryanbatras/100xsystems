@@ -12,7 +12,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import cinematicStyles from '../_styles/css/sections-home-cinematic.module.css';
 import sharedStyles from '../_styles/css/sections-home-shared.module.css';
 import { CubeSmall, CubeHover } from './animation.feature';
-import { FaWhatsapp, FaPhone, FaMicrophone, FaAws } from 'react-icons/fa';
+import { FaMicrophone, FaAws } from 'react-icons/fa';
 import {
   SiJavascript,
   SiTypescript,
@@ -64,8 +64,6 @@ import {
  */
 
 ;
-
-import 'react-quill-new/dist/quill.bubble.css';
 
 
 // ============================================================
@@ -2347,43 +2345,19 @@ export function SectionBootcamp() {
           <div className={styles.bootcampCTA}>
             <div className={styles.ctaPrimary}>
               <InteractiveButton 
-                href="https://chat.whatsapp.com/L5DpJhAjRFi805IDntDXQa?mode=gi_t" 
+                href="/contact" 
                 variant="cta"
                 scrambleText={{
-                  hover: "JOIN NOW",
+                  hover: "APPLY NOW",
                   speed: 2,
                   chars: "upperCase",
                   revealDelay: 0.1
                 }}
                 className={styles.ctaButton}
               >
-                Join WhatsApp Group
+                Apply for Admission
               </InteractiveButton>
-              <p className={styles.ctaNote}>Direct contact - No forms, no waiting</p>
-            </div>
-
-            <div className={styles.ctaSecondary}>
-              <div className={styles.contactRow}>
-                <a 
-                  href="https://wa.me/919149469833" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className={styles.contactLink}
-                >
-                  <FaWhatsapp className={styles.contactIcon} />
-                  <span>Message on WhatsApp</span>
-                </a>
-              </div>
-              
-              <div className={styles.contactRow}>
-                <a 
-                  href="tel:+919149469833" 
-                  className={styles.contactLink}
-                >
-                  <FaPhone className={styles.contactIcon} />
-                  <span>Call: +91 91494 69833</span>
-                </a>
-              </div>
+              <p className={styles.ctaNote}>Qualification-based admission - Limited seats</p>
             </div>
           </div>
 

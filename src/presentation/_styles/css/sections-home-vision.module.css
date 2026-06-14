@@ -1,0 +1,111 @@
+/* HomeVision - Detailed Vision Section */
+
+.section {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.label {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: oklch(0.6 0 0);
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 200;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: oklch(0.6 0 0);
+  font-weight: 300;
+  font-family: var(--font-samsung-sharp);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.card {
+  padding: 32px;
+  background: oklch(1 0 0 / 0.02);
+  border: 1px solid oklch(1 0 0 / 0.06);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  background: oklch(1 0 0 / 0.04);
+  border-color: oklch(1 0 0 / 0.12);
+  transform: translateY(-2px);
+}
+
+.icon {
+  color: oklch(0.7 0.08 300);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.cardTitle {
+  font-size: 20px;
+  font-weight: 400;
+  font-family: var(--font-samsung-sharp);
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin-bottom: 12px;
+}
+
+.cardText {
+  font-size: 15px;
+  color: oklch(0.65 0 0);
+  line-height: 1.7;
+  font-family: var(--font-samsung-sharp);
+  font-weight: 300;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 24px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 16px;
+  }
+}

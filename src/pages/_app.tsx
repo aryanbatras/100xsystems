@@ -1,19 +1,14 @@
-import "../presentation/_styles/globals.css";
+import "./globals.css";
 import type { AppProps } from "next/app";
 import { Loading } from "../presentation/features/loading.feature"
 import { Navbar } from "../presentation/features/navbar.feature";
 import { Footer } from "../presentation/features/footer.feature";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { Toaster } from "sonner";
 import dynamic from 'next/dynamic';
-import { TableOfContentsProvider, useTableOfContents, ChatProvider } from "../presentation/features/contexts.feature";
+import { TableOfContentsProvider, useTableOfContents } from "../presentation/features/contexts.feature";
 import { GlobalTableOfContents } from "../presentation/features/path.feature";
-
-// Dynamically import chat components to disable SSR
-const ChatComponents = dynamic(
-  () => import("../presentation/features/ai.feature").then(mod => ({ default: mod.ChatComponents })),
-  { ssr: false }
-);
 
 function GlobalTOCComponent() {
   const { tocItems, activeSection, onSectionClick, isGlobalTocVisible } = useTableOfContents();
@@ -44,15 +39,22 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [router.events]);
 
   return (
-    <ChatProvider>
-      <TableOfContentsProvider>
-        <Loading /> 
-        <Navbar />
-        <Component {...pageProps} />
-        <Footer/>
-        <ChatComponents />
-        <GlobalTOCComponent />
-      </TableOfContentsProvider>
-    </ChatProvider>
+    <TableOfContentsProvider>
+      <Loading /> 
+      <Navbar />
+      <Component {...pageProps} />
+      <Footer/>
+      <GlobalTOCComponent />
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: 'oklch(0.13 0 0)',
+            color: 'oklch(1 0 0)',
+            border: '1px solid oklch(1 0 0 / 0.06)',
+          },
+        }}
+      />
+    </TableOfContentsProvider>
   );
 }

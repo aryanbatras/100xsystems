@@ -12,11 +12,19 @@ import { Geist } from 'next/font/google';
  * @module about
  */
 
-;
-import {
-  AboutHero, Innovation, Founder, Systems, Mission, CorePrinciples,
-  Philosophy, Pathway, Difference, AboutCTA, Wallpaper, Values, AboutFooter
-} from './sections.feature';
+import { AboutHero } from './aboutHero.feature';
+import { Innovation } from './aboutInnovation.feature';
+import { Founder } from './aboutFounder.feature';
+import { Systems } from './aboutSystems.feature';
+import { Mission } from './aboutMission.feature';
+import { CorePrinciples } from './aboutCorePrinciples.feature';
+import { Philosophy } from './aboutPhilosophy.feature';
+import { Pathway } from './aboutPathway.feature';
+import { Difference } from './aboutDifference.feature';
+import { AboutCTA } from './aboutCTA.feature';
+import { Wallpaper } from './aboutWallpaper.feature';
+import { Values } from './aboutValues.feature';
+import { AboutFooter } from './aboutFooter.feature';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,8 +59,3 @@ export function AboutPage() {
     </div>
   );
 }
-
-
-// ============================================================
-// Source: index.ts
-// ============================================================

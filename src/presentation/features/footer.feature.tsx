@@ -24,7 +24,7 @@ import React from 'react';
 export function Footer(): React.ReactElement {
   return (
     <>
-      <FooterLinks />
+      {/* <FooterLinks /> */}
       <div className={footerStyles.container}>
         <img src="/100xsystemsfooter.webp" className={footerStyles.logo} alt="100xSystems" />
       </div>
