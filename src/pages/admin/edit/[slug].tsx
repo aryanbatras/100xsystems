@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
 // Dynamically import Admin component with SSR disabled
-const Admin = dynamic(() => import("../../../presentation/components/admin/Admin"), {
+const Admin = dynamic(() => import("../../../presentation/admin"), {
   ssr: false,
   loading: () => <div style={{ 
     display: 'flex', 

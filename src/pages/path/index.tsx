@@ -1,6 +1,6 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
-import { PathExplorer } from '../../presentation/components/path/PathExplorer';
+import { PathExplorer } from '../../presentation/path/PathExplorer';
 import { PathContent } from '../../application/path/pathTypes';
 import { PathParser } from '../../application/path/pathParser';
 import styles from '../../presentation/_styles/pages/path/index.module.css';

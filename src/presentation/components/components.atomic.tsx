@@ -16,7 +16,7 @@ import {
   input, label, select,
   badge, badgeSuccess, badgeWarning, badgeError, badgeInfo,
   pageTitle, pageSubtitle, textMuted, textDanger
-} from '../_styles/components.styles';
+} from '../_styles/styles.components';
 
 // ─── BUTTON ───────────────────────────────────────────────────────
 type ButtonVariant = 'primary' | 'secondary' | 'destructive' | 'ghost';

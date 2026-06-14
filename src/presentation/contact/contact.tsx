@@ -8,9 +8,9 @@
  */
 
 'use client';
-import ContactHero from "../../presentation/components/sections/contact/Hero";
-import ContactInfo from "../../presentation/components/sections/contact/ContactInfo";
-import ContactForm from "../../presentation/components/sections/contact/ContactForm";
+import ContactHero from "../../presentation/sections/contact/Hero";
+import ContactInfo from "../../presentation/sections/contact/ContactInfo";
+import ContactForm from "../../presentation/sections/contact/ContactForm";
 import styles from "../../presentation/_styles/components/sections/contact/shared.module.css";
 
 /**

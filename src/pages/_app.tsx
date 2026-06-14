@@ -1,17 +1,17 @@
 import "../presentation/_styles/globals.css";
 import type { AppProps } from "next/app";
-import { Loading } from "../presentation/components/loading/Loading"
-import { Navbar } from "../presentation/components/navbar/Navbar";
-import { Footer } from "../presentation/components/footer/Footer";
+import { Loading } from "../presentation/loading/Loading"
+import { Navbar } from "../presentation/navbar/Navbar";
+import { Footer } from "../presentation/footer/Footer";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import dynamic from 'next/dynamic';
 import { TableOfContentsProvider, useTableOfContents } from "../presentation/contexts/TableOfContentsContext";
-import { GlobalTableOfContents } from "../presentation/components/path/GlobalTableOfContents";
+import { GlobalTableOfContents } from "../presentation/path/GlobalTableOfContents";
 
 // Dynamically import chat components to disable SSR
 const ChatComponents = dynamic(
-  () => import("../presentation/components/ai/ChatComponents"),
+  () => import("../presentation/ai/ChatComponents"),
   { ssr: false }
 );
 

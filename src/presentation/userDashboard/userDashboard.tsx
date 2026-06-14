@@ -8,9 +8,9 @@
  */
 
 import { useRouter } from 'next/router';
-import { ProfileSection } from '../../presentation/components/dashboard/ProfileSection/ProfileSection';
-import { ProgressSection } from '../../presentation/components/dashboard/ProgressSection/ProgressSection';
-import { AchievementsSection } from '../../presentation/components/dashboard/AchievementsSection/AchievementsSection';
+import { ProfileSection } from '../../presentation/dashboard/ProfileSection/ProfileSection';
+import { ProgressSection } from '../../presentation/dashboard/ProgressSection/ProgressSection';
+import { AchievementsSection } from '../../presentation/dashboard/AchievementsSection/AchievementsSection';
 import styles from '../../presentation/_styles/pages/UserDashboard.module.css';
 
 export default function UserDashboard() {

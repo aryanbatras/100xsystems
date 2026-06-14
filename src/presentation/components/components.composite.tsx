@@ -10,7 +10,7 @@
 
 import React from 'react';
 import { Input, Spinner } from './components.atomic';
-import { table, tableHeader, tableHeaderCell, tableRow, tableCell, textMuted } from '../_styles/components.styles';
+import { table, tableHeader, tableHeaderCell, tableRow, tableCell, textMuted } from '../_styles/styles.components';
 
 // ─── TABLE ────────────────────────────────────────────────────────
 interface ColumnDef<T = Record<string, unknown>> {

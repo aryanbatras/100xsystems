@@ -11,7 +11,7 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import InlineSearch from '../../presentation/components/search/InlineSearch';
+import InlineSearch from '../../presentation/search/InlineSearch';
 import styles from '../../presentation/_styles/pages/Articles.module.css';
 
 /** @public */

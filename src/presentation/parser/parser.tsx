@@ -13,7 +13,7 @@ import dynamic from 'next/dynamic';
 import { HtmlToDeltaConverter } from '../../infrastructure/converters/htmlToDeltaConverter';
 import styles from '../../presentation/_styles/pages/parser.module.css';
 
-const CustomQuillEditor = dynamic(() => import("../../presentation/components/editor/CustomQuillEditor"), {
+const CustomQuillEditor = dynamic(() => import("../../presentation/editor/CustomQuillEditor"), {
   ssr: false,
   loading: () => <div className={styles.loading}>Loading editor...</div>
 });

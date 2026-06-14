@@ -9,19 +9,19 @@
 
 'use client';
 import { Geist } from "next/font/google";
-import AboutHero from "../../presentation/components/sections/about/Hero";
-import Innovation from "../../presentation/components/sections/about/Innovation";
-import Founder from "../../presentation/components/sections/about/Founder";
-import Systems from "../../presentation/components/sections/about/Systems";
-import Mission from "../../presentation/components/sections/about/Mission";
-import CorePrinciples from "../../presentation/components/sections/about/CorePrinciples";
-import Philosophy from "../../presentation/components/sections/about/Philosophy";
-import Pathway from "../../presentation/components/sections/about/Pathway";
-import Difference from "../../presentation/components/sections/about/Difference";
-import AboutCTA from "../../presentation/components/sections/about/CTA";
-import Wallpaper from "../../presentation/components/sections/about/Wallpaper";
-import Values from "../../presentation/components/sections/about/Values";
-import AboutFooter from "../../presentation/components/sections/about/Footer";
+import AboutHero from "../../presentation/sections/about/Hero";
+import Innovation from "../../presentation/sections/about/Innovation";
+import Founder from "../../presentation/sections/about/Founder";
+import Systems from "../../presentation/sections/about/Systems";
+import Mission from "../../presentation/sections/about/Mission";
+import CorePrinciples from "../../presentation/sections/about/CorePrinciples";
+import Philosophy from "../../presentation/sections/about/Philosophy";
+import Pathway from "../../presentation/sections/about/Pathway";
+import Difference from "../../presentation/sections/about/Difference";
+import AboutCTA from "../../presentation/sections/about/CTA";
+import Wallpaper from "../../presentation/sections/about/Wallpaper";
+import Values from "../../presentation/sections/about/Values";
+import AboutFooter from "../../presentation/sections/about/Footer";
 import styles from "../../presentation/_styles/components/sections/about/shared.module.css";
 
 const geistSans = Geist({

@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import { pageContainer, mainContent, contentArea } from '../_styles/components.styles';
+import { pageContainer, mainContent, contentArea } from '../_styles/styles.components';
 
 // ─── PAGE FRAME ───────────────────────────────────────────────────
 interface PageFrameProps {

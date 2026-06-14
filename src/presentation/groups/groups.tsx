@@ -9,9 +9,9 @@
 
 'use client';
 import { useState, useEffect } from 'react';
-import { GroupsList } from '../../presentation/components/groups/GroupsList';
-import { CreateGroupModal } from '../../presentation/components/groups/CreateGroupModal';
-import { GroupEditSection } from '../../presentation/components/groups/GroupEditSection';
+import { GroupsList } from '../../presentation/groups/GroupsList';
+import { CreateGroupModal } from '../../presentation/groups/CreateGroupModal';
+import { GroupEditSection } from '../../presentation/groups/GroupEditSection';
 import styles from '../../presentation/_styles/pages/groups/Groups.module.css';
 
 /**
