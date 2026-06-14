@@ -1,6 +1,6 @@
 'use client';
 
-import styles from '../_styles/navbar-navbar.module.css';
+import styles from '../_styles/css/navbar-navbar.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect, useRef } from 'react';

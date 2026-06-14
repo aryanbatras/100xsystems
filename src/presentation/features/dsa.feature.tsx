@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import ReactMarkdown from 'react-markdown';
-import styles from '../_styles/dsa.module.css';
+import styles from '../_styles/css/dsa.module.css';
 import type { DSAContent } from '../../infrastructure/staticSiteGenerator';
 /**
  * ## Dsa

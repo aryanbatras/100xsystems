@@ -10,7 +10,7 @@
 
 'use client';
 
-import styles from '../_styles/terms.module.css';
+import styles from '../_styles/css/terms.module.css';
 
 // ============================================================
 // Source: index.ts

@@ -2,7 +2,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { StaticSiteGenerator, KnowledgeGraph, RoadmapMeta, ArticleManifest } from '../../infrastructure/staticSiteGenerator';
-import styles from '../../presentation/_styles/roadmap.module.css';;
+import styles from '../../presentation/_styles/css/roadmap.module.css';;
 
 interface RoadmapProps {
   roadmap: RoadmapMeta;

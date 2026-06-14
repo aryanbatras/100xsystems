@@ -12,7 +12,7 @@
 
 import Head from 'next/head';
 import Link from 'next/link';
-import styles from '../_styles/roadmaps.module.css';
+import styles from '../_styles/css/roadmaps.module.css';
 import { KnowledgeGraph } from '../../infrastructure/staticSiteGenerator';
 
 // ============================================================

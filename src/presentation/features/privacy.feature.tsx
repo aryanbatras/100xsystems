@@ -10,7 +10,7 @@
 
 'use client';
 
-import styles from '../_styles/privacy.module.css';
+import styles from '../_styles/css/privacy.module.css';
 
 // ============================================================
 // Source: privacy.tsx

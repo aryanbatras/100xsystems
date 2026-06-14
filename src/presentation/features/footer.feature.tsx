@@ -1,7 +1,7 @@
 'use client';
 
-import footerStyles from '../_styles/footer-footer.module.css';
-import footerLinksStyles from '../_styles/footer-footerlinks.module.css';
+import footerStyles from '../_styles/css/footer-footer.module.css';
+import footerLinksStyles from '../_styles/css/footer-footerlinks.module.css';
 import Link from 'next/link';
 import React from 'react';
 /**

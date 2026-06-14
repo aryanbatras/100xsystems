@@ -13,7 +13,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import Head from 'next/head';
 import Fuse from 'fuse.js';
-import styles from '../_styles/resources.module.css';
+import styles from '../_styles/css/resources.module.css';
 import { Resource } from '../../application/types/resources.types';
 
 // ============================================================

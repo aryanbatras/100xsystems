@@ -1,6 +1,6 @@
 'use client';
 
-import styles from '../_styles/giscus-giscus.module.css';
+import styles from '../_styles/css/giscus-giscus.module.css';
 import Giscus from '@giscus/react';
 import { useEffect, useState } from 'react';
 /**

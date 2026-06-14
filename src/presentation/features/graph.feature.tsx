@@ -1,6 +1,6 @@
 'use client';
 
-import styles from '../_styles/graph-obsidiangraph.module.css';
+import styles from '../_styles/css/graph-obsidiangraph.module.css';
 import dynamic from 'next/dynamic';
 import React, { useState, useCallback, useMemo, useRef, useEffect, Component } from 'react';
 /**

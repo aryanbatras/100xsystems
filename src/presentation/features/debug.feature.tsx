@@ -1,5 +1,5 @@
 import { DatabaseTestUtil } from '../../infrastructure/database/databaseTest';
-import styles from '../_styles/debug-databasedebugpanel.module.css';
+import styles from '../_styles/css/debug-databasedebugpanel.module.css';
 import React, { useState } from 'react';
 /**
  * ## Debug

@@ -1,6 +1,6 @@
 'use client';
 
-import styles from '../_styles/sections-contact-shared.module.css';
+import styles from '../_styles/css/sections-contact-shared.module.css';
 import { ContactHero, ContactInfo, ContactForm } from './sections.feature';
 /**
  * ## Contact

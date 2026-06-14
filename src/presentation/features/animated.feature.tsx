@@ -1,9 +1,9 @@
 'use client';
 
-import buttonStyles from '../_styles/animated-animatedbutton.module.css';
-import cardStyles from '../_styles/animated-animatedcard.module.css';
-import sectionStyles from '../_styles/animated-animatedsection.module.css';
-import techGridStyles from '../_styles/animated-animatedtechgrid.module.css';
+import buttonStyles from '../_styles/css/animated-animatedbutton.module.css';
+import cardStyles from '../_styles/css/animated-animatedcard.module.css';
+import sectionStyles from '../_styles/css/animated-animatedsection.module.css';
+import techGridStyles from '../_styles/css/animated-animatedtechgrid.module.css';
 import Link from 'next/link';
 import { ReactNode, forwardRef } from 'react';
 /**

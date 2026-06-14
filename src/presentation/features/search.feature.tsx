@@ -1,8 +1,8 @@
 'use client';
 
 import { SearchDocument, SearchResult, SearchFilters } from '../../application/types/search';
-import globalSearchStyles from '../_styles/search-globalsearch.module.css';
-import inlineSearchStyles from '../_styles/search-inlinesearch.module.css';
+import globalSearchStyles from '../_styles/css/search-globalsearch.module.css';
+import inlineSearchStyles from '../_styles/css/search-inlinesearch.module.css';
 import { useState, useEffect, useRef } from 'react';
 /**
  * ## Search

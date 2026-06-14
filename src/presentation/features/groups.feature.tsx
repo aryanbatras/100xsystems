@@ -2,9 +2,9 @@
 
 import { useUserCommunity } from '../../application/hooks';
 import { StudyGroup, StudyGroupWithMembership } from '../../application/types/database.types';
-import editGroupModalStyles from '../_styles/groups-editgroupmodal.module.css';
-import groupEditSectionStyles from '../_styles/groups-groupeditsection.module.css';
-import groupsStyles from '../_styles/groups-groups.module.css';
+import editGroupModalStyles from '../_styles/css/groups-editgroupmodal.module.css';
+import groupEditSectionStyles from '../_styles/css/groups-groupeditsection.module.css';
+import groupsStyles from '../_styles/css/groups-groups.module.css';
 import { useRouter } from 'next/router';
 import { GiscusComments } from './giscus.feature';
 import React, { useState, useEffect } from 'react';

@@ -10,7 +10,7 @@
 
 'use client';
 
-import styles from '../_styles/sections-paths-shared.module.css';
+import styles from '../_styles/css/sections-paths-shared.module.css';
 import { PathsHero, PathCards, PathsVideoShowcase, LearningApproach, Journey, Outcomes } from './sections.feature';
 
 // ============================================================

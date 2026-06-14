@@ -12,7 +12,7 @@
 
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import styles from '../_styles/parser.module.css';
+import styles from '../_styles/css/parser.module.css';
 import { HtmlToDeltaConverter } from '../../infrastructure/converters/htmlToDeltaConverter';
 
 // ============================================================

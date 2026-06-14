@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import styles from '../../presentation/_styles/admin-admindashboard.module.css';
+import styles from '../../presentation/_styles/css/admin-admindashboard.module.css';
 interface Article {
   slug: string;
   isLoading?: boolean;

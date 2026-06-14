@@ -6,7 +6,7 @@ import systemDesignTemplateLibrary from '../../../public/assets/exclidraw/system
 import systemDesignLibrary from '../../../public/assets/exclidraw/system-design.json';
 import technologyLogosLibrary from '../../../public/assets/exclidraw/technology-logos.json';
 import wardleyMapsSymbolsLibrary from '../../../public/assets/exclidraw/wardley-maps-symbols.json';
-import styles from '../_styles/excalidraw-excalidraw.module.css';
+import styles from '../_styles/css/excalidraw-excalidraw.module.css';
 import dynamic from 'next/dynamic';
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { BiExport } from 'react-icons/bi';

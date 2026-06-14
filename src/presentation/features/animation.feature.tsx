@@ -1,7 +1,7 @@
 'use client';
 
-import cubeHoverStyles from '../_styles/animation-cubehover.module.css';
-import cubeSmallStyles from '../_styles/animation-cubesmall.module.css';
+import cubeHoverStyles from '../_styles/css/animation-cubehover.module.css';
+import cubeSmallStyles from '../_styles/css/animation-cubesmall.module.css';
 /**
  * ## Animation
  *

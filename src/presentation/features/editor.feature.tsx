@@ -4,9 +4,9 @@ import { log } from '../../infrastructure/utils/logger';
 import { useImageQueue, usePublishing, useArticleUpdate } from '../../application/hooks';
 import { PublishingState } from '../../application/types/shared.types';
 import { ArticleUpdater } from '../../infrastructure/articleUpdater';
-import quillEditorStyles from '../_styles/editor-customquilleditor.module.css';
-import livePreviewStyles from '../_styles/editor-livepreview.module.css';
-import terminalStyles from '../_styles/editor-terminal.module.css';
+import quillEditorStyles from '../_styles/css/editor-customquilleditor.module.css';
+import livePreviewStyles from '../_styles/css/editor-livepreview.module.css';
+import terminalStyles from '../_styles/css/editor-terminal.module.css';
 
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import ReactQuill from 'react-quill-new';

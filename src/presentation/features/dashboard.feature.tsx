@@ -2,10 +2,10 @@
 
 import { useUserProgress, useUserProfile, useUserAchievements } from '../..//application/hooks';
 import { UserProgressWithContent, Achievement, UserAchievementWithAchievement } from '../..//application/types/database.types';
-import achievementsSectionStyles from '../_styles/dashboard-achievementssection.module.css';
-import profileSectionStyles from '../_styles/dashboard-profilesection.module.css';
-import progressSectionStyles from '../_styles/dashboard-progresssection.module.css';
-import dashboardStyles from '../_styles/dashboard.module.css';
+import achievementsSectionStyles from '../_styles/css/dashboard-achievementssection.module.css';
+import profileSectionStyles from '../_styles/css/dashboard-profilesection.module.css';
+import progressSectionStyles from '../_styles/css/dashboard-progresssection.module.css';
+import dashboardStyles from '../_styles/css/dashboard.module.css';
 import { InteractiveButton, AnimatedSection, AnimatedTitle } from './animated.feature';
 import Head from 'next/head';
 import { useRouter } from 'next/router';

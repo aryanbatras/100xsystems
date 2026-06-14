@@ -2,13 +2,13 @@
 
 import { PathNode, PathContent as PathContentType } from '../../application/path/pathTypes';
 import { useTableOfContents } from './contexts.feature';
-import contentLayoutStyles from '../_styles/path-contentlayout.module.css';
-import globalTocStyles from '../_styles/path-globaltableofcontents.module.css';
-import pathContentStyles from '../_styles/path-pathcontent.module.css';
-import pathExplorerStyles from '../_styles/path-pathexplorer.module.css';
-import pathLayoutStyles from '../_styles/path-pathlayout.module.css';
-import pathTreeStyles from '../_styles/path-pathtree.module.css';
-import tableOfContentsStyles from '../_styles/path-tableofcontents.module.css';
+import contentLayoutStyles from '../_styles/css/path-contentlayout.module.css';
+import globalTocStyles from '../_styles/css/path-globaltableofcontents.module.css';
+import pathContentStyles from '../_styles/css/path-pathcontent.module.css';
+import pathExplorerStyles from '../_styles/css/path-pathexplorer.module.css';
+import pathLayoutStyles from '../_styles/css/path-pathlayout.module.css';
+import pathTreeStyles from '../_styles/css/path-pathtree.module.css';
+import tableOfContentsStyles from '../_styles/css/path-tableofcontents.module.css';
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
 import { FiChevronRight, FiFolder } from 'react-icons/fi';

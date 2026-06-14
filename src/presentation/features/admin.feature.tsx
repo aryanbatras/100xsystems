@@ -3,7 +3,7 @@
 import { useArticleUpdate } from '../../application/hooks';
 import { QuillDelta, ArticleMetadata } from '../../application/types/shared.types';
 import { ArticleUpdater } from '../../infrastructure/articleUpdater';
-import styles from '../_styles/admin-admin.module.css';
+import styles from '../_styles/css/admin-admin.module.css';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';

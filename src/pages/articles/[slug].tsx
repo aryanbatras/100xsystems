@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { StaticSiteGenerator, ArticleManifest } from '../../infrastructure/staticSiteGenerator';
 import { GiscusComments, DiscussionProvider } from '../../presentation/features/discussions.feature';
-import styles from '../../presentation/_styles/articles.module.css';
+import styles from '../../presentation/_styles/css/articles.module.css';
 import { useChat } from '../../presentation/features/contexts.feature';
 import { AdvancedChatBot } from '../../presentation/features/ai.feature';
 

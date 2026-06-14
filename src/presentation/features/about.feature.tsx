@@ -1,6 +1,6 @@
 'use client';
 
-import styles from '../_styles/sections-about-shared.module.css';
+import styles from '../_styles/css/sections-about-shared.module.css';
 import { Geist } from 'next/font/google';
 /**
  * ## About

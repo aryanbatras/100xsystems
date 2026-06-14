@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import styles from '../_styles/articles.module.css';
+import styles from '../_styles/css/articles.module.css';
 import { InlineSearch } from './search.feature';
 /**
  * ## Articles

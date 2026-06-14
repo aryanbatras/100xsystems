@@ -1,8 +1,8 @@
 'use client';
 
 import { useLoadingScreen } from '../../application/hooks';
-import loaderStyles from '../_styles/loading-loader.module.css';
-import loaderAnimationStyles from '../_styles/loading-loaderanimation.module.css';
+import loaderStyles from '../_styles/css/loading-loader.module.css';
+import loaderAnimationStyles from '../_styles/css/loading-loaderanimation.module.css';
 
 import Image from 'next/image';
 import React from 'react';

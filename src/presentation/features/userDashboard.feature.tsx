@@ -11,7 +11,7 @@
 'use client';
 
 import { useRouter } from 'next/router';
-import styles from '../_styles/userdashboard.module.css';
+import styles from '../_styles/css/userdashboard.module.css';
 import { ProfileSection, ProgressSection, AchievementsSection } from './dashboard.feature';
 
 // ============================================================
