@@ -34,7 +34,16 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 export const useChat = () => {
   const context = useContext(ChatContext);
   if (!context) {
-    throw new Error('useChat must be used within a ChatProvider');
+    return {
+      isChatOpen: false,
+      selectedText: '',
+      articleSlug: '',
+      articleContent: '',
+      openChat: () => {},
+      closeChat: () => {},
+      toggleChat: () => {},
+      updateSelectedText: () => {},
+    };
   }
   return context;
 };
@@ -110,7 +119,15 @@ const TableOfContentsContext = createContext<TableOfContentsContextType | undefi
 export const useTableOfContents = () => {
   const context = useContext(TableOfContentsContext);
   if (!context) {
-    throw new Error('useTableOfContents must be used within a TableOfContentsProvider');
+    return {
+      tocItems: [],
+      activeSection: '',
+      setTocItems: () => {},
+      setActiveSection: () => {},
+      onSectionClick: () => {},
+      isGlobalTocVisible: false,
+      setIsGlobalTocVisible: () => {},
+    };
   }
   return context;
 };
