@@ -44,7 +44,7 @@ interface ContentLayoutProps {
 }
 
 export const ContentLayout: React.FC<ContentLayoutProps> = ({ node }) => {
-  const { setTocItems, setActiveSection, setIsGlobalTocVisible, tocItems, activeSection } = useTableOfContents();
+  // const { setTocItems, setActiveSection, setIsGlobalTocVisible, tocItems, activeSection } = useTableOfContents();
   const contentRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -114,7 +114,7 @@ export const ContentLayout: React.FC<ContentLayoutProps> = ({ node }) => {
         stack.push(item);
       });
 
-      setTocItems(items);
+      // setTocItems(items);
     };
 
     generateToc();
@@ -135,13 +135,13 @@ export const ContentLayout: React.FC<ContentLayoutProps> = ({ node }) => {
   }, []);
 
   // Show global TOC when TOC items are available
-  useEffect(() => {
-    if (tocItems.length > 0) {
-      setIsGlobalTocVisible(true);
-    } else {
-      setIsGlobalTocVisible(false);
-    }
-  }, [tocItems, setIsGlobalTocVisible]);
+  // useEffect(() => {
+  //   if (tocItems.length > 0) {
+  //     setIsGlobalTocVisible(true);
+  //   } else {
+  //     setIsGlobalTocVisible(false);
+  //   }
+  // }, [tocItems, setIsGlobalTocVisible]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -171,14 +171,14 @@ export const ContentLayout: React.FC<ContentLayoutProps> = ({ node }) => {
         currentHeading = (headings[0] as HTMLElement).id;
       }
 
-      setActiveSection(currentHeading);
+      // setActiveSection(currentHeading);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [tocItems]);
+  }, []);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -232,12 +232,12 @@ export const ContentLayout: React.FC<ContentLayoutProps> = ({ node }) => {
       </div>
 
       {/* Mobile TOC - appears before article content */}
-      <TableOfContents 
+      {/* <TableOfContents 
         tocItems={tocItems}
         activeSection={activeSection}
         onSectionClick={scrollToSection}
         isMobile={isMobile}
-      />
+      /> */}
 
       <div className={pathLayoutStyles.layoutContainer}>
         <main className={pathLayoutStyles.mainContent} ref={contentRef}>
