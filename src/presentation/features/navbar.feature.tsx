@@ -123,15 +123,22 @@ export function Navbar(): React.ReactElement {
             </Link> */}
 
             {/* Priority Links - Path & Roadmaps */}
-            <Link href="/path" className={styles.navLink}>
+            {/* <Link href="/path" className={styles.navLink}>
               Path
-            </Link>
+            </Link> */}
 
             <Link href="/roadmaps" className={styles.navLink}>
               Roadmaps
             </Link>
 
-            <div 
+            <Link href="/resources" className={styles.navLink} onClick={handleLinkClick}>
+              Resources
+            </Link> 
+            <Link href="/dsa" className={styles.navLink} onClick={handleLinkClick}>
+              DSA
+            </Link>
+
+            {/* <div 
               className={styles.dropdown}
               onMouseEnter={() => handleDropdownEnter("resources")}
               onMouseLeave={handleDropdownLeave}
@@ -149,16 +156,11 @@ export function Navbar(): React.ReactElement {
               <div
                 className={`${styles.dropdownMenu} ${activeDropdown === "resources" ? styles.show : ""}`}
               >
-                <Link href="/resources" className={styles.dropdownItem} onClick={handleLinkClick}>
-                  Resources
-                </Link>
-                <Link href="/dsa" className={styles.dropdownItem} onClick={handleLinkClick}>
-                  DSA
-                </Link>
+            
               </div>
-            </div>
+            </div> */}
 
-            <div 
+            {/* <div 
               className={styles.dropdown}
               onMouseEnter={() => handleDropdownEnter("learn")}
               onMouseLeave={handleDropdownLeave}
@@ -186,7 +188,7 @@ export function Navbar(): React.ReactElement {
                   Groups
                 </Link>
               </div>
-            </div>
+            </div> */}
 
             {/* <div 
               className={styles.dropdown}
@@ -245,25 +247,18 @@ export function Navbar(): React.ReactElement {
               >
                 Home
               </Link>
-              <Link
+              {/* <Link
                 href="/new-ai-dashboard"
                 className={styles.mobileLink}
                 onClick={() => setIsMenuOpen(false)}
               >
                 AI Chat
-              </Link>
+              </Link> */}
             </div>
 
             {/* Priority Links - Path & Roadmaps */}
             <div className={styles.mobileNavSection}>
               <h3 className={styles.mobileNavTitle}>Learning Paths</h3>
-              <Link
-                href="/path"
-                className={styles.mobileLink}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Path
-              </Link>
               <Link
                 href="/roadmaps"
                 className={styles.mobileLink}
@@ -290,7 +285,7 @@ export function Navbar(): React.ReactElement {
                 DSA
               </Link>
             </div>
-
+{/* 
             <div className={styles.mobileNavSection}>
               <h3 className={styles.mobileNavTitle}>Learn (Sign-in Required)</h3>
               <Link
@@ -332,7 +327,7 @@ export function Navbar(): React.ReactElement {
               >
                 Contact
               </Link>
-            </div>
+            </div> */}
             
           </div>
         </div>

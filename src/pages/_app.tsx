@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Toaster } from "sonner";
 import dynamic from 'next/dynamic';
-import { TableOfContentsProvider, useTableOfContents } from "../presentation/features/contexts.feature";
+import { ChatProvider, TableOfContentsProvider, useTableOfContents } from "../presentation/features/contexts.feature";
 import { GlobalTableOfContents } from "../presentation/features/path.feature";
 
 function GlobalTOCComponent() {
@@ -39,22 +39,10 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [router.events]);
 
   return (
-    <TableOfContentsProvider>
+    <>
       <Loading /> 
       <Navbar />
       <Component {...pageProps} />
-      <Footer/>
-      <GlobalTOCComponent />
-      <Toaster
-        position="bottom-right"
-        toastOptions={{
-          style: {
-            background: 'oklch(0.13 0 0)',
-            color: 'oklch(1 0 0)',
-            border: '1px solid oklch(1 0 0 / 0.06)',
-          },
-        }}
-      />
-    </TableOfContentsProvider>
+    </>
   );
 }

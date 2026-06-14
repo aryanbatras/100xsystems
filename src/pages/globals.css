@@ -19,6 +19,11 @@
   font-style: normal;
 }
 
+* {
+  margin: 0;
+  padding: 0;;
+}
+
 :root {
   /* ===== Design Tokens (inspired by startx) ===== */
 
@@ -169,20 +174,7 @@ body::before {
   background-repeat: no-repeat;
   background-attachment: fixed;
   z-index: 0;
-  opacity: 0.12;
-  pointer-events: none;
-}
-
-/* Subtle radial vignette overlay */
-body::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: radial-gradient(ellipse at center, transparent 50%, oklch(0 0 0 / 0.4) 100%);
-  z-index: 0;
+  opacity: 0.15;
   pointer-events: none;
 }
 

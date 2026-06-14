@@ -1,10 +1,13 @@
 /* Articles Page Styles - Medium-inspired Professional Design */
 .articlesContainer {
   min-height: 100vh;
+  min-width: 100vw;
   background: #ffffff;
   color: #1a1a1a;
   padding: 0;
-  font-family: var(--font-samsung-sharp);
+  /* font-family: var(--font-samsung-sharp); */
+  position: relative;
+  z-index: 1;
 }
 
 .articlesWrapper {
@@ -18,7 +21,7 @@
   margin-bottom: 4rem;
   padding-top: 8vh; /* Use viewport units to match navbar height */
   min-height: 8vh; /* Ensure minimum height */
-  font-family: var(--font-samsung-sharp);
+  /* font-family: var(--font-samsung-sharp); */
 }
 
 .articlesHeader h1 {
@@ -58,7 +61,7 @@
   font-size: 16px;
   outline: none;
   transition: border-color 0.2s;
-  font-family: var(--font-samsung-sharp);
+  /* font-family: var(--font-samsung-sharp); */
 }
 
 .searchInput:focus {
@@ -145,10 +148,13 @@
 /* Individual Article Page Styles - Medium-inspired Professional Design */
 .articleContainer {
   min-height: 100vh;
+  width: 100%;
   background: #ffffff;
   color: #1a1a1a;
   padding: 0;
-  font-family: var(--font-samsung-sharp);
+  /* font-family: var(--font-samsung-sharp); */
+  position: relative;
+  z-index: 1;
 }
 
 .articleWrapper {

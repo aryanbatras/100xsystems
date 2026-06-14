@@ -21,30 +21,30 @@ interface ArticleProps {
 export default function Article({ html, slug, title, description, date, manifest }: ArticleProps) {
   const discussionEnabled = manifest?.discussion?.enabled || false;
   const articleTitle = title || slug;
-  const { openChat, updateSelectedText, selectedText, isChatOpen, closeChat } = useChat();
+  // const { openChat, updateSelectedText, selectedText, isChatOpen, closeChat } = useChat();
   
   // State for dynamic width calculation
   const [chatbotWidth, setChatbotWidth] = useState(520);
   const [isDesktop, setIsDesktop] = useState(false);
   
   // Handle text selection
-  useEffect(() => {
-    const handleSelection = () => {
-      const selection = window.getSelection();
-      const text = selection?.toString().trim();
-      if (text && text.length > 10) {
-        updateSelectedText(text);
-      }
-    };
+  // useEffect(() => {
+  //   const handleSelection = () => {
+  //     const selection = window.getSelection();
+  //     const text = selection?.toString().trim();
+  //     if (text && text.length > 10) {
+  //       updateSelectedText(text);
+  //     }
+  //   };
 
-    document.addEventListener('mouseup', handleSelection);
-    document.addEventListener('keyup', handleSelection);
+  //   document.addEventListener('mouseup', handleSelection);
+  //   document.addEventListener('keyup', handleSelection);
     
-    return () => {
-      document.removeEventListener('mouseup', handleSelection);
-      document.removeEventListener('keyup', handleSelection);
-    };
-  }, [updateSelectedText]);
+  //   return () => {
+  //     document.removeEventListener('mouseup', handleSelection);
+  //     document.removeEventListener('keyup', handleSelection);
+  //   };
+  // }, [updateSelectedText]);
   
   // Check if desktop and calculate width
   useEffect(() => {
@@ -59,15 +59,15 @@ export default function Article({ html, slug, title, description, date, manifest
   }, []);
 
   // Initialize chat with article data (but don't auto-open)
-  useEffect(() => {
-    if (slug && html) {
-      openChat(slug, html);
-    }
-  }, [slug, html, openChat]);
+  // useEffect(() => {
+  //   if (slug && html) {
+  //     openChat(slug, html);
+  //   }
+  // }, [slug, html, openChat]);
   
   // Calculate article width based on chatbot state
-  const articleWidth = isDesktop && isChatOpen ? `calc(100vw - ${chatbotWidth}px)` : '100%';
-  // const articleMaxWidth = isDesktop && isChatOpen ? `calc(100vw - ${chatbotWidth}px)` : '1000px';
+  const articleWidth = '100%';
+  const articleMaxWidth = '1000px';
 
   return (
     <>
@@ -86,10 +86,10 @@ export default function Article({ html, slug, title, description, date, manifest
         `}</style>
       </Head>
 
-      <div className={styles.articleContainer} style={{ width: articleWidth }}>
+      <div className={styles.articleContainer}>
         <div className={styles.articleWrapper}>
           <header className={styles.articleHeader}>
-            <Link href="/articles" className={styles.backLink} onClick={closeChat}>
+            <Link href="/articles" className={styles.backLink}>
               ← Back to Articles
             </Link>
             <h1 className={styles.articleTitle}>{title || slug}</h1>
@@ -208,20 +208,20 @@ export default function Article({ html, slug, title, description, date, manifest
           )}
 
           <footer className={styles.articleFooter}>
-            <Link href="/articles" className={styles.backLink} onClick={closeChat}>
+            <Link href="/articles" className={styles.backLink} >
               ← Back to Articles
             </Link>
           </footer>
         </div>
         
         {/* AI Chatbot */}
-        <AdvancedChatBot 
+        {/* <AdvancedChatBot 
           isOpen={isChatOpen}
           onClose={closeChat}
           articleSlug={slug}
           articleContent={html}
           selectedText={selectedText}
-        />
+        /> */}
       </div>
     </>
   );
