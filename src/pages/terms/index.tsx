@@ -1,1 +1,1 @@
-export { default } from '../../presentation/terms';
+export { default } from '../../presentation/features/terms';

@@ -1,15 +1,15 @@
 /**
  * Resources page — Framework layer
- * Component lives in src/presentation/resources/
+ * Component lives in src/presentation/features/resources/
  * getStaticProps (SSG) stays here as a Next.js framework concern.
  */
-import ResourcesPage from '../../presentation/resources';
+import ResourcesPage from '../../presentation/features/resources';
 export default ResourcesPage;
 
 import { GetStaticProps } from 'next';
 import { StaticSiteGenerator } from '../../infrastructure/staticSiteGenerator';
 import { Resource } from '../../application/types/resources';
-import type { ResourcesCategoryInfo } from '../../presentation/resources/resources';
+import type { ResourcesCategoryInfo } from '../../presentation/features/resources/resources';
 
 export const getStaticProps: GetStaticProps<{
   resources: Resource[];

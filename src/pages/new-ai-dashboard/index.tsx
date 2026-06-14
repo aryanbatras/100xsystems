@@ -1,1 +1,1 @@
-export { default } from '../../presentation/newAIDashboard';
+export { default } from '../../presentation/features/newAIDashboard';

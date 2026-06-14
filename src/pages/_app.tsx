@@ -1,22 +1,22 @@
 import "../presentation/_styles/globals.css";
 import type { AppProps } from "next/app";
-import { Loading } from "../presentation/loading/Loading"
-import { Navbar } from "../presentation/navbar/Navbar";
-import { Footer } from "../presentation/footer/Footer";
+import { Loading } from "../presentation/features/loading/Loading"
+import { Navbar } from "../presentation/features/navbar/Navbar";
+import { Footer } from "../presentation/features/footer/Footer";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import dynamic from 'next/dynamic';
-import { TableOfContentsProvider, useTableOfContents } from "../presentation/contexts/TableOfContentsContext";
-import { GlobalTableOfContents } from "../presentation/path/GlobalTableOfContents";
+import { TableOfContentsProvider, useTableOfContents } from "../presentation/features/contexts/TableOfContentsContext";
+import { GlobalTableOfContents } from "../presentation/features/path/GlobalTableOfContents";
 
 // Dynamically import chat components to disable SSR
 const ChatComponents = dynamic(
-  () => import("../presentation/ai/ChatComponents"),
+  () => import("../presentation/features/ai/ChatComponents"),
   { ssr: false }
 );
 
 const ChatProvider = dynamic(
-  () => import("../presentation/contexts/ChatContext").then(mod => ({ default: mod.ChatProvider })),
+  () => import("../presentation/features/contexts/ChatContext").then(mod => ({ default: mod.ChatProvider })),
   { ssr: false }
 );
 

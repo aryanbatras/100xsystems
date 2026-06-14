@@ -1,9 +1,9 @@
 /**
  * Roadmaps page — Framework layer
- * Component lives in src/presentation/roadmaps/
+ * Component lives in src/presentation/features/roadmaps/
  * getStaticProps (SSG) stays here as a Next.js framework concern.
  */
-import RoadmapsPage from '../../presentation/roadmaps';
+import RoadmapsPage from '../../presentation/features/roadmaps';
 export default RoadmapsPage;
 
 import { GetStaticProps } from 'next';

@@ -1,5 +1,5 @@
 /**
  * Group Announcements page — Framework layer (thin re-export)
- * All presentation logic lives in src/presentation/groups/
+ * All presentation logic lives in src/presentation/features/groups/
  */
-export { GroupAnnouncements as default } from '../../../../presentation/groups';
+export { GroupAnnouncements as default } from '../../../../presentation/features/groups';

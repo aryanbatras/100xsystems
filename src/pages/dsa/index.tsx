@@ -1,6 +1,6 @@
 import { GetStaticProps } from 'next';
 import { StaticSiteGenerator } from '../../infrastructure/staticSiteGenerator';
-export { default } from '../../presentation/dsa';
+export { default } from '../../presentation/features/dsa';
 
 export const getStaticProps: GetStaticProps = async () => {
   try {

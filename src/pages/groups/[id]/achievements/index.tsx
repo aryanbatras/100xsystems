@@ -1,5 +1,5 @@
 /**
  * Group Achievements page — Framework layer (thin re-export)
- * All presentation logic lives in src/presentation/groups/
+ * All presentation logic lives in src/presentation/features/groups/
  */
-export { GroupAchievements as default } from '../../../../presentation/groups';
+export { GroupAchievements as default } from '../../../../presentation/features/groups';
