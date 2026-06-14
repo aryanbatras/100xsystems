@@ -41,10 +41,10 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
  */
 export function Button({ children, variant = 'primary', size = 'default', disabled, loading, className, ...props }: ButtonProps) {
   const styleMap: Record<ButtonVariant, string> = {
-    primary: primaryButton(),
-    secondary: secondaryButton(),
-    destructive: destructiveButton(),
-    ghost: ghostButton(),
+    primary: primaryButton,
+    secondary: secondaryButton,
+    destructive: destructiveButton,
+    ghost: ghostButton,
   };
   const sizeMap: Record<ButtonSize, string> = {
     sm: 'text-xs px-3 py-1.5',
@@ -78,9 +78,9 @@ interface CardProps {
  */
 export function Card({ children, header: headerContent, className }: CardProps) {
   return (
-    <div className={`${card()} ${className || ''}`}>
-      {headerContent && <div className={cardHeader()}>{headerContent}</div>}
-      <div className={cardBody()}>{children}</div>
+    <div className={`${card} ${className || ''}`}>
+      {headerContent && <div className={cardHeader}>{headerContent}</div>}
+      <div className={cardBody}>{children}</div>
     </div>
   );
 }
@@ -106,11 +106,11 @@ interface BadgeProps {
  */
 export function Badge({ variant = 'default', children }: BadgeProps) {
   const styleMap: Record<BadgeVariant, string> = {
-    success: badgeSuccess(),
-    warning: badgeWarning(),
-    error: badgeError(),
-    info: badgeInfo(),
-    default: badge(),
+    success: badgeSuccess,
+    warning: badgeWarning,
+    error: badgeError,
+    info: badgeInfo,
+    default: badge,
   };
   return <span className={styleMap[variant]}>{children}</span>;
 }
@@ -135,9 +135,9 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export function Input({ label: labelText, errorMessage, className, ...props }: InputProps) {
   return (
     <div className="flex flex-col gap-1">
-      {labelText && <label className={label()}>{labelText}</label>}
-      <input className={`${input()} ${errorMessage ? 'border-red-500' : ''} ${className || ''}`} {...props} />
-      {errorMessage && <span className={textDanger()}>{errorMessage}</span>}
+      {labelText && <label className={label}>{labelText}</label>}
+      <input className={`${input} ${errorMessage ? 'border-red-500' : ''} ${className || ''}`} {...props} />
+      {errorMessage && <span className={textDanger}>{errorMessage}</span>}
     </div>
   );
 }
@@ -165,16 +165,16 @@ interface ModalProps {
 export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) {
   if (!isOpen) return null;
   return (
-    <div className={modalOverlay()} onClick={onClose}>
-      <div className={modalContent()} onClick={(e) => e.stopPropagation()}>
+    <div className={modalOverlay} onClick={onClose}>
+      <div className={modalContent} onClick={(e) => e.stopPropagation()}>
         {title && (
-          <div className={modalHeader()}>
+          <div className={modalHeader}>
             <h2 className="text-lg font-semibold">{title}</h2>
             <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
           </div>
         )}
-        <div className={modalBody()}>{children}</div>
-        {footer && <div className={modalFooter()}>{footer}</div>}
+        <div className={modalBody}>{children}</div>
+        {footer && <div className={modalFooter}>{footer}</div>}
       </div>
     </div>
   );
@@ -255,8 +255,8 @@ export function PageHeader({ title, subtitle, actions }: PageHeaderProps) {
   return (
     <div className="flex items-start justify-between mb-6">
       <div>
-        <h1 className={pageTitle()}>{title}</h1>
-        {subtitle && <p className={pageSubtitle()}>{subtitle}</p>}
+        <h1 className={pageTitle}>{title}</h1>
+        {subtitle && <p className={pageSubtitle}>{subtitle}</p>}
       </div>
       {actions && <div className="flex items-center gap-2">{actions}</div>}
     </div>
@@ -330,8 +330,8 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 export function Select({ label: labelText, options, className, ...props }: SelectProps) {
   return (
     <div className="flex flex-col gap-1">
-      {labelText && <label className={label()}>{labelText}</label>}
-      <select className={`${select()} ${className || ''}`} {...props}>
+      {labelText && <label className={label}>{labelText}</label>}
+      <select className={`${select} ${className || ''}`} {...props}>
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>{opt.label}</option>
         ))}

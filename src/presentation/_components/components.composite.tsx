@@ -56,7 +56,7 @@ export function Table<T extends Record<string, unknown>>({
   if (data.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <p className={textMuted()}>{emptyMessage || 'No data available'}</p>
+        <p className={textMuted}>{emptyMessage || 'No data available'}</p>
       </div>
     );
   }
@@ -68,11 +68,11 @@ export function Table<T extends Record<string, unknown>>({
 
   return (
     <div className="overflow-x-auto border border-[#e5e5e5] rounded-lg">
-      <table className={table()}>
-        <thead className={tableHeader()}>
+      <table className={table}>
+        <thead className={tableHeader}>
           <tr>
             {columns.map((col) => (
-              <th key={col.key} className={tableHeaderCell()} style={col.width ? { width: col.width } : undefined}>
+              <th key={col.key} className={tableHeaderCell} style={col.width ? { width: col.width } : undefined}>
                 {col.label}
               </th>
             ))}
@@ -82,12 +82,12 @@ export function Table<T extends Record<string, unknown>>({
           {data.map((row) => (
             <tr
               key={getRowKey(row)}
-              className={tableRow()}
+              className={tableRow}
               onClick={() => onRowClick?.(row)}
               style={{ cursor: onRowClick ? 'pointer' : undefined }}
             >
               {columns.map((col) => (
-                <td key={col.key} className={tableCell()}>
+                <td key={col.key} className={tableCell}>
                   {col.render ? col.render(row) : String(row[col.key] ?? '')}
                 </td>
               ))}

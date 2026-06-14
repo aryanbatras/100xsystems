@@ -19,7 +19,7 @@ import {
   Position,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import styles from '../../presentation/_styles/pages/Graph.module.css';
+import styles from '../../presentation/_styles/graph.module.css';
 import { StaticSiteGenerator } from '../../infrastructure/staticSiteGenerator';
 
 // Type definitions

@@ -3,12 +3,11 @@
  * Component lives in src/presentation/features/articles/
  * getStaticProps (SSG) stays here as a Next.js framework concern.
  */
-import ArticlesPage from '../../presentation/features/articles';
-export default ArticlesPage;
+export { ArticlesPage as default } from '../../presentation/features/articles.feature';
 
 import { GetStaticProps } from 'next';
 import { StaticSiteGenerator } from '../../infrastructure/staticSiteGenerator';
-import type { ArticleItem } from '../../presentation/features/articles/articles';
+import type { ArticleItem } from '../../presentation/features/articles.feature';
 
 export const getStaticProps: GetStaticProps<{ articles: ArticleItem[] }> = async () => {
   try {

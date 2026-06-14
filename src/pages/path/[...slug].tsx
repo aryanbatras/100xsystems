@@ -3,9 +3,9 @@ import Head from 'next/head';
 import { GetStaticPropsContext } from 'next';
 import { PathContent, PathNode } from '../../application/path/pathTypes';
 import { PathParser } from '../../application/path/pathParser';
-import { PathLayout } from '../../presentation/features/path/PathLayout';
-import { ContentLayout } from '../../presentation/features/path/ContentLayout';
-import styles from '../../presentation/_styles/pages/path/[slug].module.css';
+import { PathLayout } from '../../presentation/features/path.feature';
+import { ContentLayout } from '../../presentation/features/path.feature';
+import styles from '../../presentation/_styles/path-_slug_.module.css';
 
 interface PathPageProps {
   pathContent: PathContent;

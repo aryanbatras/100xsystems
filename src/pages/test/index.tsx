@@ -1,1 +1,1 @@
-export { default } from '../../presentation/features/test';
+export { TestPage as default } from '../../presentation/features/test.feature';

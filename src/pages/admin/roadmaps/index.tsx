@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import styles from '../../../presentation/_styles/pages/admin/Roadmaps.module.css';
+import styles from '../../../presentation/_styles/admin-roadmaps.module.css';
 
 interface RoadmapMeta {
   slug: string;

@@ -1,22 +1,17 @@
 import "../presentation/_styles/globals.css";
 import type { AppProps } from "next/app";
-import { Loading } from "../presentation/features/loading/Loading"
-import { Navbar } from "../presentation/features/navbar/Navbar";
-import { Footer } from "../presentation/features/footer/Footer";
+import { Loading } from "../presentation/features/loading.feature"
+import { Navbar } from "../presentation/features/navbar.feature";
+import { Footer } from "../presentation/features/footer.feature";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import dynamic from 'next/dynamic';
-import { TableOfContentsProvider, useTableOfContents } from "../presentation/features/contexts/TableOfContentsContext";
-import { GlobalTableOfContents } from "../presentation/features/path/GlobalTableOfContents";
+import { TableOfContentsProvider, useTableOfContents, ChatProvider } from "../presentation/features/contexts.feature";
+import { GlobalTableOfContents } from "../presentation/features/path.feature";
 
 // Dynamically import chat components to disable SSR
 const ChatComponents = dynamic(
-  () => import("../presentation/features/ai/ChatComponents"),
-  { ssr: false }
-);
-
-const ChatProvider = dynamic(
-  () => import("../presentation/features/contexts/ChatContext").then(mod => ({ default: mod.ChatProvider })),
+  () => import("../presentation/features/ai.feature").then(mod => ({ default: mod.ChatComponents })),
   { ssr: false }
 );
 

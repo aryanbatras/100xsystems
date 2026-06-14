@@ -1,1 +1,1 @@
-export { default } from '../../presentation/features/terms';
+export { Terms as default } from '../../presentation/features/terms.feature';

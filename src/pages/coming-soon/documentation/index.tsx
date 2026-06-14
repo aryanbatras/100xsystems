@@ -1,12 +1,10 @@
 import React from 'react';
-import styles from '../../../presentation/_styles/ComingSoon.module.css';;
+import styles from '../../../presentation/_styles/coming-soon.module.css';;
 
 export default function Documentation() {
   return (
     <div className={styles.container}>
-      <img className={styles.videoBackground}    >
-        src="/videos/ai-search-systems-connecting-light-animation-google-deepmind.gif"
-      </img>
+      <img className={styles.videoBackground} src='/videos/ai-search-systems-connecting-light-animation-google-deepmind.gif' alt='' />
       <div className={styles.content}>
         <h1 className={styles.title}>Documentation</h1>
         <p className={styles.subtitle}>Coming Soon</p>

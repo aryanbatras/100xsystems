@@ -31,9 +31,9 @@ interface PageFrameProps {
  */
 export function PageFrame({ children, className }: PageFrameProps) {
   return (
-    <div className={`${pageContainer()} ${className || ''}`}>
-      <div className={mainContent()}>
-        <div className={contentArea()}>
+    <div className={`${pageContainer} ${className || ''}`}>
+      <div className={mainContent}>
+        <div className={contentArea}>
           {children}
         </div>
       </div>

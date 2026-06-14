@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../../presentation/_styles/ComingSoon.module.css';;
+import styles from '../../../presentation/_styles/coming-soon.module.css';;
 
 export default function Tutorials() {
   return (

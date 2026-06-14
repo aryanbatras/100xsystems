@@ -1,1 +1,1 @@
-export { default } from '../../presentation/features/newAIDashboard';
+export { NewAIDashboard as default } from '../../presentation/features/newAIDashboard.feature';

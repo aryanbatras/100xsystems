@@ -1,1 +1,1 @@
-export { default } from '../../presentation/features/privacy';
+export { Privacy as default } from '../../presentation/features/privacy.feature';

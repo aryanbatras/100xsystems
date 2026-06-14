@@ -1,1 +1,1 @@
-export { default } from '../../presentation/features/parser';
+export { ParserPage as default } from '../../presentation/features/parser.feature';
