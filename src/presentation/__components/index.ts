@@ -65,7 +65,7 @@ export { CodeBlock } from './molecules/CodeBlock';
 export type { CodeBlockProps } from './molecules/CodeBlock';
 
 export { DataGrid } from './molecules/DataGrid';
-export type { DataGridProps, StatCard } from './molecules/DataGrid';
+export type { DataGridProps } from './molecules/DataGrid';
 
 export { EmptyState } from './molecules/EmptyState';
 export type { EmptyStateProps } from './molecules/EmptyState';
@@ -85,7 +85,47 @@ export type { TabBarProps, Tab } from './molecules/TabBar';
 export { UserCard } from './molecules/UserCard';
 export type { UserCardProps } from './molecules/UserCard';
 
+export { DifficultyBadge } from './molecules/DifficultyBadge';
+export type { DifficultyBadgeProps } from './molecules/DifficultyBadge';
+
+export { FeatureCard } from './molecules/FeatureCard';
+export type { FeatureCardProps } from './molecules/FeatureCard';
+
+export { InfoRow } from './molecules/InfoRow';
+export type { InfoRowProps } from './molecules/InfoRow';
+
+export { StatCard } from './molecules/StatCard';
+export type { StatCardProps } from './molecules/StatCard';
+
+export { Timeline } from './molecules/Timeline';
+export type { TimelineProps, TimelineStep } from './molecules/Timeline';
+
+export { ArticleCard } from './molecules/ArticleCard';
+export type { ArticleCardProps } from './molecules/ArticleCard';
+
+export { ProblemCard } from './molecules/ProblemCard';
+export type { ProblemCardProps } from './molecules/ProblemCard';
+
+export { MemberCard } from './molecules/MemberCard';
+export type { MemberCardProps, SocialLink } from './molecules/MemberCard';
+
+export { StreakCard } from './molecules/StreakCard';
+export type { StreakCardProps } from './molecules/StreakCard';
+
+export { FaqItem } from './molecules/FaqItem';
+export type { FaqItemProps } from './molecules/FaqItem';
+
+export { ContactInfoItem } from './molecules/ContactInfoItem';
+export type { ContactInfoItemProps } from './molecules/ContactInfoItem';
+
 // ─── Organisms ──────────────────────────────────────────────────────
+
+export { ComingSoonCard } from './organisms/ComingSoonCard';
+export type { ComingSoonCardProps } from './organisms/ComingSoonCard';
+
+export { ModuleCard } from './organisms/ModuleCard';
+export type { ModuleCardProps, ModuleStatus } from './organisms/ModuleCard';
+
 export { PageHeader } from './organisms/PageHeader';
 export type { PageHeaderProps } from './organisms/PageHeader';
 
@@ -94,3 +134,13 @@ export type { SearchResultsProps, SearchResultItem } from './organisms/SearchRes
 
 export { SidebarNav } from './organisms/SidebarNav';
 export type { SidebarNavProps, SidebarNavItem } from './organisms/SidebarNav';
+
+export { GroupCard } from './organisms/GroupCard';
+export type { GroupCardProps } from './organisms/GroupCard';
+
+export { RoadmapCard } from './organisms/RoadmapCard';
+export type { RoadmapCardProps } from './organisms/RoadmapCard';
+
+// ─── Tokens ────────────────────────────────────────────────────────
+export { TokenColors, TokenTypography, TokenSpacing, TokenShadows, TokenRadius, TokenGallery } from './_tokens';
+export type { TokenColorsProps, ColorToken, TokenTypographyProps, TokenSpacingProps, TokenShadowsProps, TokenRadiusProps, TokenGalleryProps } from './_tokens';

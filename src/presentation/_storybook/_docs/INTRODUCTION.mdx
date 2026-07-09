@@ -4,30 +4,41 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # 100xSystems Design System
 
-Welcome to the 100xSystems component library. This Storybook documents all UI components used across the platform.
+Welcome to the 100xSystems component library. This Storybook documents all UI components and design tokens used across the platform.
 
 ## Atomic Design
 
 Components follow the **Atomic Design** methodology:
 
+- **Tokens**: Basic design primitives (colors, typography, spacing, shadows, border radius)
 - **Atoms**: Smallest building blocks (Button, Input, Badge, Card, Spinner, Typography)
 - **Molecules**: Simple combinations of atoms (SearchInput, TabBar, FilterBar, DataGrid)
-- **Organisms**: Complex UI sections (Navbar, Footer)
-- **Templates**: Page-level layouts
-- **Pages**: Full pages
+- **Organisms**: Complex UI sections (Navbar, Footer, GroupCard, RoadmapCard)
+
+## Design Tokens
+
+All design tokens are declared as CSS custom properties in `globals.css` and consumed by components through `var()` references. Token display components in **Tokens/** let you visually audit every value.
+
+```tsx
+// Import token display components (for documentation/audit pages)
+import { TokenColors, TokenTypography, TokenGallery } from '@/presentation/__components/_tokens';
+
+// Components consume tokens directly via CSS
+<div style={{ backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-md)' }} />
+```
 
 ## Getting Started
 
 ```tsx
 // Import from the barrel export
 import { Button, Card, Input } from '@/presentation/__components';
-import { colors } from '@/presentation/_tokens/colors';
 ```
 
 ## Design Principles
 
-1. **Accessible first**: All components meet WCAG 2.1 AA standards
-2. **Type-safe**: Full TypeScript support with exported prop types
-3. **Composable**: Components accept `className` for extension
-4. **Server-first**: Server components by default, client only when needed
-5. **Consistent**: Central design tokens for colors, typography, and spacing
+1. **Token-driven**: Every visual property references a design token (CSS custom property)
+2. **Accessible first**: All components meet WCAG 2.1 AA standards
+3. **Type-safe**: Full TypeScript support with exported prop types
+4. **Composable**: Components accept `className` for extension
+5. **Server-first**: Server components by default, client only when needed
+6. **Consistent**: Central design tokens in `globals.css` for colors, typography, and spacing
