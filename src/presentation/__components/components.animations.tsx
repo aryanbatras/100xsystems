@@ -42,6 +42,31 @@ import {
 } from 'motion/react';
 import { cn } from '@/application/lib/utils';
 
+import type { IconType } from 'react-icons';
+import {
+  SiGoogle, SiApple, SiMeta, SiNetflix,
+  SiOpenai, SiGithub, SiGitlab,
+  SiDocker, SiKubernetes, SiVercel,
+  SiCloudflare, SiDigitalocean, SiLinux, SiUbuntu, SiNginx,
+  SiTypescript, SiJavascript, SiPython, SiRust, SiGo, SiNodedotjs,
+  SiReact, SiNextdotjs, SiTailwindcss, SiSvelte, SiVuedotjs, SiAngular,
+  SiFigma, SiSlack, SiDiscord, SiNotion, SiLinear, SiSupabase, SiStripe,
+  SiRedis, SiPostgresql, SiMongodb, SiGraphql, SiPrisma, SiTrpc,
+  SiTurborepo, SiPnpm, SiBun, SiDeno,
+  SiAndroid, SiExpo,
+  SiX, SiYoutube,
+  SiShopify, SiJetbrains, SiCircleci, SiJenkins,
+  SiAtlassian, SiJira, SiConfluence, SiDatadog, SiSentry, SiNewrelic,
+  SiAuth0, SiClerk, SiPlanetscale, SiRailway, SiFlydotio,
+  SiTerraform, SiTesla, SiRaspberrypi, SiArduino, SiSqlite,
+  SiElasticsearch, SiKibana, SiGrafana, SiPrometheus,
+  SiAnsible, SiPulumi, SiVim, SiNeovim, SiWebpack, SiVite,
+  SiStorybook, SiCypress, SiJest, SiVitest,
+  SiNpm, SiYarn, SiRubyonrails, SiDjango, SiFlask, SiFastapi,
+  SiSwift, SiKotlin, SiFlutter, SiReactquery, SiZod, SiBiome,
+  SiSass, SiBootstrap, SiJquery, SiElectron, SiElastic,
+} from 'react-icons/si';
+
 // ─── KineticText ────────────────────────────────────────────────────
 
 type As = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span';
@@ -1395,5 +1420,333 @@ export function BookLoader() {
         <div className="book__pg book__pg--5" />
       </div>
     </BookLoaderWrapper>
+  );
+}
+
+// ─── IconAnimatedGridPattern ────────────────────────────────────────
+
+type IconItem = { Icon: IconType; name: string };
+
+const ICONS: IconItem[] = [
+  // FAANG & Big Tech
+  { Icon: SiGoogle, name: 'Google' },
+  { Icon: SiApple, name: 'Apple' },
+  { Icon: SiMeta, name: 'Meta' },
+  { Icon: SiNetflix, name: 'Netflix' },
+  { Icon: SiOpenai, name: 'OpenAI' },
+  { Icon: SiTesla, name: 'Tesla' },
+  // Developer Platforms
+  { Icon: SiGithub, name: 'GitHub' },
+  { Icon: SiGitlab, name: 'GitLab' },
+  { Icon: SiVercel, name: 'Vercel' },
+  { Icon: SiStorybook, name: 'Storybook' },
+  // Cloud & Infrastructure
+  { Icon: SiCloudflare, name: 'Cloudflare' },
+  { Icon: SiDigitalocean, name: 'DigitalOcean' },
+  { Icon: SiLinux, name: 'Linux' },
+  { Icon: SiUbuntu, name: 'Ubuntu' },
+  { Icon: SiDocker, name: 'Docker' },
+  { Icon: SiKubernetes, name: 'Kubernetes' },
+  { Icon: SiNginx, name: 'Nginx' },
+  { Icon: SiTerraform, name: 'Terraform' },
+  { Icon: SiAnsible, name: 'Ansible' },
+  { Icon: SiPulumi, name: 'Pulumi' },
+  // Languages & Runtimes
+  { Icon: SiTypescript, name: 'TypeScript' },
+  { Icon: SiJavascript, name: 'JavaScript' },
+  { Icon: SiPython, name: 'Python' },
+  { Icon: SiRust, name: 'Rust' },
+  { Icon: SiGo, name: 'Go' },
+  { Icon: SiNodedotjs, name: 'Node.js' },
+  { Icon: SiSwift, name: 'Swift' },
+  { Icon: SiKotlin, name: 'Kotlin' },
+  { Icon: SiRubyonrails, name: 'Rails' },
+  { Icon: SiDjango, name: 'Django' },
+  { Icon: SiFlask, name: 'Flask' },
+  { Icon: SiFastapi, name: 'FastAPI' },
+  // Frameworks & Libraries
+  { Icon: SiReact, name: 'React' },
+  { Icon: SiNextdotjs, name: 'Next.js' },
+  { Icon: SiVuedotjs, name: 'Vue.js' },
+  { Icon: SiAngular, name: 'Angular' },
+  { Icon: SiSvelte, name: 'Svelte' },
+  { Icon: SiTailwindcss, name: 'Tailwind CSS' },
+  { Icon: SiBootstrap, name: 'Bootstrap' },
+  { Icon: SiJquery, name: 'jQuery' },
+  { Icon: SiSass, name: 'Sass' },
+  { Icon: SiReactquery, name: 'TanStack Query' },
+  { Icon: SiPrisma, name: 'Prisma' },
+  { Icon: SiTrpc, name: 'tRPC' },
+  { Icon: SiZod, name: 'Zod' },
+  { Icon: SiBiome, name: 'Biome' },
+  // Databases
+  { Icon: SiPostgresql, name: 'PostgreSQL' },
+  { Icon: SiMongodb, name: 'MongoDB' },
+  { Icon: SiRedis, name: 'Redis' },
+  { Icon: SiSqlite, name: 'SQLite' },
+  { Icon: SiElasticsearch, name: 'Elasticsearch' },
+  { Icon: SiPlanetscale, name: 'PlanetScale' },
+  { Icon: SiSupabase, name: 'Supabase' },
+  // Monitoring & Observability
+  { Icon: SiDatadog, name: 'Datadog' },
+  { Icon: SiSentry, name: 'Sentry' },
+  { Icon: SiNewrelic, name: 'New Relic' },
+  { Icon: SiGrafana, name: 'Grafana' },
+  { Icon: SiPrometheus, name: 'Prometheus' },
+  { Icon: SiKibana, name: 'Kibana' },
+  // Tools & Editors
+  { Icon: SiJetbrains, name: 'JetBrains' },
+  { Icon: SiVim, name: 'Vim' },
+  { Icon: SiNeovim, name: 'Neovim' },
+  { Icon: SiElectron, name: 'Electron' },
+  { Icon: SiElastic, name: 'Elastic' },
+  { Icon: SiFigma, name: 'Figma' },
+  { Icon: SiLinear, name: 'Linear' },
+  { Icon: SiNotion, name: 'Notion' },
+  // CI/CD & Collaboration
+  { Icon: SiCircleci, name: 'CircleCI' },
+  { Icon: SiJenkins, name: 'Jenkins' },
+  { Icon: SiAtlassian, name: 'Atlassian' },
+  { Icon: SiJira, name: 'Jira' },
+  { Icon: SiConfluence, name: 'Confluence' },
+  { Icon: SiSlack, name: 'Slack' },
+  { Icon: SiDiscord, name: 'Discord' },
+  // Payments & Auth
+  { Icon: SiStripe, name: 'Stripe' },
+  { Icon: SiAuth0, name: 'Auth0' },
+  { Icon: SiClerk, name: 'Clerk' },
+  // Social & Media
+  { Icon: SiX, name: 'X/Twitter' },
+  { Icon: SiYoutube, name: 'YouTube' },
+  { Icon: SiShopify, name: 'Shopify' },
+  // Build Tools & Package Managers
+  { Icon: SiWebpack, name: 'Webpack' },
+  { Icon: SiVite, name: 'Vite' },
+  { Icon: SiTurborepo, name: 'Turborepo' },
+  { Icon: SiPnpm, name: 'pnpm' },
+  { Icon: SiYarn, name: 'Yarn' },
+  { Icon: SiNpm, name: 'npm' },
+  { Icon: SiBun, name: 'Bun' },
+  { Icon: SiDeno, name: 'Deno' },
+  // Testing
+  { Icon: SiJest, name: 'Jest' },
+  { Icon: SiVitest, name: 'Vitest' },
+  { Icon: SiCypress, name: 'Cypress' },
+  // Mobile
+  { Icon: SiAndroid, name: 'Android' },
+  { Icon: SiExpo, name: 'Expo' },
+  { Icon: SiFlutter, name: 'Flutter' },
+  // Hardware
+  { Icon: SiRaspberrypi, name: 'Raspberry Pi' },
+  { Icon: SiArduino, name: 'Arduino' },
+  // Other
+  { Icon: SiRailway, name: 'Railway' },
+  { Icon: SiFlydotio, name: 'Fly.io' },
+];
+
+export interface IconAnimatedGridPatternProps {
+  className?: string;
+  width?: number;
+  height?: number;
+  numIcons?: number;
+  maxOpacity?: number;
+  duration?: number;
+  repeatDelay?: number;
+  iconSize?: number;
+}
+
+type IconPos = { id: number; pos: [number, number]; iconIdx: number; iteration: number };
+type BgSquare = { id: number; pos: [number, number]; iteration: number };
+
+export function IconAnimatedGridPattern({
+  className,
+  width = 60,
+  height = 60,
+  numIcons = 30,
+  maxOpacity = 0.8,
+  duration = 8,
+  repeatDelay = 3,
+  iconSize = 24,
+}: IconAnimatedGridPatternProps) {
+  const id = useId();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [iconPositions, setIconPositions] = useState<IconPos[]>([]);
+  const [bgSquares, setBgSquares] = useState<BgSquare[]>([]);
+
+  const gridCols = dimensions.width > 0 ? Math.floor(dimensions.width / width) : 0;
+  const gridRows = dimensions.height > 0 ? Math.floor(dimensions.height / height) : 0;
+
+  // Track cells currently occupied by icons
+  const occupiedCells = useMemo(
+    () => new Set(iconPositions.map((p) => `${p.pos[0]},${p.pos[1]}`)),
+    [iconPositions]
+  );
+
+  const getPos = useCallback((): [number, number] => [
+    Math.floor(Math.random() * gridCols),
+    Math.floor(Math.random() * gridRows),
+  ], [gridCols, gridRows]);
+
+  // Pick a random empty cell (not occupied by an icon)
+  const getEmptyPos = useCallback((): [number, number] => {
+    if (gridCols === 0 || gridRows === 0) return [0, 0];
+    let attempts = 0;
+    let pos: [number, number];
+    do {
+      pos = [Math.floor(Math.random() * gridCols), Math.floor(Math.random() * gridRows)];
+      attempts++;
+    } while (occupiedCells.has(`${pos[0]},${pos[1]}`) && attempts < 30);
+    return pos;
+  }, [gridCols, gridRows, occupiedCells]);
+
+  const generatePositions = useCallback((count: number) =>
+    Array.from({ length: count }, (_, i) => ({
+      id: i,
+      pos: getPos(),
+      iconIdx: Math.floor(Math.random() * ICONS.length),
+      iteration: 0,
+    })), [getPos]);
+
+  const generateBgSquares = useCallback((count: number) =>
+    Array.from({ length: count }, (_, i) => ({
+      id: i,
+      pos: getEmptyPos(),
+      iteration: 0,
+    })), [getEmptyPos]);
+
+  // Generate bg squares when grid is ready
+  useEffect(() => {
+    if (gridCols && gridRows && iconPositions.length > 0) {
+      const totalCells = gridCols * gridRows;
+      const numBg = Math.min(Math.max(10, Math.floor(totalCells * 0.25)), 40);
+      setBgSquares(generateBgSquares(numBg));
+    }
+  }, [gridCols, gridRows, iconPositions.length, generateBgSquares]);
+
+  const updateIconPosition = useCallback((iconId: number) => {
+    let newPos: [number, number] | null = null;
+    setIconPositions((current) => {
+      const found = current.find((p) => p.id === iconId);
+      if (!found) return current;
+      newPos = getPos();
+      return current.map((p) =>
+        p.id === iconId
+          ? { ...p, pos: newPos!, iconIdx: Math.floor(Math.random() * ICONS.length), iteration: p.iteration + 1 }
+          : p
+      );
+    });
+  }, [getPos]);
+
+  const updateBgSquarePosition = useCallback((squareId: number) => {
+    setBgSquares((current) => {
+      const found = current.find((p) => p.id === squareId);
+      if (!found) return current;
+      return current.map((p) =>
+        p.id === squareId
+          ? { ...p, pos: getEmptyPos(), iteration: p.iteration + 1 }
+          : p
+      );
+    });
+  }, [getEmptyPos]);
+
+  useEffect(() => {
+    if (gridCols && gridRows) setIconPositions(generatePositions(numIcons));
+  }, [gridCols, gridRows, generatePositions, numIcons]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      for (const e of entries) {
+        setDimensions((d) =>
+          d.width === e.contentRect.width && d.height === e.contentRect.height
+            ? d
+            : { width: e.contentRect.width, height: e.contentRect.height }
+        );
+      }
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className={cn('relative w-full min-h-[400px] overflow-hidden', className)}
+    >
+      {/* SVG grid background — identical pattern to AnimatedGridPattern */}
+      <svg
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 h-full w-full fill-gray-400/20 stroke-gray-400/20"
+      >
+        <defs>
+          <pattern id={id} width={width} height={height} patternUnits="userSpaceOnUse" x={0} y={0}>
+            <path d={`M.5 ${height}V.5H${width}`} fill="none" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill={`url(#${id})`} />
+
+        {/* Background dark squares — same effect as AnimatedGridPattern, only on empty cells */}
+        <svg className="overflow-visible">
+          {bgSquares.map(({ pos: [sx, sy], id: sqId, iteration }, index) => (
+            <motion.rect
+              key={`bg-${sqId}-${iteration}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              transition={{ duration: 8, repeat: 1, delay: index * 0.1, repeatType: 'reverse', repeatDelay: 3 }}
+              onAnimationComplete={() => updateBgSquarePosition(sqId)}
+              width={width - 1}
+              height={height - 1}
+              x={sx * width + 1}
+              y={sy * height + 1}
+              fill="currentColor"
+              strokeWidth="0"
+              className="text-gray-400/40 dark:text-gray-600/50"
+            />
+          ))}
+        </svg>
+      </svg>
+
+      {/* Icons — slow fade-in/reposition animation */}
+      {iconPositions.map(({ id: sqId, pos: [cx, cy], iconIdx, iteration }, index) => {
+        const cellX = cx * width;
+        const cellY = cy * height;
+        const offset = (Math.min(width, height) - iconSize) / 2;
+        const Icon = ICONS[iconIdx % ICONS.length].Icon;
+        const name = ICONS[iconIdx % ICONS.length].name;
+
+        return (
+          <motion.div
+            key={`icon-${sqId}-${iteration}`}
+            className="absolute group"
+            style={{
+              left: cellX + offset,
+              top: cellY + offset,
+              width: iconSize,
+              height: iconSize,
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: maxOpacity }}
+            transition={{
+              duration,
+              repeat: 1,
+              delay: index * 0.1,
+              repeatType: 'reverse',
+              repeatDelay,
+            }}
+            onAnimationComplete={() => updateIconPosition(sqId)}
+          >
+            <Icon
+              size={iconSize}
+              className="text-gray-700 dark:text-gray-300"
+            />
+            <span className="pointer-events-none absolute -bottom-1 left-1/2 -translate-x-1/2 translate-y-full whitespace-nowrap rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
+              {name}
+            </span>
+          </motion.div>
+        );
+      })}
+    </div>
   );
 }

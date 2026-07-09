@@ -28,10 +28,12 @@ export {
   RippleButton, SpinningText, ScrollVelocityContainer, ScrollVelocityRow,
   NumberTicker, BlurFade, AnimatedList, AnimatedListItem,
   SkewButton, GooeyCheckbox, ServerLoader, GlobeLoader, ExpandInput, BookLoader,
+  IconAnimatedGridPattern,
 } from './components.animations';
 export type {
   KineticTextProps, CoolModeProps, CoolParticleOptions, NoiseTextureProps,
   InteractiveGridPatternProps, AnimatedGridPatternProps, RippleButtonProps,
   SpinningTextProps, ScrollVelocityContainerProps, ScrollVelocityRowProps,
   NumberTickerProps, BlurFadeProps, AnimatedListProps,
+  IconAnimatedGridPatternProps,
 } from './components.animations';

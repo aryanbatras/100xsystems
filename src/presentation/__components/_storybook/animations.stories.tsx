@@ -4,6 +4,7 @@ import {
   RippleButton, SpinningText, ScrollVelocityContainer, ScrollVelocityRow,
   NumberTicker, BlurFade, AnimatedList, AnimatedListItem,
   SkewButton, GooeyCheckbox, ServerLoader, GlobeLoader, ExpandInput, BookLoader,
+  IconAnimatedGridPattern,
 } from '../components.animations';
 import { Button } from '../components.atomic';
 
@@ -248,6 +249,21 @@ export const BookLoaderDemo: Story = {
   render: () => (
     <div className="flex items-center justify-center p-8">
       <BookLoader />
+    </div>
+  ),
+};
+
+export const IconAnimatedGridPatternDemo: Story = {
+  name: 'IconAnimatedGridPattern',
+  parameters: { layout: 'fullscreen' },
+  render: () => (
+    <div className="p-8 min-h-[400px]">
+      <p className="text-xs text-fg-muted uppercase tracking-wider font-semibold mb-6">
+        Famous software companies &amp; tools — each icon fades in then repositions:
+      </p>
+      <div className="relative h-[500px] w-full overflow-hidden border border-border bg-surface-secondary rounded-lg">
+        <IconAnimatedGridPattern />
+      </div>
     </div>
   ),
 };
