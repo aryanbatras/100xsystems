@@ -11,9 +11,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button } from '@/presentation/__components/ui/button';
-import { Input } from '@/presentation/__components/ui/input';
-import { PageHeader } from '@/presentation/__components/organisms/PageHeader';
+import { Button, Input, PageHeader } from '@/presentation/__components';
 
 // ============================================================
 // Source: profile.tsx
@@ -42,7 +40,7 @@ export function ProfilePage() {
     <div className="p-6 max-w-4xl mx-auto">
       <PageHeader title="Profile" subtitle="Manage your personal information"
         actions={
-          <Button variant={isEditing ? 'outline' : 'default'} onClick={() => setIsEditing(!isEditing)}>
+          <Button variant={isEditing ? 'secondary' : 'primary'} onClick={() => setIsEditing(!isEditing)}>
             {isEditing ? 'Cancel' : 'Edit Profile'}
           </Button>
         }
