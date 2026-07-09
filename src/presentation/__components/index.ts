@@ -11,8 +11,8 @@ export { TokenColors, TokenTypography, TokenRadius, TokenInteractive, TokenLayou
 export type { TokenColorsProps, ColorToken, TokenTypographyProps, TokenRadiusProps, TokenInteractiveProps, TokenLayoutProps, TokenShadowsProps, TokenSpacingProps, TokenIconProps, TokenImageProps, AnimatedIconProps } from './components.token';
 
 // ─── Atoms ──────────────────────────────────────────────────────────
-export { Button, Input, Textarea, Badge, Tag, Spinner, Heading, Text, Divider, Select, Toggle, ProgressBar, Skeleton, SkeletonBlock, Icon, Image } from './components.atomic';
-export type { ButtonProps, ButtonVariant, ButtonSize, InputProps, TextareaProps, BadgeProps, BadgeVariant, BadgeSize, TagProps, SpinnerProps, HeadingProps, TextProps, HeadingVariant, TextVariant, DividerProps, SelectProps, SelectOption, ToggleProps, ProgressBarProps, SkeletonProps, SkeletonBlockProps, IconProps, IconName, ImageProps } from './components.atomic';
+export { Button, Input, Textarea, Badge, Tag, Spinner, Heading, Text, Divider, Select, Toggle, ProgressBar, CircularProgress, Skeleton, SkeletonBlock, SkeletonCard, SkeletonTable, SkeletonForm, Icon, Image } from './components.atomic';
+export type { ButtonProps, ButtonVariant, ButtonSize, InputProps, TextareaProps, BadgeProps, BadgeVariant, BadgeSize, TagProps, SpinnerProps, ProgressMode, ProgressBarProps, CircularProgressProps, SkeletonProps, SkeletonBlockProps, SkeletonCardProps, SkeletonTableProps, SkeletonFormProps, IconProps, IconName, ImageProps, HeadingProps, TextProps, HeadingVariant, TextVariant, DividerProps, SelectProps, SelectOption, ToggleProps } from './components.atomic';
 
 // ─── Composites (molecules + organisms) ────────────────────────────
 export { Breadcrumbs, Accordion, Alert, SearchInput, TabBar, Pagination, FilterBar, DataGrid, CodeBlock, Timeline, ArticleCard, DifficultyBadge, InfoRow, FeatureCard, StatCard, StreakCard, ComingSoonCard, ModuleCard, UserCard, MemberCard, GroupCard, RoadmapCard, SearchResults, FaqItem, ContactInfoItem, ProblemCard } from './components.composite';
@@ -21,3 +21,7 @@ export type { BreadcrumbItem, BreadcrumbsProps, AccordionProps, AccordionItem, A
 // ─── Layout Components ─────────────────────────────────────────────
 export { SidebarNav } from './components.layout';
 export type { SidebarNavProps, SidebarNavItem } from './components.layout';
+
+// ─── Animation Components ──────────────────────────────────────────
+export { KineticText, CoolMode } from './components.animations';
+export type { KineticTextProps, CoolModeProps, CoolParticleOptions } from './components.animations';

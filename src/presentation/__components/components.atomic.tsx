@@ -18,6 +18,7 @@ import '@m3e/web/progress-indicator';
 // React wrappers for M3E custom elements (avoids JSX intrinsic type issues)
 function M3ELoading(props: Record<string, unknown>) { return createElement('m3e-loading-indicator', props); }
 function M3ELinearProgress(props: Record<string, unknown>) { return createElement('m3e-linear-progress-indicator', props); }
+function M3ECircularProgress(props: Record<string, unknown>) { return createElement('m3e-circular-progress-indicator', props); }
 
 // ─── Icon ─────────────────────────────────────────────────────────
 // Atomic SVG icon component — renders named icons as inline SVGs.
@@ -691,20 +692,28 @@ export function Toggle({ checked, onChange, label, disabled = false, size = 'def
 }
 
 // ─── ProgressBar (M3E Linear Progress Indicator) ───────────────────
+// Supports determinate, indeterminate, buffer, and query modes via m3e-linear-progress-indicator.
 
 const progressHeightMap = { sm: '4px', default: '6px', lg: '10px' } as const;
 
+export type ProgressMode = 'determinate' | 'indeterminate' | 'buffer' | 'query';
+
 export interface ProgressBarProps {
   value?: number;
+  max?: number;
   size?: keyof typeof progressHeightMap;
+  mode?: ProgressMode;
+  bufferValue?: number;
   showLabel?: boolean;
   variant?: 'flat' | 'wavy';
   className?: string;
 }
 
-export function ProgressBar({ value, size = 'default', showLabel = false, variant = 'flat', className }: ProgressBarProps) {
-  const isIndeterminate = value === undefined;
-  const mode = isIndeterminate ? 'indeterminate' : 'determinate';
+export function ProgressBar({ value, max = 100, size = 'default', mode: explicitMode, bufferValue, showLabel = false, variant = 'flat', className }: ProgressBarProps) {
+  const isIndeterminate = explicitMode === 'indeterminate' || (explicitMode === undefined && value === undefined);
+  const isQuery = explicitMode === 'query';
+  const mode: ProgressMode = explicitMode ?? (value === undefined ? 'indeterminate' : 'determinate');
+  const displayValue = (mode === 'determinate' || mode === 'buffer') && value !== undefined ? value : 0;
 
   return (
     <div className={cn('flex items-center gap-3', className)}>
@@ -712,9 +721,10 @@ export function ProgressBar({ value, size = 'default', showLabel = false, varian
         <M3ELinearProgress
           mode={mode}
           variant={variant}
-          value={isIndeterminate ? 0 : value}
-          max={100}
-          aria-label={isIndeterminate ? 'Loading...' : `${value}% complete`}
+          value={displayValue}
+          max={max}
+          buffer-value={bufferValue}
+          aria-label={isIndeterminate ? 'Loading...' : isQuery ? 'Searching...' : `${Math.round(displayValue)}% complete`}
           style={{
             height: progressHeightMap[size],
             '--m3e-linear-progress-indicator-active-indicator-color': 'var(--accent)',
@@ -722,7 +732,7 @@ export function ProgressBar({ value, size = 'default', showLabel = false, varian
           }}
         />
       </div>
-      {showLabel && !isIndeterminate && (
+      {showLabel && !isIndeterminate && !isQuery && value !== undefined && (
         <span className="text-xs font-medium text-fg-secondary min-w-[3ch] text-right tabular-nums">
           {Math.round(value)}%
         </span>
@@ -731,45 +741,169 @@ export function ProgressBar({ value, size = 'default', showLabel = false, varian
   );
 }
 
-// ─── Skeleton ───────────────────────────────────────────────────────
+// ─── CircularProgress (M3E Circular Progress Indicator) ────────────
+// Supports determinate (value) and indeterminate modes, plus flat/wavy variants.
 
-export interface SkeletonProps {
-  width?: string;
-  height?: string;
+export interface CircularProgressProps {
+  value?: number;
+  max?: number;
+  size?: number;
+  indeterminate?: boolean;
+  variant?: 'flat' | 'wavy';
+  label?: string;
+  showValue?: boolean;
   className?: string;
+}
+
+export function CircularProgress({ value, max = 100, size = 48, indeterminate = false, variant = 'flat', label, showValue = false, className }: CircularProgressProps) {
+  const isIndet = indeterminate || value === undefined;
+  const displayValue = isIndet ? 0 : value;
+
+  return (
+    <div
+      className={cn('inline-flex flex-col items-center gap-2', className)}
+    >
+      <div style={{ width: size, height: size }}>
+        <M3ECircularProgress
+          indeterminate={isIndet}
+          value={displayValue}
+          max={max}
+          variant={variant}
+          aria-label={label ?? (isIndet ? 'Loading...' : `${Math.round(displayValue)}% complete`)}
+          style={{
+            width: '100%',
+            height: '100%',
+            '--m3e-circular-progress-indicator-active-indicator-color': 'var(--accent)',
+            '--m3e-circular-progress-indicator-track-color': 'var(--bg-muted)',
+          }}
+        >
+          {showValue && !isIndet && (
+            <span className="text-xs font-semibold text-fg-secondary tabular-nums">
+              {Math.round(displayValue)}%
+            </span>
+          )}
+        </M3ECircularProgress>
+      </div>
+    </div>
+  );
+}
+
+// ─── Skeleton ───────────────────────────────────────────────────────
+// shadcn-inspired skeleton: a pure <div> with animate-pulse and our design token colors.
+// Accepts all HTML div attributes — use className for sizing.
+
+export interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
+  /** @deprecated Use className="w-* h-*" instead */
+  width?: string;
+  /** @deprecated Use className="w-* h-*" instead */
+  height?: string;
+  /** @deprecated Use className="inline-block" instead */
   inline?: boolean;
 }
 
-export function Skeleton({ width, height = '1rem', inline = false, className }: SkeletonProps) {
+export function Skeleton({ width, height, inline, className, style, ...props }: SkeletonProps) {
   return (
     <div
       className={cn(
         'animate-pulse bg-border',
-        inline ? 'inline-block' : 'block',
+        inline && 'inline-block',
         className
       )}
-      style={{ width: width || undefined, height }}
+      style={{ ...(width && { width }), ...(height && { height }), ...style }}
       aria-hidden="true"
+      {...props}
     />
   );
 }
 
-export interface SkeletonBlockProps {
+// ─── SkeletonBlock (text lines) ─────────────────────────────────────
+// A preset for rendering multiple skeleton text lines + optional avatar.
+
+export interface SkeletonBlockProps extends HTMLAttributes<HTMLDivElement> {
   lines?: number;
   avatar?: boolean;
-  className?: string;
 }
 
-export function SkeletonBlock({ lines = 3, avatar = false, className }: SkeletonBlockProps) {
+export function SkeletonBlock({ lines = 3, avatar = false, className, ...props }: SkeletonBlockProps) {
   return (
-    <div className={cn('flex gap-4 p-4', className)}>
-      {avatar && <Skeleton width="40px" height="40px" />}
+    <div className={cn('flex gap-4', className)} {...props}>
+      {avatar && <Skeleton className="size-10 shrink-0" />}
       <div className="flex-1 space-y-3">
         <Skeleton className="h-4 w-3/4" />
         {Array.from({ length: lines - 1 }).map((_, i) => (
           <Skeleton key={i} className={`h-3 ${i === lines - 2 ? 'w-1/2' : 'w-full'}`} />
         ))}
       </div>
+    </div>
+  );
+}
+
+// ─── SkeletonCard ───────────────────────────────────────────────────
+// A preset for a card-shaped skeleton with image area, title, and description lines.
+
+export interface SkeletonCardProps extends HTMLAttributes<HTMLDivElement> {
+  image?: boolean;
+  lines?: number;
+}
+
+export function SkeletonCard({ image = true, lines = 3, className, ...props }: SkeletonCardProps) {
+  return (
+    <div className={cn('border border-border p-6', className)} {...props}>
+      {image && <Skeleton className="w-full h-40 mb-4" />}
+      <Skeleton className="h-5 w-2/3 mb-3" />
+      {Array.from({ length: lines }).map((_, i) => (
+        <Skeleton key={i} className={`h-3 mb-2 ${i === lines - 1 ? 'w-1/2' : 'w-full'}`} />
+      ))}
+    </div>
+  );
+}
+
+// ─── SkeletonTable ──────────────────────────────────────────────────
+// A preset for a table-shaped skeleton with header and rows.
+
+export interface SkeletonTableProps extends HTMLAttributes<HTMLDivElement> {
+  rows?: number;
+  columns?: number;
+}
+
+export function SkeletonTable({ rows = 5, columns = 4, className, ...props }: SkeletonTableProps) {
+  return (
+    <div className={cn('border border-border', className)} {...props}>
+      {/* Header */}
+      <div className="flex gap-4 border-b border-border px-4 py-3">
+        {Array.from({ length: columns }).map((_, i) => (
+          <Skeleton key={i} className="h-4 flex-1" />
+        ))}
+      </div>
+      {/* Rows */}
+      {Array.from({ length: rows }).map((_, r) => (
+        <div key={r} className="flex gap-4 border-b border-border last:border-b-0 px-4 py-3">
+          {Array.from({ length: columns }).map((_, c) => (
+            <Skeleton key={c} className={`h-3 flex-1 ${c === columns - 1 ? 'w-1/3' : ''}`} />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── SkeletonForm ───────────────────────────────────────────────────
+// A preset for a form-shaped skeleton with multiple field rows.
+
+export interface SkeletonFormProps extends HTMLAttributes<HTMLDivElement> {
+  fields?: number;
+}
+
+export function SkeletonForm({ fields = 3, className, ...props }: SkeletonFormProps) {
+  return (
+    <div className={cn('space-y-6', className)} {...props}>
+      {Array.from({ length: fields }).map((_, i) => (
+        <div key={i} className="space-y-2">
+          <Skeleton className="h-3 w-24" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+      ))}
+      <Skeleton className="h-10 w-32" />
     </div>
   );
 }
