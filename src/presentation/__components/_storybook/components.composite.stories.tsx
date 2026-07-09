@@ -2,9 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Accordion, Alert, SearchInput, TabBar, Pagination, Breadcrumbs, CodeBlock, Timeline, ArticleCard, DifficultyBadge, FeatureCard, StatCard, ComingSoonCard, ModuleCard, FaqItem, ContactInfoItem } from '../components.composite';
 
 const meta = {
-  title: 'Composites/All',
+  title: 'Composites',
   parameters: { layout: 'fullscreen' },
-  tags: ['autodocs'],
   decorators: [(Story) => <div style={{ padding: '3rem 1.5rem', maxWidth: '960px' }}><Story /></div>],
 } satisfies Meta<React.ComponentType<unknown>>;
 

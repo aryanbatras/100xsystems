@@ -2,9 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Button, Input, Textarea, Badge, Tag, Spinner, Select, Toggle, ProgressBar, Skeleton, SkeletonBlock, Heading, Text, Divider } from '../components.atomic';
 
 const meta = {
-  title: 'Atoms/All',
+  title: 'Atoms',
   parameters: { layout: 'fullscreen' },
-  tags: ['autodocs'],
   decorators: [(Story) => <div style={{ padding: '3rem 1.5rem', maxWidth: '800px' }}><Story /></div>],
 } satisfies Meta<typeof Button>;
 

@@ -2,10 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { SidebarNav } from '../components.layout';
 
 const meta = {
-  title: 'Layout/SidebarNav',
+  title: 'Layout',
   component: SidebarNav,
   parameters: { layout: 'fullscreen' },
-  tags: ['autodocs'],
   decorators: [(Story) => <div className="h-screen"><Story /></div>],
 } satisfies Meta<typeof SidebarNav>;
 
