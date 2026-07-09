@@ -1,22 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { TokenColors, TokenTypography, TokenRadius, TokenInteractive, TokenLayout, TokenShadows, TokenMotion, TokenFramerMotion } from '../components.token';
+import { TokenColors, TokenTypography, TokenRadius, TokenInteractive, TokenLayout, TokenShadows, TokenSpacing } from '../components.token';
 
 const meta = {
-  title: 'Tokens/All',
-  component: TokenColors,
+  title: 'Tokens',
   parameters: { layout: 'fullscreen' },
   tags: ['autodocs'],
   decorators: [(Story) => <div style={{ padding: '3rem 1.5rem' }}><Story /></div>],
 } satisfies Meta<typeof TokenColors>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Colors: Story = { render: () => <TokenColors /> };
-export const Typography: Story = { render: () => <TokenTypography /> };
-export const Radius: Story = { render: () => <TokenRadius /> };
-export const Interactive: Story = { render: () => <TokenInteractive /> };
-export const Layout: Story = { render: () => <TokenLayout /> };
-export const Shadows: Story = { render: () => <TokenShadows /> };
-export const Motion: Story = { render: () => <TokenMotion /> };
-export const FramerMotion: Story = { render: () => <TokenFramerMotion /> };
+export const Colors: StoryObj = { render: () => <TokenColors /> };
+export const Typography: StoryObj = { render: () => <TokenTypography /> };
+export const Radius: StoryObj = { render: () => <TokenRadius /> };
+export const Interactive: StoryObj = { render: () => <TokenInteractive /> };
+export const Layout: StoryObj = { render: () => <TokenLayout /> };
+export const Shadows: StoryObj = { render: () => <TokenShadows /> };
+export const Spacing: StoryObj = { render: () => <TokenSpacing /> };

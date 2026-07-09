@@ -7,8 +7,8 @@
  */
 
 // ─── Tokens ────────────────────────────────────────────────────────
-export { TokenColors, TokenTypography, TokenRadius, TokenInteractive, TokenLayout, TokenShadows, TokenMotion, TokenFramerMotion } from './components.token';
-export type { TokenColorsProps, ColorToken, TokenTypographyProps, TokenRadiusProps, TokenInteractiveProps, TokenLayoutProps, TokenShadowsProps, TokenMotionProps, TokenFramerMotionProps } from './components.token';
+export { TokenColors, TokenTypography, TokenRadius, TokenInteractive, TokenLayout, TokenShadows, TokenSpacing } from './components.token';
+export type { TokenColorsProps, ColorToken, TokenTypographyProps, TokenRadiusProps, TokenInteractiveProps, TokenLayoutProps, TokenShadowsProps, TokenSpacingProps } from './components.token';
 
 // ─── Atoms ──────────────────────────────────────────────────────────
 export { Button, Input, Badge, Tag, Spinner, Card, CardHeader, Heading, Text, Divider, Select, Toggle, ProgressBar, Skeleton, SkeletonBlock, Modal, Avatar, RippleButton } from './components.atomic';

@@ -17,7 +17,7 @@ const buttonVariants = {
   primary: 'bg-accent text-white hover:bg-accent-hover active:bg-accent-active shadow-sm hover:shadow-md',
   secondary: 'bg-white text-fg-tertiary border border-border hover:bg-surface-secondary active:bg-border hover:border-border-hover',
   ghost: 'text-fg-secondary hover:text-fg-tertiary hover:bg-surface-secondary active:bg-border',
-  destructive: 'bg-red-500 text-white hover:bg-red-600 active:bg-red-700 shadow-sm hover:shadow-md',
+  destructive: 'bg-destructive text-white hover:bg-red-600 active:bg-red-700 shadow-sm hover:shadow-md',
   outline: 'border border-white/20 text-white/80 hover:border-white/40 hover:text-white bg-transparent',
   link: 'text-accent underline-offset-4 hover:underline hover:text-accent p-0',
 } as const;
@@ -330,7 +330,7 @@ export const RippleButton = forwardRef<HTMLButtonElement, RippleButtonProps>(({ 
   }, [ripples, duration]);
 
   return (
-    <button ref={ref} className={cn('relative flex cursor-pointer items-center justify-center overflow-hidden border-2 px-4 py-2 text-center bg-background text-primary', className)} onClick={handleClick} {...props}>
+    <button ref={ref} className={cn('relative flex cursor-pointer items-center justify-center overflow-hidden border border-border px-5 py-2.5 text-sm font-medium text-fg bg-surface hover:bg-surface-secondary hover:border-border-hover transition-colors duration-150', className)} onClick={handleClick} {...props}>
       <div className="relative z-10">{children}</div>
       <span className="pointer-events-none absolute inset-0">{ripples.map((ripple) => (
         <span key={ripple.key} className="absolute rounded-full opacity-30 animate-rippling" style={{ width: `${ripple.size}px`, height: `${ripple.size}px`, top: `${ripple.y}px`, left: `${ripple.x}px`, backgroundColor: rippleColor, transform: 'scale(0)' } as CSSProperties} />

@@ -24,5 +24,5 @@ export const ProgressBarStory: Story = { name: 'ProgressBar', render: () => <Pro
 export const SkeletonStory: Story = { name: 'Skeleton', render: () => <SkeletonBlock lines={3} avatar /> };
 export const ModalStory: Story = { name: 'Modal', render: () => <Modal isOpen={true} onClose={() => {}} title="Modal Title">Modal content</Modal> };
 export const AvatarStory: Story = { name: 'Avatar', render: () => <Avatar initials="JD" status="online" /> };
-export const RippleButtonStory: Story = { name: 'RippleButton', render: () => <RippleButton>Click Me</RippleButton> };
+export const RippleButtonStory: Story = { name: 'RippleButton', render: () => <div className="flex flex-wrap items-start gap-6"><RippleButton>Default</RippleButton><RippleButton style={{ borderColor: '#572EFF', color: '#572EFF' }}>Custom Ripple</RippleButton></div> };
 export const TypographyStory: Story = { name: 'Typography', render: () => <div><Heading variant="h1">Heading 1</Heading><Text variant="body">Body text</Text><Divider /><Text variant="caption">Caption</Text></div> };

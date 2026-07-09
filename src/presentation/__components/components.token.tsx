@@ -8,8 +8,6 @@
 
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/application/lib/utils';
 
 // ─── TokenColors ────────────────────────────────────────────────────
@@ -253,180 +251,65 @@ export function TokenShadows({ className }: TokenShadowsProps) {
   );
 }
 
-// ─── TokenMotion (GSAP) ────────────────────────────────────────────
+// ─── TokenSpacing ───────────────────────────────────────────────────
 
-export interface TokenMotionProps { className?: string; }
+export interface TokenSpacingProps { className?: string; }
 
-const scrollTriggers = [
-  { label: 'fadeIn', code: `gsap.from(el, {\n  scrollTrigger: el,\n  opacity: 0,\n  y: 40,\n  duration: 0.8,\n  ease: 'power2.out',\n})`, desc: 'Fade in + slide up on scroll' },
-  { label: 'staggerReveal', code: `gsap.from(items, {\n  scrollTrigger: container,\n  opacity: 0,\n  y: 30,\n  stagger: 0.12,\n  duration: 0.6,\n  ease: 'power3.out',\n})`, desc: 'Stagger children into view' },
-  { label: 'parallax', code: `gsap.to(el, {\n  scrollTrigger: {\n    trigger: el,\n    start: 'top bottom',\n    end: 'bottom top',\n    scrub: 1.5,\n  },\n  y: -80,\n  ease: 'none',\n})`, desc: 'Parallax scrub tied to scroll' },
-];
+export function TokenSpacing({ className }: TokenSpacingProps) {
+  const spacings = [
+    { label: '0', px: '0px' },
+    { label: '0.5', px: '2px' },
+    { label: '1', px: '4px' },
+    { label: '1.5', px: '6px' },
+    { label: '2', px: '8px' },
+    { label: '2.5', px: '10px' },
+    { label: '3', px: '12px' },
+    { label: '3.5', px: '14px' },
+    { label: '4', px: '16px' },
+    { label: '5', px: '20px' },
+    { label: '6', px: '24px' },
+    { label: '8', px: '32px' },
+    { label: '10', px: '40px' },
+    { label: '12', px: '48px' },
+    { label: '14', px: '56px' },
+    { label: '16', px: '64px' },
+    { label: '20', px: '80px' },
+    { label: '24', px: '96px' },
+    { label: '28', px: '112px' },
+    { label: '32', px: '128px' },
+    { label: '36', px: '144px' },
+    { label: '40', px: '160px' },
+    { label: '44', px: '176px' },
+    { label: '48', px: '192px' },
+    { label: '52', px: '208px' },
+    { label: '56', px: '224px' },
+    { label: '60', px: '240px' },
+    { label: '64', px: '256px' },
+    { label: '72', px: '288px' },
+    { label: '80', px: '320px' },
+    { label: '96', px: '384px' },
+  ];
 
-const gsapEases = [
-  { label: 'power2.out', value: 'cubic-bezier(0.22, 1, 0.36, 1)' },
-  { label: 'power3.out', value: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)' },
-  { label: 'power4.out', value: 'cubic-bezier(0.16, 1, 0.3, 1)' },
-  { label: 'expo.out', value: 'cubic-bezier(0.19, 1, 0.22, 1)' },
-  { label: 'elastic.out', value: 'cubic-bezier(0.68, -0.55, 0.27, 1.55)' },
-];
+  const midPoint = Math.ceil(spacings.length / 2);
 
-export function TokenMotion({ className }: TokenMotionProps) {
   return (
     <div className={cn('bg-white', className)}>
       <div className="px-6 py-5 border-b border-border">
-        <h2 className="text-lg font-bold text-fg">GSAP Motion</h2>
-        <p className="text-sm text-fg-secondary mt-1">Scroll-driven &amp; timeline-heavy animations. Paired with Framer Motion for UI interactions.</p>
+        <h2 className="text-lg font-bold text-fg">Spacing</h2>
+        <p className="text-sm text-fg-secondary mt-1">Padding &amp; margin scale used across all components.</p>
       </div>
-      <div className="px-6 py-10 space-y-14">
-        <section>
-          <h3 className="text-xs font-medium text-fg-muted uppercase tracking-widest mb-1">ScrollTrigger Patterns</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">{scrollTriggers.map((st) => (
-            <div key={st.label} className="border border-border overflow-hidden">
-              <div className="px-4 py-3 border-b border-border bg-surface-secondary"><span className="text-sm font-semibold text-fg font-mono">{st.label}</span></div>
-              <pre className="px-4 py-3 text-[11px] leading-relaxed text-fg-tertiary font-mono overflow-x-auto whitespace-pre">{st.code}</pre>
-              <div className="px-4 py-2 border-t border-border"><p className="text-xs text-fg-secondary">{st.desc}</p></div>
-            </div>
-          ))}</div>
-        </section>
-        <section>
-          <h3 className="text-xs font-medium text-fg-muted uppercase tracking-widest mb-1">Easing Curves</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">{gsapEases.map((e) => (
-            <div key={e.label} className="border border-border p-4">
-              <div className="h-12 mb-3 bg-surface-secondary overflow-hidden relative">
-                <div className="absolute inset-0 bg-accent/10" style={{ clipPath: `polygon(0% 100%, 100% 0%, 100% 100%)` }} />
+      <div className="px-6 py-10">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+          {spacings.map((s) => (
+            <div key={s.label} className="border border-border p-4 flex flex-col items-center">
+              <div className="w-full bg-accent-bg flex items-center justify-center mb-3" style={{ padding: `${s.label}px` }}>
+                <div className="w-full h-2 bg-accent/30" />
               </div>
-              <div className="text-sm font-medium text-fg font-mono">{e.label}</div>
-              <code className="text-[10px] text-fg-muted mt-1 block truncate">{e.value}</code>
+              <div className="text-sm font-semibold text-fg font-mono">p-{s.label}</div>
+              <code className="text-[10px] text-fg-muted mt-0.5">{s.px}</code>
             </div>
-          ))}</div>
-        </section>
-        <section>
-          <h3 className="text-xs font-medium text-fg-muted uppercase tracking-widest mb-4">Setup</h3>
-          <div className="bg-surface-secondary border border-border px-5 py-4 font-mono text-xs leading-relaxed text-fg-tertiary">
-{`// Install
-npm install gsap @gsap/react
-
-// ScrollTrigger fade-in (React component)
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
-
-// Register & use
-gsap.registerPlugin(ScrollTrigger);
-useGSAP(() => {
-  gsap.from('.fade-in', {
-    scrollTrigger: '.fade-in',
-    opacity: 0,
-    y: 40,
-    duration: 0.8,
-    ease: 'power2.out',
-  });
-});`}
-          </div>
-        </section>
-      </div>
-    </div>
-  );
-}
-
-// ─── TokenFramerMotion ─────────────────────────────────────────────
-
-export interface TokenFramerMotionProps { className?: string; }
-
-const presets = {
-  gentle: { type: 'spring' as const, stiffness: 200, damping: 25, mass: 1 },
-  smooth: { type: 'spring' as const, stiffness: 250, damping: 22, mass: 1 },
-  bouncy: { type: 'spring' as const, stiffness: 300, damping: 15, mass: 1 },
-};
-
-const springTokens = [
-  { label: 'gentle', stiffness: 200, damping: 25, mass: 1, desc: 'Subtle entrance — cards, modals' },
-  { label: 'smooth', stiffness: 250, damping: 22, mass: 1, desc: 'Default — buttons, toggles, menus' },
-  { label: 'bouncy', stiffness: 300, damping: 15, mass: 1, desc: 'Playful — badges, notifications' },
-];
-
-export function TokenFramerMotion({ className }: TokenFramerMotionProps) {
-  const [isVisible, setIsVisible] = useState(true);
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
-  const items = ['Explore Courses', 'Track Progress', 'Join Community', 'Earn Certificates'];
-
-  return (
-    <div className={cn('bg-white', className)}>
-      <div className="px-6 py-5 border-b border-border">
-        <h2 className="text-lg font-bold text-fg">Framer Motion</h2>
-        <p className="text-sm text-fg-secondary mt-1">UI animations — entry/exit, gestures, staggered children. Polished & smooth.</p>
-      </div>
-      <div className="px-6 py-10 space-y-14">
-        <section>
-          <h3 className="text-xs font-medium text-fg-muted uppercase tracking-widest mb-1">Spring Presets</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">{springTokens.map((s) => (
-            <motion.div key={s.label} className="border border-border p-5" whileHover={{ y: -2, boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }} transition={presets.gentle}>
-              <div className="h-3 w-full mb-4" style={{ backgroundColor: 'var(--accent)' }} />
-              <div className="text-sm font-semibold text-fg font-mono">{s.label}</div>
-              <div className="flex gap-3 mt-1.5 text-xs text-fg-muted font-mono"><span>stiffness: {s.stiffness}</span><span>damping: {s.damping}</span></div>
-              <p className="text-xs text-fg-secondary mt-2">{s.desc}</p>
-            </motion.div>
-          ))}</div>
-        </section>
-        <section>
-          <h3 className="text-xs font-medium text-fg-muted uppercase tracking-widest mb-1">Entry / Exit</h3>
-          <div className="border border-border p-6">
-            <button onClick={() => setIsVisible(!isVisible)} className="px-4 py-2 bg-accent text-white text-sm font-medium hover:bg-accent-hover active:bg-accent-active transition-colors">
-              {isVisible ? 'Hide Card' : 'Show Card'}
-            </button>
-            <div className="mt-4 relative min-h-[120px]">
-              <AnimatePresence mode="wait">
-                {isVisible && (
-                  <motion.div key="card" initial={{ opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -12, scale: 0.97 }} transition={presets.smooth}
-                    className="p-5 bg-surface-secondary border border-border max-w-sm">
-                    <h4 className="text-sm font-semibold text-fg">Welcome Back</h4>
-                    <p className="text-xs text-fg-secondary mt-1">Your progress syncs across all devices.</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-        </section>
-        <section>
-          <h3 className="text-xs font-medium text-fg-muted uppercase tracking-widest mb-1">Gesture Animations</h3>
-          <div className="flex flex-wrap gap-4">
-            {['hover', 'tap', 'lift'].map((gesture) => (
-              <motion.button key={gesture} whileHover={{ y: -3, boxShadow: '0 6px 20px rgba(0,0,0,0.08)' }} whileTap={{ y: 0, scale: 0.98 }} transition={presets.smooth}
-                className="px-5 py-3 bg-surface-secondary border border-border text-sm font-medium text-fg">{gesture}</motion.button>
-            ))}
-          </div>
-        </section>
-        <section>
-          <h3 className="text-xs font-medium text-fg-muted uppercase tracking-widest mb-1">Staggered Children</h3>
-          <div className="border border-border p-6">
-            <div className="flex flex-wrap gap-3">{items.map((item, i) => (
-              <motion.div key={item} initial={{ opacity: 0, y: 16 }} animate={{ opacity: hoveredIdx !== null && hoveredIdx !== i ? 0.5 : 1, y: 0 }}
-                transition={{ ...presets.gentle, delay: i * 0.08 }} onMouseEnter={() => setHoveredIdx(i)} onMouseLeave={() => setHoveredIdx(null)} whileHover={{ y: -2 }}
-                className="px-4 py-3 bg-surface-secondary border border-border text-sm text-fg cursor-default">{item}</motion.div>
-            ))}</div>
-          </div>
-        </section>
-        <section>
-          <h3 className="text-xs font-medium text-fg-muted uppercase tracking-widest mb-4">Setup</h3>
-          <div className="bg-surface-secondary border border-border px-5 py-4 font-mono text-xs leading-relaxed text-fg-tertiary">
-{`// Install
-npm install motion
-
-// Import
-import { motion, AnimatePresence } from 'motion/react';
-
-// Spring preset (recommended default)
-const spring = { type: 'spring', stiffness: 250, damping: 22 };
-
-// Usage
-<motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ type: 'spring', stiffness: 250, damping: 22 }}
-/>`}
-          </div>
-        </section>
+          ))}
+        </div>
       </div>
     </div>
   );
