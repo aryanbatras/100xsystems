@@ -1,9 +1,14 @@
 import type { Preview } from '@storybook/react';
 import '../src/pages/globals.css';
+import '../src/presentation/_tokens/design-tokens.css';
 
 const preview: Preview = {
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
+    designToken: {
+      defaultTab: 'Colors',
+      styleInjection:
+        '@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");',
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
