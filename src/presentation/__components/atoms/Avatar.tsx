@@ -6,7 +6,7 @@
  * @packageDocumentation
  */
 
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 
 const sizeStyles = {
   xs: 'h-6 w-6 text-[8px]',

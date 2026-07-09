@@ -8,7 +8,7 @@
  */
 
 import { type ElementType, type HTMLAttributes, type ReactNode } from 'react';
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 
 // ─── Variant Definitions ────────────────────────────────────────────
 

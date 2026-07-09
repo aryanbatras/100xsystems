@@ -6,7 +6,7 @@
  * @packageDocumentation
  */
 
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 
 const difficultyStyles = {
   Beginner: 'bg-[#f0fdf4] text-[#16a34a] border-[#86efac]',

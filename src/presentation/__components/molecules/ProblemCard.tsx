@@ -10,7 +10,7 @@
 'use client';
 
 import { useState } from 'react';
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 import { DifficultyBadge } from './DifficultyBadge';
 
 export interface ProblemCardProps {

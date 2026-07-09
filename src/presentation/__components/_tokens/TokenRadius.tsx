@@ -1,55 +1,41 @@
-/**
- * ## TokenRadius
- *
- * Renders all border radius design tokens from globals.css.
- * Applies each radius to a square so the rounding is visually clear.
- *
- * @packageDocumentation
- */
-
-import { cn } from '../../_components/utils';
-
-/* ─── Token Data ──────────────────────────────────────────────── */
-
-interface RadiusToken {
-  label: string;
-  variable: string;
-  value: string;
-}
-
-const radii: RadiusToken[] = [
-  { label: 'sm', variable: 'var(--radius-sm)', value: '4px' },
-  { label: 'md', variable: 'var(--radius-md)', value: '8px' },
-  { label: 'lg', variable: 'var(--radius-lg)', value: '12px' },
-];
-
-/* ─── Main Component ──────────────────────────────────────────── */
+import { cn } from '@/application/lib/utils';
 
 export interface TokenRadiusProps {
   className?: string;
 }
 
-/**
- * Displays all border radius design tokens with visual examples.
- */
 export function TokenRadius({ className }: TokenRadiusProps) {
   return (
-    <div className={cn('p-4 bg-[#111] rounded-lg', className)}>
-      <h2 className="text-base font-bold text-[#e0e0e0] mb-4">Border Radius Tokens</h2>
-      <div className="flex gap-6">
-        {radii.map((radius) => (
-          <div key={radius.label} className="flex flex-col items-center gap-2">
-            <div
-              className="w-20 h-20 bg-[#572EFF]"
-              style={{ borderRadius: radius.variable }}
-            />
-            <div className="text-center">
-              <div className="text-xs font-medium text-[#e0e0e0]">{radius.label}</div>
-              <code className="text-[10px] font-mono text-[#666]">{radius.variable}</code>
-              <div className="text-[9px] font-mono text-[#888]">{radius.value}</div>
+    <div className={cn('bg-white', className)}>
+      <div className="px-6 py-5 border-b border-gray-100">
+        <h2 className="text-lg font-bold text-black">Rounding</h2>
+      </div>
+      <div className="px-6 py-10 space-y-10">
+        {/* The only rounding we use */}
+        <div className="max-w-xs">
+          <div className="inline-flex items-center gap-4 px-5 py-4 border border-gray-100">
+            <div className="h-14 w-14 bg-purple rounded-sm shrink-0" />
+            <div>
+              <div className="text-sm font-medium text-black">rounded-sm</div>
+              <code className="text-xs text-gray-300">0.125rem</code>
             </div>
           </div>
-        ))}
+          <p className="text-xs text-gray-400 mt-3 px-1">
+            The only rounding in the system. Everything else is square.
+          </p>
+        </div>
+
+        {/* Reference: square */}
+        <div>
+          <h3 className="text-xs font-medium text-gray-300 uppercase tracking-widest mb-4">Default: Square</h3>
+          <div className="inline-flex items-center gap-4 px-5 py-4 border border-gray-100">
+            <div className="h-14 w-14 bg-purple shrink-0" />
+            <div>
+              <div className="text-sm font-medium text-black">rounded-none</div>
+              <code className="text-xs text-gray-300">0rem</code>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

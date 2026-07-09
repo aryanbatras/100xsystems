@@ -9,7 +9,7 @@
 'use client';
 
 import { useState } from 'react';
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 
 export interface CodeBlockProps {
   /** Code content */

@@ -13,14 +13,21 @@ export type { TokenColorsProps, ColorToken } from './TokenColors';
 export { TokenTypography } from './TokenTypography';
 export type { TokenTypographyProps } from './TokenTypography';
 
-export { TokenSpacing } from './TokenSpacing';
-export type { TokenSpacingProps } from './TokenSpacing';
+export { TokenRadius } from './TokenRadius';
+export type { TokenRadiusProps } from './TokenRadius';
+
+export { TokenInteractive } from './TokenInteractive';
+export type { TokenInteractiveProps } from './TokenInteractive';
+
+export { TokenLayout } from './TokenLayout';
+export type { TokenLayoutProps } from './TokenLayout';
 
 export { TokenShadows } from './TokenShadows';
 export type { TokenShadowsProps } from './TokenShadows';
 
-export { TokenRadius } from './TokenRadius';
-export type { TokenRadiusProps } from './TokenRadius';
+export { TokenMotion } from './TokenMotion';
+export type { TokenMotionProps } from './TokenMotion';
 
-export { TokenGallery } from './TokenGallery';
-export type { TokenGalleryProps } from './TokenGallery';
+export { TokenFramerMotion } from './TokenFramerMotion';
+export type { TokenFramerMotionProps } from './TokenFramerMotion';
+

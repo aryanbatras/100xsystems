@@ -6,6 +6,13 @@ const meta = {
   component: TokenColors,
   parameters: { layout: 'fullscreen' },
   tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <div style={{ padding: '3rem 1.5rem' }}>
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof TokenColors>;
 
 export default meta;

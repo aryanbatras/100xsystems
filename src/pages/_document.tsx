@@ -5,6 +5,15 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <meta charSet="utf-8" />
+
+        {/* Google Fonts: Plus Jakarta Sans */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+          rel="stylesheet"
+        />
+        <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="google-adsense-account" content="ca-pub-6524892676012386" />
         {/* Primary Meta Tags */}
@@ -34,8 +43,8 @@ export default function Document() {
         <meta property="twitter:image:alt" content="100xSystems Logo" />
         
         {/* Additional Meta Tags */}
-        <meta name="theme-color" content="#000000" />
-        <meta name="msapplication-TileColor" content="#000000" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="application-name" content="100xSystems" />
         <meta name="apple-mobile-web-app-title" content="100xSystems" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

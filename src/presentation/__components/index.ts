@@ -36,6 +36,9 @@ export type { ModalProps } from './atoms/Modal';
 export { ProgressBar } from './atoms/ProgressBar';
 export type { ProgressBarProps } from './atoms/ProgressBar';
 
+export { RippleButton } from './atoms/RippleButton';
+export type { RippleButtonProps } from './atoms/RippleButton';
+
 export { Select } from './atoms/Select';
 export type { SelectProps, SelectOption } from './atoms/Select';
 
@@ -142,5 +145,5 @@ export { RoadmapCard } from './organisms/RoadmapCard';
 export type { RoadmapCardProps } from './organisms/RoadmapCard';
 
 // ─── Tokens ────────────────────────────────────────────────────────
-export { TokenColors, TokenTypography, TokenSpacing, TokenShadows, TokenRadius, TokenGallery } from './_tokens';
-export type { TokenColorsProps, ColorToken, TokenTypographyProps, TokenSpacingProps, TokenShadowsProps, TokenRadiusProps, TokenGalleryProps } from './_tokens';
+export { TokenColors, TokenTypography, TokenRadius, TokenInteractive, TokenLayout, TokenShadows, TokenMotion, TokenFramerMotion } from './_tokens';
+export type { TokenColorsProps, ColorToken, TokenTypographyProps, TokenRadiusProps, TokenInteractiveProps, TokenLayoutProps, TokenShadowsProps, TokenMotionProps, TokenFramerMotionProps } from './_tokens';

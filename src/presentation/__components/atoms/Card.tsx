@@ -8,7 +8,7 @@
  */
 
 import { type ReactNode, type ElementType } from 'react';
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 
 // ─── Types ──────────────────────────────────────────────────────────
 

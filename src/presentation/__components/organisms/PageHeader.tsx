@@ -7,7 +7,7 @@
  */
 
 import { type ReactNode } from 'react';
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 import { Breadcrumbs, type BreadcrumbItem } from '../molecules/Breadcrumbs';
 
 export interface PageHeaderProps {

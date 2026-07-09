@@ -7,7 +7,7 @@
  * @packageDocumentation
  */
 
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 
 export interface StatCardProps {
   /** Stat value */

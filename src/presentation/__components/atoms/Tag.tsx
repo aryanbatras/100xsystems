@@ -8,7 +8,7 @@
 
 'use client';
 
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 
 const variantStyles = {
   default: 'bg-[#f5f5f5] text-[#45464d] border-[#e5e5e5]',

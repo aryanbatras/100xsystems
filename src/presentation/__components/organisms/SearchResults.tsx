@@ -9,7 +9,7 @@
 'use client';
 
 import { useState } from 'react';
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 import { Tag } from '../atoms/Tag';
 import { EmptyState } from '../molecules/EmptyState';
 import { Pagination } from '../molecules/Pagination';

@@ -6,7 +6,7 @@
  * @packageDocumentation
  */
 
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 
 const colorStyles = {
   brand: 'bg-[#572EFF]',

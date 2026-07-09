@@ -8,7 +8,7 @@
 
 'use client';
 
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 
 export interface ToggleProps {
   /** Whether the toggle is on */

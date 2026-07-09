@@ -7,7 +7,7 @@
  * @packageDocumentation
  */
 
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 import { ProgressBar } from '../atoms/ProgressBar';
 import { DifficultyBadge } from '../molecules/DifficultyBadge';
 

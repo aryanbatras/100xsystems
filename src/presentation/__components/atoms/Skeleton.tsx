@@ -6,7 +6,7 @@
  * @packageDocumentation
  */
 
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 
 export interface SkeletonProps {
   /** Width (Tailwind class or CSS value) */

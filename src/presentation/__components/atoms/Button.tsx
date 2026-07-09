@@ -10,7 +10,7 @@
 'use client';
 
 import { forwardRef, type ButtonHTMLAttributes } from 'react';
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 import { Spinner } from './Spinner';
 
 // ─── Variant Definitions ────────────────────────────────────────────

@@ -7,7 +7,7 @@
  * @packageDocumentation
  */
 
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 import { DifficultyBadge } from '../molecules/DifficultyBadge';
 import { Tag } from '../atoms/Tag';
 

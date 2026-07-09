@@ -9,7 +9,7 @@
 'use client';
 
 import { forwardRef, type SelectHTMLAttributes } from 'react';
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 
 export interface SelectOption {
   value: string;

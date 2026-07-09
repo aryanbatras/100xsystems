@@ -1,136 +1,51 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '../../__components/atoms/Button';
-
+import { Button } from '@/presentation/__components/ui/button';
 
 const meta = {
   title: 'Atoms/Button',
   component: Button,
-  parameters: {
-    layout: 'centered',
-    docs: {
-      description: {
-        component:
-          'Primary interactive button with variant, size, and loading support. Built from scratch for the 100xSystems design system.',
-      },
-    },
-  },
+  parameters: { layout: 'centered' },
   tags: ['autodocs'],
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['primary', 'secondary', 'ghost', 'destructive', 'outline', 'link'],
-      description: 'Visual style variant',
-    },
-    size: {
-      control: 'select',
-      options: ['sm', 'default', 'lg', 'icon', 'icon-sm'],
-      description: 'Size preset',
-    },
-    loading: {
-      control: 'boolean',
-      description: 'Show loading spinner',
-    },
-    disabled: {
-      control: 'boolean',
-      description: 'Disable the button',
-    },
-    children: {
-      control: 'text',
-      description: 'Button content',
-    },
+    variant: { control: 'select', options: ['default', 'outline', 'ghost'] },
+    size: { control: 'select', options: ['default', 'sm', 'lg', 'icon'] },
   },
 } satisfies Meta<typeof Button>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// ─── Variants ───────────────────────────────────────────────────────
-
-export const Primary: Story = {
-  args: {
-    variant: 'primary',
-    children: 'Primary Button',
-  },
-};
-
-export const Secondary: Story = {
-  args: {
-    variant: 'secondary',
-    children: 'Secondary Button',
-  },
-};
-
-export const Ghost: Story = {
-  args: {
-    variant: 'ghost',
-    children: 'Ghost Button',
-  },
-};
-
-export const Destructive: Story = {
-  args: {
-    variant: 'destructive',
-    children: 'Delete',
-  },
+export const Default: Story = {
+  args: { variant: 'default', children: 'Get Started' },
 };
 
 export const Outline: Story = {
-  args: {
-    variant: 'outline',
-    children: 'Outline Button',
-  },
-  parameters: {
-    backgrounds: { default: 'dark' },
-  },
+  args: { variant: 'outline', children: 'Learn More' },
 };
 
-export const Link: Story = {
-  args: {
-    variant: 'link',
-    children: 'Link Button',
-  },
+export const Ghost: Story = {
+  args: { variant: 'ghost', children: 'Cancel' },
 };
-
-// ─── Sizes ──────────────────────────────────────────────────────────
 
 export const Small: Story = {
-  args: {
-    size: 'sm',
-    children: 'Small',
-  },
+  args: { size: 'sm', children: 'Small Button' },
 };
 
 export const Large: Story = {
-  args: {
-    size: 'lg',
-    children: 'Large Button',
-  },
-};
-
-export const IconButton: Story = {
-  args: {
-    size: 'icon',
-    children: '→',
-    'aria-label': 'Next',
-  },
-};
-
-// ─── States ─────────────────────────────────────────────────────────
-
-export const Loading: Story = {
-  args: {
-    loading: true,
-    children: 'Saving...',
-  },
+  args: { size: 'lg', children: 'Large Action' },
 };
 
 export const Disabled: Story = {
-  args: {
-    disabled: true,
-    children: 'Disabled',
-  },
+  args: { disabled: true, children: 'Disabled' },
 };
 
-// ─── Interaction Test ──────────────────────────────────────────────
-
-
+export const AllVariants: Story = {
+  render: () => (
+    <div className="flex flex-wrap items-center gap-4">
+      <Button>Get Started</Button>
+      <Button variant="outline">Learn More</Button>
+      <Button variant="ghost">Cancel</Button>
+      <Button disabled>Disabled</Button>
+    </div>
+  ),
+};

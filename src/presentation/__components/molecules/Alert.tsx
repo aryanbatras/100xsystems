@@ -10,7 +10,7 @@
 'use client';
 
 import { useState, type ReactNode } from 'react';
-import { cn } from '../../_components/utils';
+import { cn } from '@/application/lib/utils';
 
 const variantStyles = {
   info: {

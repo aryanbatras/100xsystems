@@ -1,57 +1,57 @@
-/**
- * ## TokenShadows
- *
- * Renders all shadow/elevation design tokens from globals.css.
- * Shows each shadow applied to a card so the visual effect is clear.
- *
- * @packageDocumentation
- */
-
-import { cn } from '../../_components/utils';
-
-/* ─── Token Data ──────────────────────────────────────────────── */
-
-interface ShadowToken {
-  label: string;
-  variable: string;
-  value: string;
-}
-
-const shadows: ShadowToken[] = [
-  { label: 'sm', variable: 'var(--shadow-sm)', value: '0 1px 2px rgb(0 0 0 / 0.3)' },
-  { label: 'md', variable: 'var(--shadow-md)', value: '0 4px 16px rgb(0 0 0 / 0.4)' },
-  { label: 'lg', variable: 'var(--shadow-lg)', value: '0 8px 32px rgb(0 0 0 / 0.5)' },
-  { label: 'glow', variable: 'var(--shadow-glow)', value: '0 0 20px rgb(255 255 255 / 0.05)' },
-];
-
-/* ─── Main Component ──────────────────────────────────────────── */
+import { cn } from '@/application/lib/utils';
 
 export interface TokenShadowsProps {
   className?: string;
 }
 
-/**
- * Displays all shadow/elevation design tokens with visual examples.
- */
+const shadowStyle = 'h-20 w-full mb-4 bg-gray-50 rounded-sm';
+
 export function TokenShadows({ className }: TokenShadowsProps) {
   return (
-    <div className={cn('p-4 bg-[#111] rounded-lg', className)}>
-      <h2 className="text-base font-bold text-[#e0e0e0] mb-4">Shadow Tokens</h2>
-      <div className="grid grid-cols-2 gap-4">
-        {shadows.map((shadow) => (
-          <div key={shadow.label} className="rounded-md border border-[#333] bg-[#1a1a1a] overflow-hidden">
-            <div
-              className="h-24 m-4 rounded bg-[#222] flex items-center justify-center"
-              style={{ boxShadow: shadow.variable }}
-            >
-              <span className="text-xs font-medium text-[#888]">{shadow.label}</span>
+    <div className={cn('bg-white', className)}>
+      <div className="px-6 py-5 border-b border-gray-100">
+        <h2 className="text-lg font-bold text-black">Shadows</h2>
+      </div>
+      <div className="px-6 py-10 space-y-12">
+
+        {/* Standard */}
+        <div>
+          <h3 className="text-xs font-medium text-gray-300 uppercase tracking-widest mb-5">Standard</h3>
+          <div className="max-w-sm px-5 py-5 bg-white shadow-md border border-gray-100">
+            <div className={shadowStyle} />
+            <div className="text-sm font-medium text-black">shadow-md</div>
+            <code className="text-xs text-gray-300 mt-1 block">
+              0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)
+            </code>
+          </div>
+        </div>
+
+        {/* Custom Combinations */}
+        <div>
+          <h3 className="text-xs font-medium text-gray-300 uppercase tracking-widest mb-5">Custom</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {/* Inset shadow */}
+            <div className="px-5 py-5 bg-white border border-gray-100" style={{ boxShadow: 'inset 0 2px 8px 0 rgb(0 0 0 / 0.08)' }}>
+              <div className={shadowStyle} />
+              <div className="text-sm font-medium text-black">Inset</div>
+              <code className="text-xs text-gray-300 mt-1 block">
+                inset 0 2px 8px 0 rgb(0 0 0 / 0.08)
+              </code>
+              <p className="text-xs text-gray-400 mt-2">Inner depth for cards &amp; modals</p>
             </div>
-            <div className="px-4 pb-3">
-              <div className="text-xs font-medium text-[#e0e0e0] mb-0.5">{shadow.label}</div>
-              <code className="text-[9px] font-mono text-[#666] block truncate">{shadow.variable}</code>
+
+            {/* Layered onset shadow */}
+            <div className="px-5 py-5 bg-white border border-gray-100" style={{ boxShadow: '0 8px 32px -8px rgb(0 0 0 / 0.12), 0 0 0 1px rgb(0 0 0 / 0.02)' }}>
+              <div className={shadowStyle} />
+              <div className="text-sm font-medium text-black">Layered Onset</div>
+              <code className="text-xs text-gray-300 mt-1 block break-all">
+                0 8px 32px -8px rgb(0 0 0 / 0.12), 0 0 0 1px rgb(0 0 0 / 0.02)
+              </code>
+              <p className="text-xs text-gray-400 mt-2">Elevation with subtle border definition</p>
             </div>
           </div>
-        ))}
+        </div>
+
       </div>
     </div>
   );

@@ -1,71 +1,97 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Card, CardHeader } from '../../__components/atoms/Card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/presentation/__components/ui/card';
+import { Button } from '@/presentation/__components/ui/button';
 
 const meta = {
   title: 'Atoms/Card',
   component: Card,
-  parameters: {
-    layout: 'centered',
-    docs: {
-      description: {
-        component:
-          'Content container with optional header, body, and footer sections.',
-      },
-    },
-  },
+  parameters: { layout: 'centered' },
   tags: ['autodocs'],
-  argTypes: {
-    hoverable: { control: 'boolean' },
-    noPadding: { control: 'boolean' },
-  },
 } satisfies Meta<typeof Card>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {
-    children: 'This is a basic card with no header or footer.',
-    className: 'w-80',
-  },
+export const Simple: Story = {
+  render: () => (
+    <Card className="w-96">
+      <CardContent className="pt-6">
+        <p className="text-lg text-black">A simple card with clean content.</p>
+      </CardContent>
+    </Card>
+  ),
+};
+
+export const WithImage: Story = {
+  render: () => (
+    <Card className="w-96">
+      <img
+        src="https://placehold.co/600x340/7c3aed/white?text=100xSystems"
+        alt="Card"
+        className="w-full"
+      />
+      <CardContent className="pt-6">
+        <p className="text-lg text-black">Card with an image above the content.</p>
+      </CardContent>
+    </Card>
+  ),
 };
 
 export const WithHeader: Story = {
-  args: {
-    header: <CardHeader title="Getting Started" subtitle="Learn the basics" />,
-    children: 'Card content goes here. Build projects that matter.',
-    className: 'w-80',
-  },
+  render: () => (
+    <Card className="w-96">
+      <CardHeader>
+        <CardTitle>Getting Started</CardTitle>
+        <CardDescription>Learn the basics of the platform</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p className="text-base text-black leading-relaxed">
+          Start building projects that matter. This platform gives you everything you need to become a 100x engineer.
+        </p>
+      </CardContent>
+    </Card>
+  ),
 };
 
-export const WithHeaderAndFooter: Story = {
-  args: {
-    header: <CardHeader title="Java Foundations" subtitle="12 lessons" />,
-    children: 'Learn Java from scratch with hands-on projects.',
-    footer: <span className="text-xs text-[#76777d]">Last updated: Jan 2025</span>,
-    className: 'w-80',
-  },
-};
+export const WithFooter: Story = ({
+  render: () => (
+    <Card className="w-96">
+      <CardHeader>
+        <CardTitle>Java Foundations</CardTitle>
+        <CardDescription>12 modules · 48 lessons</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p className="text-base text-black leading-relaxed">
+          Learn Java from scratch with hands-on projects and real-world examples.
+        </p>
+      </CardContent>
+      <CardFooter>
+        <Button size="sm">Enroll Now</Button>
+      </CardFooter>
+    </Card>
+  ),
+});
 
-export const Hoverable: Story = {
-  args: {
-    hoverable: true,
-    header: <CardHeader title="Clickable Card" subtitle="Hover to see effect" />,
-    children: 'This card has a hover effect.',
-    className: 'w-80',
-  },
-};
-
-export const WithActions: Story = {
-  args: {
-    header: (
-      <CardHeader
-        title="Course Progress"
-        subtitle="75% complete"
-        actions={<span className="text-xs text-[#572EFF] font-medium">View</span>}
+export const WithImageAndContent: Story = {
+  render: () => (
+    <Card className="w-96">
+      <img
+        src="https://placehold.co/600x340/000000/white?text=System+Design"
+        alt="Course preview"
+        className="w-full"
       />
-    ),
-    children: 'Continue where you left off.',
-    className: 'w-80',
-  },
+      <CardHeader>
+        <CardTitle>System Design Fundamentals</CardTitle>
+        <CardDescription>12 modules · 48 lessons</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p className="text-base text-black leading-relaxed">
+          Master distributed systems, scalability patterns, and architecture decisions.
+        </p>
+      </CardContent>
+      <CardFooter>
+        <Button size="sm">Enroll Now →</Button>
+      </CardFooter>
+    </Card>
+  ),
 };
