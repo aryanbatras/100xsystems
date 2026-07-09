@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { TokenColors, TokenTypography, TokenRadius, TokenInteractive, TokenLayout, TokenShadows, TokenSpacing } from '../components.token';
+import { TokenColors, TokenTypography, TokenRadius, TokenInteractive, TokenLayout, TokenShadows, TokenSpacing, TokenIcon, TokenImage } from '../components.token';
 
 const meta = {
   title: 'Tokens',
@@ -17,3 +17,5 @@ export const Interactive: StoryObj = { render: () => <TokenInteractive /> };
 export const Layout: StoryObj = { render: () => <TokenLayout /> };
 export const Shadows: StoryObj = { render: () => <TokenShadows /> };
 export const Spacing: StoryObj = { render: () => <TokenSpacing /> };
+export const Icons: StoryObj = { render: () => <TokenIcon /> };
+export const Images: StoryObj = { render: () => <TokenImage /> };

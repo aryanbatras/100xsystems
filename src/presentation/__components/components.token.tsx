@@ -9,6 +9,7 @@
 'use client';
 
 import { cn } from '@/application/lib/utils';
+import { Icon, type IconName, Image, type ImageProps } from './components.atomic';
 
 // ─── TokenColors ────────────────────────────────────────────────────
 
@@ -250,6 +251,90 @@ export function TokenShadows({ className }: TokenShadowsProps) {
     </div>
   );
 }
+
+// ─── TokenIcon ─────────────────────────────────────────────────────
+// Displays all available icons in the design system for visual auditing.
+
+export interface TokenIconProps { className?: string; }
+
+const iconRows = [
+  { row: 'Navigation', names: ['chevron-right', 'chevron-down', 'chevron-left', 'arrow-left', 'arrow-right', 'arrow-up', 'arrow-down', 'menu', 'more-vertical'] },
+  { row: 'Actions', names: ['x', 'check', 'plus', 'minus', 'edit', 'trash', 'copy', 'share', 'download', 'upload'] },
+  { row: 'Media & Content', names: ['search', 'image', 'file', 'folder', 'star', 'heart', 'bookmark', 'external-link'] },
+  { row: 'Info & Status', names: ['info', 'alert-circle', 'clock', 'settings', 'mail', 'user', 'globe'] },
+];
+
+export function TokenIcon({ className }: TokenIconProps) {
+  return (
+    <div className={cn('bg-white', className)}>
+      <div className="px-6 py-5 border-b border-border">
+        <h2 className="text-lg font-bold text-fg">Icons</h2>
+        <p className="text-sm text-fg-secondary mt-1">Available icons via the <code className="text-xs bg-surface-secondary px-1.5 py-0.5">{`<Icon name="..." />`}</code> component.</p>
+      </div>
+      <div className="px-6 py-8 space-y-10">
+        {iconRows.map((group) => (
+          <div key={group.row}>
+            <h3 className="text-xs font-medium text-fg-muted uppercase tracking-widest mb-4">{group.row}</h3>
+            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3">
+              {group.names.map((name) => (
+                <div key={name} className="flex flex-col items-center gap-2 px-3 py-4 border border-border hover:border-accent/30 transition-colors">
+                  <Icon name={name as IconName} size={20} />
+                  <code className="text-[10px] text-fg-muted text-center leading-tight break-all">{name}</code>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+
+// ─── TokenImage ─────────────────────────────────────────────────────
+// Shows the Image component with different aspect ratio variants.
+
+export interface TokenImageProps { className?: string; }
+
+const aspectRatios: Array<{ label: string; value: ImageProps['aspectRatio']; desc: string }> = [
+  { label: 'Auto', value: 'auto', desc: 'Natural image dimensions' },
+  { label: '16:9', value: '16/9', desc: 'Widescreen video' },
+  { label: '4:3', value: '4/3', desc: 'Standard photo' },
+  { label: '1:1', value: '1/1', desc: 'Square / avatar' },
+  { label: '3:2', value: '3/2', desc: 'Classic photo' },
+  { label: '2:3', value: '2/3', desc: 'Portrait' },
+];
+
+export function TokenImage({ className }: TokenImageProps) {
+  return (
+    <div className={cn('bg-white', className)}>
+      <div className="px-6 py-5 border-b border-border">
+        <h2 className="text-lg font-bold text-fg">Images</h2>
+        <p className="text-sm text-fg-secondary mt-1">The <code className="text-xs bg-surface-secondary px-1.5 py-0.5">{`<Image />`}</code> component with aspect ratio variants.</p>
+      </div>
+      <div className="px-6 py-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+          {aspectRatios.map((ar) => (
+            <div key={ar.value} className="border border-border">
+              <Image
+                src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80"
+                alt={ar.label}
+                aspectRatio={ar.value}
+                objectFit="cover"
+              />
+              <div className="px-4 py-3">
+                <div className="text-sm font-medium text-fg">{ar.label}</div>
+                <div className="text-xs text-fg-secondary mt-0.5">{ar.desc}</div>
+                <code className="text-[10px] text-fg-muted mt-1 block">aspectRatio="{ar.value}"</code>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 // ─── TokenSpacing ───────────────────────────────────────────────────
 

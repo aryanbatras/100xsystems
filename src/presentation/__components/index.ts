@@ -7,12 +7,12 @@
  */
 
 // ─── Tokens ────────────────────────────────────────────────────────
-export { TokenColors, TokenTypography, TokenRadius, TokenInteractive, TokenLayout, TokenShadows, TokenSpacing } from './components.token';
-export type { TokenColorsProps, ColorToken, TokenTypographyProps, TokenRadiusProps, TokenInteractiveProps, TokenLayoutProps, TokenShadowsProps, TokenSpacingProps } from './components.token';
+export { TokenColors, TokenTypography, TokenRadius, TokenInteractive, TokenLayout, TokenShadows, TokenSpacing, TokenIcon, TokenImage } from './components.token';
+export type { TokenColorsProps, ColorToken, TokenTypographyProps, TokenRadiusProps, TokenInteractiveProps, TokenLayoutProps, TokenShadowsProps, TokenSpacingProps, TokenIconProps, TokenImageProps } from './components.token';
 
 // ─── Atoms ──────────────────────────────────────────────────────────
-export { Button, Input, Badge, Tag, Spinner, Card, CardHeader, Heading, Text, Divider, Select, Toggle, ProgressBar, Skeleton, SkeletonBlock, Modal, Avatar, RippleButton } from './components.atomic';
-export type { ButtonProps, ButtonVariant, ButtonSize, InputProps, InputVariant, BadgeProps, BadgeVariant, BadgeSize, TagProps, SpinnerProps, CardProps, CardHeaderProps, HeadingProps, TextProps, HeadingVariant, TextVariant, DividerProps, SelectProps, SelectOption, ToggleProps, ProgressBarProps, SkeletonProps, SkeletonBlockProps, ModalProps, AvatarProps, RippleButtonProps } from './components.atomic';
+export { Button, Input, Textarea, Badge, Tag, Spinner, Card, CardHeader, Heading, Text, Divider, Select, Toggle, ProgressBar, Skeleton, SkeletonBlock, Modal, Icon, Image } from './components.atomic';
+export type { ButtonProps, ButtonVariant, ButtonSize, InputProps, TextareaProps, BadgeProps, BadgeVariant, BadgeSize, TagProps, SpinnerProps, CardProps, CardHeaderProps, HeadingProps, TextProps, HeadingVariant, TextVariant, DividerProps, SelectProps, SelectOption, ToggleProps, ProgressBarProps, SkeletonProps, SkeletonBlockProps, ModalProps, IconProps, IconName, ImageProps } from './components.atomic';
 
 // ─── Composites (molecules + organisms) ────────────────────────────
 export { PageHeader, Breadcrumbs, Accordion, Alert, SearchInput, TabBar, Pagination, FilterBar, EmptyState, DataGrid, CodeBlock, Timeline, ArticleCard, DifficultyBadge, InfoRow, FeatureCard, StatCard, StreakCard, ComingSoonCard, ModuleCard, UserCard, MemberCard, GroupCard, RoadmapCard, SearchResults, FaqItem, ContactInfoItem, ProblemCard } from './components.composite';

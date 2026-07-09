@@ -10,7 +10,7 @@
 
 import { useState, type ReactNode } from 'react';
 import { cn } from '@/application/lib/utils';
-import { Tag, Avatar, Skeleton, ProgressBar } from './components.atomic';
+import { Tag, Skeleton, ProgressBar } from './components.atomic';
 
 // ─── PageHeader ─────────────────────────────────────────────────────
 
@@ -99,10 +99,10 @@ export interface SearchInputProps extends Omit<React.InputHTMLAttributes<HTMLInp
 export function SearchInput({ value, onChange, placeholder = 'Search...', showClear = true, onSearch, className, ...props }: SearchInputProps) {
   return (
     <div className={cn('relative', className)}>
-      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-fg-secondary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg></div>
+      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-fg-secondary"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg></div>
       <input type="text" value={value} onChange={(e) => onChange(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && onSearch?.(value)} placeholder={placeholder}
-        className={cn('w-full border border-border bg-white py-2 pl-10 pr-10 text-sm text-fg placeholder:text-fg-muted transition-all duration-150 focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 disabled:cursor-not-allowed disabled:bg-surface-secondary', className)} {...props} />
-      {showClear && value && <button type="button" onClick={() => onChange('')} className="absolute inset-y-0 right-0 flex items-center pr-3 text-fg-secondary hover:text-fg transition-colors" aria-label="Clear search">
+        className={cn('w-full bg-transparent border-0 border-b-2 border-border py-3 pl-8 pr-10 text-lg text-fg placeholder:text-fg-muted transition-all duration-200 focus:outline-none focus:ring-0 focus:border-accent disabled:cursor-not-allowed disabled:opacity-40', className)} {...props} />
+      {showClear && value && <button type="button" onClick={() => onChange('')} className="absolute inset-y-0 right-0 flex items-center text-fg-secondary hover:text-fg transition-colors" aria-label="Clear search">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
       </button>}
     </div>
@@ -326,7 +326,7 @@ export function ModuleCard({ title, description, progress, completedLessons, tot
   return (<div className={cn('border border-border bg-white p-5 transition-all duration-200 hover:border-border-hover hover:shadow-sm', onClick && 'cursor-pointer', className)} onClick={onClick} role={onClick ? 'button' : undefined} tabIndex={onClick ? 0 : undefined}>
     <div className="flex items-start justify-between gap-3 mb-2"><h3 className="text-sm font-semibold text-fg">{title}</h3><DifficultyBadge level={difficulty} size="sm" /></div>
     <p className="text-xs text-fg-secondary mb-4 line-clamp-2">{description}</p>
-    <div className="mb-3"><div className="flex justify-between text-xs text-fg-secondary mb-1.5"><span>{completedLessons}/{totalLessons} lessons</span><span>{progress}%</span></div><ProgressBar value={progress} size="sm" variant={status === 'completed' ? 'success' : 'brand'} /></div>
+    <div className="mb-3"><div className="flex justify-between text-xs text-fg-secondary mb-1.5"><span>{completedLessons}/{totalLessons} lessons</span><span>{progress}%</span></div><ProgressBar value={progress} size="sm" /></div>
     <div className="flex items-center justify-between"><span className="text-[10px] text-fg-muted">⏱️ {estimatedTime}</span><span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium', statusStyles[status])}>{status.replace('-', ' ')}</span></div>
   </div>);
 }
@@ -338,7 +338,7 @@ export interface UserCardProps { avatarSrc?: string; name: string; username?: st
 export function UserCard({ avatarSrc, name, username, bio, tags, meta, variant = 'default', onClick, className }: UserCardProps) {
   const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   return (<div className={cn('flex items-start gap-3 transition-colors duration-150', onClick && 'cursor-pointer hover:bg-surface-light', variant === 'compact' ? 'p-2' : 'p-4', className)} onClick={onClick} role={onClick ? 'button' : undefined} tabIndex={onClick ? 0 : undefined}>
-    <Avatar src={avatarSrc} initials={initials} size={variant === 'compact' ? 'sm' : 'default'} />
+    <div className={cn('shrink-0 bg-accent-bg text-accent font-medium flex items-center justify-center', variant === 'compact' ? 'h-8 w-8 text-xs' : 'h-10 w-10 text-sm')}>{initials}</div>
     <div className="flex-1 min-w-0"><div className="flex items-center gap-2"><span className="text-sm font-semibold text-fg truncate">{name}</span>{username && <span className="text-xs text-fg-secondary truncate">@{username}</span>}</div>{variant === 'detailed' && bio && <p className="mt-0.5 text-xs text-fg-secondary line-clamp-2">{bio}</p>}{tags && tags.length > 0 && <div className="mt-1.5 flex flex-wrap gap-1">{tags.slice(0, 3).map((tag) => <Tag key={tag} variant="brand" size="sm">{tag}</Tag>)}</div>}{meta && <p className="mt-1 text-[10px] text-fg-muted">{meta}</p>}</div>
   </div>);
 }
@@ -351,7 +351,7 @@ export interface MemberCardProps { avatarUrl?: string; name: string; username?: 
 export function MemberCard({ avatarUrl, name, username, role, bio, socialLinks, joinedDate, tags, className }: MemberCardProps) {
   const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   return (<div className={cn('border border-border bg-white p-4', className)}><div className="flex items-start gap-3">
-    <Avatar src={avatarUrl} initials={initials} />
+    <div className="shrink-0 h-10 w-10 bg-accent-bg text-accent text-sm font-medium flex items-center justify-center">{initials}</div>
     <div className="flex-1 min-w-0"><div className="flex items-center gap-2"><h4 className="text-sm font-semibold text-fg">{name}</h4>{role && <span className="text-[10px] font-medium uppercase tracking-wider text-accent">{role}</span>}</div>{username && <p className="text-xs text-fg-secondary">@{username}</p>}{bio && <p className="mt-1 text-xs text-fg-secondary leading-relaxed">{bio}</p>}{tags && tags.length > 0 && <div className="mt-2 flex flex-wrap gap-1">{tags.slice(0, 3).map((tag) => <Tag key={tag} variant="brand" size="sm">{tag}</Tag>)}</div>}{socialLinks && socialLinks.length > 0 && <div className="mt-2 flex gap-3">{socialLinks.map((link) => <a key={link.label} href={link.url} target="_blank" rel="noopener noreferrer" className="text-[10px] font-medium text-fg-secondary hover:text-accent transition-colors">{link.label}</a>)}</div>}{joinedDate && <p className="mt-1 text-[10px] text-fg-muted">Joined {new Date(joinedDate).toLocaleDateString()}</p>}</div>
   </div></div>);
 }
@@ -363,7 +363,7 @@ export interface GroupCardProps { name: string; description?: string; memberCoun
 export function GroupCard({ name, description, memberCount, maxMembers, avatarUrl, tags, isPrivate, welcomeMessage, createdAt, roadmapSlug, membership = 'none', onJoin, onLeave, onEdit, onClick, className }: GroupCardProps) {
   const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   return (<div className={cn('border border-border bg-white p-5 transition-all duration-200 hover:border-border-hover hover:shadow-sm', onClick && 'cursor-pointer', className)} onClick={onClick} role={onClick ? 'button' : undefined} tabIndex={onClick ? 0 : undefined}>
-    <div className="flex items-start gap-3 mb-3"><Avatar src={avatarUrl} initials={initials} /><div className="flex-1 min-w-0"><h3 className="text-sm font-semibold text-fg">{name}</h3>{description && <p className="text-xs text-fg-secondary mt-0.5 line-clamp-2">{description}</p>}</div></div>
+    <div className="flex items-start gap-3 mb-3"><div className="shrink-0 h-10 w-10 bg-accent-bg text-accent text-sm font-medium flex items-center justify-center">{initials}</div><div className="flex-1 min-w-0"><h3 className="text-sm font-semibold text-fg">{name}</h3>{description && <p className="text-xs text-fg-secondary mt-0.5 line-clamp-2">{description}</p>}</div></div>
     <div className="flex flex-wrap items-center gap-3 mb-3"><span className="text-xs text-fg-secondary">{memberCount} {memberCount === 1 ? 'member' : 'members'}{maxMembers && ` / ${maxMembers} max`}</span>{isPrivate && <span className="text-[10px] font-medium uppercase tracking-wider text-amber-500">Private</span>}{roadmapSlug && <span className="text-[10px] text-fg-secondary">📚 {roadmapSlug}</span>}{tags && tags.length > 0 && <div className="flex flex-wrap gap-1">{tags.slice(0, 3).map((tag) => <Tag key={tag} variant="brand" size="sm">{tag}</Tag>)}</div>}</div>
     {welcomeMessage && <div className="mb-3 p-3 bg-surface-light text-xs text-fg-secondary italic border border-border">&ldquo;{welcomeMessage}&rdquo;</div>}
     <div className="flex items-center justify-between pt-3 border-t border-border"><div className="flex gap-2">{membership === 'none' && onJoin && <button type="button" onClick={(e) => { e.stopPropagation(); onJoin(); }} className="bg-accent px-4 py-1.5 text-xs text-white font-medium hover:bg-accent-hover transition-colors">Join</button>}{membership === 'member' && onLeave && <button type="button" onClick={(e) => { e.stopPropagation(); onLeave(); }} className="border border-border px-4 py-1.5 text-xs text-fg-secondary font-medium hover:bg-surface-secondary transition-colors">Leave</button>}{membership === 'admin' && onEdit && <button type="button" onClick={(e) => { e.stopPropagation(); onEdit(); }} className="border border-border px-4 py-1.5 text-xs text-fg-secondary font-medium hover:bg-surface-secondary transition-colors">Edit</button>}</div>{createdAt && <span className="text-[10px] text-fg-muted">Created {new Date(createdAt).toLocaleDateString()}</span>}</div>

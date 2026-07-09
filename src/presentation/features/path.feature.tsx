@@ -9,6 +9,7 @@ import pathExplorerStyles from '../_styles/css/path-pathexplorer.module.css';
 import pathLayoutStyles from '../_styles/css/path-pathlayout.module.css';
 import pathTreeStyles from '../_styles/css/path-pathtree.module.css';
 import tableOfContentsStyles from '../_styles/css/path-tableofcontents.module.css';
+import { cn } from '@/application/lib/utils';
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
 import { FiChevronRight, FiFolder } from 'react-icons/fi';
@@ -44,13 +45,13 @@ interface ContentLayoutProps {
 }
 
 export const ContentLayout: React.FC<ContentLayoutProps> = ({ node }) => {
-  // const { setTocItems, setActiveSection, setIsGlobalTocVisible, tocItems, activeSection } = useTableOfContents();
   const contentRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [tocItems, setTocItems] = useState<TocItem[]>([]);
+  const [activeSection, setActiveSection] = useState<string>('');
 
+  // Generate TOC from markdown headings
   useEffect(() => {
     const generateToc = () => {
-      // Advanced markdown parser that ignores code blocks
       const markdownLines = node.content.split('\n');
       const headings: Array<{level: number, title: string, line: number}> = [];
       
@@ -60,7 +61,6 @@ export const ContentLayout: React.FC<ContentLayoutProps> = ({ node }) => {
       markdownLines.forEach((line, index) => {
         const trimmedLine = line.trim();
         
-        // Track code blocks
         if (trimmedLine.startsWith('```') || trimmedLine.startsWith('~~~')) {
           if (!inCodeBlock) {
             inCodeBlock = true;
@@ -72,12 +72,8 @@ export const ContentLayout: React.FC<ContentLayoutProps> = ({ node }) => {
           return;
         }
         
-        // Skip processing if inside code block
-        if (inCodeBlock) {
-          return;
-        }
+        if (inCodeBlock) return;
         
-        // Only process headings if not in code block
         const match = line.match(/^(#{1,6})\s+(.+)$/);
         if (match) {
           const level = match[1].length;
@@ -89,8 +85,7 @@ export const ContentLayout: React.FC<ContentLayoutProps> = ({ node }) => {
       const items: TocItem[] = [];
       const stack: TocItem[] = [];
 
-      headings.forEach((heading, index) => {
-        // Generate consistent ID that matches heading ID generation
+      headings.forEach((heading) => {
         const baseId = heading.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-');
         const id = `heading-${heading.level}-${baseId}`;
         
@@ -114,64 +109,39 @@ export const ContentLayout: React.FC<ContentLayoutProps> = ({ node }) => {
         stack.push(item);
       });
 
-      // setTocItems(items);
+      setTocItems(items);
     };
 
     generateToc();
   }, [node.content]);
 
-  // Mobile detection and global TOC visibility
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 1024);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => {
-      window.removeEventListener('resize', checkMobile);
-    };
-  }, []);
-
-  // Show global TOC when TOC items are available
-  // useEffect(() => {
-  //   if (tocItems.length > 0) {
-  //     setIsGlobalTocVisible(true);
-  //   } else {
-  //     setIsGlobalTocVisible(false);
-  //   }
-  // }, [tocItems, setIsGlobalTocVisible]);
-
+  // Scroll tracking — highlight active section in outline — highlight active section in outline
   useEffect(() => {
     const handleScroll = () => {
       if (!contentRef.current) return;
 
-      const headings = contentRef.current.querySelectorAll('h1, h2, h3');
-      const scrollPosition = window.scrollY + 120; // Adjusted offset for better tracking
+      const headings = contentRef.current.querySelectorAll('h1, h2, h3, h4, h5, h6');
+      const scrollPosition = window.scrollY + 120;
 
       let currentHeading = '';
       let closestDistance = Infinity;
 
       headings.forEach((heading) => {
         const element = heading as HTMLElement;
-        const rect = element.getBoundingClientRect();
-        const elementTop = rect.top + window.scrollY;
+        const elementTop = element.getBoundingClientRect().top + window.scrollY;
         const distance = Math.abs(elementTop - scrollPosition);
         
-        // Only consider headings that are actually in view or above
         if (elementTop <= scrollPosition + 200 && distance < closestDistance) {
           closestDistance = distance;
           currentHeading = element.id;
         }
       });
 
-      // If no heading found, use the first one
       if (!currentHeading && headings.length > 0) {
         currentHeading = (headings[0] as HTMLElement).id;
       }
 
-      // setActiveSection(currentHeading);
+      setActiveSection(currentHeading);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -183,15 +153,12 @@ export const ContentLayout: React.FC<ContentLayoutProps> = ({ node }) => {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      const offset = -900; // Reduced offset for better positioning
+      const offset = 80;
       const elementPosition = element.offsetTop - offset;
       window.scrollTo({
         top: elementPosition,
         behavior: 'smooth'
       });
-      
-      // Let scroll tracking handle active section update naturally
-      // when user reaches the target section
     }
   };
 
@@ -208,46 +175,47 @@ export const ContentLayout: React.FC<ContentLayoutProps> = ({ node }) => {
   };
 
   return (
-    <div className={pathLayoutStyles.contentLayout}>
-      <div className={pathLayoutStyles.breadcrumb}>
-        <Link href="/path" className={pathLayoutStyles.breadcrumbItem}>
-          Path
-        </Link>
-        {node.path && node.path.split('/').map((segment, index, array) => {
-          const fullPath = array.slice(0, index + 1).join('/');
-          const isLast = index === array.length - 1;
+    <div className={cn(pathLayoutStyles.contentLayout, 'max-w-[1400px] p-0')}>
+      {/* Padding wrapper for breadcrumb + mobile outline area */}
+      <div className="px-8 pt-16">
+        {/* Breadcrumb */}
+        <div className={pathLayoutStyles.breadcrumb}>
+          <Link href="/path" className={pathLayoutStyles.breadcrumbItem}>
+            Path
+          </Link>
+          {node.path && node.path.split('/').map((segment, index, array) => {
+            const fullPath = array.slice(0, index + 1).join('/');
+            const isLast = index === array.length - 1;
           
-          return (
-            <React.Fragment key={segment}>
-              <span className={pathLayoutStyles.breadcrumbSeparator}>/</span>
-              <Link 
-                href={getBreadcrumbPath(fullPath)}
-                className={`${pathLayoutStyles.breadcrumbItem} ${isLast ? pathLayoutStyles.active : ''}`}
-              >
-                {segment}
-              </Link>
-            </React.Fragment>
-          );
-        })}
+            return (
+              <React.Fragment key={segment}>
+                <span className={pathLayoutStyles.breadcrumbSeparator}>/</span>
+                <Link 
+                  href={getBreadcrumbPath(fullPath)}
+                  className={`${pathLayoutStyles.breadcrumbItem} ${isLast ? pathLayoutStyles.active : ''}`}
+                >
+                  {segment}
+                </Link>
+              </React.Fragment>
+            );
+          })}
+        </div>
+
+        {/* Mobile Outline — full width, all items visible, no scroll */}
+        {tocItems.length > 0 && (
+          <div className="block md:hidden border-b border-border mb-8">
+            <Outline
+              tocItems={tocItems}
+              activeSection={activeSection}
+              onSectionClick={scrollToSection}
+            />
+          </div>
+        )}
       </div>
 
-      {/* Mobile TOC - appears before article content */}
-      {/* <TableOfContents 
-        tocItems={tocItems}
-        activeSection={activeSection}
-        onSectionClick={scrollToSection}
-        isMobile={isMobile}
-      /> */}
-
-      <div className={pathLayoutStyles.layoutContainer}>
-        <main className={pathLayoutStyles.mainContent} ref={contentRef}>
-          {/* <header className={pathLayoutStyles.contentHeader}>
-            <h1 className={pathLayoutStyles.contentTitle}>{node.title}</h1>
-            {node.description && (
-              <p className={pathLayoutStyles.contentDescription}>{node.description}</p>
-            )}
-          </header> */}
-
+      {/* Desktop: flex row | Mobile: stacked */}
+      <div className="md:flex">
+        <main className="flex-1 min-w-0 px-8 pb-16" ref={contentRef}>
           <article className={pathLayoutStyles.article}>
             <ReactMarkdown
               components={{
@@ -299,11 +267,89 @@ export const ContentLayout: React.FC<ContentLayoutProps> = ({ node }) => {
           </article>
         </main>
 
-        <aside className={pathLayoutStyles.sidebar}>
-          {/* Desktop TOC removed - global TOC handles it */}
-        </aside>
+        {/* Desktop Outline Sidebar — 30vw, sticky, full height, scrollable */}
+        {tocItems.length > 0 && (
+          <aside className="hidden md:block md:w-[30vw] md:max-w-[320px] lg:max-w-[360px] h-screen sticky top-0 overflow-y-auto border-l border-border bg-white shrink-0">
+            <Outline
+              tocItems={tocItems}
+              activeSection={activeSection}
+              onSectionClick={scrollToSection}
+            />
+          </aside>
+        )}
       </div>
     </div>
+  );
+};
+
+
+// ============================================================
+// Source: Outline.tsx
+interface OutlineProps {
+  tocItems: TocItem[];
+  activeSection: string;
+  onSectionClick: (id: string) => void;
+  className?: string;
+}
+
+export const Outline: React.FC<OutlineProps> = ({
+  tocItems,
+  activeSection,
+  onSectionClick,
+  className,
+}) => {
+  if (tocItems.length === 0) return null;
+
+  const renderItem = (item: TocItem, depth: number = 0) => {
+    const isActive = activeSection === item.id;
+    return (
+      <div key={item.id}>
+        <button
+          type="button"
+          onClick={() => onSectionClick(item.id)}
+          className={cn(
+            'w-full text-left transition-all duration-150 relative',
+            'text-sm leading-relaxed',
+            isActive
+              ? 'text-accent font-medium bg-accent-bg'
+              : 'text-fg-secondary hover:text-fg hover:bg-surface-secondary',
+          )}
+          style={{
+            paddingTop: '10px',
+            paddingBottom: '10px',
+            paddingRight: '16px',
+            paddingLeft: `${depth * 16 + 20}px`,
+          }}
+        >
+          {/* Active indicator bar */}
+          <span
+            className={cn(
+              'absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-full transition-all duration-150',
+              isActive ? 'bg-accent opacity-100' : 'bg-transparent',
+            )}
+          />
+          {item.title}
+        </button>
+        {item.children.length > 0 && (
+          <div>
+            {item.children.map((child) => renderItem(child, depth + 1))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <nav className={cn('flex flex-col', className)}>
+      <div className="px-5 py-4 border-b border-border">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">
+          On this page
+        </h3>
+      </div>
+      <div className="flex-1 py-2 overflow-y-auto">
+        {tocItems.map((item) => renderItem(item))}
+      </div>
+    </nav>
   );
 };
 

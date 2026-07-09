@@ -40,7 +40,7 @@ export function ProfilePage() {
     <div className="p-6 max-w-4xl mx-auto">
       <PageHeader title="Profile" subtitle="Manage your personal information"
         actions={
-          <Button variant={isEditing ? 'secondary' : 'primary'} onClick={() => setIsEditing(!isEditing)}>
+          <Button variant={isEditing ? 'ghost' : 'primary'} onClick={() => setIsEditing(!isEditing)}>
             {isEditing ? 'Cancel' : 'Edit Profile'}
           </Button>
         }

@@ -8,30 +8,277 @@
 
 'use client';
 
-import { forwardRef, useState, useEffect, useCallback, useRef, type ButtonHTMLAttributes, type InputHTMLAttributes, type HTMLAttributes, type ReactNode, type ElementType, type CSSProperties } from 'react';
+import { forwardRef, useState, useEffect, useRef, createElement, type ButtonHTMLAttributes, type InputHTMLAttributes, type TextareaHTMLAttributes, type HTMLAttributes, type ReactNode, type ElementType } from 'react';
 import { cn } from '@/application/lib/utils';
+
+// M3E Web Components (Material 3 Expressive) — registered via side-effect imports
+import '@m3e/web/loading-indicator';
+import '@m3e/web/progress-indicator';
+
+// React wrappers for M3E custom elements (avoids JSX intrinsic type issues)
+function M3ELoading(props: Record<string, unknown>) { return createElement('m3e-loading-indicator', props); }
+function M3ELinearProgress(props: Record<string, unknown>) { return createElement('m3e-linear-progress-indicator', props); }
+
+// ─── Icon ─────────────────────────────────────────────────────────
+// Atomic SVG icon component — renders named icons as inline SVGs.
+
+const icons = {
+  'chevron-right': <polyline points="9 18 15 12 9 6" />,
+  'chevron-down': <polyline points="6 9 12 15 18 9" />,
+  'chevron-left': <polyline points="15 18 9 12 15 6" />,
+  'x': <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>,
+  'search': <><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></>,
+  'check': <polyline points="20 6 9 17 4 12" />,
+  'plus': <><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></>,
+  'minus': <line x1="5" y1="12" x2="19" y2="12" />,
+  'menu': <><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></>,
+  'arrow-left': <><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></>,
+  'arrow-right': <><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></>,
+  'arrow-up': <><line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" /></>,
+  'arrow-down': <><line x1="12" y1="5" x2="12" y2="19" /><polyline points="19 12 12 19 5 12" /></>,
+  'external-link': <><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></>,
+  'info': <><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></>,
+  'alert-circle': <><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></>,
+  'user': <><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></>,
+  'star': <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />,
+  'folder': <><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" /></>,
+  'file': <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></>,
+  'clock': <><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></>,
+  'settings': <><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></>,
+  'edit': <><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" /></>,
+  'trash': <><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></>,
+  'heart': <><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></>,
+  'mail': <><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></>,
+  'globe': <><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></>,
+  'share': <><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" y1="2" x2="12" y2="15" /></>,
+  'download': <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></>,
+  'upload': <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></>,
+  'copy': <><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></>,
+  'image': <><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></>,
+  'more-vertical': <><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></>,
+  'bookmark': <><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></>,
+} as const;
+
+export type IconName = keyof typeof icons;
+
+export interface IconProps {
+  name: IconName;
+  size?: number;
+  className?: string;
+  strokeWidth?: number;
+}
+
+export function Icon({ name, size = 16, className, strokeWidth = 2 }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={cn('shrink-0', className)}
+      aria-hidden="true"
+    >
+      {icons[name]}
+    </svg>
+  );
+}
+
+
+// ─── Image ─────────────────────────────────────────────────────────
+// Atomic image component with loading skeleton, error fallback, and aspect ratio support.
+
+export interface ImageProps {
+  src: string;
+  alt: string;
+  aspectRatio?: 'auto' | '16/9' | '4/3' | '1/1' | '3/2' | '2/3';
+  objectFit?: 'cover' | 'contain' | 'fill';
+  className?: string;
+  fallback?: ReactNode;
+}
+
+const aspectRatioClasses: Record<string, string> = {
+  '16/9': 'aspect-[16/9]',
+  '4/3': 'aspect-[4/3]',
+  '1/1': 'aspect-square',
+  '3/2': 'aspect-[3/2]',
+  '2/3': 'aspect-[2/3]',
+  'auto': '',
+};
+
+export function Image({ src, alt, aspectRatio = 'auto', objectFit = 'cover', className, fallback }: ImageProps) {
+  const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
+
+  return (
+    <div className={cn('relative overflow-hidden bg-surface-secondary', aspectRatioClasses[aspectRatio], className)}>
+      {status === 'loading' && (
+        <div className="absolute inset-0 animate-pulse bg-border" />
+      )}
+      {status === 'error' ? (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 text-fg-muted p-4">
+          {fallback ?? (
+            <>
+              <Icon name="image" size={20} />
+              <span className="text-[10px] font-medium uppercase tracking-wider text-center">No image</span>
+            </>
+          )}
+        </div>
+      ) : (
+        <img
+          src={src}
+          alt={alt}
+          className={cn(
+            'w-full h-full transition-opacity duration-300',
+            status === 'loading' ? 'opacity-0' : 'opacity-100',
+            objectFit === 'cover' && 'object-cover',
+            objectFit === 'contain' && 'object-contain',
+            objectFit === 'fill' && 'object-fill',
+          )}
+          onLoad={() => setStatus('loaded')}
+          onError={() => setStatus('error')}
+          loading="lazy"
+        />
+      )}
+    </div>
+  );
+}
+
 
 // ─── Button ────────────────────────────────────────────────────────
 
+interface Ripple { x: number; y: number; size: number; key: number; }
+
 const buttonVariants = {
-  primary: 'bg-accent text-white hover:bg-accent-hover active:bg-accent-active shadow-sm hover:shadow-md',
-  secondary: 'bg-white text-fg-tertiary border border-border hover:bg-surface-secondary active:bg-border hover:border-border-hover',
-  ghost: 'text-fg-secondary hover:text-fg-tertiary hover:bg-surface-secondary active:bg-border',
-  destructive: 'bg-destructive text-white hover:bg-red-600 active:bg-red-700 shadow-sm hover:shadow-md',
-  outline: 'border border-white/20 text-white/80 hover:border-white/40 hover:text-white bg-transparent',
-  link: 'text-accent underline-offset-4 hover:underline hover:text-accent p-0',
+  primary: [
+    'bg-accent text-white',
+    'hover:bg-accent-hover active:bg-accent-active',
+    'shadow-sm hover:shadow-md active:shadow-none',
+    'transition-all duration-200 ease-out',
+  ].join(' '),
+  ghost: [
+    'relative bg-transparent',
+    'text-fg-secondary hover:text-fg',
+    'cursor-pointer',
+    // Yellow strip on hover
+    'after:absolute after:bottom-0 after:left-0',
+    'after:h-[3px] after:w-full after:bg-accent-yellow',
+    'after:origin-left after:scale-x-0 hover:after:scale-x-100',
+    'after:transition-transform after:duration-300 after:ease-out',
+    'transition-colors duration-200',
+  ].join(' '),
+  ripple: [
+    'bg-accent-yellow text-black',
+    'hover:bg-yellow-400 active:bg-yellow-500',
+    'shadow-sm hover:shadow-md active:shadow-none',
+    'overflow-hidden relative',
+    'transition-all duration-200 ease-out',
+  ].join(' '),
 } as const;
-const buttonSizes = { sm: 'h-8 px-3 text-xs gap-1.5', default: 'h-10 px-5 text-sm gap-2', lg: 'h-12 px-7 text-base gap-2.5', icon: 'h-10 w-10', 'icon-sm': 'h-8 w-8' } as const;
+
+const buttonSizes = {
+  sm: 'px-5 py-2 text-xs gap-1.5',
+  default: 'px-6 py-3 text-sm gap-2',
+  lg: 'px-8 py-4 text-base gap-2.5',
+} as const;
 
 export type ButtonVariant = keyof typeof buttonVariants;
 export type ButtonSize = keyof typeof buttonSizes;
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> { variant?: ButtonVariant; size?: ButtonSize; loading?: boolean; asChild?: boolean; }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant = 'primary', size = 'default', loading, disabled, children, ...props }, ref) => {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  loading?: boolean;
+  icon?: ReactNode;
+  iconPosition?: 'left' | 'right';
+}
+
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant = 'primary', size = 'default', loading, disabled, icon, iconPosition = 'left', children, onClick, ...props }, ref) => {
+  const [ripples, setRipples] = useState<Ripple[]>([]);
+  const isRipple = variant === 'ripple';
+  const btnDisabled = disabled || loading;
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (isRipple && !btnDisabled) {
+      const button = event.currentTarget;
+      const rect = button.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = event.clientX - rect.left - size / 2;
+      const y = event.clientY - rect.top - size / 2;
+      setRipples((prev) => [...prev, { x, y, size, key: Date.now() }]);
+    }
+    onClick?.(event);
+  };
+
+  useEffect(() => {
+    if (ripples.length === 0) return;
+    const last = ripples[ripples.length - 1];
+    const t = setTimeout(() => setRipples((prev) => prev.filter((r) => r.key !== last.key)), 600);
+    return () => clearTimeout(t);
+  }, [ripples]);
+
+  const spinner = (
+    <span className="inline-flex shrink-0" style={{ width: 18, height: 18 }}>
+      <M3ELoading
+        variant="contained"
+        aria-label="Loading"
+        style={{
+          width: '100%',
+          height: '100%',
+          '--m3e-loading-indicator-active-indicator-color': 'var(--accent)',
+          '--m3e-loading-indicator-track-color': 'var(--accent-bg)',
+        }}
+      />
+    </span>
+  );
+
+  const content = (
+    <span className="inline-flex items-center justify-center gap-2">
+      {loading && spinner}
+      {icon && iconPosition === 'left' && !loading && <span className="shrink-0">{icon}</span>}
+      {children && <span>{children}</span>}
+      {icon && iconPosition === 'right' && !loading && <span className="shrink-0">{icon}</span>}
+    </span>
+  );
+
   return (
-    <button ref={ref} className={cn('inline-flex items-center justify-center whitespace-nowrap font-medium transition-all duration-150 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none', buttonVariants[variant], buttonSizes[size], className)}
-      disabled={disabled || loading} {...props}>
-      {loading ? <><span className={`inline-block animate-spin rounded-full border-2 ${size === 'sm' ? 'h-3 w-3 border-t-accent' : 'h-4 w-4 border-t-white'} border-white/20`} /><span>{children}</span></> : children}
+    <button
+      ref={ref}
+      className={cn(
+        'inline-flex items-center justify-center whitespace-nowrap font-semibold select-none',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2',
+        'disabled:pointer-events-none disabled:opacity-50',
+        buttonVariants[variant],
+        buttonSizes[size],
+        isRipple && 'overflow-hidden',
+        className
+      )}
+      disabled={btnDisabled}
+      onClick={handleClick}
+      {...props}
+    >
+      {content}
+      {isRipple && ripples.length > 0 && (
+        <span className="pointer-events-none absolute inset-0" aria-hidden="true">
+          {ripples.map((ripple) => (
+            <span
+              key={ripple.key}
+              className="absolute rounded-full"
+              style={{
+                width: `${ripple.size}px`,
+                height: `${ripple.size}px`,
+                top: `${ripple.y}px`,
+                left: `${ripple.x}px`,
+                backgroundColor: 'rgba(0,0,0,0.12)',
+                animation: 'rippling 600ms ease-out',
+                transform: 'scale(0)',
+              } as React.CSSProperties}
+            />
+          ))}
+        </span>
+      )}
     </button>
   );
 });
@@ -39,79 +286,274 @@ Button.displayName = 'Button';
 
 // ─── Input ─────────────────────────────────────────────────────────
 
-const inputVariants = { default: 'border-border focus:border-accent focus:ring-accent/20', error: 'border-red-500 focus:border-red-500 focus:ring-red-500/20', success: 'border-green-500 focus:border-green-500 focus:ring-green-500/20' } as const;
-export type InputVariant = keyof typeof inputVariants;
-export interface InputProps extends InputHTMLAttributes<HTMLInputElement> { label?: string; errorMessage?: string; successMessage?: string; variant?: InputVariant; leftIcon?: ReactNode; rightIcon?: ReactNode; helperText?: string; fullWidth?: boolean; }
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  errorMessage?: string;
+  helperText?: string;
+  leftIcon?: ReactNode;
+  rightIcon?: ReactNode;
+  fullWidth?: boolean;
+}
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(({ className, label, errorMessage, successMessage, variant = 'default', leftIcon, rightIcon, helperText, fullWidth = true, id, ...props }, ref) => {
+export const Input = forwardRef<HTMLInputElement, InputProps>(({ className, label, errorMessage, helperText, leftIcon, rightIcon, fullWidth = true, id, ...props }, ref) => {
   const inputId = id || `input-${label?.toLowerCase().replace(/\s+/g, '-')}`;
   const hasError = !!errorMessage;
-  const hasSuccess = !!successMessage;
-  const currentVariant = hasError ? 'error' : hasSuccess ? 'success' : variant;
+
   return (
-    <div className={cn('flex flex-col gap-1', fullWidth && 'w-full')}>
-      {label && <label htmlFor={inputId} className="text-[10px] font-semibold uppercase tracking-[0.6px] text-fg-secondary">{label}</label>}
+    <div className={cn('flex flex-col gap-2', fullWidth && 'w-full')}>
+      {label && (
+        <label htmlFor={inputId} className="text-sm font-semibold text-fg-secondary">
+          {label}
+        </label>
+      )}
       <div className="relative">
-        {leftIcon && <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-fg-secondary">{leftIcon}</div>}
-        <input ref={ref} id={inputId} className={cn('w-full border px-3 py-2 text-sm text-fg placeholder:text-fg-muted bg-white transition-all duration-150 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:bg-surface-secondary disabled:text-fg-muted read-only:cursor-default read-only:bg-surface-light', inputVariants[currentVariant], leftIcon && 'pl-10', rightIcon && 'pr-10', className)}
-          aria-invalid={hasError} {...props} />
-        {rightIcon && <div className="absolute inset-y-0 right-0 flex items-center pr-3 text-fg-secondary">{rightIcon}</div>}
+        <input
+          ref={ref}
+          id={inputId}
+          className={cn(
+            'w-full bg-transparent border-0 border-b-2 py-3 pr-0',
+            'text-lg text-fg placeholder:text-fg-muted',
+            'transition-all duration-200 ease-out',
+            'focus:outline-none focus:ring-0',
+            'disabled:cursor-not-allowed disabled:opacity-40',
+            'read-only:cursor-default',
+            hasError
+              ? 'border-red-500 focus:border-red-500'
+              : 'border-border focus:border-accent',
+            leftIcon && 'pl-8',
+            rightIcon && 'pr-8',
+            className
+          )}
+          aria-invalid={hasError}
+          {...props}
+        />
+        {leftIcon && (
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-fg-secondary">
+            {leftIcon}
+          </div>
+        )}
+        {rightIcon && (
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center text-fg-secondary">
+            {rightIcon}
+          </div>
+        )}
       </div>
-      {hasError && <p className="text-xs text-red-500" role="alert">{errorMessage}</p>}
-      {hasSuccess && !hasError && <p className="text-xs text-green-600">{successMessage}</p>}
-      {helperText && !hasError && <p className="text-xs text-fg-secondary">{helperText}</p>}
+      {hasError && (
+        <p className="text-xs text-red-500 leading-relaxed" role="alert">{errorMessage}</p>
+      )}
+      {helperText && !hasError && (
+        <p className="text-xs text-fg-secondary leading-relaxed">{helperText}</p>
+      )}
     </div>
   );
 });
 Input.displayName = 'Input';
 
+// ─── Textarea ───────────────────────────────────────────────────────
+
+export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  label?: string;
+  errorMessage?: string;
+  helperText?: string;
+  fullWidth?: boolean;
+}
+
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(({ className, label, errorMessage, helperText, fullWidth = true, id, rows = 4, ...props }, ref) => {
+  const textareaId = id || `textarea-${label?.toLowerCase().replace(/\s+/g, '-')}`;
+  const hasError = !!errorMessage;
+
+  return (
+    <div className={cn('flex flex-col gap-2', fullWidth && 'w-full')}>
+      {label && (
+        <label htmlFor={textareaId} className="text-sm font-semibold text-fg-secondary">
+          {label}
+        </label>
+      )}
+      <div className="relative">
+        <textarea
+          ref={ref}
+          id={textareaId}
+          rows={rows}
+          className={cn(
+            'w-full bg-transparent border-0 border-b-2 py-3 pr-0 resize-none',
+            'text-lg text-fg placeholder:text-fg-muted',
+            'transition-all duration-200 ease-out',
+            'focus:outline-none focus:ring-0',
+            'disabled:cursor-not-allowed disabled:opacity-40',
+            hasError
+              ? 'border-red-500 focus:border-red-500'
+              : 'border-border focus:border-accent',
+            className
+          )}
+          aria-invalid={hasError}
+          {...props}
+        />
+      </div>
+      {hasError && (
+        <p className="text-xs text-red-500 leading-relaxed" role="alert">{errorMessage}</p>
+      )}
+      {helperText && !hasError && (
+        <p className="text-xs text-fg-secondary leading-relaxed">{helperText}</p>
+      )}
+    </div>
+  );
+});
+Textarea.displayName = 'Textarea';
+
 // ─── Badge ──────────────────────────────────────────────────────────
 
-const badgeVariants = { default: 'bg-surface-secondary text-fg-tertiary', success: 'bg-green-50 text-green-600', warning: 'bg-amber-50 text-amber-600', error: 'bg-red-50 text-red-600', info: 'bg-blue-50 text-blue-600', brand: 'bg-accent-bg text-accent' } as const;
-const badgeSizes = { sm: 'px-1.5 py-0.5 text-[10px]', default: 'px-2.5 py-0.5 text-xs', lg: 'px-3 py-1 text-sm' } as const;
+const badgeVariants = {
+  purple: 'bg-accent text-white',
+  yellow: 'bg-accent-yellow text-black',
+  black: 'bg-fg text-white',
+} as const;
+
+const badgeSizes = {
+  sm: 'px-3 py-1 text-xs',
+  default: 'px-4 py-1.5 text-sm font-semibold',
+  lg: 'px-5 py-2 text-base font-bold',
+} as const;
+
 export type BadgeVariant = keyof typeof badgeVariants;
 export type BadgeSize = keyof typeof badgeSizes;
-export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> { variant?: BadgeVariant; size?: BadgeSize; dot?: boolean; }
 
-export function Badge({ variant = 'default', size = 'default', dot = false, className, children, ...props }: BadgeProps) {
-  const dotColors: Record<string, string> = { default: 'bg-fg-tertiary', success: 'bg-green-600', warning: 'bg-amber-600', error: 'bg-red-600', info: 'bg-blue-600', brand: 'bg-accent' };
+export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
+  variant?: BadgeVariant;
+  size?: BadgeSize;
+  dot?: boolean;
+}
+
+export function Badge({ variant = 'purple', size = 'default', dot = false, className, children, ...props }: BadgeProps) {
+  const dotColors: Record<BadgeVariant, string> = {
+    purple: 'bg-white',
+    yellow: 'bg-black',
+    black: 'bg-white',
+  };
+
   return (
-    <span className={cn('inline-flex items-center gap-1.5 rounded-full font-medium whitespace-nowrap', badgeVariants[variant], badgeSizes[size], className)} {...props}>
-      {dot && <span className={cn('h-1.5 w-1.5 rounded-full', dotColors[variant])} aria-hidden="true" />}
+    <span
+      className={cn(
+        'inline-flex items-center gap-2 font-medium whitespace-nowrap',
+        badgeVariants[variant],
+        badgeSizes[size],
+        className
+      )}
+      {...props}
+    >
+      {dot && (
+        <span className={cn('h-2 w-2', dotColors[variant])} aria-hidden="true" />
+      )}
       {children}
     </span>
   );
 }
 
-// ─── Tag ────────────────────────────────────────────────────────────
+// ─── Chip / Tag ─────────────────────────────────────────────────────
+// MD3-inspired chip component — compact, filled surface, with leading/trailing icon support.
 
-const tagVariants = { default: 'bg-surface-secondary text-fg-tertiary border-border', brand: 'bg-accent-bg text-accent border-accent-bg', success: 'bg-green-50 text-green-600 border-green-200', warning: 'bg-amber-50 text-amber-600 border-amber-200', error: 'bg-red-50 text-red-600 border-red-200', outline: 'bg-transparent text-fg-secondary border-border-hover' } as const;
-const tagSizes = { sm: 'px-1.5 py-0.5 text-[10px]', default: 'px-2 py-0.5 text-xs', lg: 'px-3 py-1 text-sm' } as const;
-export interface TagProps { variant?: keyof typeof tagVariants; size?: keyof typeof tagSizes; removable?: boolean; onRemove?: () => void; onClick?: () => void; className?: string; children: ReactNode; }
+const tagVariants = {
+  default: 'bg-surface-secondary text-fg border-0',
+  brand: 'bg-accent text-white border-0',
+  success: 'bg-accent-yellow text-black border-0',
+  outline: 'bg-transparent text-fg-secondary border border-border',
+} as const;
 
-export function Tag({ variant = 'default', size = 'default', removable = false, onRemove, onClick, className, children }: TagProps) {
+const tagSizes = {
+  sm: 'px-3 py-1 text-xs gap-1',
+  default: 'px-4 py-1.5 text-sm gap-1.5',
+  lg: 'px-5 py-2 text-base gap-2',
+} as const;
+
+export interface TagProps {
+  variant?: keyof typeof tagVariants;
+  size?: keyof typeof tagSizes;
+  removable?: boolean;
+  onRemove?: () => void;
+  onClick?: () => void;
+  selected?: boolean;
+  leadingIcon?: ReactNode;
+  className?: string;
+  children: ReactNode;
+}
+
+export function Tag({
+  variant = 'default',
+  size = 'default',
+  removable = false,
+  onRemove,
+  onClick,
+  selected = false,
+  leadingIcon,
+  className,
+  children,
+}: TagProps) {
   return (
-    <span onClick={onClick} className={cn('inline-flex items-center gap-1 rounded-md border font-medium whitespace-nowrap transition-colors duration-150', tagVariants[variant], tagSizes[size], onClick && 'cursor-pointer', removable && 'pr-1', className)}>
-      {children}
-      {removable && <button type="button" onClick={(e) => { e.stopPropagation(); onRemove?.(); }} className="ml-0.5 inline-flex h-3.5 w-3.5 items-center justify-center rounded-full hover:bg-black/10 transition-colors" aria-label="Remove">
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-      </button>}
+    <span
+      onClick={onClick}
+      className={cn(
+        'inline-flex items-center font-medium whitespace-nowrap transition-all duration-150',
+        tagVariants[variant],
+        tagSizes[size],
+        selected && variant === 'default' && 'bg-accent-bg text-accent',
+        onClick && 'cursor-pointer hover:opacity-80',
+        className
+      )}
+    >
+      {leadingIcon && <span className="shrink-0">{leadingIcon}</span>}
+      <span>{children}</span>
+      {removable && (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onRemove?.(); }}
+          className="inline-flex items-center justify-center hover:opacity-60 transition-opacity shrink-0"
+          aria-label="Remove"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      )}
     </span>
   );
 }
 
-// ─── Spinner ────────────────────────────────────────────────────────
+// ─── Spinner (M3E Loading Indicator) ───────────────────────────────
 
-export interface SpinnerProps { size?: 'xs' | 'sm' | 'default' | 'lg' | 'xl'; label?: string; variant?: 'brand' | 'neutral' | 'white'; className?: string; }
+const sizeMap = {
+  xs: 20,
+  sm: 24,
+  default: 32,
+  lg: 48,
+  xl: 64,
+} as const;
 
-export function Spinner({ size = 'default', variant = 'brand', label = 'Loading...', className }: SpinnerProps) {
-  const sizeMap = { xs: 'h-3 w-3', sm: 'h-4 w-4', default: 'h-6 w-6', lg: 'h-8 w-8', xl: 'h-12 w-12' };
-  const borderMap = { xs: 'border-2', sm: 'border-2', default: 'border-[2.5px]', lg: 'border-[3px]', xl: 'border-[4px]' };
-  const colorMap = { brand: 'border-accent-bg border-t-accent', neutral: 'border-border border-t-fg-secondary', white: 'border-white/20 border-t-white' };
+export interface SpinnerProps {
+  size?: keyof typeof sizeMap;
+  variant?: 'uncontained' | 'contained';
+  label?: string;
+  className?: string;
+}
+
+export function Spinner({ size = 'default', variant = 'uncontained', label = 'Loading...', className }: SpinnerProps) {
+  const px = sizeMap[size];
+
   return (
-    <div className={cn('inline-flex items-center justify-center', className)} role="status" aria-label={label}>
-      <div className={cn('animate-spin rounded-full', sizeMap[size], borderMap[size], colorMap[variant])} />
-      <span className="sr-only">{label}</span>
+    <div
+      className={cn('inline-flex items-center justify-center', className)}
+      role="status"
+      aria-label={label}
+      style={{ width: px, height: px }}
+    >
+      <M3ELoading
+        variant={variant}
+        aria-label={label}
+        style={{
+          width: '100%',
+          height: '100%',
+          '--m3e-loading-indicator-active-indicator-color': 'var(--accent)',
+          '--m3e-loading-indicator-track-color': 'var(--accent-bg)',
+        }}
+      />
     </div>
   );
 }
@@ -173,19 +615,59 @@ export function Divider({ label, className }: DividerProps) {
 // ─── Select ─────────────────────────────────────────────────────────
 
 export interface SelectOption { value: string; label: string; }
-export interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'children'> { label?: string; errorMessage?: string; helperText?: string; options: SelectOption[]; placeholder?: string; fullWidth?: boolean; }
+export interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'children'> {
+  label?: string;
+  errorMessage?: string;
+  helperText?: string;
+  options: SelectOption[];
+  placeholder?: string;
+  fullWidth?: boolean;
+}
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(({ className, label, errorMessage, helperText, options, placeholder, fullWidth = true, id, ...props }, ref) => {
   const selectId = id || `select-${label?.toLowerCase().replace(/\s+/g, '-')}`;
+  const hasError = !!errorMessage;
+
   return (
-    <div className={cn('flex flex-col gap-1', fullWidth && 'w-full')}>
-      {label && <label htmlFor={selectId} className="text-[10px] font-semibold uppercase tracking-[0.6px] text-fg-secondary">{label}</label>}
-      <select ref={ref} id={selectId} className={cn('w-full border px-3 py-2 text-sm text-fg bg-white transition-all duration-150 focus:outline-none focus:ring-2 focus:border-accent focus:ring-accent/20 disabled:cursor-not-allowed disabled:bg-surface-secondary disabled:text-fg-muted', errorMessage ? 'border-red-500' : 'border-border', className)} aria-invalid={!!errorMessage} {...props}>
-        {placeholder && <option value="" disabled>{placeholder}</option>}
-        {options.map((opt) => (<option key={opt.value} value={opt.value}>{opt.label}</option>))}
-      </select>
-      {errorMessage && <p className="text-xs text-red-500" role="alert">{errorMessage}</p>}
-      {helperText && !errorMessage && <p className="text-xs text-fg-secondary">{helperText}</p>}
+    <div className={cn('flex flex-col gap-2', fullWidth && 'w-full')}>
+      {label && (
+        <label htmlFor={selectId} className="text-sm font-semibold text-fg-secondary">
+          {label}
+        </label>
+      )}
+      <div className="relative">
+        <select
+          ref={ref}
+          id={selectId}
+          className={cn(
+            'w-full appearance-none bg-transparent border-0 border-b-2 py-3 pr-8',
+            'text-lg text-fg',
+            'transition-all duration-200 ease-out',
+            'focus:outline-none focus:ring-0',
+            'disabled:cursor-not-allowed disabled:opacity-40',
+            hasError
+              ? 'border-red-500 focus:border-red-500'
+              : 'border-border focus:border-accent',
+            className
+          )}
+          aria-invalid={hasError}
+          {...props}
+        >
+          {placeholder && <option value="" disabled>{placeholder}</option>}
+          {options.map((opt) => (<option key={opt.value} value={opt.value}>{opt.label}</option>))}
+        </select>
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center text-fg-muted" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </div>
+      </div>
+      {hasError && (
+        <p className="text-xs text-red-500 leading-relaxed" role="alert">{errorMessage}</p>
+      )}
+      {helperText && !hasError && (
+        <p className="text-xs text-fg-secondary leading-relaxed">{helperText}</p>
+      )}
     </div>
   );
 });
@@ -193,56 +675,130 @@ Select.displayName = 'Select';
 
 // ─── Toggle ─────────────────────────────────────────────────────────
 
-export interface ToggleProps { checked: boolean; onChange: (checked: boolean) => void; label?: string; disabled?: boolean; size?: 'sm' | 'default'; className?: string; }
+export interface ToggleProps {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label?: string;
+  disabled?: boolean;
+  size?: 'sm' | 'default';
+  className?: string;
+}
 
 export function Toggle({ checked, onChange, label, disabled = false, size = 'default', className }: ToggleProps) {
-  const st = size === 'sm' ? { track: 'h-5 w-9', thumb: 'h-4 w-4', tx: 'translate-x-4' } : { track: 'h-6 w-11', thumb: 'h-5 w-5', tx: 'translate-x-5' };
+  const trackH = size === 'sm' ? 'h-5' : 'h-6';
+  const trackW = size === 'sm' ? 'w-9' : 'w-11';
+  const thumb = size === 'sm' ? 'h-4 w-4' : 'h-5 w-5';
+  const tx = size === 'sm' ? 'translate-x-4' : 'translate-x-5';
+
   return (
-    <label className={cn('inline-flex items-center gap-3', disabled && 'opacity-50 cursor-not-allowed', className)}>
-      <button type="button" role="switch" aria-checked={checked} disabled={disabled} onClick={() => !disabled && onChange(!checked)}
-        className={cn('relative inline-flex shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed', st.track, checked ? 'bg-accent' : 'bg-border-hover')}>
-        <span className={cn('inline-block rounded-full bg-white shadow-sm transition-transform duration-200', st.thumb, checked && st.tx)} />
+    <label className={cn('inline-flex items-center gap-3', disabled && 'opacity-40 cursor-not-allowed', className)}>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        disabled={disabled}
+        onClick={() => !disabled && onChange(!checked)}
+        className={cn(
+          'relative inline-flex shrink-0 cursor-pointer items-center',
+          'transition-colors duration-200',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2',
+          'disabled:cursor-not-allowed',
+          trackH, trackW,
+          checked ? 'bg-accent' : 'bg-border'
+        )}
+      >
+        <span
+          className={cn(
+            'inline-block bg-white shadow-sm transition-transform duration-200',
+            thumb,
+            checked && tx
+          )}
+        />
       </button>
-      {label && <span className="text-sm text-fg-tertiary select-none">{label}</span>}
+      {label && <span className="text-sm text-fg select-none">{label}</span>}
     </label>
   );
 }
 
-// ─── ProgressBar ────────────────────────────────────────────────────
+// ─── ProgressBar (M3E Linear Progress Indicator) ───────────────────
 
-const progressColors = { brand: 'bg-accent', success: 'bg-green-500', warning: 'bg-amber-500', error: 'bg-red-500', neutral: 'bg-fg-secondary' } as const;
-const progressSizes = { sm: 'h-1', default: 'h-2', lg: 'h-3' } as const;
-export interface ProgressBarProps { value?: number; variant?: keyof typeof progressColors; size?: keyof typeof progressSizes; showLabel?: boolean; className?: string; }
+const progressHeightMap = { sm: '4px', default: '6px', lg: '10px' } as const;
 
-export function ProgressBar({ value, variant = 'brand', size = 'default', showLabel = false, className }: ProgressBarProps) {
+export interface ProgressBarProps {
+  value?: number;
+  size?: keyof typeof progressHeightMap;
+  showLabel?: boolean;
+  variant?: 'flat' | 'wavy';
+  className?: string;
+}
+
+export function ProgressBar({ value, size = 'default', showLabel = false, variant = 'flat', className }: ProgressBarProps) {
   const isIndeterminate = value === undefined;
+  const mode = isIndeterminate ? 'indeterminate' : 'determinate';
+
   return (
     <div className={cn('flex items-center gap-3', className)}>
-      <div className={cn('w-full overflow-hidden bg-surface-muted', progressSizes[size])} role="progressbar" aria-valuenow={!isIndeterminate ? value : undefined} aria-valuemin={0} aria-valuemax={100} aria-label={isIndeterminate ? 'Loading...' : value + '% complete'}>
-        <div className={cn('h-full transition-all duration-500 ease-out', progressColors[variant], isIndeterminate && 'animate-pulse w-1/2')} style={!isIndeterminate ? { width: (Math.min(100, Math.max(0, value))) + '%' } : undefined} />
+      <div className="flex-1">
+        <M3ELinearProgress
+          mode={mode}
+          variant={variant}
+          value={isIndeterminate ? 0 : value}
+          max={100}
+          aria-label={isIndeterminate ? 'Loading...' : `${value}% complete`}
+          style={{
+            height: progressHeightMap[size],
+            '--m3e-linear-progress-indicator-active-indicator-color': 'var(--accent)',
+            '--m3e-linear-progress-indicator-track-color': 'var(--bg-muted)',
+          }}
+        />
       </div>
-      {showLabel && !isIndeterminate && <span className="text-xs font-medium text-fg-secondary min-w-[3ch] text-right tabular-nums">{Math.round(value)}%</span>}
+      {showLabel && !isIndeterminate && (
+        <span className="text-xs font-medium text-fg-secondary min-w-[3ch] text-right tabular-nums">
+          {Math.round(value)}%
+        </span>
+      )}
     </div>
   );
 }
 
 // ─── Skeleton ───────────────────────────────────────────────────────
 
-export interface SkeletonProps { width?: string; height?: string; rounded?: 'sm' | 'default' | 'lg' | 'full'; className?: string; inline?: boolean; }
-const skeletonRounded = { sm: 'rounded-sm', default: 'rounded-md', lg: 'rounded-lg', full: 'rounded-full' } as const;
-
-export function Skeleton({ width, height = '1rem', rounded = 'default', inline = false, className }: SkeletonProps) {
-  return <div className={cn('animate-pulse bg-border', skeletonRounded[rounded], inline ? 'inline-block' : 'block', className)} style={{ width: width || undefined, height }} aria-hidden="true" />;
+export interface SkeletonProps {
+  width?: string;
+  height?: string;
+  className?: string;
+  inline?: boolean;
 }
 
-export interface SkeletonBlockProps { lines?: number; avatar?: boolean; className?: string; }
+export function Skeleton({ width, height = '1rem', inline = false, className }: SkeletonProps) {
+  return (
+    <div
+      className={cn(
+        'animate-pulse bg-border',
+        inline ? 'inline-block' : 'block',
+        className
+      )}
+      style={{ width: width || undefined, height }}
+      aria-hidden="true"
+    />
+  );
+}
+
+export interface SkeletonBlockProps {
+  lines?: number;
+  avatar?: boolean;
+  className?: string;
+}
+
 export function SkeletonBlock({ lines = 3, avatar = false, className }: SkeletonBlockProps) {
   return (
     <div className={cn('flex gap-4 p-4', className)}>
-      {avatar && <Skeleton width="40px" height="40px" rounded="full" />}
+      {avatar && <Skeleton width="40px" height="40px" />}
       <div className="flex-1 space-y-3">
         <Skeleton className="h-4 w-3/4" />
-        {Array.from({ length: lines - 1 }).map((_, i) => (<Skeleton key={i} className={`h-3 ${i === lines - 2 ? 'w-1/2' : 'w-full'}`} />))}
+        {Array.from({ length: lines - 1 }).map((_, i) => (
+          <Skeleton key={i} className={`h-3 ${i === lines - 2 ? 'w-1/2' : 'w-full'}`} />
+        ))}
       </div>
     </div>
   );
@@ -289,53 +845,3 @@ export function Modal({ isOpen, onClose, title, children, footer, size = 'defaul
   );
 }
 
-// ─── Avatar ─────────────────────────────────────────────────────────
-
-const avatarSizes = { xs: 'h-6 w-6 text-[8px]', sm: 'h-8 w-8 text-xs', default: 'h-10 w-10 text-sm', lg: 'h-12 w-12 text-base', xl: 'h-16 w-16 text-xl' } as const;
-export interface AvatarProps { src?: string; alt?: string; initials?: string; size?: keyof typeof avatarSizes; className?: string; status?: 'online' | 'away' | 'busy' | 'offline'; }
-const statusColors = { online: 'bg-green-500', away: 'bg-amber-500', busy: 'bg-red-500', offline: 'bg-fg-muted' };
-
-export function Avatar({ src, alt = '', initials, size = 'default', status, className }: AvatarProps) {
-  return (
-    <div className={cn('relative inline-flex shrink-0', className)}>
-      {src ? <img src={src} alt={alt} className={cn('rounded-full object-cover', avatarSizes[size])}
-        onError={(e) => { (e.currentTarget).style.display = 'none'; const fb = (e.currentTarget).nextElementSibling; if (fb) (fb as HTMLElement).style.display = 'flex'; }} /> : null}
-      <div className={cn('rounded-full bg-accent-bg text-accent font-medium items-center justify-center', src ? 'hidden' : 'flex', avatarSizes[size])}>{initials || '?'}</div>
-      {status && <span className={cn('absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-white', statusColors[status])} aria-label={status} />}
-    </div>
-  );
-}
-
-// ─── RippleButton ───────────────────────────────────────────────────
-
-interface Ripple { x: number; y: number; size: number; key: number; }
-export interface RippleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> { rippleColor?: string; duration?: string; }
-
-export const RippleButton = forwardRef<HTMLButtonElement, RippleButtonProps>(({ className, children, rippleColor = '#ffffff', duration = '600ms', onClick, ...props }, ref) => {
-  const [ripples, setRipples] = useState<Ripple[]>([]);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const button = event.currentTarget;
-    const rect = button.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height);
-    const x = event.clientX - rect.left - size / 2;
-    const y = event.clientY - rect.top - size / 2;
-    setRipples((prev) => [...prev, { x, y, size, key: Date.now() }]);
-    onClick?.(event);
-  };
-  useEffect(() => {
-    if (ripples.length === 0) return;
-    const last = ripples[ripples.length - 1];
-    const t = setTimeout(() => setRipples((prev) => prev.filter((r) => r.key !== last.key)), parseInt(duration));
-    return () => clearTimeout(t);
-  }, [ripples, duration]);
-
-  return (
-    <button ref={ref} className={cn('relative flex cursor-pointer items-center justify-center overflow-hidden border border-border px-5 py-2.5 text-sm font-medium text-fg bg-surface hover:bg-surface-secondary hover:border-border-hover transition-colors duration-150', className)} onClick={handleClick} {...props}>
-      <div className="relative z-10">{children}</div>
-      <span className="pointer-events-none absolute inset-0">{ripples.map((ripple) => (
-        <span key={ripple.key} className="absolute rounded-full opacity-30 animate-rippling" style={{ width: `${ripple.size}px`, height: `${ripple.size}px`, top: `${ripple.y}px`, left: `${ripple.x}px`, backgroundColor: rippleColor, transform: 'scale(0)' } as CSSProperties} />
-      ))}</span>
-    </button>
-  );
-});
-RippleButton.displayName = 'RippleButton';

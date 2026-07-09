@@ -115,10 +115,45 @@ a { color: inherit; text-decoration: none; }
     }
   }
 
+  --animate-morph-purple: morph-purple 1.4s ease-in-out infinite;
+
+  @keyframes morph-purple {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(100%, 0) scale(0.6);
+    }
+    50% {
+      transform: translate(100%, 100%) scale(1);
+    }
+    75% {
+      transform: translate(0, 100%) scale(0.6);
+    }
+  }
+
+  --animate-morph-yellow: morph-yellow 1.4s ease-in-out infinite;
+
+  @keyframes morph-yellow {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(-100%, 0) scale(0.6);
+    }
+    50% {
+      transform: translate(-100%, -100%) scale(1);
+    }
+    75% {
+      transform: translate(0, -100%) scale(0.6);
+    }
+  }
+
   --font-heading: var(--font-sans);
 
   --color-accent-hover: var(--accent-hover);
   --color-accent-active: var(--accent-active);
+  --color-accent-yellow: var(--accent-yellow);
   --color-accent-bg: var(--accent-bg);
   --color-fg: var(--text-primary);
   --color-fg-secondary: var(--text-secondary);
