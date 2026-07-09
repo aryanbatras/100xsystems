@@ -7,8 +7,7 @@ import profileSectionStyles from '../_styles/css/dashboard-profilesection.module
 import progressSectionStyles from '../_styles/css/dashboard-progresssection.module.css';
 import dashboardStyles from '../_styles/css/dashboard.module.css';
 import { InteractiveButton, AnimatedSection, AnimatedTitle } from './animated.feature';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 /**
  * ## Dashboard
@@ -118,11 +117,6 @@ export function DashboardPage() {
 
   return (
     <>
-      <Head>
-        <title>100x Systems Dashboard</title>
-        <meta name="description" content="Your learning dashboard for mastering systems thinking" />
-      </Head>
-
       <div className={dashboardStyles.page}>
         {/* Hero Section */}
         <section className={dashboardStyles.heroSection}>

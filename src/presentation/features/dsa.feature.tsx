@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Head from 'next/head';
+
 import ReactMarkdown from 'react-markdown';
 import styles from '../_styles/css/dsa.module.css';
 import type { DSAContent } from '../../infrastructure/staticSiteGenerator';
@@ -64,14 +64,6 @@ export function DSA({ dsaContent }: DSAProps) {
 
   return (
     <>
-      <Head>
-        <title>DSA Problems - 100x Systems</title>
-        <meta name="description" content="Comprehensive DSA problem collection following structured curriculum for interview preparation." />
-        <meta property="og:title" content="DSA Problems - 100x Systems" />
-        <meta property="og:description" content="Comprehensive DSA problem collection following structured curriculum for interview preparation." />
-        <meta property="og:type" content="website" />
-      </Head>
-
       <div className={styles.dsaContainer}>
         <div className={styles.dsaWrapper}>
           <header className={styles.dsaHeader}>

@@ -10,7 +10,6 @@
 
 'use client';
 
-import { useRouter } from 'next/router';
 import styles from '../_styles/css/userdashboard.module.css';
 import { ProfileSection, ProgressSection, AchievementsSection } from './dashboard.feature';
 
@@ -26,7 +25,6 @@ import { ProfileSection, ProgressSection, AchievementsSection } from './dashboar
 /**
  */
 export function UserDashboard() {
-  const router = useRouter();
   const user = null;
   const loading = false;
 

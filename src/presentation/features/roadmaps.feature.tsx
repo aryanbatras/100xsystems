@@ -10,7 +10,7 @@
 
 'use client';
 
-import Head from 'next/head';
+
 import Link from 'next/link';
 import styles from '../_styles/css/roadmaps.module.css';
 import { KnowledgeGraph } from '../../infrastructure/staticSiteGenerator';
@@ -23,14 +23,6 @@ export function RoadmapsPage({ knowledgeGraph }: { knowledgeGraph: KnowledgeGrap
 
   return (
       <>
-      <Head>
-        <title>Learning Roadmaps - 100x Systems</title>
-        <meta name="description" content="Explore our structured learning roadmaps for systems thinking, engineering, and innovation." />
-        <meta property="og:title" content="Learning Roadmaps - 100x Systems" />
-        <meta property="og:description" content="Explore our structured learning roadmaps for systems thinking, engineering, and innovation." />
-        <meta property="og:type" content="website" />
-      </Head>
-
       <div className={styles.roadmapsContainer}>
         <div className={styles.roadmapsWrapper}>
           <header className={styles.roadmapsHeader}>

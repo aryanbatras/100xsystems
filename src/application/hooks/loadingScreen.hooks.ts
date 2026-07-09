@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 
 /**
  * Hook for managing a full-page loading screen on route changes.
@@ -22,7 +22,7 @@ import { useRouter } from 'next/router';
  */
 export const useLoadingScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
+  const pathname = usePathname();
 
   const hideLoader = () => {
     const timer = setTimeout(() => {
@@ -41,14 +41,10 @@ export const useLoadingScreen = () => {
   }, []);
 
   useEffect(() => {
-    router.events.on('routeChangeStart', showLoader);
-    router.events.on('routeChangeComplete', hideLoader);
-
-    return () => {
-      router.events.off('routeChangeStart', showLoader);
-      router.events.off('routeChangeComplete', hideLoader);
-    };
-  }, [router.events]);
+    showLoader();
+    const timer = hideLoader();
+    return () => clearTimeout(timer);
+  }, [pathname]);
 
   return { isLoading, showLoader, hideLoader };
 };

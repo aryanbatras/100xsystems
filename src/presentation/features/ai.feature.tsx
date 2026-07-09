@@ -11,7 +11,7 @@ import articleRouteDialogStyles from '../_styles/css/ai-articleroutedialog.modul
 import chatButtonStyles from '../_styles/css/ai-chatbutton.module.css';
 import newAIChatBotStyles from '../_styles/css/ai-newaichatbot.module.css';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
+import { useRouter, usePathname } from 'next/navigation';
 import {useState, useEffect, useRef, useCallback} from 'react';
 import { FaArrowRight, FaBars, FaBookOpen, FaBrain, FaChevronDown, FaChevronLeft, FaChevronRight, FaChevronUp, FaCog, FaComment, FaComments, FaCopy, FaDownload, FaEllipsisH, FaImage, FaMemory, FaMicrophone, FaMicrophoneSlash, FaPaperclip, FaPencilRuler, FaPlus, FaQuoteLeft, FaRobot, FaSearch, FaShare, FaSync, FaThumbsDown, FaThumbsUp, FaTimes, FaTimesCircle, FaTrash, FaUpload, FaUserCircle, FaVolumeMute, FaVolumeUp, FaWaveSquare } from 'react-icons/fa';
 import { IoMdSend } from 'react-icons/io';
@@ -1338,7 +1338,7 @@ interface ChatButtonProps {
 }
 
 export function ChatButton({ isOpen, onToggle, unreadCount = 0 }: ChatButtonProps) {
-  const router = useRouter();
+  const pathname = usePathname();
   const [isPulsing, setIsPulsing] = useState(false);
   const [showRouteDialog, setShowRouteDialog] = useState(false);
 
@@ -1353,7 +1353,7 @@ export function ChatButton({ isOpen, onToggle, unreadCount = 0 }: ChatButtonProp
 
   const handleChatClick = () => {
     // Check if current route is /articles sub-route but not /articles itself
-    const isArticlesSubRoute = router.pathname.startsWith('/articles/') && router.pathname !== '/articles';
+    const isArticlesSubRoute = pathname.startsWith('/articles/') && pathname !== '/articles';
     
     if (isArticlesSubRoute) {
       onToggle();

@@ -2,7 +2,7 @@
 
 import styles from '../_styles/css/navbar-navbar.module.css';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 import React, { useState, useEffect, useRef } from 'react';
 import { CgMenuHotdog } from 'react-icons/cg';
 import { IoChevronDown } from 'react-icons/io5';
@@ -29,7 +29,7 @@ export function Navbar(): React.ReactElement {
   const [isWhiteTheme, setIsWhiteTheme] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
+  const pathname = usePathname();
 
   // Routes that should use white theme
   const whiteThemeRoutes = [
@@ -48,12 +48,11 @@ export function Navbar(): React.ReactElement {
 
   useEffect(() => {
     // Check if current route should use white theme
-    const currentPath = router.pathname;
     const shouldUseWhiteTheme = whiteThemeRoutes.some(
-      (route) => currentPath === route || currentPath.startsWith(route + "/"),
+      (route) => pathname === route || pathname.startsWith(route + "/"),
     );
     setIsWhiteTheme(shouldUseWhiteTheme);
-  }, [router.pathname]);
+  }, [pathname]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -88,8 +87,8 @@ export function Navbar(): React.ReactElement {
 
   // Don't render navbar on article slug pages (static pages)
   if (
-    router.pathname.startsWith("/articles/") &&
-    router.pathname !== "/articles"
+    pathname.startsWith("/articles/") &&
+    pathname !== "/articles"
   ) {
     return <div></div>;
   }
