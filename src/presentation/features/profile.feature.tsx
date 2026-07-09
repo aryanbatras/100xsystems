@@ -11,7 +11,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, Input, PageHeader } from '@/presentation/__components';
+import { Button, Input } from '@/presentation/__components';
 
 // ============================================================
 // Source: profile.tsx
@@ -38,13 +38,19 @@ export function ProfilePage() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <PageHeader title="Profile" subtitle="Manage your personal information"
-        actions={
-          <Button variant={isEditing ? 'ghost' : 'primary'} onClick={() => setIsEditing(!isEditing)}>
-            {isEditing ? 'Cancel' : 'Edit Profile'}
-          </Button>
-        }
-      />
+      <div className="flex flex-col gap-4 mb-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl font-bold text-fg sm:text-3xl">Profile</h1>
+            <p className="mt-1 text-sm text-fg-secondary max-w-2xl">Manage your personal information</p>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            <Button variant={isEditing ? 'ghost' : 'primary'} onClick={() => setIsEditing(!isEditing)}>
+              {isEditing ? 'Cancel' : 'Edit Profile'}
+            </Button>
+          </div>
+        </div>
+      </div>
       <form onSubmit={handleSubmit} className="max-w-2xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1">

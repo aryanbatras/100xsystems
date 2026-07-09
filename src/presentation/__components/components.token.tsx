@@ -1,15 +1,63 @@
 /**
- * ## Token Display Components
- *
- * Design token display components for visual auditing in Storybook.
- *
- * @packageDocumentation
+ * Design token display components & AnimatedIcon wrapper.
  */
 
 'use client';
 
 import { cn } from '@/application/lib/utils';
 import { Icon, type IconName, Image, type ImageProps } from './components.atomic';
+
+// ─── AnimatedIcon ────────────────────────────────────────────────────
+// Animated icon wrapper using @animateicons/react (Lucide animated set).
+
+import * as AnimatedIcons from '@animateicons/react/lucide';
+
+type AnimateIconComponent = typeof AnimatedIcons[keyof typeof AnimatedIcons];
+
+export interface AnimatedIconProps {
+  name: string;
+  size?: number;
+  color?: string;
+  isAnimated?: boolean;
+  duration?: number;
+  className?: string;
+}
+
+function toPascalCase(str: string): string {
+  return str
+    .split(/[-\s]+/)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join('');
+}
+
+const iconCache = new Map<string, AnimateIconComponent>();
+
+function resolveIcon(name: string): AnimateIconComponent | null {
+  if (iconCache.has(name)) return iconCache.get(name)!;
+  const pascal = toPascalCase(name);
+  const key = pascal.endsWith('Icon') ? pascal : `${pascal}Icon`;
+  const component = (AnimatedIcons as Record<string, AnimateIconComponent>)[key];
+  if (component) iconCache.set(name, component);
+  return component || null;
+}
+
+export function AnimatedIcon({ name, size = 20, color, isAnimated = true, duration, className }: AnimatedIconProps) {
+  const IconComponent = resolveIcon(name);
+  if (!IconComponent) {
+    console.warn(`AnimatedIcon "${name}" not found in @animateicons/react/lucide`);
+    return null;
+  }
+  return (
+    <span className={cn('inline-flex shrink-0', className)}>
+      <IconComponent
+        size={size}
+        color={color}
+        isAnimated={isAnimated}
+        duration={duration}
+      />
+    </span>
+  );
+}
 
 // ─── TokenColors ────────────────────────────────────────────────────
 
@@ -254,6 +302,7 @@ export function TokenShadows({ className }: TokenShadowsProps) {
 
 // ─── TokenIcon ─────────────────────────────────────────────────────
 // Displays all available icons in the design system for visual auditing.
+// Shows both static (Icon) and animated (AnimatedIcon) variants side-by-side.
 
 export interface TokenIconProps { className?: string; }
 
@@ -269,9 +318,28 @@ export function TokenIcon({ className }: TokenIconProps) {
     <div className={cn('bg-white', className)}>
       <div className="px-6 py-5 border-b border-border">
         <h2 className="text-lg font-bold text-fg">Icons</h2>
-        <p className="text-sm text-fg-secondary mt-1">Available icons via the <code className="text-xs bg-surface-secondary px-1.5 py-0.5">{`<Icon name="..." />`}</code> component.</p>
+        <p className="text-sm text-fg-secondary mt-1">
+          Static <code className="text-xs bg-surface-secondary px-1.5 py-0.5">{`<Icon />`}</code> and animated{' '}
+          <code className="text-xs bg-surface-secondary px-1.5 py-0.5">{`<AnimatedIcon />`}</code> variants.
+        </p>
       </div>
-      <div className="px-6 py-8 space-y-10">
+      <div className="px-6 py-8 space-y-12">
+        {/* ── Animated icon showcase ── */}
+        <div className="rounded-lg bg-surface-secondary p-6">
+          <h3 className="text-xs font-medium text-fg-muted uppercase tracking-widest mb-4">Animated Icons (hover to animate)</h3>
+          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-4">
+            {['search', 'user', 'star', 'heart', 'settings', 'mail', 'bell', 'clock', 'bookmark', 'trash', 'edit', 'share', 'download', 'upload', 'external-link', 'globe'].map((name) => (
+              <div key={name} className="flex flex-col items-center gap-2 px-3 py-4 bg-white border border-border hover:border-accent/30 transition-colors group">
+                <span className="group-hover:scale-110 transition-transform duration-200">
+                  <AnimatedIcon name={name} size={22} isAnimated={true} />
+                </span>
+                <code className="text-[10px] text-fg-muted text-center leading-tight break-all">{name}</code>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Static icon inventory ── */}
         {iconRows.map((group) => (
           <div key={group.row}>
             <h3 className="text-xs font-medium text-fg-muted uppercase tracking-widest mb-4">{group.row}</h3>

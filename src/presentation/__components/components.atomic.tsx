@@ -8,7 +8,7 @@
 
 'use client';
 
-import { forwardRef, useState, useEffect, useRef, createElement, type ButtonHTMLAttributes, type InputHTMLAttributes, type TextareaHTMLAttributes, type HTMLAttributes, type ReactNode, type ElementType } from 'react';
+import { forwardRef, useState, useEffect, createElement, type ButtonHTMLAttributes, type InputHTMLAttributes, type TextareaHTMLAttributes, type HTMLAttributes, type ReactNode, type ElementType } from 'react';
 import { cn } from '@/application/lib/utils';
 
 // M3E Web Components (Material 3 Expressive) — registered via side-effect imports
@@ -179,9 +179,9 @@ const buttonVariants = {
 } as const;
 
 const buttonSizes = {
-  sm: 'px-5 py-2 text-xs gap-1.5',
-  default: 'px-6 py-3 text-sm gap-2',
-  lg: 'px-8 py-4 text-base gap-2.5',
+  sm: 'px-6 py-3 text-sm gap-1.5',
+  default: 'px-10 py-4 text-sm gap-2',
+  lg: 'px-12 py-5 text-base gap-2.5',
 } as const;
 
 export type ButtonVariant = keyof typeof buttonVariants;
@@ -409,9 +409,9 @@ const badgeVariants = {
 } as const;
 
 const badgeSizes = {
-  sm: 'px-3 py-1 text-xs',
-  default: 'px-4 py-1.5 text-sm font-semibold',
-  lg: 'px-5 py-2 text-base font-bold',
+  sm: 'px-4 py-1.5 text-xs',
+  default: 'px-5 py-2 text-sm font-semibold',
+  lg: 'px-6 py-2.5 text-base font-bold',
 } as const;
 
 export type BadgeVariant = keyof typeof badgeVariants;
@@ -459,9 +459,9 @@ const tagVariants = {
 } as const;
 
 const tagSizes = {
-  sm: 'px-3 py-1 text-xs gap-1',
-  default: 'px-4 py-1.5 text-sm gap-1.5',
-  lg: 'px-5 py-2 text-base gap-2',
+  sm: 'px-4 py-1.5 text-xs gap-1',
+  default: 'px-5 py-2 text-sm gap-1.5',
+  lg: 'px-6 py-2.5 text-base gap-2',
 } as const;
 
 export interface TagProps {
@@ -520,9 +520,6 @@ export function Tag({
 // ─── Spinner (M3E Loading Indicator) ───────────────────────────────
 
 const sizeMap = {
-  xs: 20,
-  sm: 24,
-  default: 32,
   lg: 48,
   xl: 64,
 } as const;
@@ -534,7 +531,7 @@ export interface SpinnerProps {
   className?: string;
 }
 
-export function Spinner({ size = 'default', variant = 'uncontained', label = 'Loading...', className }: SpinnerProps) {
+export function Spinner({ size = 'lg', variant = 'uncontained', label = 'Loading...', className }: SpinnerProps) {
   const px = sizeMap[size];
 
   return (
@@ -558,33 +555,6 @@ export function Spinner({ size = 'default', variant = 'uncontained', label = 'Lo
   );
 }
 
-// ─── Card + CardHeader ──────────────────────────────────────────────
-
-export interface CardProps { header?: ReactNode; footer?: ReactNode; noPadding?: boolean; hoverable?: boolean; onClick?: () => void; className?: string; children?: ReactNode; as?: ElementType; }
-
-export function Card({ children, header, footer, noPadding = false, hoverable = false, className, onClick, as }: CardProps) {
-  const Tag: ElementType = as || (onClick ? 'button' : 'div');
-  const extraProps: Record<string, unknown> = {};
-  if (onClick) { extraProps.onClick = onClick; extraProps.type = 'button'; }
-  return (
-    <Tag className={cn('border border-border bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)]', hoverable && 'transition-all duration-200 hover:shadow-md hover:border-border-hover', onClick && 'cursor-pointer text-left w-full', className)} {...extraProps}>
-      {header && <div className="border-b border-border px-6 py-4">{header}</div>}
-      <div className={cn(noPadding ? '' : 'px-6 py-5')}>{children}</div>
-      {footer && <div className="border-t border-border px-6 py-4">{footer}</div>}
-    </Tag>
-  );
-}
-
-export interface CardHeaderProps { title: string; subtitle?: string; actions?: ReactNode; className?: string; }
-
-export function CardHeader({ title, subtitle, actions, className }: CardHeaderProps) {
-  return (
-    <div className={cn('flex items-start justify-between', className)}>
-      <div className="min-w-0 flex-1"><h3 className="text-sm font-semibold text-fg truncate">{title}</h3>{subtitle && <p className="mt-0.5 text-xs text-fg-secondary">{subtitle}</p>}</div>
-      {actions && <div className="ml-4 flex shrink-0 items-center gap-2">{actions}</div>}
-    </div>
-  );
-}
 
 // ─── Typography (Heading, Text, Divider) ────────────────────────────
 
@@ -803,45 +773,4 @@ export function SkeletonBlock({ lines = 3, avatar = false, className }: Skeleton
     </div>
   );
 }
-
-// ─── Modal ──────────────────────────────────────────────────────────
-
-const modalSizes = { sm: 'max-w-sm', default: 'max-w-lg', lg: 'max-w-2xl', xl: 'max-w-4xl', full: 'max-w-[95vw]' } as const;
-export interface ModalProps { isOpen: boolean; onClose: () => void; title?: string; children: ReactNode; footer?: ReactNode; size?: keyof typeof modalSizes; closeOnOverlay?: boolean; closeOnEscape?: boolean; }
-
-export function Modal({ isOpen, onClose, title, children, footer, size = 'default', closeOnOverlay = true, closeOnEscape = true }: ModalProps) {
-  const [visible, setVisible] = useState(false);
-  const [animating, setAnimating] = useState(false);
-  const overlayRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (isOpen) { setVisible(true); requestAnimationFrame(() => setAnimating(true)); }
-    else { setAnimating(false); const t = setTimeout(() => setVisible(false), 200); return () => clearTimeout(t); }
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const handler = (e: KeyboardEvent) => { if (closeOnEscape && e.key === 'Escape') onClose(); };
-    document.addEventListener('keydown', handler);
-    document.body.style.overflow = 'hidden';
-    return () => { document.removeEventListener('keydown', handler); document.body.style.overflow = ''; };
-  }, [isOpen, closeOnEscape, onClose]);
-
-  if (!visible) return null;
-
-  return (
-    <div ref={overlayRef} className={cn('fixed inset-0 z-50 flex items-center justify-center transition-all duration-200 ease-in-out', animating ? 'bg-black/30 backdrop-blur-sm' : 'bg-transparent')}
-      onClick={(e) => { if (closeOnOverlay && e.target === overlayRef.current) onClose(); }} role="dialog" aria-modal="true" aria-label={title}>
-      <div className={cn('relative w-full rounded-lg bg-white shadow-xl max-h-[90vh] overflow-y-auto transition-all duration-200 ease-out mx-4', modalSizes[size], animating ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4')}>
-        {title && <div className="flex items-center justify-between border-b border-border px-6 py-4"><h2 className="text-lg font-semibold text-fg">{title}</h2>
-          <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-md text-fg-secondary hover:text-fg hover:bg-surface-secondary transition-colors" aria-label="Close modal">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-          </button>
-        </div>}
-        <div className="px-6 py-5">{children}</div>
-        {footer && <div className="flex items-center justify-end gap-3 border-t border-border px-6 py-4">{footer}</div>}
-      </div>
-    </div>
-  );
-}
-
+// ─── (end of file)
