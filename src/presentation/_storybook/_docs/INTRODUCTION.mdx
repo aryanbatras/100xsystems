@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Introduction" />
+
+# 100xSystems Design System
+
+Welcome to the 100xSystems component library. This Storybook documents all UI components used across the platform.
+
+## Atomic Design
+
+Components follow the **Atomic Design** methodology:
+
+- **Atoms**: Smallest building blocks (Button, Input, Badge, Card, Spinner, Typography)
+- **Molecules**: Simple combinations of atoms (SearchInput, TabBar, FilterBar, DataGrid)
+- **Organisms**: Complex UI sections (Navbar, Footer)
+- **Templates**: Page-level layouts
+- **Pages**: Full pages
+
+## Getting Started
+
+```tsx
+// Import from the barrel export
+import { Button, Card, Input } from '@/presentation/__components';
+import { colors } from '@/presentation/_tokens/colors';
+```
+
+## Design Principles
+
+1. **Accessible first**: All components meet WCAG 2.1 AA standards
+2. **Type-safe**: Full TypeScript support with exported prop types
+3. **Composable**: Components accept `className` for extension
+4. **Server-first**: Server components by default, client only when needed
+5. **Consistent**: Central design tokens for colors, typography, and spacing
