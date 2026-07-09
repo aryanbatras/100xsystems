@@ -23,5 +23,15 @@ export { SidebarNav } from './components.layout';
 export type { SidebarNavProps, SidebarNavItem } from './components.layout';
 
 // ─── Animation Components ──────────────────────────────────────────
-export { KineticText, CoolMode } from './components.animations';
-export type { KineticTextProps, CoolModeProps, CoolParticleOptions } from './components.animations';
+export {
+  KineticText, CoolMode, NoiseTexture, InteractiveGridPattern, AnimatedGridPattern,
+  RippleButton, SpinningText, ScrollVelocityContainer, ScrollVelocityRow,
+  NumberTicker, BlurFade, AnimatedList, AnimatedListItem,
+  SkewButton, GooeyCheckbox, ServerLoader, GlobeLoader, ExpandInput, BookLoader,
+} from './components.animations';
+export type {
+  KineticTextProps, CoolModeProps, CoolParticleOptions, NoiseTextureProps,
+  InteractiveGridPatternProps, AnimatedGridPatternProps, RippleButtonProps,
+  SpinningTextProps, ScrollVelocityContainerProps, ScrollVelocityRowProps,
+  NumberTickerProps, BlurFadeProps, AnimatedListProps,
+} from './components.animations';
