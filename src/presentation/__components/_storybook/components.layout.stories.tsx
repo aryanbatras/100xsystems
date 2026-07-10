@@ -1,13 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { SidebarNav, Header, MobileNav, Footer, Dropdown } from '../components.layout';
 import { Button } from '../components.atomic';
-import {
-  HouseIcon, LayersIcon, LayoutGridIcon, BlocksIcon, LayoutListIcon,
-  BookOpenIcon, SearchIcon, SettingsIcon, UserIcon, UsersIcon,
-  RocketIcon, CodeIcon, TerminalIcon, GlobeIcon, StarIcon,
-  BrainIcon, SparklesIcon, FlameIcon, HeartIcon, ZapIcon, BellIcon,
-  ChevronDownIcon,
-} from '@animateicons/react/lucide';
 
 const meta = {
   title: 'Layout',
@@ -17,42 +10,43 @@ const meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── Dropdown ──
+// ─── Dropdown — Borderless Bento, Inset Shadow, UPPERCASE ──
 
 export const DropdownDemo: Story = {
   name: 'Dropdown',
   render: () => (
-    <div className="p-8">
+    <div className="min-h-[600px] p-8 bg-surface-secondary flex flex-col items-center gap-8">
+      <p className="text-sm text-fg-muted uppercase tracking-wider">SINGLE-COLUMN DROPDOWN — INSET SHADOW, UPPERCASE TEXT</p>
       <Dropdown
         trigger={
-          <span className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-fg-secondary hover:text-accent uppercase tracking-wider cursor-pointer">
-            ROADMAP
-            <ChevronDownIcon size={16} isAnimated={true} />
+          <span className="inline-flex items-center gap-1.5 px-5 py-3 text-sm font-bold uppercase tracking-wider text-fg-secondary hover:text-fg transition-colors cursor-pointer border border-border">
+            ROADMAPS
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
           </span>
         }
         items={[
-          { id: 'dsa', label: 'DSA', description: 'Data structures & algorithms practice', icon: <CodeIcon size={18} isAnimated={true} /> },
-          { id: 'system-design', label: 'System Design', description: 'Scalable architecture patterns', icon: <LayersIcon size={18} isAnimated={true} /> },
-          { id: 'web-dev', label: 'Web Dev', description: 'Full-stack development paths', icon: <GlobeIcon size={18} isAnimated={true} /> },
-          { id: 'ai-ml', label: 'AI / ML', description: 'Machine learning & AI fundamentals', icon: <BrainIcon size={18} isAnimated={true} /> },
+          { id: 'dsa', label: 'DSA', description: 'Data structures & algorithms practice', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg> },
+          { id: 'system-design', label: 'SYSTEM DESIGN', description: 'Scalable architecture patterns', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z" /><path d="M2 17l10 5 10-5" /><path d="M2 12l10 5 10-5" /></svg> },
+          { id: 'web-dev', label: 'WEB DEV', description: 'Full-stack development paths', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg> },
+          { id: 'ai-ml', label: 'AI / ML', description: 'Machine learning & AI fundamentals', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v13a2.5 2.5 0 0 1-5 0V12H5a2.5 2.5 0 0 1 0-5h2V4.5A2.5 2.5 0 0 1 9.5 2z" /><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v13a2.5 2.5 0 0 0 5 0V12h2a2.5 2.5 0 0 0 0-5h-2V4.5A2.5 2.5 0 0 0 14.5 2z" /></svg> },
         ]}
       />
     </div>
   ),
 };
 
-// ─── Header ──
+// ─── Header — UPPERCASE, Ghost Hover, Active=Yellow, 100X SYSTEMS ──
 
 const headerItems = [
-  { id: 'home', label: 'Home', href: '/' },
-  { id: 'courses', label: 'Courses', href: '/courses' },
-  { id: 'pricing', label: 'Pricing', href: '/pricing' },
-  { id: 'about', label: 'About', href: '/about' },
-  { id: 'roadmap', label: 'Roadmap', children: [
-    { id: 'dsa', label: 'DSA', href: '/roadmaps/dsa', description: 'Data structures & algorithms', icon: <CodeIcon size={18} isAnimated={true} /> },
-    { id: 'system-design', label: 'System Design', href: '/roadmaps/system-design', description: 'Scalable architecture patterns', icon: <LayersIcon size={18} isAnimated={true} /> },
-    { id: 'web-dev', label: 'Web Dev', href: '/roadmaps/web-dev', description: 'Full-stack development paths', icon: <GlobeIcon size={18} isAnimated={true} /> },
-    { id: 'ai-ml', label: 'AI / ML', href: '/roadmaps/ai-ml', description: 'Machine learning & AI', icon: <BrainIcon size={18} isAnimated={true} /> },
+  { id: 'home', label: 'HOME', href: '/' },
+  { id: 'courses', label: 'COURSES', href: '/courses' },
+  { id: 'pricing', label: 'PRICING', href: '/pricing' },
+  { id: 'about', label: 'ABOUT', href: '/about' },
+  { id: 'roadmap', label: 'ROADMAP', children: [
+    { id: 'dsa', label: 'DSA', href: '/roadmaps/dsa', description: 'Data structures & algorithms', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg> },
+    { id: 'system-design', label: 'SYSTEM DESIGN', href: '/roadmaps/system-design', description: 'Scalable architecture patterns', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z" /><path d="M2 17l10 5 10-5" /><path d="M2 12l10 5 10-5" /></svg> },
+    { id: 'web-dev', label: 'WEB DEV', href: '/roadmaps/web-dev', description: 'Full-stack development paths', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg> },
+    { id: 'ai-ml', label: 'AI / ML', href: '/roadmaps/ai-ml', description: 'Machine learning & AI', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v13a2.5 2.5 0 0 1-5 0V12H5a2.5 2.5 0 0 1 0-5h2V4.5A2.5 2.5 0 0 1 9.5 2z" /><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v13a2.5 2.5 0 0 0 5 0V12h2a2.5 2.5 0 0 0 0-5h-2V4.5A2.5 2.5 0 0 0 14.5 2z" /></svg> },
   ]},
 ];
 
@@ -62,89 +56,84 @@ export const HeaderDemo: Story = {
     <div className="min-h-screen">
       <Header
         items={headerItems}
-        actions={<Button variant="ripple" size="sm">Sign In</Button>}
+        activeId="home"
+        actions={
+          <Button variant="purpleGhost" size="sm">SIGN IN</Button>
+        }
       />
-      <div className="p-12">
-        <h1 className="text-4xl font-extrabold text-fg uppercase tracking-tight">Page Content</h1>
-        <p className="text-fg-secondary mt-4 text-lg">Header with tall height, no border, animated icons, and bento dropdown.</p>
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-16">
+        <h1 className="text-3xl font-bold text-fg tracking-tight uppercase">PAGE CONTENT</h1>
+        <p className="text-fg-secondary mt-3 text-lg uppercase tracking-wider">"100X SYSTEMS" LOGO — GHOST HOVER YELLOW UNDERLINE — ACTIVE=YELLOW BUTTON — SIGN IN=PURPLE GHOST</p>
       </div>
     </div>
   ),
 };
 
-// ─── SidebarNav ──
-
-const sidebarItems = [
-  { id: 'home', label: 'Home', Icon: HouseIcon, href: '/' },
-  { id: 'roadmaps', label: 'Roadmaps', Icon: LayersIcon, href: '/roadmaps' },
-  { id: 'resources', label: 'Resources', Icon: BookOpenIcon, href: '/resources' },
-  { id: 'dsa', label: 'DSA', Icon: CodeIcon, href: '/dsa' },
-  { id: 'dashboard', label: 'Dashboard', Icon: LayoutGridIcon, href: '/dashboard' },
-  { id: 'settings', label: 'Settings', Icon: SettingsIcon, href: '/settings' },
-];
+// ─── SidebarNav — Borderless with Shadow, No Gap, Animated Icons ──
 
 export const SidebarDemo: Story = {
   name: 'SidebarNav',
   render: () => (
     <div className="h-screen flex">
-      <SidebarNav items={sidebarItems} activeId="home" />
+      <SidebarNav
+        items={[
+          { id: 'home', label: 'Home', iconName: 'house', href: '/' },
+          { id: 'roadmaps', label: 'Roadmaps', iconName: 'compass', href: '/roadmaps' },
+          { id: 'resources', label: 'Resources', iconName: 'book-open', href: '/resources' },
+          { id: 'dsa', label: 'DSA', iconName: 'code', href: '/dsa' },
+          { id: 'dashboard', label: 'Dashboard', iconName: 'layout-grid', href: '/dashboard' },
+          { id: 'settings', label: 'Settings', iconName: 'settings', href: '/settings' },
+        ]}
+        activeId="home"
+      />
       <div className="flex-1 p-8 bg-surface-light">
-        <h1 className="text-2xl font-bold text-fg">Page Content</h1>
-        <p className="text-fg-secondary mt-2">Compact sidebar with animated icons.</p>
+        <h1 className="text-3xl font-bold text-fg tracking-tight uppercase">SIDEBAR CONTENT</h1>
+        <p className="text-fg-secondary mt-2 uppercase tracking-wider text-sm">BORDERLESS — SHADOW — NO GAP — ANIMATED ICONS</p>
       </div>
     </div>
   ),
 };
 
-// ─── MobileNav (Dock) ──
-
-const mobileItems = [
-  { id: 'home', label: 'Home', Icon: HouseIcon, href: '/' },
-  { id: 'roadmaps', label: 'Roadmaps', Icon: LayersIcon, href: '/roadmaps' },
-  { id: 'resources', label: 'Resources', Icon: BookOpenIcon, href: '/resources' },
-  { id: 'notifications', label: 'Alerts', Icon: BellIcon, href: '#', badge: 5 },
-  { id: 'profile', label: 'Profile', Icon: UserIcon, href: '/profile' },
-];
+// ─── MobileNav (Dock) — Borderless, Inset Shadow, Dividers ──
 
 export const MobileNavDemo: Story = {
   name: 'MobileNav (Dock)',
   parameters: { viewport: { defaultViewport: 'mobile1' } },
   render: () => (
-    <div className="min-h-[600px] pb-24">
-      <div className="p-8">
-        <h1 className="text-2xl font-bold text-fg">Page Content</h1>
-        <p className="text-fg-secondary mt-2">Dock-style bottom navigation with magnification effect. Hover over icons to see the dock effect.</p>
+    <div className="min-h-[600px] pb-24 bg-surface-light">
+      <div className="p-6">
+        <h1 className="text-2xl font-bold text-fg uppercase tracking-tight">PAGE CONTENT</h1>
+        <p className="text-fg-secondary mt-2 uppercase tracking-wider text-xs">BORDERLESS DOCK — INSET SHADOW — DIVIDER BEFORE PROFILE — ANIMATED ICONS</p>
       </div>
-      <MobileNav items={mobileItems} activeId="home" />
-    </div>
-  ),
-};
-
-// ─── Footer ──
-
-const footerSections = [
-  { title: 'Product', links: [{ label: 'Roadmaps', href: '/roadmaps' }, { label: 'Resources', href: '/resources' }, { label: 'DSA', href: '/dsa' }, { label: 'Articles', href: '/articles' }] },
-  { title: 'Company', links: [{ label: 'About', href: '/about' }, { label: 'Contact', href: '/contact' }, { label: 'Privacy', href: '/privacy' }, { label: 'Terms', href: '/terms' }] },
-  { title: 'Community', links: [{ label: 'GitHub', href: 'https://github.com' }, { label: 'Discord', href: '#' }, { label: 'Twitter', href: '#' }] },
-];
-
-export const FooterDemo: Story = {
-  name: 'Footer',
-  render: () => (
-    <div className="min-h-screen flex flex-col">
-      <div className="flex-1 p-8">
-        <h1 className="text-2xl font-bold text-fg">Page Content</h1>
-      </div>
-      <Footer
-        sections={footerSections}
-        tagline="Transform Developers into 100xEngineers"
-        copyright="© 2025 100X Systems. All rights reserved."
+      <MobileNav
+        items={[
+          { id: 'home', label: 'Home', iconName: 'house', href: '/' },
+          { id: 'roadmaps', label: 'Roadmaps', iconName: 'compass', href: '/roadmaps' },
+          { id: 'resources', label: 'Resources', iconName: 'book-open', href: '/resources' },
+          { id: 'alerts', label: 'Alerts', iconName: 'bell', href: '#', badge: 5 },
+          { id: 'profile', label: 'Profile', iconName: 'user', href: '/profile', dividerAfter: true },
+        ]}
+        activeId="home"
       />
     </div>
   ),
 };
 
-// ─── Full Layout Demo ──
+// ─── Footer — Purple Ghost Links ──
+
+export const FooterDemo: Story = {
+  name: 'Footer',
+  render: () => (
+    <div className="min-h-screen flex flex-col">
+      <div className="flex-1 max-w-[1400px] mx-auto px-6 lg:px-12 py-16">
+        <h1 className="text-3xl font-bold text-fg tracking-tight uppercase">PAGE CONTENT</h1>
+      </div>
+      <Footer />
+    </div>
+  ),
+};
+
+// ─── Full Layout Demo — Improved ──
 
 export const FullLayout: Story = {
   name: 'Full Layout Demo',
@@ -152,19 +141,55 @@ export const FullLayout: Story = {
     <div className="min-h-screen flex flex-col">
       <Header
         items={headerItems}
-        actions={<Button variant="ripple" size="sm">Sign In</Button>}
+        activeId="home"
+        actions={
+          <Button variant="purpleGhost" size="sm">SIGN IN</Button>
+        }
       />
       <div className="flex-1 flex">
         <div className="hidden lg:block">
-          <SidebarNav items={sidebarItems} activeId="home" className="h-full" />
+          <SidebarNav
+            items={[
+              { id: 'home', label: 'Home', iconName: 'house' },
+              { id: 'roadmaps', label: 'Roadmaps', iconName: 'compass' },
+              { id: 'resources', label: 'Resources', iconName: 'book-open' },
+              { id: 'dsa', label: 'DSA', iconName: 'code' },
+              { id: 'dashboard', label: 'Dashboard', iconName: 'layout-grid' },
+              { id: 'settings', label: 'Settings', iconName: 'settings' },
+            ]}
+            activeId="home"
+            className="h-full"
+          />
         </div>
-        <main className="flex-1 p-8">
-          <h1 className="text-2xl font-bold text-fg">Dashboard</h1>
-          <p className="text-fg-secondary mt-2">Page content goes here.</p>
+        <main className="flex-1 p-10 bg-surface-light">
+          <h1 className="text-3xl font-bold text-fg tracking-tight uppercase">DASHBOARD</h1>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="border border-border p-6 bg-white">
+              <p className="text-xs font-bold uppercase tracking-wider text-fg-muted mb-2">TOTAL MODULES</p>
+              <p className="text-3xl font-bold text-fg">12</p>
+            </div>
+            <div className="border border-border p-6 bg-white">
+              <p className="text-xs font-bold uppercase tracking-wider text-fg-muted mb-2">COMPLETED</p>
+              <p className="text-3xl font-bold text-fg">8</p>
+            </div>
+            <div className="border border-border p-6 bg-white">
+              <p className="text-xs font-bold uppercase tracking-wider text-fg-muted mb-2">STREAK</p>
+              <p className="text-3xl font-bold text-fg">7 DAYS</p>
+            </div>
+          </div>
+          <p className="text-fg-secondary mt-8 uppercase tracking-wider text-sm">FULL LAYOUT — HEADER + SIDEBAR + DOCK + FOOTER</p>
         </main>
       </div>
-      <Footer sections={footerSections} tagline="100X Systems" copyright="© 2025" />
-      <MobileNav items={mobileItems} activeId="home" />
+      <Footer />
+      <MobileNav
+        items={[
+          { id: 'home', label: 'Home', iconName: 'house' },
+          { id: 'roadmaps', label: 'Roadmaps', iconName: 'compass' },
+          { id: 'resources', label: 'Resources', iconName: 'book-open' },
+          { id: 'profile', label: 'Profile', iconName: 'user', dividerAfter: true },
+        ]}
+        activeId="home"
+      />
     </div>
   ),
 };

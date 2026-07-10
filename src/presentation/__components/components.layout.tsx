@@ -2,7 +2,8 @@
  * ## Layout Components
  *
  * Full-width page layout components — Header, SidebarNav, MobileNav, Footer, Dropdown.
- * Uses animated icons from @animateicons/react and Bento grid for dropdown panels.
+ * Uses @animateicons/react/lucide for sidebar/dock animated icons, and the atomic Button
+ * component for all interactive actions.
  *
  * @packageDocumentation
  */
@@ -12,20 +13,12 @@
 import React, { useState, useRef, useEffect, type ReactNode } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, type MotionValue } from 'motion/react';
 import { cn } from '@/application/lib/utils';
-import { ScrollVelocityRow } from './components.animations';
+import { Button } from './components.atomic';
+import { AnimatedIcon } from './components.token';
 
-import {
-  HouseIcon, LayersIcon, LayoutGridIcon, BlocksIcon, LayoutListIcon,
-  BookOpenIcon, SearchIcon, SettingsIcon, UserIcon, UsersIcon,
-  MenuIcon, XIcon, ChevronDownIcon, ChevronRightIcon,
-  CodeIcon, TerminalIcon, GlobeIcon, RocketIcon, StarIcon,
-  BrainIcon, SparklesIcon, FlameIcon, HeartIcon, ZapIcon,
-  MailIcon, MessageCircleIcon, BellIcon, CompassIcon,
-} from '@animateicons/react/lucide';
-
-type AnimatedIconComponent = React.ComponentType<{ size?: number; isAnimated?: boolean; color?: string }>;
-
-// ─── Dropdown ───────────────────────────────────────────────────────
+// ─── Dropdown — Borderless Bento with Inset Shadow ──────────────────
+// No border, inset shadow, no padding on container, flush to trigger corners.
+// All text UPPERCASE, bigger, bolder.
 
 export interface DropdownItem {
   id: string;
@@ -33,6 +26,7 @@ export interface DropdownItem {
   href?: string;
   icon?: ReactNode;
   description?: string;
+  featured?: boolean;
 }
 
 export interface DropdownProps {
@@ -55,8 +49,6 @@ export function Dropdown({ trigger, items, align = 'left', className, onItemSele
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
-  const cols = items.length <= 4 ? 'grid-cols-2' : items.length <= 9 ? 'grid-cols-3' : 'grid-cols-4';
-
   return (
     <div ref={ref} className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
       <button onClick={() => setOpen(!open)} className="inline-flex items-center">
@@ -65,33 +57,46 @@ export function Dropdown({ trigger, items, align = 'left', className, onItemSele
       <AnimatePresence>
         {open && items.length > 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            transition={{ duration: 0.15 }}
+            initial={{ opacity: 0, y: 4, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 4, scale: 0.97 }}
+            transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
+            style={{ transformOrigin: align === 'right' ? 'top right' : 'top left' }}
             className={cn(
-              'absolute top-full mt-3 min-w-[380px] bg-white border border-border shadow-xl z-50',
+              'absolute top-full z-50 w-max max-w-[calc(100vw-2rem)]',
+              'shadow-[inset_0_1px_3px_rgba(0,0,0,0.06),0_10px_30px_-10px_rgba(0,0,0,0.15)]',
               align === 'right' ? 'right-0' : 'left-0',
               className,
             )}
           >
-            <div className={cn('grid gap-2 p-3', cols)}>
-              {items.map((item) => (
-                <a
-                  key={item.id}
-                  href={item.href || '#'}
-                  className="flex flex-col gap-1.5 p-3 hover:bg-surface-secondary transition-colors group"
-                  onClick={() => { onItemSelect?.(item); setOpen(false); }}
-                >
-                  <div className="flex items-center gap-2.5">
-                    {item.icon && <span className="shrink-0 text-fg-secondary group-hover:text-accent">{item.icon}</span>}
-                    <span className="text-sm font-bold text-fg group-hover:text-accent uppercase tracking-wide">{item.label}</span>
-                  </div>
-                  {item.description && (
-                    <div className="text-xs text-fg-secondary leading-snug pl-0 group-hover:text-fg-tertiary">{item.description}</div>
-                  )}
-                </a>
-              ))}
+            {/* Single-column vertical dropdown — no border, no padding on container */}
+            <div className="bg-accent-bg p-0 min-w-[220px]">
+              <div className="flex flex-col">
+                {items.map((item) => (
+                  <a
+                    key={item.id}
+                    href={item.href || '#'}
+                    className="group flex items-center gap-3 px-5 py-4 transition-all duration-200 bg-white hover:bg-accent hover:text-white"
+                    onClick={() => { onItemSelect?.(item); setOpen(false); }}
+                  >
+                    {item.icon && (
+                      <span className="shrink-0 text-fg group-hover:text-white transition-colors">
+                        {item.icon}
+                      </span>
+                    )}
+                    <div className="flex flex-col gap-0.5">
+                      <span className="font-bold tracking-wide text-sm text-fg group-hover:text-white transition-colors">
+                        {item.label.toUpperCase()}
+                      </span>
+                      {item.description && (
+                        <span className="text-xs leading-relaxed text-fg-secondary group-hover:text-white/80 transition-colors uppercase tracking-wide font-medium">
+                          {item.description}
+                        </span>
+                      )}
+                    </div>
+                  </a>
+                ))}
+              </div>
             </div>
           </motion.div>
         )}
@@ -101,12 +106,14 @@ export function Dropdown({ trigger, items, align = 'left', className, onItemSele
 }
 
 // ─── Header ─────────────────────────────────────────────────────────
+// "100X SYSTEMS" big text. Nav links: ghost hover (yellow underline), active = yellow button.
+// Sign In = purpleGhost Button atom.
 
 export interface HeaderNavItem {
   id: string;
   label: string;
   href?: string;
-  children?: Array<{ id: string; label: string; href?: string; description?: string; icon?: ReactNode }>;
+  children?: Array<{ id: string; label: string; href?: string; description?: string; icon?: ReactNode; featured?: boolean }>;
 }
 
 export interface HeaderProps {
@@ -114,10 +121,11 @@ export interface HeaderProps {
   items: HeaderNavItem[];
   actions?: ReactNode;
   sticky?: boolean;
+  activeId?: string;
   className?: string;
 }
 
-export function Header({ logo, items, actions, sticky = true, className }: HeaderProps) {
+export function Header({ logo, items, actions, sticky = true, activeId, className }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -128,54 +136,68 @@ export function Header({ logo, items, actions, sticky = true, className }: Heade
     )}>
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div className="flex items-center justify-between h-24 lg:h-28">
-          {/* Logo */}
+          {/* Logo — "100X SYSTEMS", uppercase */}
           <div className="shrink-0">
             {logo || (
-              <div className="flex items-center gap-2">
-                <span className="text-2xl lg:text-3xl font-extrabold text-fg tracking-tight uppercase">100X</span>
-                <ZapIcon size={22} isAnimated={true} color="#572EFF" />
-              </div>
+              <span className="text-2xl lg:text-3xl font-extrabold text-fg tracking-tight select-none uppercase">
+                100X SYSTEMS
+              </span>
             )}
           </div>
 
-          {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-2">
-            {items.map((item) => (
-              item.children && item.children.length > 0 ? (
+          {/* Desktop nav — ghost hover behavior (yellow underline), active = yellow button */}
+          <nav className="hidden lg:flex items-center gap-0.5">
+            {items.map((item) => {
+              const isActive = activeId === item.id;
+              return item.children && item.children.length > 0 ? (
                 <Dropdown
                   key={item.id}
                   trigger={
-                    <span className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-fg-secondary hover:text-accent transition-colors uppercase tracking-wider cursor-pointer">
+                    <span className={cn(
+                      'inline-flex items-center gap-1.5 px-5 py-3 text-sm font-bold uppercase tracking-wider cursor-pointer transition-all duration-200 relative',
+                      isActive
+                        ? 'bg-accent-yellow text-black'
+                        : 'text-fg-secondary after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full after:bg-accent-yellow after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out hover:text-fg',
+                    )}>
                       {item.label}
-                      <ChevronDownIcon size={16} isAnimated={true} />
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
                     </span>
                   }
                   items={item.children.map(c => ({
                     ...c,
-                    icon: c.icon || <RocketIcon size={18} isAnimated={true} />,
+                    icon: c.icon,
                   }))}
                 />
               ) : (
                 <a
                   key={item.id}
                   href={item.href || '#'}
-                  className="px-4 py-2.5 text-sm font-bold text-fg-secondary hover:text-accent transition-colors uppercase tracking-wider"
+                  className={cn(
+                    'px-5 py-3 text-sm font-bold uppercase tracking-wider transition-all duration-200 relative',
+                    isActive
+                      ? 'bg-accent-yellow text-black'
+                      : 'text-fg-secondary after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full after:bg-accent-yellow after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out hover:text-fg',
+                  )}
                 >
                   {item.label}
                 </a>
-              )
-            ))}
+              );
+            })}
           </nav>
 
           {/* Actions + mobile toggle */}
-          <div className="flex items-center gap-4">
-            {actions && <div className="hidden lg:flex items-center gap-3">{actions}</div>}
+          <div className="flex items-center gap-3">
+            {actions && <div className="hidden lg:flex items-center gap-2">{actions}</div>}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 text-fg-secondary hover:text-accent transition-colors"
+              className="lg:hidden p-2 text-fg-secondary hover:text-fg transition-colors"
               aria-label="Toggle menu"
             >
-              {mobileOpen ? <XIcon size={28} isAnimated={true} /> : <MenuIcon size={28} isAnimated={true} />}
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                {mobileOpen ? <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></> : <><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></>}
+              </svg>
             </button>
           </div>
         </div>
@@ -188,37 +210,43 @@ export function Header({ logo, items, actions, sticky = true, className }: Heade
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
             className="lg:hidden border-t border-border bg-white overflow-hidden"
           >
-            <nav className="px-6 py-4 space-y-1">
-              {items.map((item) => (
-                <div key={item.id}>
-                  <a
-                    href={item.href || '#'}
-                    className="block px-4 py-3 text-sm font-bold text-fg hover:text-accent uppercase tracking-wider transition-colors"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    {item.label}
-                  </a>
-                  {item.children && (
-                    <div className="pl-6 space-y-0.5">
-                      {item.children.map((child) => (
-                        <a
-                          key={child.id}
-                          href={child.href || '#'}
-                          className="block px-4 py-2.5 text-sm text-fg-secondary hover:text-accent transition-colors"
-                          onClick={() => setMobileOpen(false)}
-                        >
-                          {child.label}
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
+            <nav className="px-6 py-4 space-y-0.5">
+              {items.map((item) => {
+                const isActive = activeId === item.id;
+                return (
+                  <div key={item.id}>
+                    <a
+                      href={item.href || '#'}
+                      className={cn(
+                        'block px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors',
+                        isActive ? 'bg-accent-yellow text-black' : 'text-fg hover:text-accent',
+                      )}
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      {item.label}
+                    </a>
+                    {item.children && (
+                      <div className="pl-6 space-y-0.5 border-l border-border ml-4">
+                        {item.children.map((child) => (
+                          <a
+                            key={child.id}
+                            href={child.href || '#'}
+                            className="block px-4 py-2.5 text-sm text-fg-secondary hover:text-accent transition-colors"
+                            onClick={() => setMobileOpen(false)}
+                          >
+                            {child.label}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </nav>
-            {actions && <div className="px-6 pb-4 border-t border-border pt-4">{actions}</div>}
+            {actions && <div className="px-6 pb-4 border-t border-border pt-4 flex gap-2">{actions}</div>}
           </motion.div>
         )}
       </AnimatePresence>
@@ -226,14 +254,14 @@ export function Header({ logo, items, actions, sticky = true, className }: Heade
   );
 }
 
-// ─── SidebarNav (collapsed only, animated icons) ────────────────────
+// ─── SidebarNav — Borderless, with Shadow ───────────────────────────
+// No gap between items. White icons on active. Borderless with shadow.
 
 export interface SidebarNavItem {
   id: string;
   label: string;
-  Icon?: AnimatedIconComponent;
+  iconName?: string;
   href?: string;
-  active?: boolean;
 }
 
 export interface SidebarNavProps {
@@ -246,45 +274,64 @@ export interface SidebarNavProps {
 export function SidebarNav({ items, activeId, onItemClick, className }: SidebarNavProps) {
   return (
     <nav className={cn(
-      'flex flex-col items-center gap-0.5 py-3 px-1.5 bg-white border-r border-border min-h-full w-12',
+      'flex flex-col items-center bg-white min-h-full w-auto',
+      'shadow-[inset_-1px_0_0_rgba(0,0,0,0.04),2px_0_8px_-4px_rgba(0,0,0,0.06)]',
       className,
     )}>
-      {items.map((item) => {
-        const isActive = activeId === item.id;
-        const IconComp = item.Icon;
-        return (
-          <a
-            key={item.id}
-            href={item.href || '#'}
-            onClick={() => onItemClick?.(item)}
-            title={item.label}
-            className={cn(
-              'flex items-center justify-center w-9 h-9 transition-colors',
-              isActive
-                ? 'bg-accent text-white'
-                : 'text-fg-secondary hover:text-accent hover:bg-accent/10',
-            )}
-          >
-            {IconComp ? (
-              <IconComp size={18} isAnimated={!isActive} color={isActive ? '#fff' : undefined} />
-            ) : (
-              <span className="text-xs font-bold">{item.label[0]}</span>
-            )}
-          </a>
-        );
-      })}
+      {/* No gap between items */}
+      <div className="flex flex-col items-center">
+        {items.map((item) => {
+          const isActive = activeId === item.id;
+          return (
+            <a
+              key={item.id}
+              href={item.href || '#'}
+              onClick={() => onItemClick?.(item)}
+              title={item.label}
+              className={cn(
+                'flex items-center justify-center transition-all duration-150',
+                isActive
+                  ? 'bg-accent-yellow text-black'
+                  : 'hover:bg-accent hover:text-white',
+              )}
+              style={{
+                width: isActive ? 52 : 52,
+                height: isActive ? 52 : 52,
+              }}
+            >
+              {item.iconName ? (
+                <AnimatedIcon
+                  name={item.iconName}
+                  size={isActive ? 24 : 22}
+                  color={isActive ? '#000000' : undefined}
+                  isAnimated={!isActive}
+                />
+              ) : (
+                <span className={cn(
+                  'text-xs font-bold',
+                  isActive ? 'text-black' : 'text-fg-secondary',
+                )}>
+                  {item.label[0]}
+                </span>
+              )}
+            </a>
+          );
+        })}
+      </div>
     </nav>
   );
 }
 
-// ─── MobileNav (Dock-style bottom tab bar) ──────────────────────────
+// ─── MobileNav (Dock) — Borderless, Inset Shadow, with Dividers ────
+// No gap between items. Dividers between sections. Purple bg + white on hover.
 
 export interface MobileNavItem {
   id: string;
   label: string;
-  Icon?: AnimatedIconComponent;
+  iconName?: string;
   href?: string;
   badge?: number;
+  dividerAfter?: boolean;
 }
 
 export interface MobileNavProps {
@@ -302,34 +349,42 @@ export function MobileNav({ items, activeId, onNavigate, className }: MobileNavP
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
       className={cn(
-        'fixed bottom-4 left-1/2 -translate-x-1/2 z-50 md:hidden',
-        'flex items-center gap-1 px-4 py-2',
-        'bg-white/95 backdrop-blur-md border border-border shadow-xl',
+        'fixed bottom-4 left-1/2 -translate-x-1/2 z-50',
+        'flex items-center px-3 py-2',
+        'bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_-6px_rgba(0,0,0,0.12)]',
         className,
       )}
     >
-      {items.map((item) => {
+      {items.map((item, idx) => {
         const isActive = activeId === item.id;
-        const IconComp = item.Icon;
         return (
-          <DockIcon
-            key={item.id}
-            mouseX={mouseX}
-            isActive={isActive}
-            badge={item.badge}
-          >
-            <a
-              href={item.href || '#'}
-              onClick={() => onNavigate?.(item)}
-              className="flex items-center justify-center w-full h-full"
+          <React.Fragment key={item.id}>
+            {item.dividerAfter && idx < items.length - 1 && (
+              <div className="w-px h-6 bg-border mx-1.5" />
+            )}
+            <DockIcon
+              mouseX={mouseX}
+              isActive={isActive}
+              badge={item.badge}
             >
-              {IconComp ? (
-                <IconComp size={18} isAnimated={!isActive} color={isActive ? 'var(--accent)' : undefined} />
-              ) : (
-                <span className="text-xs font-bold">{item.label[0]}</span>
-              )}
-            </a>
-          </DockIcon>
+              <a
+                href={item.href || '#'}
+                onClick={() => onNavigate?.(item)}
+                className="flex items-center justify-center w-full h-full"
+              >
+                {item.iconName ? (
+                  <AnimatedIcon
+                    name={item.iconName}
+                    size={22}
+                    color={isActive ? '#000000' : undefined}
+                    isAnimated={true}
+                  />
+                ) : (
+                  <span className="text-xs font-bold">{item.label[0]}</span>
+                )}
+              </a>
+            </DockIcon>
+          </React.Fragment>
         );
       })}
     </motion.div>
@@ -337,6 +392,7 @@ export function MobileNav({ items, activeId, onNavigate, className }: MobileNavP
 }
 
 // ─── DockIcon (magnification on hover) ──────────────────────────────
+// Purple bg + white on hover/active. Magnification effect.
 
 interface DockIconProps {
   mouseX: MotionValue<number>;
@@ -347,10 +403,9 @@ interface DockIconProps {
 
 function DockIcon({ mouseX, isActive, badge, children }: DockIconProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const size = 40;
-  const magnification = 52;
-  const dist = 100;
-  const padding = 6;
+  const size = 44;
+  const magnification = 62;
+  const dist = 120;
 
   const distanceCalc = useTransform(mouseX, (val: number) => {
     const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
@@ -363,15 +418,17 @@ function DockIcon({ mouseX, isActive, badge, children }: DockIconProps) {
   return (
     <motion.div
       ref={ref}
-      style={{ width: scaleSize, height: scaleSize, padding }}
+      style={{ width: scaleSize, height: scaleSize }}
       className={cn(
-        'relative flex items-center justify-center transition-colors',
-        isActive ? 'bg-accent/10' : 'hover:bg-surface-secondary',
+        'relative flex items-center justify-center transition-colors duration-150',
+        isActive
+          ? 'bg-accent-yellow text-black'
+          : 'text-fg-secondary hover:bg-accent hover:text-white',
       )}
     >
       {children}
       {badge && badge > 0 && (
-        <span className="absolute -top-0.5 -right-0.5 min-w-[14px] h-3.5 px-0.5 bg-accent text-white text-[9px] font-bold flex items-center justify-center">
+        <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 bg-accent text-white text-[10px] font-bold flex items-center justify-center">
           {badge > 99 ? '99+' : badge}
         </span>
       )}
@@ -379,64 +436,61 @@ function DockIcon({ mouseX, isActive, badge, children }: DockIconProps) {
   );
 }
 
-// ─── Footer ─────────────────────────────────────────────────────────
-
-export interface FooterSection {
-  title: string;
-  links: Array<{ label: string; href: string }>;
-}
+// ─── Footer — Modern Minimal, Purple Ghost Links ────────────────────
+// Links styled as purpleGhost buttons. Rich text.
 
 export interface FooterProps {
-  sections?: FooterSection[];
-  copyright?: string;
-  tagline?: string;
-  marqueeText?: string;
   className?: string;
 }
 
-export function Footer({ sections = [], copyright, tagline, marqueeText, className }: FooterProps) {
-  const displayMarquee = marqueeText || '100X SYSTEMS — TRANSFORM DEVELOPERS INTO 100XENGINEERS — ';
+export function Footer({ className }: FooterProps) {
+  const currentYear = new Date().getFullYear();
+  const linkClass = 'inline-flex items-center px-4 py-2 text-sm font-semibold text-fg-secondary hover:text-white hover:bg-accent transition-all duration-200 uppercase tracking-wider';
 
   return (
-    <footer className={cn('bg-black', className)}>
-      {/* Marquee strip */}
-      <div className="overflow-hidden border-b border-white/10 py-4">
-        <ScrollVelocityRow baseVelocity={4} direction={1} className="text-sm font-bold text-white/30 uppercase tracking-[0.3em]">
-          <span className="mx-8 shrink-0">{displayMarquee}</span>
-        </ScrollVelocityRow>
-      </div>
-
+    <footer className={cn('bg-white', className)}>
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
-        {/* Top section */}
-        <div className="py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
-          {sections.map((section) => (
-            <div key={section.title}>
-              <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white/40 mb-4">{section.title}</h4>
-              <ul className="space-y-2.5">
-                {section.links.map((link) => (
-                  <li key={link.label}>
-                    <a href={link.href} className="text-sm font-medium text-white/60 hover:text-white transition-colors">
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom section */}
-        {(tagline || copyright) && (
-          <div className="py-5 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-            {tagline && (
-              <div className="flex items-center gap-3">
-                <span className="text-xl font-extrabold text-white tracking-tight uppercase">100X</span>
-                <span className="text-sm text-white/50">{tagline}</span>
-              </div>
-            )}
-            {copyright && <p className="text-xs text-white/30">{copyright}</p>}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 py-12">
+          {/* Brand */}
+          <div className="flex flex-col items-center md:items-start gap-1.5">
+            <span className="text-2xl lg:text-3xl font-extrabold text-fg tracking-tight uppercase select-none">
+              100X SYSTEMS
+            </span>
+            <span className="text-sm lg:text-base text-fg-secondary font-medium">
+              FROM DEVELOPER TO SYSTEMS ENGINEER
+            </span>
           </div>
-        )}
+
+          {/* Links — purple ghost style */}
+          <div className="flex items-center flex-wrap justify-center gap-1">
+            <a href="/about" className={linkClass}>ABOUT</a>
+            <a href="/contact" className={linkClass}>CONTACT</a>
+            <a href="/privacy" className={linkClass}>PRIVACY</a>
+            <a href="/terms" className={linkClass}>TERMS</a>
+          </div>
+
+          {/* Social & Copyright */}
+          <div className="flex items-center gap-4">
+            <a href="https://github.com/100xsystems" target="_blank" rel="noopener noreferrer" className="p-2 text-fg-secondary hover:text-white hover:bg-accent transition-all duration-200" aria-label="GitHub">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />
+              </svg>
+            </a>
+            <a href="https://www.linkedin.com/company/100xsystems/" target="_blank" rel="noopener noreferrer" className="p-2 text-fg-secondary hover:text-white hover:bg-accent transition-all duration-200" aria-label="LinkedIn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+              </svg>
+            </a>
+            <a href="mailto:admin@100xsystems.dev" className="p-2 text-fg-secondary hover:text-white hover:bg-accent transition-all duration-200" aria-label="Email">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+              </svg>
+            </a>
+            <span className="text-xs font-semibold text-fg-muted select-none uppercase tracking-wider">
+              &copy; {currentYear}
+            </span>
+          </div>
+        </div>
       </div>
     </footer>
   );

@@ -20,7 +20,7 @@ export type { BreadcrumbItem, BreadcrumbsProps, AccordionProps, AccordionItem, A
 
 // ─── Layout Components ─────────────────────────────────────────────
 export { SidebarNav, Header, MobileNav, Footer, Dropdown } from './components.layout';
-export type { SidebarNavProps, SidebarNavItem, HeaderProps, HeaderNavItem, MobileNavProps, MobileNavItem, FooterProps, FooterSection, DropdownProps, DropdownItem } from './components.layout';
+export type { SidebarNavProps, SidebarNavItem, HeaderProps, HeaderNavItem, MobileNavProps, MobileNavItem, FooterProps, DropdownProps, DropdownItem } from './components.layout';
 
 // ─── Animation Components ──────────────────────────────────────────
 export {
