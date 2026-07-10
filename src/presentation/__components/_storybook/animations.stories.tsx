@@ -221,7 +221,7 @@ export const IconAnimatedGridPatternDemo: Story = {
       <p className="text-xs text-fg-muted uppercase tracking-wider font-semibold mb-6">
         Famous software companies &amp; tools — each icon fades in then repositions:
       </p>
-      <div className="relative h-[500px] w-full overflow-hidden">
+      <div className="relative h-[80vh] w-full overflow-hidden">
         <IconAnimatedGridPattern />
       </div>
     </div>
