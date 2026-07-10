@@ -1216,6 +1216,13 @@ export function IconAnimatedGridPattern({
   type GlassVariant = keyof typeof GLASS_COLORS;
   const pickColor = (): GlassVariant => 'yellow';
 
+  // ── Slow diagonal drift ─────────────────────────────────────────
+  const diagOffset = useMotionValue(0);
+  useAnimationFrame((_, delta) => {
+    const speed = 0.003 // px per ms ≈ 3 px/s — very slow diagonal drift
+    diagOffset.set(diagOffset.get() + delta * speed);
+  });
+
   const [hoveredCell, setHoveredCell] = useState<{ col: number; row: number } | null>(null);
   const hoveredCellRef = useRef<{ col: number; row: number } | null>(null);
 
@@ -1304,10 +1311,16 @@ export function IconAnimatedGridPattern({
   }, []);
 
   return (
-    <div
+    <motion.div
       ref={containerRef}
       className={cn('pointer-events-auto absolute inset-0 h-full w-full overflow-hidden', className)}
-      style={{ transform: 'rotate(-2deg) scale(1.1)', transformOrigin: 'center' }}
+      style={{
+        x: diagOffset,
+        y: diagOffset,
+        rotate: -2,
+        scale: 1.1,
+        transformOrigin: 'center',
+      }}
       onMouseMove={(e) => {
         if (!containerRef.current || dims.w === 0) return;
         const rect = containerRef.current.getBoundingClientRect();
@@ -1437,6 +1450,6 @@ export function IconAnimatedGridPattern({
           </motion.div>
         );
       })}
-    </div>
+    </motion.div>
   );
 }
