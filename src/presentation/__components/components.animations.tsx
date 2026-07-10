@@ -1189,17 +1189,46 @@ export function IconAnimatedGridPattern({
   className,
   width = 80,
   height = 80,
-  numIcons = 50,
+  numIcons = 16,
   maxOpacity = 0.2,
-  iconSize = 28,
+  iconSize = 46,
   duration = 4,
   repeatDelay = 1,
 }: IconAnimatedGridPatternProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dims, setDims] = useState({ w: 0, h: 0 });
-  const [bgSquares, setBgSquares] = useState<Array<{ id: number; pos: [number, number]; iteration: number }>>([]);
+  const [bgSquares, setBgSquares] = useState<Array<{ id: number; pos: [number, number]; iteration: number; colorVariant: 'purple' | 'yellow' }>>([]);
   const [iconSquares, setIconSquares] = useState<Array<{ id: number; pos: [number, number]; iconIdx: number; iteration: number }>>([]);
   const occRef = useRef<Set<string>>(new Set());
+
+  // ── Glassy color presets (purple accent & yellow accent) ─────────
+  const GLASS_COLORS = {
+    purple: {
+      background: 'linear-gradient(135deg, rgba(98,37,230,0.28) 0%, rgba(98,37,230,0.12) 40%, rgba(130,70,255,0.22) 70%, rgba(98,37,230,0.30) 100%)',
+      boxShadow: 'inset 0 1.5px 0 rgba(255,255,255,0.25), inset 0 -1px 0 rgba(0,0,0,0.08), 0 2px 8px rgba(98,37,230,0.15)',
+    },
+    yellow: {
+      background: 'linear-gradient(135deg, rgba(251,198,56,0.30) 0%, rgba(251,198,56,0.12) 40%, rgba(255,215,80,0.22) 70%, rgba(251,198,56,0.32) 100%)',
+      boxShadow: 'inset 0 1.5px 0 rgba(255,255,255,0.30), inset 0 -1px 0 rgba(0,0,0,0.06), 0 2px 8px rgba(251,198,56,0.15)',
+    },
+  } as const;
+
+  type GlassVariant = keyof typeof GLASS_COLORS;
+  const pickColor = (): GlassVariant => 'yellow';
+
+  const [hoveredCell, setHoveredCell] = useState<{ col: number; row: number } | null>(null);
+  const hoveredCellRef = useRef<{ col: number; row: number } | null>(null);
+
+  // ── Trailing fade-out effect ────────────────────────────────────
+  const [trailCells, setTrailCells] = useState<Array<{ col: number; row: number; id: number }>>([]);
+  const trailIdRef = useRef(0);
+  const addTrail = useCallback((col: number, row: number) => {
+    const id = trailIdRef.current++;
+    setTrailCells((prev) => [...prev, { col, row, id }]);
+  }, []);
+  const removeTrail = useCallback((id: number) => {
+    setTrailCells((prev) => prev.filter((t) => t.id !== id));
+  }, []);
 
   const cols = dims.w > 0 ? Math.ceil(dims.w / width) + 2 : 0;
   const rows = dims.h > 0 ? Math.ceil(dims.h / height) + 2 : 0;
@@ -1223,24 +1252,24 @@ export function IconAnimatedGridPattern({
   useEffect(() => {
     if (cols === 0 || rows === 0) return;
     occRef.current.clear();
-    const bg: Array<{ id: number; pos: [number, number]; iteration: number }> = [];
+    const bg: Array<{ id: number; pos: [number, number]; iteration: number; colorVariant: 'purple' | 'yellow' }> = [];
     const icons: Array<{ id: number; pos: [number, number]; iconIdx: number; iteration: number }> = [];
 
-    for (let i = 0; i < 60; i++) bg.push({ id: i, pos: pickPos(), iteration: 0 });
+    for (let i = 0; i < 60; i++) bg.push({ id: i, pos: pickPos(), iteration: 0, colorVariant: pickColor() });
     for (let i = 0; i < numIcons; i++) icons.push({ id: i, pos: pickPos(), iconIdx: i % ICON_LIST.length, iteration: 0 });
 
     setBgSquares(bg);
     setIconSquares(icons);
   }, [cols, rows, numIcons, pickPos]);
 
-  // Reposition a single dark square when its animation completes
+  // Reposition a single glass square when its animation completes
   const repositionBg = useCallback((id: number) => {
     setBgSquares((prev) => {
       const next = prev.slice();
       const sq = next[id];
       if (!sq) return prev;
       occRef.current.delete(`${sq.pos[0]},${sq.pos[1]}`);
-      next[id] = { ...sq, pos: pickPos(), iteration: sq.iteration + 1 };
+      next[id] = { ...sq, pos: pickPos(), iteration: sq.iteration + 1, colorVariant: 'yellow' };
       return next;
     });
   }, [pickPos]);
@@ -1277,22 +1306,48 @@ export function IconAnimatedGridPattern({
   return (
     <div
       ref={containerRef}
-      className={cn('pointer-events-none absolute inset-0 h-full w-full overflow-hidden', className)}
+      className={cn('pointer-events-auto absolute inset-0 h-full w-full overflow-hidden', className)}
       style={{ transform: 'rotate(-2deg) scale(1.1)', transformOrigin: 'center' }}
+      onMouseMove={(e) => {
+        if (!containerRef.current || dims.w === 0) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        const preLeft = rect.left + (rect.width - dims.w) / 2;
+        const preTop = rect.top + (rect.height - dims.h) / 2;
+        const col = Math.floor((e.clientX - preLeft - 1) / width);
+        const row = Math.floor((e.clientY - preTop - 1) / height);
+        if (col >= 0 && row >= 0 && col < cols && row < rows) {
+          const prev = hoveredCellRef.current;
+          // If the mouse entered a new cell, push the previous cell to the trail
+          if (prev && (prev.col !== col || prev.row !== row)) {
+            addTrail(prev.col, prev.row);
+          }
+          hoveredCellRef.current = { col, row };
+          setHoveredCell({ col, row });
+        }
+      }}
+      onMouseLeave={() => {
+        const prev = hoveredCellRef.current;
+        if (prev) addTrail(prev.col, prev.row);
+        hoveredCellRef.current = null;
+        setHoveredCell(null);
+      }}
     >
-      {/* Dark squares — glassy dark transparent boxes */}
-      {bgSquares.map((sq, idx) => (
-        <motion.div
-          key={`bg-${sq.id}-${sq.iteration}`}
-          className="absolute"
-          style={{
-            left: sq.pos[0] * width + 1,
-            top: sq.pos[1] * height + 1,
-            width: width - 1,
-            height: height - 1,
-            background: 'linear-gradient(135deg, rgba(30,30,40,0.35) 0%, rgba(20,20,30,0.15) 50%, rgba(40,40,55,0.3) 100%)',
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), 0 1px 3px rgba(0,0,0,0.15)',
-          }}
+      {/* Glass boxes — only yellow by default; purple on hover */}
+      {bgSquares.map((sq, idx) => {
+        const isHovered = hoveredCell !== null && hoveredCell.col === sq.pos[0] && hoveredCell.row === sq.pos[1];
+        const glass = GLASS_COLORS[isHovered ? 'purple' : sq.colorVariant];
+        return (
+          <motion.div
+            key={`bg-${sq.id}-${sq.iteration}`}
+            className="absolute"
+            style={{
+              left: sq.pos[0] * width + 1,
+              top: sq.pos[1] * height + 1,
+              width: width - 1,
+              height: height - 1,
+              background: glass.background,
+              boxShadow: glass.boxShadow,
+            } as React.CSSProperties}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{
@@ -1305,7 +1360,43 @@ export function IconAnimatedGridPattern({
           }}
           onAnimationComplete={() => repositionBg(sq.id)}
         />
+      );
+    })}
+
+      {/* Trail cells — purple cells fading out after mouse leaves */}
+      {trailCells.map((tc) => (
+        <motion.div
+          key={`trail-${tc.id}`}
+          className="absolute"
+          style={{
+            left: tc.col * width + 1,
+            top: tc.row * height + 1,
+            width: width - 1,
+            height: height - 1,
+            background: GLASS_COLORS.purple.background,
+            boxShadow: GLASS_COLORS.purple.boxShadow,
+          }}
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          onAnimationComplete={() => removeTrail(tc.id)}
+        />
       ))}
+
+      {/* Temporary purple box on hovered cell — covers empty cells & icon cells */}
+      {hoveredCell && !bgSquares.some(sq => sq.pos[0] === hoveredCell.col && sq.pos[1] === hoveredCell.row) && (
+        <div
+          className="absolute"
+          style={{
+            left: hoveredCell.col * width + 1,
+            top: hoveredCell.row * height + 1,
+            width: width - 1,
+            height: height - 1,
+            background: GLASS_COLORS.purple.background,
+            boxShadow: GLASS_COLORS.purple.boxShadow,
+          }}
+        />
+      )}
 
       {/* White vignette overlay — fades to white at edges */}
       <div
