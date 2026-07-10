@@ -1195,7 +1195,6 @@ export function IconAnimatedGridPattern({
   duration = 4,
   repeatDelay = 1,
 }: IconAnimatedGridPatternProps) {
-  const svgId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
   const [dims, setDims] = useState({ w: 0, h: 0 });
   const [bgSquares, setBgSquares] = useState<Array<{ id: number; pos: [number, number]; iteration: number }>>([]);
@@ -1292,7 +1291,6 @@ export function IconAnimatedGridPattern({
             width: width - 1,
             height: height - 1,
             background: 'linear-gradient(135deg, rgba(30,30,40,0.35) 0%, rgba(20,20,30,0.15) 50%, rgba(40,40,55,0.3) 100%)',
-            border: '1px solid rgba(255,255,255,0.05)',
             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), 0 1px 3px rgba(0,0,0,0.15)',
           }}
           initial={{ opacity: 0 }}
@@ -1308,6 +1306,14 @@ export function IconAnimatedGridPattern({
           onAnimationComplete={() => repositionBg(sq.id)}
         />
       ))}
+
+      {/* White vignette overlay — fades to white at edges */}
+      <div
+        className="pointer-events-none absolute inset-0 z-10"
+        style={{
+          background: 'radial-gradient(ellipse at center, transparent 40%, rgba(255,255,255,0.85) 75%, rgba(255,255,255,1) 100%)',
+        }}
+      />
 
       {/* Icons — glassy shine, slow fade in, quick fade out */}
       {iconSquares.map((ic, idx) => {
