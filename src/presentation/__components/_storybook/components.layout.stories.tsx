@@ -58,7 +58,7 @@ export const HeaderDemo: Story = {
         items={headerItems}
         activeId="home"
         actions={
-          <Button variant="purpleGhost" size="sm">SIGN IN</Button>
+          <Button variant="purpleGhost" size="default">SIGN IN</Button>
         }
       />
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-16">
@@ -143,7 +143,7 @@ export const FullLayout: Story = {
         items={headerItems}
         activeId="home"
         actions={
-          <Button variant="purpleGhost" size="sm">SIGN IN</Button>
+          <Button variant="purpleGhost" size="default">SIGN IN</Button>
         }
       />
       <div className="flex-1 flex">

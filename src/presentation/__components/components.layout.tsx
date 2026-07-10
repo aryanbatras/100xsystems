@@ -154,7 +154,7 @@ export function Header({ logo, items, actions, sticky = true, activeId, classNam
                   key={item.id}
                   trigger={
                     <span className={cn(
-                      'inline-flex items-center gap-1.5 px-5 py-3 text-sm font-bold uppercase tracking-wider cursor-pointer transition-all duration-200 relative',
+                      'inline-flex items-center gap-1.5 px-6 py-4 text-sm font-bold uppercase tracking-wider cursor-pointer transition-all duration-200 relative',
                       isActive
                         ? 'bg-accent-yellow text-black'
                         : 'text-fg-secondary after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full after:bg-accent-yellow after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out hover:text-fg',
@@ -175,7 +175,7 @@ export function Header({ logo, items, actions, sticky = true, activeId, classNam
                   key={item.id}
                   href={item.href || '#'}
                   className={cn(
-                    'px-5 py-3 text-sm font-bold uppercase tracking-wider transition-all duration-200 relative',
+                    'px-6 py-4 text-sm font-bold uppercase tracking-wider transition-all duration-200 relative',
                     isActive
                       ? 'bg-accent-yellow text-black'
                       : 'text-fg-secondary after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full after:bg-accent-yellow after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out hover:text-fg',
@@ -255,7 +255,8 @@ export function Header({ logo, items, actions, sticky = true, activeId, classNam
 }
 
 // ─── SidebarNav — Borderless, with Shadow ───────────────────────────
-// No gap between items. White icons on active. Borderless with shadow.
+// No gap between items. Matching dock magnification behavior on mouse hover.
+// Uses mouseY for vertical tracking (same physics as dock's horizontal tracking).
 
 export interface SidebarNavItem {
   id: string;
@@ -272,53 +273,93 @@ export interface SidebarNavProps {
 }
 
 export function SidebarNav({ items, activeId, onItemClick, className }: SidebarNavProps) {
+  const mouseY = useMotionValue(Infinity);
+
   return (
-    <nav className={cn(
-      'flex flex-col items-center bg-white min-h-full w-auto',
-      'shadow-[inset_-1px_0_0_rgba(0,0,0,0.04),2px_0_8px_-4px_rgba(0,0,0,0.06)]',
-      className,
-    )}>
-      {/* No gap between items */}
+    <nav
+      onMouseMove={(e) => mouseY.set(e.pageY)}
+      onMouseLeave={() => mouseY.set(Infinity)}
+      className={cn(
+        'flex flex-col items-center bg-white min-h-full w-auto',
+        'shadow-[inset_-1px_0_0_rgba(0,0,0,0.04),2px_0_8px_-4px_rgba(0,0,0,0.06)]',
+        className,
+      )}
+    >
+      {/* No gap between items — magnification on hover */}
       <div className="flex flex-col items-center">
         {items.map((item) => {
           const isActive = activeId === item.id;
           return (
-            <a
+            <SidebarIcon
               key={item.id}
-              href={item.href || '#'}
-              onClick={() => onItemClick?.(item)}
-              title={item.label}
-              className={cn(
-                'flex items-center justify-center transition-all duration-150',
-                isActive
-                  ? 'bg-accent-yellow text-black'
-                  : 'hover:bg-accent hover:text-white',
-              )}
-              style={{
-                width: isActive ? 52 : 52,
-                height: isActive ? 52 : 52,
-              }}
+              mouseY={mouseY}
+              isActive={isActive}
             >
-              {item.iconName ? (
-                <AnimatedIcon
-                  name={item.iconName}
-                  size={isActive ? 24 : 22}
-                  color={isActive ? '#000000' : undefined}
-                  isAnimated={!isActive}
-                />
-              ) : (
-                <span className={cn(
-                  'text-xs font-bold',
-                  isActive ? 'text-black' : 'text-fg-secondary',
-                )}>
-                  {item.label[0]}
-                </span>
-              )}
-            </a>
+              <a
+                href={item.href || '#'}
+                onClick={() => onItemClick?.(item)}
+                title={item.label}
+                className="flex items-center justify-center w-full h-full"
+              >
+                {item.iconName ? (
+                  <AnimatedIcon
+                    name={item.iconName}
+                    size={22}
+                    color={isActive ? '#000000' : undefined}
+                    isAnimated={true}
+                  />
+                ) : (
+                  <span className={cn(
+                    'text-xs font-bold',
+                    isActive ? 'text-black' : 'text-fg-secondary',
+                  )}>
+                    {item.label[0]}
+                  </span>
+                )}
+              </a>
+            </SidebarIcon>
           );
         })}
       </div>
     </nav>
+  );
+}
+
+// ─── SidebarIcon (magnification on hover — matches dock behavior) ───
+
+interface SidebarIconProps {
+  mouseY: MotionValue<number>;
+  isActive?: boolean;
+  children: ReactNode;
+}
+
+function SidebarIcon({ mouseY, isActive, children }: SidebarIconProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const size = 44;
+  const magnification = 62;
+  const dist = 120;
+
+  const distanceCalc = useTransform(mouseY, (val: number) => {
+    const bounds = ref.current?.getBoundingClientRect() ?? { y: 0, height: 0 };
+    return val - bounds.y - bounds.height / 2;
+  });
+
+  const sizeTransform = useTransform(distanceCalc, [-dist, 0, dist], [size, magnification, size]);
+  const scaleSize = useSpring(sizeTransform, { mass: 0.1, stiffness: 150, damping: 12 });
+
+  return (
+    <motion.div
+      ref={ref}
+      style={{ width: scaleSize, height: scaleSize }}
+      className={cn(
+        'flex items-center justify-center transition-colors duration-150',
+        isActive
+          ? 'bg-accent-yellow text-black'
+          : 'text-fg-secondary hover:bg-accent hover:text-white',
+      )}
+    >
+      {children}
+    </motion.div>
   );
 }
 
@@ -445,48 +486,42 @@ export interface FooterProps {
 
 export function Footer({ className }: FooterProps) {
   const currentYear = new Date().getFullYear();
-  const linkClass = 'inline-flex items-center px-4 py-2 text-sm font-semibold text-fg-secondary hover:text-white hover:bg-accent transition-all duration-200 uppercase tracking-wider';
 
   return (
-    <footer className={cn('bg-white', className)}>
+    <footer className={cn('group bg-white', className)}>
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 py-12">
-          {/* Brand */}
-          <div className="flex flex-col items-center md:items-start gap-1.5">
-            <span className="text-2xl lg:text-3xl font-extrabold text-fg tracking-tight uppercase select-none">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 py-16">
+          {/* Left side: Brand + nav buttons */}
+          <div className="flex flex-col items-center md:items-start gap-6">
+            <span className="text-4xl lg:text-5xl font-extrabold text-fg tracking-tight uppercase select-none transition-colors duration-200 group-hover:text-white">
               100X SYSTEMS
             </span>
-            <span className="text-sm lg:text-base text-fg-secondary font-medium">
-              FROM DEVELOPER TO SYSTEMS ENGINEER
-            </span>
+            <div className="flex items-center flex-wrap justify-center md:justify-start gap-2">
+              <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/about'}>ABOUT</Button>
+              <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/contact'}>CONTACT</Button>
+              <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/privacy'}>PRIVACY</Button>
+              <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/terms'}>TERMS</Button>
+            </div>
           </div>
 
-          {/* Links — purple ghost style */}
-          <div className="flex items-center flex-wrap justify-center gap-1">
-            <a href="/about" className={linkClass}>ABOUT</a>
-            <a href="/contact" className={linkClass}>CONTACT</a>
-            <a href="/privacy" className={linkClass}>PRIVACY</a>
-            <a href="/terms" className={linkClass}>TERMS</a>
-          </div>
-
-          {/* Social & Copyright */}
+          {/* Right side: Social & Copyright — white on footer hover */}
           <div className="flex items-center gap-4">
-            <a href="https://github.com/100xsystems" target="_blank" rel="noopener noreferrer" className="p-2 text-fg-secondary hover:text-white hover:bg-accent transition-all duration-200" aria-label="GitHub">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <a href="https://github.com/100xsystems" target="_blank" rel="noopener noreferrer" className="p-2 text-fg-secondary transition-all duration-200 group-hover:text-white hover:!text-white hover:bg-accent" aria-label="GitHub">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />
               </svg>
             </a>
-            <a href="https://www.linkedin.com/company/100xsystems/" target="_blank" rel="noopener noreferrer" className="p-2 text-fg-secondary hover:text-white hover:bg-accent transition-all duration-200" aria-label="LinkedIn">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <a href="https://www.linkedin.com/company/100xsystems/" target="_blank" rel="noopener noreferrer" className="p-2 text-fg-secondary transition-all duration-200 group-hover:text-white hover:!text-white hover:bg-accent" aria-label="LinkedIn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
               </svg>
             </a>
-            <a href="mailto:admin@100xsystems.dev" className="p-2 text-fg-secondary hover:text-white hover:bg-accent transition-all duration-200" aria-label="Email">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <a href="mailto:admin@100xsystems.dev" className="p-2 text-fg-secondary transition-all duration-200 group-hover:text-white hover:!text-white hover:bg-accent" aria-label="Email">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
               </svg>
             </a>
-            <span className="text-xs font-semibold text-fg-muted select-none uppercase tracking-wider">
+            <span className="text-xs font-semibold text-fg-muted select-none uppercase tracking-wider transition-colors duration-200 group-hover:text-white">
               &copy; {currentYear}
             </span>
           </div>
