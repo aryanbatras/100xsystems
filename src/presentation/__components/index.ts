@@ -37,3 +37,27 @@ export type {
   NumberTickerProps, BlurFadeProps, AnimatedListProps,
   IconAnimatedGridPatternProps,
 } from './components.animations';
+
+// ─── Page Layout Components ────────────────────────────────────────
+export {
+  SignUpPage, LoginPage, ForgotPasswordPage,
+  PricingTiers, FAQPage, CoursesPage, CourseDetailPage,
+  BlogPage, TeamPage, ContactPageLayout,
+  NotFoundPage, ErrorPage, StatsShowcase, NewsletterSignup,
+  SettingsPage, OnboardingPage, TestimonialsShowcase,
+  ComparisonPage, DonationPage, CheckoutPage, EmptyDashboard,
+  NotificationsPage, AccountPage, ComingSoonPage,
+  SearchPage, HeroPage, CtaSection,
+} from './components.pages';
+export type {
+  SignUpPageProps, LoginPageProps, ForgotPasswordPageProps,
+  PricingTier, PricingTiersProps, FAQPageProps, CoursesPageProps,
+  CourseDetailPageProps, BlogPageProps, TeamPageProps,
+  ContactPageProps, NotFoundPageProps, ErrorPageProps,
+  StatsShowcaseProps, NewsletterSignupProps, SettingsPageProps,
+  OnboardingPageProps, TestimonialsShowcaseProps,
+  ComparisonPageProps, DonationPageProps, CheckoutPageProps,
+  EmptyDashboardProps, NotificationsPageProps, AccountPageProps,
+  ComingSoonPageProps, SearchPageProps, HeroPageProps,
+  CtaSectionProps,
+} from './components.pages';

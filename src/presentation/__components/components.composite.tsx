@@ -268,7 +268,7 @@ const difficultyMap = { Beginner: 'bg-accent-bg text-accent border-accent', Inte
 export interface DifficultyBadgeProps { level: keyof typeof difficultyMap; size?: 'sm' | 'default'; className?: string; }
 
 export function DifficultyBadge({ level, size = 'default', className }: DifficultyBadgeProps) {
-  return <span className={cn('inline-flex items-center rounded-full border font-medium whitespace-nowrap', size === 'sm' ? 'px-2.5 py-0.5 text-[10px]' : 'px-3 py-1 text-xs', difficultyMap[level] || difficultyMap.Beginner, className)}>{level}</span>;
+  return <span className={cn('inline-flex items-center rounded-none uppercase border-0 font-medium whitespace-nowrap', size === 'sm' ? 'px-2.5 py-0.5 text-[10px]' : 'px-3 py-1 text-xs', difficultyMap[level] || difficultyMap.Beginner, className)}>{level}</span>;
 }
 
 // ─── InfoRow ────────────────────────────────────────────────────────
@@ -334,11 +334,11 @@ export interface ModuleCardProps { title: string; description: string; progress:
 const statusStyles: Record<ModuleStatus, string> = { 'not-started': 'bg-surface-secondary text-fg-secondary', 'in-progress': 'bg-accent-bg text-accent', 'completed': 'bg-accent text-white' };
 
 export function ModuleCard({ title, description, progress, completedLessons, totalLessons, difficulty, estimatedTime, status, onClick, className }: ModuleCardProps) {
-  return (<div className={cn('border border-border bg-white p-6 transition-all duration-200 hover:border-border-hover hover:shadow-sm', onClick && 'cursor-pointer', className)} onClick={onClick} role={onClick ? 'button' : undefined} tabIndex={onClick ? 0 : undefined}>
+  return (<div className={cn('border-0 rounded-none border-border bg-white p-6 transition-all duration-200 hover:border-border-hover hover:shadow-sm', onClick && 'cursor-pointer', className)} onClick={onClick} role={onClick ? 'button' : undefined} tabIndex={onClick ? 0 : undefined}>
     <div className="flex items-start justify-between gap-4 mb-3"><h3 className="text-base font-semibold text-fg">{title}</h3><DifficultyBadge level={difficulty} size="sm" /></div>
     <p className="text-sm text-fg-secondary mb-4 line-clamp-2 leading-relaxed">{description}</p>
     <div className="mb-4"><div className="flex justify-between text-sm text-fg-secondary mb-1.5"><span>{completedLessons}/{totalLessons} lessons</span><span>{progress}%</span></div><ProgressBar value={progress} size="sm" /></div>
-    <div className="flex items-center justify-between"><span className="text-xs text-fg-muted">{estimatedTime}</span><span className={cn('inline-flex items-center px-3 py-1 rounded-full text-xs font-medium', statusStyles[status])}>{status.replace('-', ' ')}</span></div>
+    <div className="flex items-center justify-between"><span className="text-xs text-fg-muted">{estimatedTime}</span><span className={cn('inline-flex items-center px-3 py-3 rounded-mnone border-0 lowercase text-xs font-small', statusStyles[status])}>{status.replace('-', ' ')}</span></div>
   </div>);
 }
 
