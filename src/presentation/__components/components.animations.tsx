@@ -1569,7 +1569,7 @@ export function IconAnimatedGridPattern({
     const icons: Array<{ id: number; pos: [number, number]; iconIdx: number; iteration: number }> = [];
 
     for (let i = 0; i < 60; i++) bg.push({ id: i, pos: pickPos(), iteration: 0 });
-    for (let i = 0; i < numIcons; i++) icons.push({ id: i, pos: pickPos(), iconIdx: rand(ICON_LIST.length), iteration: 0 });
+    for (let i = 0; i < numIcons; i++) icons.push({ id: i, pos: pickPos(), iconIdx: i % ICON_LIST.length, iteration: 0 });
 
     setBgSquares(bg);
     setIconSquares(icons);
@@ -1594,7 +1594,7 @@ export function IconAnimatedGridPattern({
       const ic = next[id];
       if (!ic) return prev;
       occRef.current.delete(`${ic.pos[0]},${ic.pos[1]}`);
-      next[id] = { ...ic, pos: pickPos(), iconIdx: rand(ICON_LIST.length), iteration: ic.iteration + 1 };
+      next[id] = { ...ic, pos: pickPos(), iconIdx: (ic.iconIdx + 1) % ICON_LIST.length, iteration: ic.iteration + 1 };
       return next;
     });
   }, [pickPos]);
@@ -1635,7 +1635,7 @@ export function IconAnimatedGridPattern({
         <rect width="100%" height="100%" fill={`url(#${svgId})`} />
       </svg>
 
-      {/* Dark squares — each independently fades in/out then repositions */}
+      {/* Dark squares — glassy dark transparent boxes */}
       {bgSquares.map((sq, idx) => (
         <motion.div
           key={`bg-${sq.id}-${sq.iteration}`}
@@ -1645,12 +1645,15 @@ export function IconAnimatedGridPattern({
             top: sq.pos[1] * height + 1,
             width: width - 1,
             height: height - 1,
-            backgroundColor: 'currentColor',
+            background: 'linear-gradient(135deg, rgba(30,30,40,0.35) 0%, rgba(20,20,30,0.15) 50%, rgba(40,40,55,0.3) 100%)',
+            border: '1px solid rgba(255,255,255,0.05)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), 0 1px 3px rgba(0,0,0,0.15)',
           }}
           initial={{ opacity: 0 }}
-          animate={{ opacity: maxOpacity }}
+          animate={{ opacity: 1 }}
           transition={{
             duration,
+            ease: [0.4, 0, 0.2, 1],
             repeat: 1,
             delay: idx * 0.1,
             repeatType: 'reverse',
@@ -1660,7 +1663,7 @@ export function IconAnimatedGridPattern({
         />
       ))}
 
-      {/* Icons — each independently fades in/out then repositions */}
+      {/* Icons — glassy shine, slow fade in, quick fade out */}
       {iconSquares.map((ic, idx) => {
         const { Component, label } = ICON_LIST[ic.iconIdx % ICON_LIST.length];
         return (
@@ -1672,11 +1675,13 @@ export function IconAnimatedGridPattern({
               top: ic.pos[1] * height + (height - iconSize) / 2,
               width: iconSize,
               height: iconSize,
+              filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))',
             }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{
               duration,
+              ease: [0.16, 1, 0.3, 1],
               repeat: 1,
               delay: idx * 0.12,
               repeatType: 'reverse',
