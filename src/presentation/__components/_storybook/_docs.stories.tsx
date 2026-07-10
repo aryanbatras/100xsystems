@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react';
 import {
   AnimatedIcon,
   Button, Input, Textarea, Badge, Tag, Spinner, Heading, Text, Divider, Select, Toggle, ProgressBar, CircularProgress, Skeleton, SkeletonBlock, Icon, Image,
-  Accordion, Alert, SearchInput, TabBar, Pagination, Breadcrumbs, CodeBlock, Timeline, ArticleCard, DifficultyBadge, InfoRow, FeatureCard, StatCard, StreakCard, ComingSoonCard, ModuleCard, UserCard, MemberCard, GroupCard, RoadmapCard, FaqItem, ContactInfoItem, ProblemCard, DataGrid, FilterBar,
+  Accordion, Alert, SearchInput, TabBar, Pagination, Breadcrumbs, CodeBlock, Timeline, InfoRow, UserCard, MemberCard, GroupCard, RoadmapCard, FaqItem, ContactInfoItem, ProblemCard, DataGrid, FilterBar,
   SidebarNav,
 } from '..';
 
 const meta = {
-  title: '_Docs',
+  title: 'All Components',
   parameters: { layout: 'fullscreen' },
 } satisfies Meta;
 
@@ -195,56 +195,13 @@ export const AllComponents: Story = {
             <Pagination currentPage={3} totalPages={10} onPageChange={() => {}} totalItems={250} />
           </div>
 
-          {/* DifficultyBadge */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">DifficultyBadge</h3>
-            <div className="flex flex-wrap gap-2">
-              <DifficultyBadge level="Beginner" />
-              <DifficultyBadge level="Intermediate" />
-              <DifficultyBadge level="Advanced" />
-              <DifficultyBadge level="Theory" />
-            </div>
-          </div>
-
           {/* InfoRow */}
           <div>
             <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">InfoRow</h3>
             <InfoRow label="Status" value="Active" />
           </div>
 
-          {/* StatCard */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">StatCard</h3>
-            <div className="max-w-xs">
-              <StatCard value="10,000" label="Users" trend="up" trendText="+12%" />
-            </div>
-          </div>
-
-          {/* FeatureCard */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">FeatureCard</h3>
-            <div className="max-w-sm">
-              <FeatureCard title="Systems Thinking" description="Learn to architect scalable solutions." number="01" />
-            </div>
-          </div>
-
-          {/* ArticleCard */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">ArticleCard</h3>
-            <div className="max-w-sm">
-              <ArticleCard slug="test" title="Getting Started with System Design" date="2024-06-15" category="Engineering" readTime={8} />
-            </div>
-          </div>
-
-          {/* ModuleCard */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">ModuleCard</h3>
-            <div className="max-w-sm">
-              <ModuleCard title="System Fundamentals" description="Master core principles" progress={75} completedLessons={9} totalLessons={12} difficulty="Intermediate" estimatedTime="8 hours" status="in-progress" />
-            </div>
-          </div>
-
-          {/* UserCard */}
+          {/* Timeline */}
           <div>
             <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">UserCard</h3>
             <div className="max-w-sm border border-border">
@@ -273,22 +230,6 @@ export const AllComponents: Story = {
             <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">RoadmapCard</h3>
             <div className="max-w-sm">
               <RoadmapCard title="Backend Engineering" description="Complete path to backend mastery" difficulty="Intermediate" estimatedTime="6 months" sectionCount={8} sections={['Fundamentals', 'Databases', 'APIs']} />
-            </div>
-          </div>
-
-          {/* ComingSoonCard */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">ComingSoonCard</h3>
-            <div className="max-w-xs">
-              <ComingSoonCard icon="🏆" title="Achievements" description="Track your learning milestones" />
-            </div>
-          </div>
-
-          {/* StreakCard */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">StreakCard</h3>
-            <div className="max-w-sm">
-              <StreakCard currentStreak={7} longestStreak={30} totalDays={120} />
             </div>
           </div>
 

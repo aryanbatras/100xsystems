@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import {
-  KineticText, CoolMode, NoiseTexture, InteractiveGridPattern, AnimatedGridPattern,
+  KineticText, CoolMode, NoiseTexture,
   RippleButton, SpinningText, ScrollVelocityContainer, ScrollVelocityRow,
   NumberTicker, BlurFade, AnimatedList, AnimatedListItem,
-  SkewButton, GooeyCheckbox, ServerLoader, GlobeLoader, ExpandInput, BookLoader,
+  SkewButton, GooeyCheckbox, ExpandInput, BookLoader,
   IconAnimatedGridPattern,
 } from '../components.animations';
 import { Button } from '../components.atomic';
@@ -57,30 +57,6 @@ export const NoiseTextureDemo: Story = {
   ),
 };
 
-export const InteractiveGridPatternDemo: Story = {
-  name: 'InteractiveGridPattern',
-  render: () => (
-    <div className="p-8">
-      <p className="text-xs text-fg-muted uppercase tracking-wider font-semibold mb-4">Hover over the squares:</p>
-      <div className="relative h-[300px] w-[500px] overflow-hidden border border-border">
-        <InteractiveGridPattern width={30} height={30} squares={[16, 10]} />
-      </div>
-    </div>
-  ),
-};
-
-export const AnimatedGridPatternDemo: Story = {
-  name: 'AnimatedGridPattern',
-  render: () => (
-    <div className="p-8">
-      <p className="text-xs text-fg-muted uppercase tracking-wider font-semibold mb-4">Animated grid squares:</p>
-      <div className="relative h-[300px] w-[500px] overflow-hidden border border-border bg-surface-secondary">
-        <AnimatedGridPattern numSquares={30} maxOpacity={0.5} duration={3} />
-      </div>
-    </div>
-  ),
-};
-
 export const RippleButtonDemo: Story = {
   name: 'RippleButton',
   render: () => (
@@ -99,9 +75,8 @@ export const SpinningTextDemo: Story = {
   name: 'SpinningText',
   render: () => (
     <div className="p-8">
-      <p className="text-xs text-fg-muted uppercase tracking-wider font-semibold mb-8 text-center">Spinning text:</p>
-      <SpinningText duration={12} radius={6} className="text-sm font-semibold text-accent">
-        learn more • earn more • grow more •
+      <SpinningText duration={20} radius={4} className="text-sm font-semibold text-accent">
+        build your own x • 100x systems • build your own x •
       </SpinningText>
     </div>
   ),
@@ -181,14 +156,16 @@ export const ScrollVelocityDemo: Story = {
   name: 'ScrollVelocity',
   parameters: { layout: 'fullscreen' },
   render: () => (
-    <div className="relative h-[600px] overflow-hidden">
+    <div className="relative h-[600px] overflow-hidden bg-gray-950">
       <div className="absolute inset-0 flex flex-col justify-center gap-8">
-        <ScrollVelocityContainer className="text-4xl font-bold md:text-6xl">
-          <ScrollVelocityRow baseVelocity={15} direction={1}>
-            <span className="text-accent mr-8">Scroll Velocity</span>
-          </ScrollVelocityRow>
-          <ScrollVelocityRow baseVelocity={15} direction={-1}>
-            <span className="text-fg mr-8">Scroll Velocity</span>
+        <ScrollVelocityContainer className="text-5xl md:text-7xl font-bold">
+          <ScrollVelocityRow baseVelocity={8} direction={1}>
+            <span style={{ color: 'transparent', WebkitTextStroke: '2px white' }} className="mr-8">100X SYSTEMS</span>
+            <span style={{ color: 'transparent', WebkitTextStroke: '2px white' }} className="mr-8">100X SYSTEMS</span>
+            <span style={{ color: 'transparent', WebkitTextStroke: '2px white' }} className="mr-8">100X SYSTEMS</span>
+            <span style={{ color: 'transparent', WebkitTextStroke: '2px white' }} className="mr-8">100X SYSTEMS</span>
+            <span style={{ color: 'transparent', WebkitTextStroke: '2px white' }} className="mr-8">100X SYSTEMS</span>
+            <span style={{ color: 'transparent', WebkitTextStroke: '2px white' }} className="mr-8">100X SYSTEMS</span>
           </ScrollVelocityRow>
         </ScrollVelocityContainer>
         <div className="text-center text-sm text-fg-muted mt-8">Scroll up and down to see the speed change</div>
@@ -213,24 +190,6 @@ export const GooeyCheckboxDemo: Story = {
   render: () => (
     <div className="flex items-center justify-center p-8">
       <GooeyCheckbox />
-    </div>
-  ),
-};
-
-export const ServerLoaderDemo: Story = {
-  name: 'ServerLoader',
-  render: () => (
-    <div className="flex items-center justify-center p-8">
-      <ServerLoader />
-    </div>
-  ),
-};
-
-export const GlobeLoaderDemo: Story = {
-  name: 'GlobeLoader',
-  render: () => (
-    <div className="flex h-32 items-center justify-center p-8">
-      <GlobeLoader />
     </div>
   ),
 };

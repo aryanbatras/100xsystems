@@ -177,6 +177,20 @@ const buttonVariants = {
     'overflow-hidden relative',
     'transition-all duration-200 ease-out',
   ].join(' '),
+  purpleGhost: [
+    'relative bg-transparent',
+    'text-fg-secondary hover:text-white',
+    'cursor-pointer',
+    'hover:bg-accent',
+    'transition-all duration-200',
+  ].join(' '),
+  yellowGhost: [
+    'relative bg-transparent',
+    'text-fg-secondary hover:text-black',
+    'cursor-pointer',
+    'hover:bg-accent-yellow',
+    'transition-all duration-200',
+  ].join(' '),
 } as const;
 
 const buttonSizes = {

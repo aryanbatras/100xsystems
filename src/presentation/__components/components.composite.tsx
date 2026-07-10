@@ -26,7 +26,7 @@ export function Breadcrumbs({ items, separator = '/', className }: BreadcrumbsPr
   return (
     <nav aria-label="Breadcrumb" className={cn('flex items-center gap-1.5 text-sm', className)}>{items.map((item, index) => {
       const isLast = index === items.length - 1;
-      return (<span key={index} className="flex items-center gap-1.5">{index > 0 && <span className="text-fg-muted select-none" aria-hidden="true">{separator}</span>}{item.href && !isLast ? <a href={item.href} className="text-fg-secondary hover:text-accent transition-colors duration-150">{item.label}</a> : <span className={isLast ? 'text-fg font-medium' : 'text-fg-secondary'} aria-current={isLast ? 'page' : undefined}>{item.label}</span>}</span>);
+      return (<span key={index} className="flex items-center gap-1.5">{index > 0 && <span className="text-fg-muted select-none" aria-hidden="true">{separator}</span>}{item.href && !isLast ? <a href={item.href} className="text-fg-secondary hover:text-accent hover:bg-accent/10 hover:px-1 rounded-sm transition-all">{item.label}</a> : <span className={isLast ? 'text-fg font-medium' : 'text-fg-secondary'} aria-current={isLast ? 'page' : undefined}>{item.label}</span>}</span>);
     })}</nav>
   );
 }
@@ -39,14 +39,14 @@ export interface AccordionProps { items: AccordionItem[]; multiple?: boolean; de
 export function Accordion({ items, multiple = false, defaultOpen = [], variant = 'default', className }: AccordionProps) {
   const [openIds, setOpenIds] = useState<Set<string>>(new Set(defaultOpen));
   const toggle = (id: string) => setOpenIds((prev) => { const next = new Set(prev); if (next.has(id)) next.delete(id); else { if (!multiple) next.clear(); next.add(id); } return next; });
-  const variantStyles = { default: 'divide-y divide-border', bordered: 'space-y-3', separated: 'space-y-3' };
+  const variantStyles = { default: 'divide-y divide-accent/20', bordered: 'space-y-3', separated: 'space-y-3' };
   const itemStyles = { default: '', bordered: 'border border-border overflow-hidden', separated: 'border border-border overflow-hidden' };
 
   return (<div className={cn(variantStyles[variant], className)}>{items.map((item) => {
     const isOpen = openIds.has(item.id);
     return (<div key={item.id} className={itemStyles[variant]}>
       <button type="button" onClick={() => !item.disabled && toggle(item.id)} disabled={item.disabled}
-        className={cn('flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors duration-150 hover:bg-surface-light disabled:opacity-50 disabled:cursor-not-allowed', isOpen && variant !== 'default' && 'border-b border-border')} aria-expanded={isOpen}>
+        className={cn('flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors duration-150 hover:bg-accent/10 hover:text-accent disabled:opacity-50 disabled:cursor-not-allowed', isOpen && variant !== 'default' && 'border-b border-border')} aria-expanded={isOpen}>
         <span className="text-base font-semibold text-fg">{item.title}</span>
         <span className="flex items-center gap-3">{item.count !== undefined && <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-2 text-xs font-semibold rounded-full bg-accent-bg text-accent">{item.count}</span>}
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={cn('text-fg-muted transition-transform duration-200', isOpen && 'rotate-180')}><polyline points="6 9 12 15 18 9" /></svg>
@@ -83,7 +83,7 @@ export function Alert({ variant = 'info', title, children, dismissible = false, 
   return (
     <div className={cn('relative flex items-start gap-4 border-l-4 p-5 text-sm', alertVariants[variant].container, className)} role="alert">
       {!hideIcon && <span className={cn('mt-0.5 shrink-0', alertVariants[variant].icon)}><AlertIcon variant={variant} /></span>}
-      <div className="flex-1 min-w-0">{title && <p className="font-semibold mb-1.5 text-base">{title}</p>}<div className="leading-relaxed">{children}</div></div>
+      <div className="flex-1 min-w-0">{title && <p className="font-semibold mb-1.5 text-base">{title}</p>}<div className="leading-relaxed font-semibold">{children}</div></div>
       {dismissible && <button type="button" onClick={() => setDismissed(true)} className="shrink-0 p-1 rounded hover:opacity-70 transition-opacity text-fg-muted" aria-label="Dismiss">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
       </button>}
@@ -116,7 +116,7 @@ export interface Tab { id: string; label: string; count?: number; disabled?: boo
 export interface TabBarProps { tabs: Tab[]; activeTab: string; onTabChange: (tabId: string) => void; variant?: 'underline' | 'pills' | 'buttons'; className?: string; }
 
 const tabVariants = {
-  underline: { container: 'border-b border-border', tab: (a: boolean) => cn('px-6 py-3 text-sm font-medium transition-colors relative', a ? 'text-accent' : 'text-fg-secondary hover:text-fg'), indicator: 'absolute bottom-0 left-0 right-0 h-0.5 bg-accent' },
+  underline: { container: 'border-b border-border', tab: (a: boolean) => cn('px-6 py-3 text-sm font-medium transition-colors relative', a ? 'text-accent' : 'text-fg-secondary hover:bg-accent/10 hover:text-accent rounded-sm transition-colors'), indicator: 'absolute bottom-0 left-0 right-0 h-0.5 bg-accent' },
   pills: { container: 'flex gap-1.5 p-1.5 bg-surface-secondary', tab: (a: boolean) => cn('px-5 py-2.5 text-sm font-medium transition-all', a ? 'bg-white text-fg shadow-sm' : 'text-fg-secondary hover:text-fg-tertiary'), indicator: null },
   buttons: { container: 'flex gap-3', tab: (a: boolean) => cn('px-5 py-2.5 text-sm font-medium border transition-all', a ? 'border-accent bg-accent-bg text-accent' : 'border-border text-fg-secondary hover:border-accent hover:text-accent'), indicator: null },
 } as const;
@@ -148,11 +148,11 @@ export function Pagination({ currentPage, totalPages, onPageChange, totalItems, 
     <div className={cn('flex items-center justify-between', className)}>
       {totalItems && <span className={cn('text-fg-secondary', compact ? 'text-xs' : 'text-sm')}>Showing {startItem}–{endItem} of {totalItems}</span>}
       <div className="flex items-center gap-2">
-        <button type="button" onClick={() => onPageChange(currentPage - 1)} disabled={currentPage <= 1} className={cn(btn, currentPage <= 1 ? 'text-fg-muted' : 'text-fg-secondary hover:text-accent hover:bg-accent-bg')} aria-label="Previous page">
+        <button type="button" onClick={() => onPageChange(currentPage - 1)} disabled={currentPage <= 1} className={cn(btn, currentPage <= 1 ? 'text-fg-muted' : 'text-fg-secondary hover:text-accent hover:bg-accent/10')} aria-label="Previous page">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-1"><polyline points="15 18 9 12 15 6" /></svg>{!compact && 'Previous'}
         </button>
         <span className={cn('text-fg-secondary', compact ? 'text-xs px-2' : 'text-sm px-3')}>{compact ? `${currentPage}/${totalPages}` : `Page ${currentPage} of ${totalPages}`}</span>
-        <button type="button" onClick={() => onPageChange(currentPage + 1)} disabled={currentPage >= totalPages} className={cn(btn, currentPage >= totalPages ? 'text-fg-muted' : 'text-fg-secondary hover:text-accent hover:bg-accent-bg')} aria-label="Next page">
+        <button type="button" onClick={() => onPageChange(currentPage + 1)} disabled={currentPage >= totalPages} className={cn(btn, currentPage >= totalPages ? 'text-fg-muted' : 'text-fg-secondary hover:text-accent hover:bg-accent/10')} aria-label="Next page">
           {!compact && 'Next'}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="ml-1"><polyline points="9 18 15 12 9 6" /></svg>
         </button>
       </div>

@@ -10,6 +10,7 @@ const config: StorybookConfig = {
     '@storybook/addon-docs',
     '@storybook/addon-links',
     '@chromatic-com/storybook',
+    '@github-ui/storybook-addon-performance-panel',
   ],
   framework: '@storybook/nextjs',
   staticDirs: ['../../../../../public'],
