@@ -74,9 +74,9 @@ export const RippleButtonDemo: Story = {
 export const SpinningTextDemo: Story = {
   name: 'SpinningText',
   render: () => (
-    <div className="p-8">
-      <SpinningText duration={20} radius={4} className="text-sm font-semibold text-accent">
-        build your own x • 100x systems • build your own x •
+    <div className="p-8 flex items-center justify-center">
+      <SpinningText duration={25} radius={5} className="text-sm font-semibold text-accent">
+        100X SYSTEMS • 100X SYSTEMS • 100X SYSTEMS •
       </SpinningText>
     </div>
   ),
@@ -156,19 +156,20 @@ export const ScrollVelocityDemo: Story = {
   name: 'ScrollVelocity',
   parameters: { layout: 'fullscreen' },
   render: () => (
-    <div className="relative h-[600px] overflow-hidden bg-gray-950">
-      <div className="absolute inset-0 flex flex-col justify-center gap-8">
-        <ScrollVelocityContainer className="text-5xl md:text-7xl font-bold">
-          <ScrollVelocityRow baseVelocity={8} direction={1}>
-            <span style={{ color: 'transparent', WebkitTextStroke: '2px white' }} className="mr-8">100X SYSTEMS</span>
-            <span style={{ color: 'transparent', WebkitTextStroke: '2px white' }} className="mr-8">100X SYSTEMS</span>
-            <span style={{ color: 'transparent', WebkitTextStroke: '2px white' }} className="mr-8">100X SYSTEMS</span>
-            <span style={{ color: 'transparent', WebkitTextStroke: '2px white' }} className="mr-8">100X SYSTEMS</span>
-            <span style={{ color: 'transparent', WebkitTextStroke: '2px white' }} className="mr-8">100X SYSTEMS</span>
-            <span style={{ color: 'transparent', WebkitTextStroke: '2px white' }} className="mr-8">100X SYSTEMS</span>
-          </ScrollVelocityRow>
-        </ScrollVelocityContainer>
-        <div className="text-center text-sm text-fg-muted mt-8">Scroll up and down to see the speed change</div>
+    <div className="relative h-[600px] overflow-hidden">
+      <div className="absolute inset-0 flex flex-col justify-center">
+        <div className="bg-accent/20 py-16">
+          <ScrollVelocityContainer className="text-4xl md:text-6xl font-bold">
+            <ScrollVelocityRow baseVelocity={4} direction={1}>
+              <span className="text-white font-bold mr-12 opacity-90">100X SYSTEMS</span>
+              <span className="text-white font-bold mr-12 opacity-90">100X SYSTEMS</span>
+              <span className="text-white font-bold mr-12 opacity-90">100X SYSTEMS</span>
+              <span className="text-white font-bold mr-12 opacity-90">100X SYSTEMS</span>
+              <span className="text-white font-bold mr-12 opacity-90">100X SYSTEMS</span>
+              <span className="text-white font-bold mr-12 opacity-90">100X SYSTEMS</span>
+            </ScrollVelocityRow>
+          </ScrollVelocityContainer>
+        </div>
       </div>
     </div>
   ),

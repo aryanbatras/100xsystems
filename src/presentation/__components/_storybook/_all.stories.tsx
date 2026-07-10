@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import {
   AnimatedIcon,
   Button, Input, Textarea, Badge, Tag, Spinner, Heading, Text, Divider, Select, Toggle, ProgressBar, CircularProgress, Skeleton, SkeletonBlock, Icon, Image,
-  Accordion, Alert, SearchInput, TabBar, Pagination, Breadcrumbs, CodeBlock, Timeline, InfoRow, UserCard, MemberCard, GroupCard, RoadmapCard, FaqItem, ContactInfoItem, ProblemCard, DataGrid, FilterBar,
+  Accordion, Alert, SearchInput, TabBar, Pagination, Breadcrumbs, CodeBlock, Timeline, FilterBar,
   SidebarNav,
 } from '..';
 
@@ -195,44 +195,6 @@ export const AllComponents: Story = {
             <Pagination currentPage={3} totalPages={10} onPageChange={() => {}} totalItems={250} />
           </div>
 
-          {/* InfoRow */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">InfoRow</h3>
-            <InfoRow label="Status" value="Active" />
-          </div>
-
-          {/* Timeline */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">UserCard</h3>
-            <div className="max-w-sm border border-border">
-              <UserCard name="Aryan Batra" username="aryan" bio="Full-stack engineer" />
-            </div>
-          </div>
-
-          {/* MemberCard */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">MemberCard</h3>
-            <div className="max-w-sm">
-              <MemberCard name="Priya Sharma" role="Designer" username="priya" />
-            </div>
-          </div>
-
-          {/* GroupCard */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">GroupCard</h3>
-            <div className="max-w-sm">
-              <GroupCard name="System Design Study" description="Weekly study group" memberCount={24} maxMembers={50} />
-            </div>
-          </div>
-
-          {/* RoadmapCard */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">RoadmapCard</h3>
-            <div className="max-w-sm">
-              <RoadmapCard title="Backend Engineering" description="Complete path to backend mastery" difficulty="Intermediate" estimatedTime="6 months" sectionCount={8} sections={['Fundamentals', 'Databases', 'APIs']} />
-            </div>
-          </div>
-
           {/* Timeline */}
           <div>
             <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">Timeline</h3>
@@ -243,30 +205,6 @@ export const AllComponents: Story = {
           <div>
             <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">CodeBlock</h3>
             <CodeBlock code={`function greet(name: string) {\n  return \`Hello, \${name}!\`;\n}`} language="typescript" />
-          </div>
-
-          {/* FaqItem */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">FaqItem</h3>
-            <FaqItem question="What is this platform?" answer="A comprehensive learning platform for system design and engineering." />
-          </div>
-
-          {/* ContactInfoItem */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">ContactInfoItem</h3>
-            <ContactInfoItem label="Email" value="hello@example.com" />
-          </div>
-
-          {/* ProblemCard */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">ProblemCard</h3>
-            <ProblemCard order={1} title="Two Sum" difficulty="Easy" description="Find two numbers that add up to a target." />
-          </div>
-
-          {/* DataGrid */}
-          <div>
-            <h3 className="text-xs font-semibold text-fg-muted uppercase tracking-wider mb-3">DataGrid</h3>
-            <DataGrid stats={[{ label: 'Total Users', value: '10K', trend: 'up', trendText: '+12%' }, { label: 'Active', value: '4.2K', trend: 'up', trendText: '+5%' }, { label: 'Revenue', value: '$48K', trend: 'up', trendText: '+18%' }]} columns={3} />
           </div>
 
           {/* FilterBar */}

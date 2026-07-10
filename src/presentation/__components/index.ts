@@ -19,8 +19,8 @@ export { Breadcrumbs, Accordion, Alert, SearchInput, TabBar, Pagination, FilterB
 export type { BreadcrumbItem, BreadcrumbsProps, AccordionProps, AccordionItem, AlertProps, SearchInputProps, TabBarProps, Tab, PaginationProps, FilterBarProps, DataGridProps, StatCardData, CodeBlockProps, TimelineProps, TimelineStep, ArticleCardProps, DifficultyBadgeProps, InfoRowProps, FeatureCardProps, StatCardProps, StreakCardProps, ComingSoonCardProps, ModuleCardProps, ModuleStatus, UserCardProps, MemberCardProps, SocialLink, GroupCardProps, RoadmapCardProps, SearchResultsProps, SearchResultItem, FaqItemProps, ContactInfoItemProps, ProblemCardProps } from './components.composite';
 
 // ─── Layout Components ─────────────────────────────────────────────
-export { SidebarNav } from './components.layout';
-export type { SidebarNavProps, SidebarNavItem } from './components.layout';
+export { SidebarNav, Header, MobileNav, Footer } from './components.layout';
+export type { SidebarNavProps, SidebarNavItem, HeaderProps, HeaderNavItem, MobileNavProps, MobileNavItem, FooterProps, FooterSection } from './components.layout';
 
 // ─── Animation Components ──────────────────────────────────────────
 export {

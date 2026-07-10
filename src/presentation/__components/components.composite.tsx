@@ -46,7 +46,7 @@ export function Accordion({ items, multiple = false, defaultOpen = [], variant =
     const isOpen = openIds.has(item.id);
     return (<div key={item.id} className={itemStyles[variant]}>
       <button type="button" onClick={() => !item.disabled && toggle(item.id)} disabled={item.disabled}
-        className={cn('flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors duration-150 hover:bg-accent/10 hover:text-accent disabled:opacity-50 disabled:cursor-not-allowed', isOpen && variant !== 'default' && 'border-b border-border')} aria-expanded={isOpen}>
+        className={cn('flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors duration-150 hover:bg-accent hover:text-white disabled:opacity-50 disabled:cursor-not-allowed', isOpen && variant !== 'default' && 'border-b border-border')} aria-expanded={isOpen}>
         <span className="text-base font-semibold text-fg">{item.title}</span>
         <span className="flex items-center gap-3">{item.count !== undefined && <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-2 text-xs font-semibold rounded-full bg-accent-bg text-accent">{item.count}</span>}
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={cn('text-fg-muted transition-transform duration-200', isOpen && 'rotate-180')}><polyline points="6 9 12 15 18 9" /></svg>
@@ -116,7 +116,7 @@ export interface Tab { id: string; label: string; count?: number; disabled?: boo
 export interface TabBarProps { tabs: Tab[]; activeTab: string; onTabChange: (tabId: string) => void; variant?: 'underline' | 'pills' | 'buttons'; className?: string; }
 
 const tabVariants = {
-  underline: { container: 'border-b border-border', tab: (a: boolean) => cn('px-6 py-3 text-sm font-medium transition-colors relative', a ? 'text-accent' : 'text-fg-secondary hover:bg-accent/10 hover:text-accent rounded-sm transition-colors'), indicator: 'absolute bottom-0 left-0 right-0 h-0.5 bg-accent' },
+  underline: { container: 'border-b border-border', tab: (a: boolean) => cn('px-6 py-3 text-sm font-medium transition-colors relative', a ? 'text-accent' : 'text-fg-secondary hover:bg-accent hover:text-white rounded-sm transition-colors'), indicator: 'absolute bottom-0 left-0 right-0 h-0.5 bg-accent' },
   pills: { container: 'flex gap-1.5 p-1.5 bg-surface-secondary', tab: (a: boolean) => cn('px-5 py-2.5 text-sm font-medium transition-all', a ? 'bg-white text-fg shadow-sm' : 'text-fg-secondary hover:text-fg-tertiary'), indicator: null },
   buttons: { container: 'flex gap-3', tab: (a: boolean) => cn('px-5 py-2.5 text-sm font-medium border transition-all', a ? 'border-accent bg-accent-bg text-accent' : 'border-border text-fg-secondary hover:border-accent hover:text-accent'), indicator: null },
 } as const;
