@@ -1,5 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { SidebarNav, Header, MobileNav, Footer } from '../components.layout';
+import { SidebarNav, Header, MobileNav, Footer, Dropdown } from '../components.layout';
+import { Button } from '../components.atomic';
+import {
+  HouseIcon, LayersIcon, LayoutGridIcon, BlocksIcon, LayoutListIcon,
+  BookOpenIcon, SearchIcon, SettingsIcon, UserIcon, UsersIcon,
+  RocketIcon, CodeIcon, TerminalIcon, GlobeIcon, StarIcon,
+  BrainIcon, SparklesIcon, FlameIcon, HeartIcon, ZapIcon, BellIcon,
+  ChevronDownIcon,
+} from '@animateicons/react/lucide';
 
 const meta = {
   title: 'Layout',
@@ -9,34 +17,26 @@ const meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── SidebarNav ──
+// ─── Dropdown ──
 
-const sidebarItems = [
-  { id: 'overview', label: 'Overview', icon: '📊' },
-  { id: 'lessons', label: 'Lessons', icon: '📚', count: 12 },
-  { id: 'settings', label: 'Settings', icon: '⚙️', children: [{ id: 'profile', label: 'Profile' }, { id: 'account', label: 'Account' }] },
-];
-
-export const SidebarDefault: Story = {
-  name: 'SidebarNav',
+export const DropdownDemo: Story = {
+  name: 'Dropdown',
   render: () => (
-    <div className="h-screen flex">
-      <SidebarNav items={sidebarItems} header="Navigation" activeId="overview" />
-      <div className="flex-1 p-8 bg-surface-light">
-        <h1 className="text-2xl font-bold text-fg">Page Content</h1>
-      </div>
-    </div>
-  ),
-};
-
-export const SidebarCollapsed: Story = {
-  name: 'SidebarNav Collapsed',
-  render: () => (
-    <div className="h-screen flex">
-      <SidebarNav items={sidebarItems} collapsed />
-      <div className="flex-1 p-8 bg-surface-light">
-        <h1 className="text-2xl font-bold text-fg">Page Content</h1>
-      </div>
+    <div className="p-8">
+      <Dropdown
+        trigger={
+          <span className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-fg-secondary hover:text-accent uppercase tracking-wider cursor-pointer">
+            ROADMAP
+            <ChevronDownIcon size={16} isAnimated={true} />
+          </span>
+        }
+        items={[
+          { id: 'dsa', label: 'DSA', description: 'Data structures & algorithms practice', icon: <CodeIcon size={18} isAnimated={true} /> },
+          { id: 'system-design', label: 'System Design', description: 'Scalable architecture patterns', icon: <LayersIcon size={18} isAnimated={true} /> },
+          { id: 'web-dev', label: 'Web Dev', description: 'Full-stack development paths', icon: <GlobeIcon size={18} isAnimated={true} /> },
+          { id: 'ai-ml', label: 'AI / ML', description: 'Machine learning & AI fundamentals', icon: <BrainIcon size={18} isAnimated={true} /> },
+        ]}
+      />
     </div>
   ),
 };
@@ -45,39 +45,75 @@ export const SidebarCollapsed: Story = {
 
 const headerItems = [
   { id: 'home', label: 'Home', href: '/' },
-  { id: 'roadmaps', label: 'Roadmaps', href: '/roadmaps' },
-  { id: 'resources', label: 'Resources', href: '/resources' },
-  { id: 'dsa', label: 'DSA', href: '/dsa' },
+  { id: 'courses', label: 'Courses', href: '/courses' },
+  { id: 'pricing', label: 'Pricing', href: '/pricing' },
+  { id: 'about', label: 'About', href: '/about' },
+  { id: 'roadmap', label: 'Roadmap', children: [
+    { id: 'dsa', label: 'DSA', href: '/roadmaps/dsa', description: 'Data structures & algorithms', icon: <CodeIcon size={18} isAnimated={true} /> },
+    { id: 'system-design', label: 'System Design', href: '/roadmaps/system-design', description: 'Scalable architecture patterns', icon: <LayersIcon size={18} isAnimated={true} /> },
+    { id: 'web-dev', label: 'Web Dev', href: '/roadmaps/web-dev', description: 'Full-stack development paths', icon: <GlobeIcon size={18} isAnimated={true} /> },
+    { id: 'ai-ml', label: 'AI / ML', href: '/roadmaps/ai-ml', description: 'Machine learning & AI', icon: <BrainIcon size={18} isAnimated={true} /> },
+  ]},
 ];
 
-export const HeaderDefault: Story = {
+export const HeaderDemo: Story = {
   name: 'Header',
   render: () => (
     <div className="min-h-screen">
-      <Header items={headerItems} />
-      <div className="p-8">
-        <h1 className="text-2xl font-bold text-fg">Page Content</h1>
+      <Header
+        items={headerItems}
+        actions={<Button variant="ripple" size="sm">Sign In</Button>}
+      />
+      <div className="p-12">
+        <h1 className="text-4xl font-extrabold text-fg uppercase tracking-tight">Page Content</h1>
+        <p className="text-fg-secondary mt-4 text-lg">Header with tall height, no border, animated icons, and bento dropdown.</p>
       </div>
     </div>
   ),
 };
 
-// ─── MobileNav ──
+// ─── SidebarNav ──
 
-const mobileItems = [
-  { id: 'home', label: 'Home', href: '/', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg> },
-  { id: 'roadmaps', label: 'Roadmaps', href: '/roadmaps', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg> },
-  { id: 'resources', label: 'Resources', href: '/resources', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" /></svg> },
-  { id: 'profile', label: 'Profile', href: '/profile', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>, badge: 3 },
+const sidebarItems = [
+  { id: 'home', label: 'Home', Icon: HouseIcon, href: '/' },
+  { id: 'roadmaps', label: 'Roadmaps', Icon: LayersIcon, href: '/roadmaps' },
+  { id: 'resources', label: 'Resources', Icon: BookOpenIcon, href: '/resources' },
+  { id: 'dsa', label: 'DSA', Icon: CodeIcon, href: '/dsa' },
+  { id: 'dashboard', label: 'Dashboard', Icon: LayoutGridIcon, href: '/dashboard' },
+  { id: 'settings', label: 'Settings', Icon: SettingsIcon, href: '/settings' },
 ];
 
-export const MobileNavDefault: Story = {
-  name: 'MobileNav',
+export const SidebarDemo: Story = {
+  name: 'SidebarNav',
   render: () => (
-    <div className="min-h-screen pb-16">
+    <div className="h-screen flex">
+      <SidebarNav items={sidebarItems} activeId="home" />
+      <div className="flex-1 p-8 bg-surface-light">
+        <h1 className="text-2xl font-bold text-fg">Page Content</h1>
+        <p className="text-fg-secondary mt-2">Compact sidebar with animated icons.</p>
+      </div>
+    </div>
+  ),
+};
+
+// ─── MobileNav (Dock) ──
+
+const mobileItems = [
+  { id: 'home', label: 'Home', Icon: HouseIcon, href: '/' },
+  { id: 'roadmaps', label: 'Roadmaps', Icon: LayersIcon, href: '/roadmaps' },
+  { id: 'resources', label: 'Resources', Icon: BookOpenIcon, href: '/resources' },
+  { id: 'notifications', label: 'Alerts', Icon: BellIcon, href: '#', badge: 5 },
+  { id: 'profile', label: 'Profile', Icon: UserIcon, href: '/profile' },
+];
+
+export const MobileNavDemo: Story = {
+  name: 'MobileNav (Dock)',
+  parameters: { viewport: { defaultViewport: 'mobile1' } },
+  render: () => (
+    <div className="min-h-[600px] pb-24">
       <div className="p-8">
         <h1 className="text-2xl font-bold text-fg">Page Content</h1>
-        <p className="text-fg-secondary mt-2">Mobile nav appears at the bottom on small screens.</p>
+        <p className="text-fg-secondary mt-2">Dock-style bottom navigation with magnification effect. Hover over icons to see the dock effect.</p>
       </div>
       <MobileNav items={mobileItems} activeId="home" />
     </div>
@@ -92,14 +128,18 @@ const footerSections = [
   { title: 'Community', links: [{ label: 'GitHub', href: 'https://github.com' }, { label: 'Discord', href: '#' }, { label: 'Twitter', href: '#' }] },
 ];
 
-export const FooterDefault: Story = {
+export const FooterDemo: Story = {
   name: 'Footer',
   render: () => (
     <div className="min-h-screen flex flex-col">
       <div className="flex-1 p-8">
         <h1 className="text-2xl font-bold text-fg">Page Content</h1>
       </div>
-      <Footer sections={footerSections} tagline="Transform Developers into 100xEngineers" copyright="© 2025 100X Systems. All rights reserved." />
+      <Footer
+        sections={footerSections}
+        tagline="Transform Developers into 100xEngineers"
+        copyright="© 2025 100X Systems. All rights reserved."
+      />
     </div>
   ),
 };
@@ -110,10 +150,13 @@ export const FullLayout: Story = {
   name: 'Full Layout Demo',
   render: () => (
     <div className="min-h-screen flex flex-col">
-      <Header items={headerItems} />
+      <Header
+        items={headerItems}
+        actions={<Button variant="ripple" size="sm">Sign In</Button>}
+      />
       <div className="flex-1 flex">
-        <div className="hidden md:block">
-          <SidebarNav items={sidebarItems} header="Navigation" activeId="overview" className="h-full" />
+        <div className="hidden lg:block">
+          <SidebarNav items={sidebarItems} activeId="home" className="h-full" />
         </div>
         <main className="flex-1 p-8">
           <h1 className="text-2xl font-bold text-fg">Dashboard</h1>

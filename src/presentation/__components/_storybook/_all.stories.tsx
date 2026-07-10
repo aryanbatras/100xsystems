@@ -219,7 +219,7 @@ export const AllComponents: Story = {
       <section>
         <h2 className="text-lg font-bold text-fg mb-6 border-b border-border pb-3">Layout</h2>
         <div className="border border-border max-w-xs">
-          <SidebarNav items={[{ id: 'overview', label: 'Overview', count: 3 }, { id: 'settings', label: 'Settings', children: [{ id: 'profile', label: 'Profile' }, { id: 'account', label: 'Account' }] }]} header="Navigation" activeId="overview" />
+          <SidebarNav items={[{ id: 'overview', label: 'Overview' }, { id: 'settings', label: 'Settings' }]} activeId="overview" />
         </div>
       </section>
 

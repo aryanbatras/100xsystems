@@ -4,9 +4,7 @@ import styles from '../_styles/css/navbar-navbar.module.css';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useState, useEffect, useRef } from 'react';
-import { CgMenuHotdog } from 'react-icons/cg';
-import { IoChevronDown } from 'react-icons/io5';
-import { RxCross1 } from 'react-icons/rx';
+import { MenuIcon, XIcon, ChevronDownIcon } from '@animateicons/react/lucide';
 /**
  * ## Navbar
  *
@@ -148,7 +146,7 @@ export function Navbar(): React.ReactElement {
                 aria-expanded={activeDropdown === "resources"}
               >
                 Resources{" "}
-                <IoChevronDown
+                <ChevronDownIcon size={16}
                   className={`${styles.dropdownIcon} ${activeDropdown === "resources" ? styles.rotated : ""}`}
                 />
               </button>
@@ -170,7 +168,7 @@ export function Navbar(): React.ReactElement {
                 aria-expanded={activeDropdown === "learn"}
               >
                 Learn{" "}
-                <IoChevronDown
+                <ChevronDownIcon size={16}
                   className={`${styles.dropdownIcon} ${activeDropdown === "learn" ? styles.rotated : ""}`}
                 />
               </button>
@@ -200,7 +198,7 @@ export function Navbar(): React.ReactElement {
                 aria-expanded={activeDropdown === "about"}
               >
                 About{" "}
-                <IoChevronDown
+                <ChevronDownIcon size={16}
                   className={`${styles.dropdownIcon} ${activeDropdown === "about" ? styles.rotated : ""}`}
                 />
               </button>
@@ -224,7 +222,7 @@ export function Navbar(): React.ReactElement {
             className={styles.menuButton}
             onClick={() => setIsMenuOpen(true)}
           >
-            <CgMenuHotdog />
+            <MenuIcon size={22} />
           </button>
         ) : null}
       </nav>
@@ -234,7 +232,7 @@ export function Navbar(): React.ReactElement {
             className={styles.crossButton}
             onClick={() => setIsMenuOpen(false)}
           >
-            <RxCross1 />
+            <XIcon size={22} />
           </button>
           <div className={styles.mobileNav}>
             <div className={styles.mobileNavSection}>

@@ -19,20 +19,20 @@ export { Breadcrumbs, Accordion, Alert, SearchInput, TabBar, Pagination, FilterB
 export type { BreadcrumbItem, BreadcrumbsProps, AccordionProps, AccordionItem, AlertProps, SearchInputProps, TabBarProps, Tab, PaginationProps, FilterBarProps, DataGridProps, StatCardData, CodeBlockProps, TimelineProps, TimelineStep, ArticleCardProps, DifficultyBadgeProps, InfoRowProps, FeatureCardProps, StatCardProps, StreakCardProps, ComingSoonCardProps, ModuleCardProps, ModuleStatus, UserCardProps, MemberCardProps, SocialLink, GroupCardProps, RoadmapCardProps, SearchResultsProps, SearchResultItem, FaqItemProps, ContactInfoItemProps, ProblemCardProps } from './components.composite';
 
 // ─── Layout Components ─────────────────────────────────────────────
-export { SidebarNav, Header, MobileNav, Footer } from './components.layout';
-export type { SidebarNavProps, SidebarNavItem, HeaderProps, HeaderNavItem, MobileNavProps, MobileNavItem, FooterProps, FooterSection } from './components.layout';
+export { SidebarNav, Header, MobileNav, Footer, Dropdown } from './components.layout';
+export type { SidebarNavProps, SidebarNavItem, HeaderProps, HeaderNavItem, MobileNavProps, MobileNavItem, FooterProps, FooterSection, DropdownProps, DropdownItem } from './components.layout';
 
 // ─── Animation Components ──────────────────────────────────────────
 export {
-  KineticText, CoolMode, NoiseTexture, InteractiveGridPattern, AnimatedGridPattern,
+  KineticText, CoolMode, NoiseTexture,
   RippleButton, SpinningText, ScrollVelocityContainer, ScrollVelocityRow,
   NumberTicker, BlurFade, AnimatedList, AnimatedListItem,
-  SkewButton, GooeyCheckbox, ServerLoader, GlobeLoader, ExpandInput, BookLoader,
+  SkewButton, GooeyCheckbox, ExpandInput, BookLoader,
   IconAnimatedGridPattern,
 } from './components.animations';
 export type {
   KineticTextProps, CoolModeProps, CoolParticleOptions, NoiseTextureProps,
-  InteractiveGridPatternProps, AnimatedGridPatternProps, RippleButtonProps,
+  RippleButtonProps,
   SpinningTextProps, ScrollVelocityContainerProps, ScrollVelocityRowProps,
   NumberTickerProps, BlurFadeProps, AnimatedListProps,
   IconAnimatedGridPatternProps,

@@ -47,9 +47,9 @@ export function Accordion({ items, multiple = false, defaultOpen = [], variant =
     return (<div key={item.id} className={itemStyles[variant]}>
       <button type="button" onClick={() => !item.disabled && toggle(item.id)} disabled={item.disabled}
         className={cn('flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors duration-150 hover:bg-accent hover:text-white disabled:opacity-50 disabled:cursor-not-allowed', isOpen && variant !== 'default' && 'border-b border-border')} aria-expanded={isOpen}>
-        <span className="text-base font-semibold text-fg">{item.title}</span>
+        <span className="text-base font-semibold">{item.title}</span>
         <span className="flex items-center gap-3">{item.count !== undefined && <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-2 text-xs font-semibold rounded-full bg-accent-bg text-accent">{item.count}</span>}
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={cn('text-fg-muted transition-transform duration-200', isOpen && 'rotate-180')}><polyline points="6 9 12 15 18 9" /></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={cn('transition-transform duration-200', isOpen && 'rotate-180')}><polyline points="6 9 12 15 18 9" /></svg>
         </span>
       </button>
       <div className={cn('overflow-hidden transition-all duration-200', isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0')}><div className="px-6 py-5 text-base text-fg-tertiary leading-relaxed">{item.content}</div></div>
