@@ -1281,19 +1281,6 @@ export function IconAnimatedGridPattern({
       className={cn('pointer-events-none absolute inset-0 h-full w-full overflow-hidden', className)}
       style={{ transform: 'rotate(-2deg) scale(1.1)', transformOrigin: 'center' }}
     >
-      {/* SVG grid lines */}
-      <svg
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 h-full w-full fill-gray-400/30 stroke-gray-400/30"
-      >
-        <defs>
-          <pattern id={svgId} width={width} height={height} patternUnits="userSpaceOnUse" x={-1} y={-1}>
-            <path d={`M.5 ${height}V.5H${width}`} fill="none" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill={`url(#${svgId})`} />
-      </svg>
-
       {/* Dark squares — glassy dark transparent boxes */}
       {bgSquares.map((sq, idx) => (
         <motion.div
