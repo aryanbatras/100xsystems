@@ -7,7 +7,7 @@ import {
 } from '..';
 
 const meta = {
-  title: 'Overview',
+  title: '_Docs',
   parameters: { layout: 'fullscreen' },
 } satisfies Meta;
 

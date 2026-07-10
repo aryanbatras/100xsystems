@@ -1424,124 +1424,95 @@ export function BookLoader() {
 }
 
 // ─── IconAnimatedGridPattern ────────────────────────────────────────
+// Each icon/dark-square independently: fade in → hold → fade out → reposition → repeat.
+// Staggered delays mean ~4-5 elements are visible at any given moment.
+// Icons and dark squares never overlap (shared occupied-cells tracker).
 
-type IconItem = { Icon: IconType; name: string };
+import {
+  ReactDark, Nextjs, Vue, Angular, Svelte, TypeScript, JavaScript, Python,
+  RustDark, GoLight, Nodejs, Docker, Kubernetes, GitHubDark, GitLab,
+  PostgreSQL, Redis, GraphQL, Figma, TailwindCSS, Vite, PrismaDark,
+  Supabase, Firebase, VercelDark, Netlify, Cloudflare, Nginx, Linux,
+  Ubuntu, Terraform,   Slack, Discord, Notion, Sentry, Grafana,
+  DenoLight, Bun, PnpmDark, Yarn, Swift, Kotlin, Flutter, Android,
+  AppleLight, Google, Microsoft, Meta, Netflix, OpenAIDark, Stripe,
+  Auth0, Datadog, Expo, Shopify, Django, FastAPI, NestJS, Laravel,
+  Spring, Storybook, Cypress, Jest, DigitalOcean, GoogleCloud,
+  MicrosoftAzure,   Git, ApacheKafkaDark, WordPress,
+} from '@ridemountainpig/svgl-react';
 
-const ICONS: IconItem[] = [
-  // FAANG & Big Tech
-  { Icon: SiGoogle, name: 'Google' },
-  { Icon: SiApple, name: 'Apple' },
-  { Icon: SiMeta, name: 'Meta' },
-  { Icon: SiNetflix, name: 'Netflix' },
-  { Icon: SiOpenai, name: 'OpenAI' },
-  { Icon: SiTesla, name: 'Tesla' },
-  // Developer Platforms
-  { Icon: SiGithub, name: 'GitHub' },
-  { Icon: SiGitlab, name: 'GitLab' },
-  { Icon: SiVercel, name: 'Vercel' },
-  { Icon: SiStorybook, name: 'Storybook' },
-  // Cloud & Infrastructure
-  { Icon: SiCloudflare, name: 'Cloudflare' },
-  { Icon: SiDigitalocean, name: 'DigitalOcean' },
-  { Icon: SiLinux, name: 'Linux' },
-  { Icon: SiUbuntu, name: 'Ubuntu' },
-  { Icon: SiDocker, name: 'Docker' },
-  { Icon: SiKubernetes, name: 'Kubernetes' },
-  { Icon: SiNginx, name: 'Nginx' },
-  { Icon: SiTerraform, name: 'Terraform' },
-  { Icon: SiAnsible, name: 'Ansible' },
-  { Icon: SiPulumi, name: 'Pulumi' },
-  // Languages & Runtimes
-  { Icon: SiTypescript, name: 'TypeScript' },
-  { Icon: SiJavascript, name: 'JavaScript' },
-  { Icon: SiPython, name: 'Python' },
-  { Icon: SiRust, name: 'Rust' },
-  { Icon: SiGo, name: 'Go' },
-  { Icon: SiNodedotjs, name: 'Node.js' },
-  { Icon: SiSwift, name: 'Swift' },
-  { Icon: SiKotlin, name: 'Kotlin' },
-  { Icon: SiRubyonrails, name: 'Rails' },
-  { Icon: SiDjango, name: 'Django' },
-  { Icon: SiFlask, name: 'Flask' },
-  { Icon: SiFastapi, name: 'FastAPI' },
-  // Frameworks & Libraries
-  { Icon: SiReact, name: 'React' },
-  { Icon: SiNextdotjs, name: 'Next.js' },
-  { Icon: SiVuedotjs, name: 'Vue.js' },
-  { Icon: SiAngular, name: 'Angular' },
-  { Icon: SiSvelte, name: 'Svelte' },
-  { Icon: SiTailwindcss, name: 'Tailwind CSS' },
-  { Icon: SiBootstrap, name: 'Bootstrap' },
-  { Icon: SiJquery, name: 'jQuery' },
-  { Icon: SiSass, name: 'Sass' },
-  { Icon: SiReactquery, name: 'TanStack Query' },
-  { Icon: SiPrisma, name: 'Prisma' },
-  { Icon: SiTrpc, name: 'tRPC' },
-  { Icon: SiZod, name: 'Zod' },
-  { Icon: SiBiome, name: 'Biome' },
-  // Databases
-  { Icon: SiPostgresql, name: 'PostgreSQL' },
-  { Icon: SiMongodb, name: 'MongoDB' },
-  { Icon: SiRedis, name: 'Redis' },
-  { Icon: SiSqlite, name: 'SQLite' },
-  { Icon: SiElasticsearch, name: 'Elasticsearch' },
-  { Icon: SiPlanetscale, name: 'PlanetScale' },
-  { Icon: SiSupabase, name: 'Supabase' },
-  // Monitoring & Observability
-  { Icon: SiDatadog, name: 'Datadog' },
-  { Icon: SiSentry, name: 'Sentry' },
-  { Icon: SiNewrelic, name: 'New Relic' },
-  { Icon: SiGrafana, name: 'Grafana' },
-  { Icon: SiPrometheus, name: 'Prometheus' },
-  { Icon: SiKibana, name: 'Kibana' },
-  // Tools & Editors
-  { Icon: SiJetbrains, name: 'JetBrains' },
-  { Icon: SiVim, name: 'Vim' },
-  { Icon: SiNeovim, name: 'Neovim' },
-  { Icon: SiElectron, name: 'Electron' },
-  { Icon: SiElastic, name: 'Elastic' },
-  { Icon: SiFigma, name: 'Figma' },
-  { Icon: SiLinear, name: 'Linear' },
-  { Icon: SiNotion, name: 'Notion' },
-  // CI/CD & Collaboration
-  { Icon: SiCircleci, name: 'CircleCI' },
-  { Icon: SiJenkins, name: 'Jenkins' },
-  { Icon: SiAtlassian, name: 'Atlassian' },
-  { Icon: SiJira, name: 'Jira' },
-  { Icon: SiConfluence, name: 'Confluence' },
-  { Icon: SiSlack, name: 'Slack' },
-  { Icon: SiDiscord, name: 'Discord' },
-  // Payments & Auth
-  { Icon: SiStripe, name: 'Stripe' },
-  { Icon: SiAuth0, name: 'Auth0' },
-  { Icon: SiClerk, name: 'Clerk' },
-  // Social & Media
-  { Icon: SiX, name: 'X/Twitter' },
-  { Icon: SiYoutube, name: 'YouTube' },
-  { Icon: SiShopify, name: 'Shopify' },
-  // Build Tools & Package Managers
-  { Icon: SiWebpack, name: 'Webpack' },
-  { Icon: SiVite, name: 'Vite' },
-  { Icon: SiTurborepo, name: 'Turborepo' },
-  { Icon: SiPnpm, name: 'pnpm' },
-  { Icon: SiYarn, name: 'Yarn' },
-  { Icon: SiNpm, name: 'npm' },
-  { Icon: SiBun, name: 'Bun' },
-  { Icon: SiDeno, name: 'Deno' },
-  // Testing
-  { Icon: SiJest, name: 'Jest' },
-  { Icon: SiVitest, name: 'Vitest' },
-  { Icon: SiCypress, name: 'Cypress' },
-  // Mobile
-  { Icon: SiAndroid, name: 'Android' },
-  { Icon: SiExpo, name: 'Expo' },
-  { Icon: SiFlutter, name: 'Flutter' },
-  // Hardware
-  { Icon: SiRaspberrypi, name: 'Raspberry Pi' },
-  { Icon: SiArduino, name: 'Arduino' },
-  // Other
-  { Icon: SiRailway, name: 'Railway' },
-  { Icon: SiFlydotio, name: 'Fly.io' },
+type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
+
+const ICON_LIST: Array<{ Component: IconComponent; label: string }> = [
+  { Component: ReactDark, label: 'React' },
+  { Component: Nextjs, label: 'Next.js' },
+  { Component: Vue, label: 'Vue.js' },
+  { Component: Angular, label: 'Angular' },
+  { Component: Svelte, label: 'Svelte' },
+  { Component: TypeScript, label: 'TypeScript' },
+  { Component: JavaScript, label: 'JavaScript' },
+  { Component: Python, label: 'Python' },
+  { Component: RustDark, label: 'Rust' },
+  { Component: GoLight, label: 'Go' },
+  { Component: Nodejs, label: 'Node.js' },
+  { Component: Docker, label: 'Docker' },
+  { Component: Kubernetes, label: 'Kubernetes' },
+  { Component: GitHubDark, label: 'GitHub' },
+  { Component: GitLab, label: 'GitLab' },
+  { Component: PostgreSQL, label: 'PostgreSQL' },
+  { Component: Redis, label: 'Redis' },
+  { Component: GraphQL, label: 'GraphQL' },
+  { Component: Figma, label: 'Figma' },
+  { Component: TailwindCSS, label: 'Tailwind' },
+  { Component: Vite, label: 'Vite' },
+  { Component: PrismaDark, label: 'Prisma' },
+  { Component: Supabase, label: 'Supabase' },
+  { Component: Firebase, label: 'Firebase' },
+  { Component: VercelDark, label: 'Vercel' },
+  { Component: Netlify, label: 'Netlify' },
+  { Component: Cloudflare, label: 'Cloudflare' },
+  { Component: Nginx, label: 'Nginx' },
+  { Component: Linux, label: 'Linux' },
+  { Component: Ubuntu, label: 'Ubuntu' },
+  { Component: Terraform, label: 'Terraform' },
+  { Component: Slack, label: 'Slack' },
+  { Component: Discord, label: 'Discord' },
+  { Component: Notion, label: 'Notion' },
+  { Component: Sentry, label: 'Sentry' },
+  { Component: Grafana, label: 'Grafana' },
+  { Component: DenoLight, label: 'Deno' },
+  { Component: Bun, label: 'Bun' },
+  { Component: PnpmDark, label: 'pnpm' },
+  { Component: Yarn, label: 'Yarn' },
+  { Component: Swift, label: 'Swift' },
+  { Component: Kotlin, label: 'Kotlin' },
+  { Component: Flutter, label: 'Flutter' },
+  { Component: Android, label: 'Android' },
+  { Component: AppleLight, label: 'Apple' },
+  { Component: Google, label: 'Google' },
+  { Component: Microsoft, label: 'Microsoft' },
+  { Component: Meta, label: 'Meta' },
+  { Component: Netflix, label: 'Netflix' },
+  { Component: OpenAIDark, label: 'OpenAI' },
+  { Component: Stripe, label: 'Stripe' },
+  { Component: Auth0, label: 'Auth0' },
+  { Component: Datadog, label: 'Datadog' },
+  { Component: Expo, label: 'Expo' },
+  { Component: Shopify, label: 'Shopify' },
+  { Component: Django, label: 'Django' },
+  { Component: FastAPI, label: 'FastAPI' },
+  { Component: NestJS, label: 'NestJS' },
+  { Component: Laravel, label: 'Laravel' },
+  { Component: Spring, label: 'Spring' },
+  { Component: Storybook, label: 'Storybook' },
+  { Component: Cypress, label: 'Cypress' },
+  { Component: Jest, label: 'Jest' },
+  { Component: DigitalOcean, label: 'DigitalOcean' },
+  { Component: GoogleCloud, label: 'Google Cloud' },
+  { Component: MicrosoftAzure, label: 'Azure' },
+  { Component: Git, label: 'Git' },
+  { Component: ApacheKafkaDark, label: 'Kafka' },
+  { Component: WordPress, label: 'WordPress' },
 ];
 
 export interface IconAnimatedGridPatternProps {
@@ -1550,119 +1521,94 @@ export interface IconAnimatedGridPatternProps {
   height?: number;
   numIcons?: number;
   maxOpacity?: number;
+  iconSize?: number;
   duration?: number;
   repeatDelay?: number;
-  iconSize?: number;
 }
-
-type IconPos = { id: number; pos: [number, number]; iconIdx: number; iteration: number };
-type BgSquare = { id: number; pos: [number, number]; iteration: number };
 
 export function IconAnimatedGridPattern({
   className,
-  width = 60,
-  height = 60,
-  numIcons = 30,
-  maxOpacity = 0.8,
-  duration = 8,
-  repeatDelay = 3,
-  iconSize = 24,
+  width = 80,
+  height = 80,
+  numIcons = 50,
+  maxOpacity = 0.2,
+  iconSize = 28,
+  duration = 6,
+  repeatDelay = 2,
 }: IconAnimatedGridPatternProps) {
-  const id = useId();
+  const svgId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [iconPositions, setIconPositions] = useState<IconPos[]>([]);
-  const [bgSquares, setBgSquares] = useState<BgSquare[]>([]);
+  const [dims, setDims] = useState({ w: 0, h: 0 });
+  const [bgSquares, setBgSquares] = useState<Array<{ id: number; pos: [number, number]; iteration: number }>>([]);
+  const [iconSquares, setIconSquares] = useState<Array<{ id: number; pos: [number, number]; iconIdx: number; iteration: number }>>([]);
+  const occRef = useRef<Set<string>>(new Set());
 
-  const gridCols = dimensions.width > 0 ? Math.floor(dimensions.width / width) : 0;
-  const gridRows = dimensions.height > 0 ? Math.floor(dimensions.height / height) : 0;
+  const cols = dims.w > 0 ? Math.ceil(dims.w / width) + 2 : 0;
+  const rows = dims.h > 0 ? Math.ceil(dims.h / height) + 2 : 0;
 
-  // Track cells currently occupied by icons
-  const occupiedCells = useMemo(
-    () => new Set(iconPositions.map((p) => `${p.pos[0]},${p.pos[1]}`)),
-    [iconPositions]
-  );
+  const rand = (max: number) => Math.floor(Math.random() * max);
 
-  const getPos = useCallback((): [number, number] => [
-    Math.floor(Math.random() * gridCols),
-    Math.floor(Math.random() * gridRows),
-  ], [gridCols, gridRows]);
-
-  // Pick a random empty cell (not occupied by an icon)
-  const getEmptyPos = useCallback((): [number, number] => {
-    if (gridCols === 0 || gridRows === 0) return [0, 0];
+  const pickPos = useCallback((): [number, number] => {
     let attempts = 0;
-    let pos: [number, number];
+    let cx: number, cy: number, key: string;
     do {
-      pos = [Math.floor(Math.random() * gridCols), Math.floor(Math.random() * gridRows)];
+      cx = rand(cols);
+      cy = rand(rows);
+      key = `${cx},${cy}`;
       attempts++;
-    } while (occupiedCells.has(`${pos[0]},${pos[1]}`) && attempts < 30);
-    return pos;
-  }, [gridCols, gridRows, occupiedCells]);
+    } while (occRef.current.has(key) && attempts < 300);
+    occRef.current.add(key);
+    return [cx, cy];
+  }, [cols, rows]);
 
-  const generatePositions = useCallback((count: number) =>
-    Array.from({ length: count }, (_, i) => ({
-      id: i,
-      pos: getPos(),
-      iconIdx: Math.floor(Math.random() * ICONS.length),
-      iteration: 0,
-    })), [getPos]);
-
-  const generateBgSquares = useCallback((count: number) =>
-    Array.from({ length: count }, (_, i) => ({
-      id: i,
-      pos: getEmptyPos(),
-      iteration: 0,
-    })), [getEmptyPos]);
-
-  // Generate bg squares when grid is ready
+  // Generate initial positions
   useEffect(() => {
-    if (gridCols && gridRows && iconPositions.length > 0) {
-      const totalCells = gridCols * gridRows;
-      const numBg = Math.min(Math.max(10, Math.floor(totalCells * 0.25)), 40);
-      setBgSquares(generateBgSquares(numBg));
-    }
-  }, [gridCols, gridRows, iconPositions.length, generateBgSquares]);
+    if (cols === 0 || rows === 0) return;
+    occRef.current.clear();
+    const bg: Array<{ id: number; pos: [number, number]; iteration: number }> = [];
+    const icons: Array<{ id: number; pos: [number, number]; iconIdx: number; iteration: number }> = [];
 
-  const updateIconPosition = useCallback((iconId: number) => {
-    let newPos: [number, number] | null = null;
-    setIconPositions((current) => {
-      const found = current.find((p) => p.id === iconId);
-      if (!found) return current;
-      newPos = getPos();
-      return current.map((p) =>
-        p.id === iconId
-          ? { ...p, pos: newPos!, iconIdx: Math.floor(Math.random() * ICONS.length), iteration: p.iteration + 1 }
-          : p
-      );
+    for (let i = 0; i < 60; i++) bg.push({ id: i, pos: pickPos(), iteration: 0 });
+    for (let i = 0; i < numIcons; i++) icons.push({ id: i, pos: pickPos(), iconIdx: rand(ICON_LIST.length), iteration: 0 });
+
+    setBgSquares(bg);
+    setIconSquares(icons);
+  }, [cols, rows, numIcons, pickPos]);
+
+  // Reposition a single dark square when its animation completes
+  const repositionBg = useCallback((id: number) => {
+    setBgSquares((prev) => {
+      const next = prev.slice();
+      const sq = next[id];
+      if (!sq) return prev;
+      occRef.current.delete(`${sq.pos[0]},${sq.pos[1]}`);
+      next[id] = { ...sq, pos: pickPos(), iteration: sq.iteration + 1 };
+      return next;
     });
-  }, [getPos]);
+  }, [pickPos]);
 
-  const updateBgSquarePosition = useCallback((squareId: number) => {
-    setBgSquares((current) => {
-      const found = current.find((p) => p.id === squareId);
-      if (!found) return current;
-      return current.map((p) =>
-        p.id === squareId
-          ? { ...p, pos: getEmptyPos(), iteration: p.iteration + 1 }
-          : p
-      );
+  // Reposition a single icon when its animation completes
+  const repositionIcon = useCallback((id: number) => {
+    setIconSquares((prev) => {
+      const next = prev.slice();
+      const ic = next[id];
+      if (!ic) return prev;
+      occRef.current.delete(`${ic.pos[0]},${ic.pos[1]}`);
+      next[id] = { ...ic, pos: pickPos(), iconIdx: rand(ICON_LIST.length), iteration: ic.iteration + 1 };
+      return next;
     });
-  }, [getEmptyPos]);
+  }, [pickPos]);
 
-  useEffect(() => {
-    if (gridCols && gridRows) setIconPositions(generatePositions(numIcons));
-  }, [gridCols, gridRows, generatePositions, numIcons]);
-
+  // Observe container size
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
     const ro = new ResizeObserver((entries) => {
       for (const e of entries) {
-        setDimensions((d) =>
-          d.width === e.contentRect.width && d.height === e.contentRect.height
+        setDims((d) =>
+          d.w === e.contentRect.width && d.h === e.contentRect.height
             ? d
-            : { width: e.contentRect.width, height: e.contentRect.height }
+            : { w: e.contentRect.width, h: e.contentRect.height }
         );
       }
     });
@@ -1673,77 +1619,73 @@ export function IconAnimatedGridPattern({
   return (
     <div
       ref={containerRef}
-      className={cn('relative w-full min-h-[400px] overflow-hidden', className)}
+      className={cn('pointer-events-none absolute inset-0 h-full w-full overflow-hidden', className)}
+      style={{ transform: 'rotate(-2deg) scale(1.1)', transformOrigin: 'center' }}
     >
-      {/* SVG grid background — identical pattern to AnimatedGridPattern */}
+      {/* SVG grid lines */}
       <svg
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 h-full w-full fill-gray-400/20 stroke-gray-400/20"
+        className="pointer-events-none absolute inset-0 h-full w-full fill-gray-400/30 stroke-gray-400/30"
       >
         <defs>
-          <pattern id={id} width={width} height={height} patternUnits="userSpaceOnUse" x={0} y={0}>
+          <pattern id={svgId} width={width} height={height} patternUnits="userSpaceOnUse" x={-1} y={-1}>
             <path d={`M.5 ${height}V.5H${width}`} fill="none" />
           </pattern>
         </defs>
-        <rect width="100%" height="100%" fill={`url(#${id})`} />
-
-        {/* Background dark squares — same effect as AnimatedGridPattern, only on empty cells */}
-        <svg className="overflow-visible">
-          {bgSquares.map(({ pos: [sx, sy], id: sqId, iteration }, index) => (
-            <motion.rect
-              key={`bg-${sqId}-${iteration}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.5 }}
-              transition={{ duration: 8, repeat: 1, delay: index * 0.1, repeatType: 'reverse', repeatDelay: 3 }}
-              onAnimationComplete={() => updateBgSquarePosition(sqId)}
-              width={width - 1}
-              height={height - 1}
-              x={sx * width + 1}
-              y={sy * height + 1}
-              fill="currentColor"
-              strokeWidth="0"
-              className="text-gray-400/40 dark:text-gray-600/50"
-            />
-          ))}
-        </svg>
+        <rect width="100%" height="100%" fill={`url(#${svgId})`} />
       </svg>
 
-      {/* Icons — slow fade-in/reposition animation */}
-      {iconPositions.map(({ id: sqId, pos: [cx, cy], iconIdx, iteration }, index) => {
-        const cellX = cx * width;
-        const cellY = cy * height;
-        const offset = (Math.min(width, height) - iconSize) / 2;
-        const Icon = ICONS[iconIdx % ICONS.length].Icon;
-        const name = ICONS[iconIdx % ICONS.length].name;
+      {/* Dark squares — each independently fades in/out then repositions */}
+      {bgSquares.map((sq, idx) => (
+        <motion.div
+          key={`bg-${sq.id}-${sq.iteration}`}
+          className="absolute"
+          style={{
+            left: sq.pos[0] * width + 1,
+            top: sq.pos[1] * height + 1,
+            width: width - 1,
+            height: height - 1,
+            backgroundColor: 'currentColor',
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: maxOpacity }}
+          transition={{
+            duration,
+            repeat: 1,
+            delay: idx * 0.1,
+            repeatType: 'reverse',
+            repeatDelay,
+          }}
+          onAnimationComplete={() => repositionBg(sq.id)}
+        />
+      ))}
 
+      {/* Icons — each independently fades in/out then repositions */}
+      {iconSquares.map((ic, idx) => {
+        const { Component, label } = ICON_LIST[ic.iconIdx % ICON_LIST.length];
         return (
           <motion.div
-            key={`icon-${sqId}-${iteration}`}
-            className="absolute group"
+            key={`icon-${ic.id}-${ic.iteration}`}
+            className="absolute flex items-center justify-center"
             style={{
-              left: cellX + offset,
-              top: cellY + offset,
+              left: ic.pos[0] * width + (width - iconSize) / 2,
+              top: ic.pos[1] * height + (height - iconSize) / 2,
               width: iconSize,
               height: iconSize,
             }}
             initial={{ opacity: 0 }}
-            animate={{ opacity: maxOpacity }}
+            animate={{ opacity: 1 }}
             transition={{
               duration,
               repeat: 1,
-              delay: index * 0.1,
+              delay: idx * 0.12,
               repeatType: 'reverse',
               repeatDelay,
             }}
-            onAnimationComplete={() => updateIconPosition(sqId)}
+            onAnimationComplete={() => repositionIcon(ic.id)}
+            title={label}
           >
-            <Icon
-              size={iconSize}
-              className="text-gray-700 dark:text-gray-300"
-            />
-            <span className="pointer-events-none absolute -bottom-1 left-1/2 -translate-x-1/2 translate-y-full whitespace-nowrap rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
-              {name}
-            </span>
+            <Component width={iconSize} height={iconSize} />
           </motion.div>
         );
       })}
