@@ -29,6 +29,7 @@ export {
   NumberTicker, BlurFade, AnimatedList, AnimatedListItem,
   SkewButton, GooeyCheckbox, ExpandInput, BookLoader,
   IconAnimatedGridPattern,
+  Highlighter, WordRotate,
 } from './components.animations';
 export type {
   KineticTextProps, CoolModeProps, CoolParticleOptions, NoiseTextureProps,
@@ -36,6 +37,7 @@ export type {
   SpinningTextProps, ScrollVelocityContainerProps, ScrollVelocityRowProps,
   NumberTickerProps, BlurFadeProps, AnimatedListProps,
   IconAnimatedGridPatternProps,
+  HighlighterProps, WordRotateProps,
 } from './components.animations';
 
 // ─── Page Layout Components ────────────────────────────────────────

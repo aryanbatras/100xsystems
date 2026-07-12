@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react';
 import Link from 'next/link';
-import { IconAnimatedGridPattern } from '@/presentation/__components';
+import { IconAnimatedGridPattern, WordRotate } from '@/presentation/__components';
 
 export function HomeHero() {
   return (
@@ -12,17 +12,34 @@ export function HomeHero() {
       </div>
 
       <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 text-center">
-        <motion.h1
-          className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-fg tracking-tight mb-12 uppercase"
+        <motion.div
+          className="mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          The world runs on systems.
-          <br />
-          <br />
-          <span className="text-accent">Learn to build them.</span>
-        </motion.h1>
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-fg tracking-tight uppercase leading-[1.05]">
+            The world runs on{' '}
+            <span className="text-accent inline-block">
+              <WordRotate
+                words={['systems','code.', 'software.', 'infrastructure.', 'platforms.', 'data.', 'open source.']}
+                duration={2000}
+                className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-accent tracking-tight uppercase"
+              />
+            </span>
+          </h1>
+        </motion.div>
+
+        <motion.div
+          className="mb-14"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-accent-yellow tracking-tight uppercase">
+            Learn to build them.
+          </h2>
+        </motion.div>
 
         <motion.div
           className="flex items-center justify-center"
