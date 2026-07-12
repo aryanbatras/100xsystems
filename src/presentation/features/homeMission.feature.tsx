@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
+import { WordRotate } from '@/presentation/__components';
 
 const principles = [
   'Build.',
@@ -27,10 +28,18 @@ export function HomeMission() {
           <span className="inline-block text-[11px] tracking-[0.15em] uppercase text-fg-muted font-medium mb-4">
             The Mission
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-fg tracking-tight uppercase leading-tight mb-6">
-            The world doesn&apos;t need more tutorials.
-            <br />
-            <span className="text-accent">It needs better engineers.</span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-fg tracking-tight uppercase leading-[1.05] mb-4">
+            The world doesn&apos;t need more{' '}
+            <span className="text-accent inline-block">
+              <WordRotate
+                words={['tutorials.', 'courses.', 'certificates.', 'lectures.', 'bootcamps.']}
+                duration={2000}
+                className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-accent tracking-tight uppercase"
+              />
+            </span>
+          </h2>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-accent-yellow tracking-tight uppercase">
+            It needs better engineers.
           </h2>
         </motion.div>
 

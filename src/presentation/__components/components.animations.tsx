@@ -1220,7 +1220,7 @@ export function IconAnimatedGridPattern({
   // ── Slow diagonal drift ─────────────────────────────────────────
   const diagOffset = useMotionValue(0);
   useAnimationFrame((_, delta) => {
-    const speed = 0.003 // px per ms ≈ 3 px/s — very slow diagonal drift
+    const speed = 0.0015 // px per ms ≈ 3 px/s — very slow diagonal drift
     diagOffset.set(diagOffset.get() + delta * speed);
   });
 
