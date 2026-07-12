@@ -8,37 +8,45 @@ import { IconAnimatedGridPattern } from '@/presentation/__components';
 export function HomeHero() {
   return (
     <section className="relative overflow-hidden h-screen min-h-[600px] flex items-center bg-white">
-      {/* Full-screen icon animated grid background */}
       <div className="absolute inset-0 z-0">
         <IconAnimatedGridPattern />
       </div>
 
-      {/* Content — centered */}
       <div className="relative z-10 max-w-[900px] mx-auto px-6 py-24 text-center">
-        <motion.h1
-          className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-fg tracking-tight leading-[1.05] mb-4 uppercase"
+        <motion.span
+          className="inline-block text-[10px] font-bold tracking-[0.2em] uppercase text-accent mb-6 px-3 py-1.5 bg-accent-bg"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          Build. Ship. Scale.{' '}
-          <span className="text-accent">Repeat.</span>
+          Open Source Engineering Ecosystem
+        </motion.span>
+
+        <motion.h1
+          className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-fg tracking-tight leading-[1.05] mb-6 uppercase"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          The world runs on systems.
+          <br />
+          <span className="text-accent">Learn to build them.</span>
         </motion.h1>
 
         <motion.p
           className="text-lg md:text-xl text-fg-secondary max-w-xl mx-auto mb-10 leading-relaxed"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
-          Build your own systems. Be the 100x Engineer.
+          Not tutorials. Not courses. Complete systems from scratch.
         </motion.p>
 
         <motion.div
           className="flex items-center justify-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
           <Link
             href="/roadmaps"

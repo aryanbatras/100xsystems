@@ -1,18 +1,32 @@
 import { HomeHero } from '@/presentation/features/homeHero.feature';
+import { HomePhilosophy } from '@/presentation/features/homePhilosophy.feature';
+import { HomeWhatIsSystem } from '@/presentation/features/homeWhatIsSystem.feature';
 import { HomeVideoParallax } from '@/presentation/features/homeVideoParallax.feature';
-import { HomeSystems } from '@/presentation/features/homeSystems.feature';
-import { HomeJourneyVideo } from '@/presentation/features/homeJourneyVideo.feature';
-import { HomeFAQ } from '@/presentation/features/homeFAQ.feature';
+import { HomeBuildSystems } from '@/presentation/features/homeBuildSystems.feature';
+import { HomeLearningPhilosophy } from '@/presentation/features/homeLearningPhilosophy.feature';
+import { HomeExploreSystems } from '@/presentation/features/homeExploreSystems.feature';
+import { HomeCubix } from '@/presentation/features/homeCubix.feature';
+import { HomeOpenSource } from '@/presentation/features/homeOpenSource.feature';
+import { HomeStats } from '@/presentation/features/homeStats.feature';
+import { HomeTestimonials } from '@/presentation/features/homeTestimonials.feature';
+import { HomeMission } from '@/presentation/features/homeMission.feature';
 import { HomeSection10 } from '@/presentation/features/homeSection10.feature';
 
 export default function HomePage() {
   return (
     <>
       <HomeHero />
+      <HomePhilosophy />
+      <HomeWhatIsSystem />
       <HomeVideoParallax />
-      <HomeSystems />
-      <HomeJourneyVideo />
-      <HomeFAQ />
+      <HomeBuildSystems />
+      <HomeLearningPhilosophy />
+      <HomeExploreSystems />
+      <HomeCubix />
+      <HomeOpenSource />
+      <HomeStats />
+      <HomeTestimonials />
+      <HomeMission />
       <HomeSection10 />
     </>
   );
