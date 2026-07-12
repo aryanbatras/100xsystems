@@ -1,10 +1,9 @@
 .spinner {
   --size: 60px;
   --first-block-clr: #facc15;
-  --second-block-clr: #ffffff;
-  --clr: #111;
-  width: 100px;
-  height: 100px;
+  --second-block-clr: #7c3aed;
+  width: 120px;
+  height: 120px;
   position: relative;
 }
 
@@ -26,6 +25,22 @@
   top: calc(50% - var(--size));
   left: calc(50% - var(--size));
   animation: down 2.4s cubic-bezier(0, 0, 0.24, 1.21) infinite;
+}
+
+@media (min-width: 768px) {
+  .spinner {
+    --size: 90px;
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .spinner {
+    --size: 120px;
+    width: 240px;
+    height: 240px;
+  }
 }
 
 @keyframes down {
