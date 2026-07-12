@@ -30,8 +30,9 @@ export function HomeWhatIsSystem() {
           <span className="inline-block text-[11px] tracking-[0.15em] uppercase text-fg-muted font-medium mb-4">
             What is a System?
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-fg tracking-tight uppercase leading-tight mb-6">
-            Everything around you is a system.
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-fg tracking-tight uppercase leading-tight mb-6">
+            Everything around you is a{' '}
+            <span className="text-accent">system.</span>
           </h2>
           <p className="text-lg text-fg-secondary leading-relaxed max-w-2xl mx-auto">
             The tools you use daily are engineering marvels.
@@ -45,40 +46,30 @@ export function HomeWhatIsSystem() {
             return (
               <motion.div
                 key={sys.name}
-                className="group flex items-start gap-4 p-5 cursor-default transition-all duration-300"
+                className="system-card group flex items-start gap-4 p-5 cursor-default transition-all duration-300"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.05 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#572EFF';
-                  e.currentTarget.querySelectorAll('h3, p').forEach((el) => {
-                    (el as HTMLElement).style.color = '#ffffff';
-                  });
-                  const svg = e.currentTarget.querySelector('svg');
-                  if (svg) svg.style.color = '#ffffff';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.querySelectorAll('h3').forEach((el) => {
-                    (el as HTMLElement).style.color = '';
-                  });
-                  e.currentTarget.querySelectorAll('p').forEach((el) => {
-                    (el as HTMLElement).style.color = '';
-                  });
-                  const svg = e.currentTarget.querySelector('svg');
-                  if (svg) svg.style.color = '';
-                }}
               >
-                <Icon className="shrink-0 text-2xl text-accent mt-0.5 group-hover:text-white transition-colors" />
+                <Icon className="shrink-0 text-2xl text-accent mt-0.5 transition-colors duration-300" />
                 <div>
-                  <h3 className="text-base font-bold text-fg uppercase tracking-wide mb-1">{sys.name}</h3>
-                  <p className="text-sm text-fg-secondary leading-relaxed">{sys.desc}</p>
+                  <h3 className="text-base font-bold text-fg uppercase tracking-wide mb-1 transition-colors duration-300">{sys.name}</h3>
+                  <p className="text-sm text-fg-secondary leading-relaxed transition-colors duration-300">{sys.desc}</p>
                 </div>
               </motion.div>
             );
           })}
         </div>
+
+        <style>{`
+          .system-card:hover {
+            background-color: #572EFF;
+          }
+          .system-card:hover * {
+            color: #ffffff !important;
+          }
+        `}</style>
       </div>
     </section>
   );

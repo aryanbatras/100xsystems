@@ -5,7 +5,7 @@ import { motion } from 'motion/react';
 export function HomePhilosophy() {
   return (
     <section className="py-24 lg:py-32 bg-white">
-      <div className="max-w-[1000px] mx-auto px-6 lg:px-12">
+      <div className="max-w-[1200px] mx-auto px-6 lg:px-12">
         <motion.div
           className="text-center mb-20"
           initial={{ opacity: 0, y: 30 }}
@@ -27,49 +27,81 @@ export function HomePhilosophy() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            {
-              title: 'Why systems matter',
-              text: 'Every product you use is a system. Understanding how they work — not just how to use them — is what separates engineers from coders.',
-            },
-            {
-              title: 'Why tutorials fail',
-              text: 'Tutorials give you steps. Systems give you understanding. One teaches you to follow. The other teaches you to think.',
-            },
-            {
-              title: 'Why building changes everything',
-              text: 'When you build a database from scratch, you stop being a user of databases. You become someone who understands them.',
-            },
-          ].map((item, i) => (
-            <motion.div
-              key={item.title}
-              className="group flex flex-col gap-4 p-8 cursor-default transition-all duration-300"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#572EFF';
-                e.currentTarget.querySelectorAll('h3, p').forEach((el) => {
-                  (el as HTMLElement).style.color = '#ffffff';
-                });
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'transparent';
-                e.currentTarget.querySelectorAll('h3').forEach((el) => {
-                  (el as HTMLElement).style.color = '';
-                });
-                e.currentTarget.querySelectorAll('p').forEach((el) => {
-                  (el as HTMLElement).style.color = '';
-                });
-              }}
-            >
-              <h3 className="text-lg font-bold text-fg uppercase tracking-wide">{item.title}</h3>
-              <p className="text-sm text-fg-secondary leading-relaxed text-justify">{item.text}</p>
-            </motion.div>
-          ))}
+        {/* Bento grid — single image left, text cards right */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Tall image card */}
+          <motion.div
+            className="philosophy-image-card group relative overflow-hidden lg:row-span-3 cursor-default"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <img
+              src="/assets/wallpaper/hand-one-finger-rubik-cube-holded-like-pro.jpg"
+              alt="Mastery — balancing complex systems"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          </motion.div>
+
+          {/* Text card 1 */}
+          <motion.div
+            className="philosophy-card group flex flex-col justify-center p-8 lg:col-span-2 cursor-default"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <h3 className="text-xl font-bold text-fg uppercase tracking-wide mb-3 group-hover:text-white transition-colors duration-300">Why systems matter</h3>
+            <p className="text-base text-fg-secondary leading-relaxed text-justify group-hover:text-white/80 transition-colors duration-300">
+              Every product you use is a system. Understanding how they work — not just how to use them — is what separates engineers from coders.
+            </p>
+          </motion.div>
+
+          {/* Text card 2 */}
+          <motion.div
+            className="philosophy-card group flex flex-col justify-center p-8 lg:col-span-2 cursor-default"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <h3 className="text-xl font-bold text-fg uppercase tracking-wide mb-3 group-hover:text-white transition-colors duration-300">Why tutorials fail</h3>
+            <p className="text-base text-fg-secondary leading-relaxed text-justify group-hover:text-white/80 transition-colors duration-300">
+              Tutorials give you steps. Systems give you understanding. One teaches you to follow. The other teaches you to think.
+            </p>
+          </motion.div>
+
+          {/* Text card 3 */}
+          <motion.div
+            className="philosophy-card group flex flex-col justify-center p-8 lg:col-span-2 cursor-default"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <h3 className="text-xl font-bold text-fg uppercase tracking-wide mb-3 group-hover:text-white transition-colors duration-300">Why building changes everything</h3>
+            <p className="text-base text-fg-secondary leading-relaxed text-justify group-hover:text-white/80 transition-colors duration-300">
+              When you build a database from scratch, you stop being a user of databases. You become someone who understands them.
+            </p>
+          </motion.div>
         </div>
+
+        <style>{`
+          .philosophy-card {
+            background-color: #f5f5f5;
+            min-height: 180px;
+          }
+          .philosophy-card:hover {
+            background-color: #572EFF;
+          }
+          .philosophy-card:hover * {
+            color: #ffffff !important;
+          }
+          .philosophy-image-card {
+            min-height: 100%;
+          }
+        `}</style>
       </div>
     </section>
   );

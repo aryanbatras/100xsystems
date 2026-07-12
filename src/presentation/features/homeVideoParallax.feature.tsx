@@ -35,8 +35,8 @@ export function HomeVideoParallax() {
             Roadmaps
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-fg tracking-tight uppercase leading-tight">
-            Every roadmap hints at
-            <span className="text-accent"> something real.</span>
+            Every path leads to
+            <span className="text-accent"> understanding systems.</span>
           </h2>
           <p className="text-lg text-fg-secondary leading-relaxed max-w-lg text-justify">
             Each learning path leads to building a complete system.

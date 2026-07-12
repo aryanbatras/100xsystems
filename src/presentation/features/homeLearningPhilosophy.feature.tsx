@@ -48,46 +48,37 @@ export function HomeLearningPhilosophy() {
           {principles.map((p, i) => (
             <motion.div
               key={p.label}
-              className="group flex items-start gap-6 p-8 cursor-default transition-all duration-300"
+              className="learning-card group flex items-start gap-6 p-8 cursor-default transition-all duration-300"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#572EFF';
-                e.currentTarget.querySelectorAll('h3, p, span').forEach((el) => {
-                  (el as HTMLElement).style.color = '#ffffff';
-                });
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'transparent';
-                e.currentTarget.querySelectorAll('h3').forEach((el) => {
-                  (el as HTMLElement).style.color = '';
-                });
-                e.currentTarget.querySelectorAll('p').forEach((el) => {
-                  (el as HTMLElement).style.color = '';
-                });
-                e.currentTarget.querySelectorAll('span').forEach((el) => {
-                  (el as HTMLElement).style.color = '';
-                });
-              }}
             >
               <img
                 src={p.image}
                 alt=""
-                className="shrink-0 w-28 h-28 object-contain opacity-80 group-hover:opacity-100 transition-opacity"
+                className="shrink-0 w-28 h-28 object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300"
                 aria-hidden="true"
               />
               <div className="flex flex-col gap-2">
-                <span className="text-5xl font-extrabold text-accent tracking-tight">
+                <span className="text-5xl font-extrabold text-accent tracking-tight transition-colors duration-300">
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                <h3 className="text-lg font-bold text-fg uppercase tracking-wide">{p.label}</h3>
-                <p className="text-sm text-fg-secondary leading-relaxed">{p.text}</p>
+                <h3 className="text-lg font-bold text-fg uppercase tracking-wide transition-colors duration-300">{p.label}</h3>
+                <p className="text-sm text-fg-secondary leading-relaxed transition-colors duration-300">{p.text}</p>
               </div>
             </motion.div>
           ))}
         </div>
+
+        <style>{`
+          .learning-card:hover {
+            background-color: #572EFF;
+          }
+          .learning-card:hover * {
+            color: #ffffff !important;
+          }
+        `}</style>
       </div>
     </section>
   );

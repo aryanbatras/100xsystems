@@ -42,32 +42,26 @@ export function HomeOpenSource() {
           ].map((item, i) => (
             <motion.div
               key={item.title}
-              className="group text-center p-8 cursor-default transition-all duration-300"
+              className="opensource-card group text-center p-8 cursor-default transition-all duration-300"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#572EFF';
-                e.currentTarget.querySelectorAll('h3, p').forEach((el) => {
-                  (el as HTMLElement).style.color = '#ffffff';
-                });
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'transparent';
-                e.currentTarget.querySelectorAll('h3').forEach((el) => {
-                  (el as HTMLElement).style.color = '';
-                });
-                e.currentTarget.querySelectorAll('p').forEach((el) => {
-                  (el as HTMLElement).style.color = '';
-                });
-              }}
             >
-              <h3 className="text-lg font-bold text-fg uppercase tracking-wider mb-3">{item.title}</h3>
-              <p className="text-sm text-fg-secondary leading-relaxed">{item.text}</p>
+              <h3 className="text-lg font-bold text-fg uppercase tracking-wider mb-3 transition-colors duration-300">{item.title}</h3>
+              <p className="text-sm text-fg-secondary leading-relaxed transition-colors duration-300">{item.text}</p>
             </motion.div>
           ))}
         </div>
+
+        <style>{`
+          .opensource-card:hover {
+            background-color: #572EFF;
+          }
+          .opensource-card:hover * {
+            color: #ffffff !important;
+          }
+        `}</style>
       </div>
     </section>
   );
