@@ -36,7 +36,7 @@ export function HomeHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-accent-yellow tracking-tight uppercase">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-accent-yellow tracking-tight uppercase flex items-center justify-center gap-4">
             Learn to build them.
           </h2>
         </motion.div>
