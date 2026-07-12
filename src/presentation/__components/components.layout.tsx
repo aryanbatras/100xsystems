@@ -146,7 +146,7 @@ export function Header({ logo, items, actions, sticky = true, activeId, classNam
           </div>
 
           {/* Desktop nav — ghost hover behavior (yellow underline), active = yellow button */}
-          <nav className="hidden lg:flex items-center gap-0.5">
+          <nav className="hidden lg:flex items-center gap-1">
             {items.map((item) => {
               const isActive = activeId === item.id;
               return item.children && item.children.length > 0 ? (
@@ -154,13 +154,13 @@ export function Header({ logo, items, actions, sticky = true, activeId, classNam
                   key={item.id}
                   trigger={
                     <span className={cn(
-                      'inline-flex items-center gap-1.5 px-6 py-4 text-sm font-bold uppercase tracking-wider cursor-pointer transition-all duration-200 relative',
+                      'inline-flex items-center gap-1.5 px-5 py-4 text-base font-bold uppercase tracking-wider cursor-pointer transition-all duration-200 relative',
                       isActive
                         ? 'bg-accent-yellow text-black'
                         : 'text-fg-secondary after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full after:bg-accent-yellow after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out hover:text-fg',
                     )}>
                       {item.label}
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
                     </span>
@@ -175,7 +175,7 @@ export function Header({ logo, items, actions, sticky = true, activeId, classNam
                   key={item.id}
                   href={item.href || '#'}
                   className={cn(
-                    'px-6 py-4 text-sm font-bold uppercase tracking-wider transition-all duration-200 relative',
+                    'px-5 py-4 text-base font-bold uppercase tracking-wider transition-all duration-200 relative',
                     isActive
                       ? 'bg-accent-yellow text-black'
                       : 'text-fg-secondary after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full after:bg-accent-yellow after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out hover:text-fg',
@@ -221,7 +221,7 @@ export function Header({ logo, items, actions, sticky = true, activeId, classNam
                     <a
                       href={item.href || '#'}
                       className={cn(
-                        'block px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors',
+                        'block px-4 py-3 text-base font-bold uppercase tracking-wider transition-colors',
                         isActive ? 'bg-accent-yellow text-black' : 'text-fg hover:text-accent',
                       )}
                       onClick={() => setMobileOpen(false)}
@@ -488,43 +488,47 @@ export function Footer({ className }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className={cn('group bg-white', className)}>
+    <footer className={cn('group bg-surface-secondary border-t border-border', className)}>
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8 py-16">
-          {/* Left side: Brand + nav buttons */}
-          <div className="flex flex-col items-center md:items-start gap-6">
-            <span className="text-4xl lg:text-5xl font-extrabold text-fg tracking-tight uppercase select-none transition-colors duration-200 group-hover:text-white">
-              100X SYSTEMS
-            </span>
-            <div className="flex items-center flex-wrap justify-center md:justify-start gap-2">
-              <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/about'}>ABOUT</Button>
-              <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/contact'}>CONTACT</Button>
-              <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/privacy'}>PRIVACY</Button>
-              <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/terms'}>TERMS</Button>
-            </div>
+        {/* Tree image — replaces text logo */}
+        <div className="flex justify-center md:justify-start pt-12">
+          <img
+            src="/assets/cubix/images/many-cubix-on-a-holy-tree.png"
+            alt="100xSystems — Cubix community tree"
+            className="w-full max-w-[600px] lg:max-w-[700px] h-auto object-contain"
+          />
+        </div>
+
+        {/* Nav links + social */}
+        <div className="flex flex-col items-center gap-8 pb-16 pt-10">
+          <div className="flex items-center flex-wrap justify-center gap-2">
+            <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/about'}>ABOUT</Button>
+            <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/contact'}>CONTACT</Button>
+            <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/privacy'}>PRIVACY</Button>
+            <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/terms'}>TERMS</Button>
           </div>
 
-          {/* Right side: Social & Copyright — white on footer hover */}
           <div className="flex items-center gap-4">
-            <a href="https://github.com/100xsystems" target="_blank" rel="noopener noreferrer" className="p-2 text-fg-secondary transition-all duration-200 group-hover:text-white hover:!text-white hover:bg-accent" aria-label="GitHub">
+            <a href="https://github.com/100xsystems" target="_blank" rel="noopener noreferrer" className="p-2 text-fg-secondary transition-all duration-200 hover:text-accent" aria-label="GitHub">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />
               </svg>
             </a>
-            <a href="https://www.linkedin.com/company/100xsystems/" target="_blank" rel="noopener noreferrer" className="p-2 text-fg-secondary transition-all duration-200 group-hover:text-white hover:!text-white hover:bg-accent" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/company/100xsystems/" target="_blank" rel="noopener noreferrer" className="p-2 text-fg-secondary transition-all duration-200 hover:text-accent" aria-label="LinkedIn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
               </svg>
             </a>
-            <a href="mailto:admin@100xsystems.dev" className="p-2 text-fg-secondary transition-all duration-200 group-hover:text-white hover:!text-white hover:bg-accent" aria-label="Email">
+            <a href="mailto:admin@100xsystems.dev" className="p-2 text-fg-secondary transition-all duration-200 hover:text-accent" aria-label="Email">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
               </svg>
             </a>
-            <span className="text-xs font-semibold text-fg-muted select-none uppercase tracking-wider transition-colors duration-200 group-hover:text-white">
-              &copy; {currentYear}
-            </span>
           </div>
+
+          <span className="text-xs font-semibold text-fg-muted select-none uppercase tracking-wider">
+            &copy; {currentYear} 100XSYSTEMS
+          </span>
         </div>
       </div>
     </footer>

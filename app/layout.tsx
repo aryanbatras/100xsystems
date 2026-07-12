@@ -69,6 +69,12 @@ export const metadata: Metadata = {
 };
 
 const headerItems = [
+  { id: 'products', label: 'Products', children: [
+    { id: 'startx', label: 'StartX', href: 'https://startx.100xsystems.dev', description: 'Generate & research ideas into X-Factor systems' },
+    { id: 'peerly', label: 'Peerly', href: 'https://peerly.100xsystems.dev', description: 'Peer-to-peer collaborative learning' },
+    { id: 'tools', label: '100X Tools', href: 'https://tools.100xsystems.dev', description: 'Privacy-first browser utilities' },
+    { id: 'blog', label: 'Engineering Blog', href: 'https://blog.100xsystems.dev', description: 'Deep dives. No fluff.' },
+  ]},
   { id: 'roadmaps', label: 'Roadmaps', href: '/roadmaps' },
   { id: 'resources', label: 'Resources', href: '/resources' },
   { id: 'dsa', label: 'DSA', href: '/dsa' },
@@ -101,7 +107,21 @@ export default function RootLayout({
       <body className="antialiased">
         <ScrollRestoration />
         <Loading />
-        <Header items={headerItems} />
+        <Header
+          items={headerItems}
+          logo={
+            <div className="flex items-center gap-3">
+              <img
+                src="/assets/cubix/base/cubix-brand-logo.png"
+                alt="Cubix"
+                className="h-10 w-auto lg:h-12"
+              />
+              <span className="text-xl lg:text-2xl font-extrabold text-fg tracking-tight select-none uppercase">
+                100XSYSTEMS
+              </span>
+            </div>
+          }
+        />
         <main>{children}</main>
         <Footer />
 

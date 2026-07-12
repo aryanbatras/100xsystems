@@ -38,22 +38,18 @@ const faqs = [
 export function HomeFAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
   return (
-    <section className="py-24 px-4 bg-white">
-      <div className="max-w-[800px] mx-auto">
+    <section className="py-24 lg:py-32 bg-white">
+      <div className="max-w-[800px] mx-auto px-6">
         <div className="text-center mb-12">
           <span className="inline-block text-[11px] tracking-[0.15em] uppercase text-fg-muted font-medium mb-4">
             FAQ
           </span>
           <h2 className="text-4xl md:text-5xl font-bold text-fg tracking-tight uppercase mb-4">
-            Questions, answered.
+            Frequently Asked Questions
           </h2>
           <p className="text-lg text-fg-secondary">
-            The ones we actually hear. No corporate fluff.
+            Dense and authentic. The ones we actually hear.
           </p>
         </div>
 
@@ -62,7 +58,7 @@ export function HomeFAQ() {
             <div key={index} className="border border-border bg-white transition-colors hover:border-border-hover">
               <button
                 className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left cursor-pointer"
-                onClick={() => toggleFAQ(index)}
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
                 aria-expanded={openIndex === index}
               >
                 <span className="text-base text-fg font-medium leading-snug">{faq.q}</span>
