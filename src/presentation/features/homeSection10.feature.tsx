@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export function HomeSection10() {
@@ -9,7 +8,7 @@ export function HomeSection10() {
     <section className="py-24 lg:py-32 bg-accent text-white">
       <div className="max-w-[1000px] mx-auto px-6 lg:px-12 text-center">
         <motion.div
-          className="flex flex-col items-center gap-8"
+          className="flex flex-col items-center gap-6"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -22,7 +21,7 @@ export function HomeSection10() {
           />
 
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight uppercase leading-tight">
-            Understand the machine.
+            Understand the systems.
           </h2>
 
           <p className="text-lg text-white/70 leading-relaxed max-w-lg">
@@ -32,9 +31,9 @@ export function HomeSection10() {
 
           <Link
             href="/roadmaps"
-            className="inline-flex items-center gap-2 px-12 py-5 bg-accent-yellow text-black text-base font-bold uppercase tracking-wider transition-all duration-200 hover:bg-yellow-400 active:bg-yellow-500"
+            className="inline-flex items-center gap-3 px-12 py-5 text-white text-base font-bold uppercase tracking-wider transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full after:bg-accent-yellow after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
           >
-            Start Building <ArrowRight size={16} />
+            Start Building
           </Link>
         </motion.div>
       </div>

@@ -130,7 +130,7 @@ export function Header({ logo, items, actions, sticky = true, activeId, classNam
 
   return (
     <header className={cn(
-      'bg-white/95 backdrop-blur-sm z-50 border-b border-border/50',
+      'bg-white/95 backdrop-blur-sm z-50',
       sticky && 'sticky top-0',
       className,
     )}>
@@ -490,17 +490,8 @@ export function Footer({ className }: FooterProps) {
   return (
     <footer className={cn('group bg-surface-secondary border-t border-border', className)}>
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
-        {/* Tree image — replaces text logo */}
-        <div className="flex justify-center md:justify-start pt-12">
-          <img
-            src="/assets/cubix/images/many-cubix-on-a-holy-tree.png"
-            alt="100xSystems — Cubix community tree"
-            className="w-full max-w-[600px] lg:max-w-[700px] h-auto object-contain"
-          />
-        </div>
-
         {/* Nav links + social */}
-        <div className="flex flex-col items-center gap-8 pb-16 pt-10">
+        <div className="flex flex-col items-center gap-4">
           <div className="flex items-center flex-wrap justify-center gap-2">
             <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/about'}>ABOUT</Button>
             <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/contact'}>CONTACT</Button>
@@ -508,7 +499,7 @@ export function Footer({ className }: FooterProps) {
             <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/terms'}>TERMS</Button>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <a href="https://github.com/100xsystems" target="_blank" rel="noopener noreferrer" className="p-2 text-fg-secondary transition-all duration-200 hover:text-accent" aria-label="GitHub">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />

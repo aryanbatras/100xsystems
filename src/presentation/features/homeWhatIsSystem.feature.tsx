@@ -1,17 +1,19 @@
 'use client';
 
 import { motion } from 'motion/react';
+import { FaGitAlt, FaChrome, FaLinux, FaReact, FaDocker, FaSpotify } from 'react-icons/fa';
+import { SiRedis, SiKubernetes, SiGoogle } from 'react-icons/si';
 
 const systems = [
-  { name: 'Git', desc: 'Version control that changed how the world writes code.' },
-  { name: 'Chrome', desc: 'A browser that renders the entire web.' },
-  { name: 'Linux', desc: 'An operating system powering most of the internet.' },
-  { name: 'Redis', desc: 'In-memory data structure store. Fast. Elegant.' },
-  { name: 'React', desc: 'A library that redefined frontend engineering.' },
-  { name: 'Docker', desc: 'Containerization that simplified deployment.' },
-  { name: 'Kubernetes', desc: 'Orchestration at scale. Complexity made manageable.' },
-  { name: 'Spotify', desc: 'Recommendation systems that understand you.' },
-  { name: 'Google Search', desc: 'Indexing the entire internet in milliseconds.' },
+  { name: 'Git', desc: 'Version control that changed how the world writes code.', icon: FaGitAlt },
+  { name: 'Chrome', desc: 'A browser that renders the entire web.', icon: FaChrome },
+  { name: 'Linux', desc: 'An operating system powering most of the internet.', icon: FaLinux },
+  { name: 'Redis', desc: 'In-memory data structure store. Fast. Elegant.', icon: SiRedis },
+  { name: 'React', desc: 'A library that redefined frontend engineering.', icon: FaReact },
+  { name: 'Docker', desc: 'Containerization that simplified deployment.', icon: FaDocker },
+  { name: 'Kubernetes', desc: 'Orchestration at scale. Complexity made manageable.', icon: SiKubernetes },
+  { name: 'Spotify', desc: 'Recommendation systems that understand you.', icon: FaSpotify },
+  { name: 'Google Search', desc: 'Indexing the entire internet in milliseconds.', icon: SiGoogle },
 ];
 
 export function HomeWhatIsSystem() {
@@ -38,22 +40,44 @@ export function HomeWhatIsSystem() {
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {systems.map((sys, i) => (
-            <motion.div
-              key={sys.name}
-              className="flex items-start gap-4 p-5 bg-white border border-border transition-all duration-300 hover:border-border-hover hover:shadow-sm"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
-            >
-              <div className="shrink-0 w-2 h-2 mt-2 bg-accent" />
-              <div>
-                <h3 className="text-base font-bold text-fg uppercase tracking-wide mb-1">{sys.name}</h3>
-                <p className="text-sm text-fg-secondary leading-relaxed">{sys.desc}</p>
-              </div>
-            </motion.div>
-          ))}
+          {systems.map((sys, i) => {
+            const Icon = sys.icon;
+            return (
+              <motion.div
+                key={sys.name}
+                className="group flex items-start gap-4 p-5 cursor-default transition-all duration-300"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.05 }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#572EFF';
+                  e.currentTarget.querySelectorAll('h3, p').forEach((el) => {
+                    (el as HTMLElement).style.color = '#ffffff';
+                  });
+                  const svg = e.currentTarget.querySelector('svg');
+                  if (svg) svg.style.color = '#ffffff';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.querySelectorAll('h3').forEach((el) => {
+                    (el as HTMLElement).style.color = '';
+                  });
+                  e.currentTarget.querySelectorAll('p').forEach((el) => {
+                    (el as HTMLElement).style.color = '';
+                  });
+                  const svg = e.currentTarget.querySelector('svg');
+                  if (svg) svg.style.color = '';
+                }}
+              >
+                <Icon className="shrink-0 text-2xl text-accent mt-0.5 group-hover:text-white transition-colors" />
+                <div>
+                  <h3 className="text-base font-bold text-fg uppercase tracking-wide mb-1">{sys.name}</h3>
+                  <p className="text-sm text-fg-secondary leading-relaxed">{sys.desc}</p>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

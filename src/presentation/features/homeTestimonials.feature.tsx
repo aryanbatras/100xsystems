@@ -31,9 +31,6 @@ export function HomeTestimonials() {
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
-          <span className="inline-block text-[11px] tracking-[0.15em] uppercase text-fg-muted font-medium mb-4">
-            From the community
-          </span>
           <h2 className="text-3xl md:text-4xl font-bold text-fg tracking-tight uppercase">
             Engineers building engineers.
           </h2>

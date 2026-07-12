@@ -21,7 +21,7 @@ export function HomePhilosophy() {
             <br />
             <span className="text-accent">Systems teach you engineering.</span>
           </h2>
-          <p className="text-lg text-fg-secondary leading-relaxed max-w-2xl mx-auto">
+          <p className="text-lg text-fg-secondary leading-relaxed max-w-2xl mx-auto text-justify">
             The gap between writing code and understanding software is enormous.
             We close it by building complete systems — not fragments.
           </p>
@@ -44,14 +44,29 @@ export function HomePhilosophy() {
           ].map((item, i) => (
             <motion.div
               key={item.title}
-              className="flex flex-col gap-4 p-8 border border-border bg-white transition-all duration-300 hover:border-border-hover hover:shadow-sm"
+              className="group flex flex-col gap-4 p-8 cursor-default transition-all duration-300"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#572EFF';
+                e.currentTarget.querySelectorAll('h3, p').forEach((el) => {
+                  (el as HTMLElement).style.color = '#ffffff';
+                });
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.querySelectorAll('h3').forEach((el) => {
+                  (el as HTMLElement).style.color = '';
+                });
+                e.currentTarget.querySelectorAll('p').forEach((el) => {
+                  (el as HTMLElement).style.color = '';
+                });
+              }}
             >
               <h3 className="text-lg font-bold text-fg uppercase tracking-wide">{item.title}</h3>
-              <p className="text-sm text-fg-secondary leading-relaxed">{item.text}</p>
+              <p className="text-sm text-fg-secondary leading-relaxed text-justify">{item.text}</p>
             </motion.div>
           ))}
         </div>

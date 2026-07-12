@@ -1,28 +1,38 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 
 export function HomeCubix() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.play().catch(() => {});
+    }
+  }, []);
+
   return (
-    <section className="py-24 lg:py-32 bg-surface-secondary border-y border-border">
-      <div className="max-w-[1000px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        {/* Left: Cubix images */}
+    <section className="py-24 lg:py-32 bg-white">
+      <div className="max-w-[1200px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        {/* Left: cube-learning video */}
         <motion.div
-          className="flex justify-center gap-4"
+          className="relative w-full"
+          style={{ aspectRatio: '4/3' }}
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
-          <img
-            src="/assets/cubix/images/cubix-close-up-cute.png"
-            alt="Cubix"
-            className="w-[180px] h-[180px] object-contain"
-          />
-          <img
-            src="/assets/cubix/images/cubix-sitting-and-reading-book.png"
-            alt="Cubix reading"
-            className="w-[180px] h-[180px] object-contain"
+          <video
+            ref={videoRef}
+            src="/assets/cubix/video/cube-learning.mp4"
+            className="w-full h-full object-cover"
+            loop
+            muted
+            playsInline
+            preload="auto"
           />
         </motion.div>
 
@@ -42,15 +52,22 @@ export function HomeCubix() {
             <br />
             <span className="text-accent">Built by learning.</span>
           </h2>
-          <p className="text-lg text-fg-secondary leading-relaxed">
-            Cubix is the mascot of 100X Systems.
-            Cubix is curious. Cubix loves solving systems.
-            Cubix represents every engineer who learns by building.
-          </p>
-          <p className="text-base text-fg-secondary leading-relaxed">
-            Cubix is not perfect. Cubix makes mistakes.
-            But Cubix keeps building — and that&apos;s what matters.
-          </p>
+          <div className="flex flex-col gap-4">
+            <p className="text-lg text-fg-secondary leading-relaxed text-justify">
+              Cubix is <strong className="text-fg font-semibold">curious</strong>. Cubix asks questions before writing code.
+              Cubix reads source code, breaks things, and rebuilds them better.
+            </p>
+            <p className="text-base text-fg-secondary leading-relaxed text-justify">
+              Cubix is <strong className="text-fg font-semibold">not afraid of complexity</strong>. Cubix simplifies it.
+              Cubix shares what it learns. Cubix teaches others.
+              Cubix is every engineer who chooses <strong className="text-fg font-semibold">understanding over shortcuts</strong>.
+            </p>
+            <p className="text-base text-fg-secondary leading-relaxed text-justify">
+              Cubix is <strong className="text-fg font-semibold">not perfect</strong>. Cubix makes mistakes.
+              But Cubix keeps building — and that&apos;s what matters.
+              You can build alongside Cubix. Start with any roadmap.
+            </p>
+          </div>
         </motion.div>
       </div>
     </section>

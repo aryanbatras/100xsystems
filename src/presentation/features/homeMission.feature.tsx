@@ -9,8 +9,6 @@ const principles = [
   'Simplify.',
   'Read source code.',
   'Share knowledge.',
-  'Stay curious.',
-  'Never stop learning.',
   'Understand before using.',
   'Systems over shortcuts.',
 ];
@@ -34,11 +32,6 @@ export function HomeMission() {
             <br />
             <span className="text-accent">It needs better engineers.</span>
           </h2>
-          <p className="text-lg text-fg-secondary leading-relaxed max-w-2xl mx-auto">
-            Engineers who understand systems.
-            Who can build from scratch.
-            Who think before they code.
-          </p>
         </motion.div>
 
         <motion.div
