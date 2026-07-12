@@ -5,7 +5,7 @@ import { StudyGroup, StudyGroupWithMembership } from '../../application/types/da
 import editGroupModalStyles from '../_styles/css/groups-editgroupmodal.module.css';
 import groupEditSectionStyles from '../_styles/css/groups-groupeditsection.module.css';
 import groupsStyles from '../_styles/css/groups-groups.module.css';
-import { useRouter } from 'next/router';
+import { useRouter, useParams } from 'next/navigation';
 import { GiscusComments } from './giscus.feature';
 import React, { useState, useEffect } from 'react';
 /**
@@ -885,7 +885,8 @@ export const GroupsList: React.FC<GroupsListProps> = function GroupsList({
  */
 export function GroupAchievements() {
   const router = useRouter();
-  const groupId = router.query.id as string;
+  const params = useParams();
+  const groupId = params.id as string;
   const { group, loading } = useGroupFetcher(groupId);
 
   if (loading) return <GroupLoading />;
@@ -911,7 +912,8 @@ export function GroupAchievements() {
  */
 export function GroupAnnouncements() {
   const router = useRouter();
-  const groupId = router.query.id as string;
+  const params = useParams();
+  const groupId = params.id as string;
   const { group, loading } = useGroupFetcher(groupId);
 
   if (loading) return <GroupLoading />;
@@ -982,7 +984,8 @@ export function GroupNotFound({ onBack }: { onBack: () => void }) {
  */
 export function GroupHeader({ group, activeCategory }: { group: any; activeCategory: string }) {
   const router = useRouter();
-  const groupId = router.query.id as string;
+  const params = useParams();
+  const groupId = params.id as string;
 
   return (
     <>
@@ -1064,7 +1067,8 @@ export function useGroupFetcher(groupId: string | undefined) {
  */
 export function GroupDiscussions() {
   const router = useRouter();
-  const groupId = router.query.id as string;
+  const params = useParams();
+  const groupId = params.id as string;
   const { group, loading } = useGroupFetcher(groupId);
 
   if (loading) return <GroupLoading />;
@@ -1090,7 +1094,8 @@ export function GroupDiscussions() {
  */
 export function GroupMembers() {
   const router = useRouter();
-  const groupId = router.query.id as string;
+  const params = useParams();
+  const groupId = params.id as string;
   const { group, loading } = useGroupFetcher(groupId);
   const [members] = useState<any[]>([]);
   const [loadingMembers] = useState(false);
@@ -1186,7 +1191,8 @@ export function GroupMembers() {
  */
 export function GroupQuestions() {
   const router = useRouter();
-  const groupId = router.query.id as string;
+  const params = useParams();
+  const groupId = params.id as string;
   const { group, loading } = useGroupFetcher(groupId);
 
   if (loading) return <GroupLoading />;
@@ -1212,7 +1218,8 @@ export function GroupQuestions() {
  */
 export function GroupRedirect() {
   const router = useRouter();
-  const groupId = router.query.id as string;
+  const params = useParams();
+  const groupId = params.id as string;
 
   useEffect(() => {
     if (groupId) {
@@ -1238,7 +1245,8 @@ export function GroupRedirect() {
  */
 export function GroupResources() {
   const router = useRouter();
-  const groupId = router.query.id as string;
+  const params = useParams();
+  const groupId = params.id as string;
   const { group, loading } = useGroupFetcher(groupId);
 
   if (loading) return <GroupLoading />;

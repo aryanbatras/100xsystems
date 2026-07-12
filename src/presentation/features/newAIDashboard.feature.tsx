@@ -10,7 +10,7 @@
 
 'use client';
 
-import Head from 'next/head';
+
 import { NewAIChatBot } from './ai.feature';
 
 // ============================================================
@@ -19,10 +19,6 @@ import { NewAIChatBot } from './ai.feature';
 export function NewAIDashboard() {
   return (
     <>
-      <Head>
-        <title>100x AI - Chat Dashboard</title>
-        <meta name="description" content="Chat with 100x AI - Your systems and design assistant" />
-      </Head>
       <NewAIChatBot />
     </>
   );

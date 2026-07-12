@@ -11,7 +11,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import Head from 'next/head';
+
 import Fuse from 'fuse.js';
 import styles from '../_styles/css/resources.module.css';
 import { Resource } from '../../application/types/resources.types';
@@ -131,12 +131,6 @@ export function ResourcesPage({
 
   return (
     <>
-      <Head>
-        <title>Resources - 100x Systems</title>
-        <meta name="description" content="Comprehensive collection of learning resources organized by categories and subcategories" />
-        <meta name="keywords" content="resources, learning, education, development, programming" />
-      </Head>
-
       <div className={styles.resourcesContainer}>
         <div className={styles.resourcesWrapper}>
           <header className={styles.resourcesHeader}>

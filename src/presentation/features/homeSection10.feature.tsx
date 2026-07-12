@@ -1,50 +1,41 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
-import sec10Styles from '../_styles/css/sections-home-section10.module.css';
+import { motion } from 'motion/react';
 
 export function HomeSection10() {
   return (
-    <section className={`${sec10Styles.ctaSection} glass-card section-padding`}>
-      <div className={sec10Styles.ctaContainer}>
-        <div className={sec10Styles.leftCard}>
-          <div className={sec10Styles.cardImage}>
-            <Image
-              src="/assets/wallpaper/hand-one-finger-rubik-cube-holded-like-pro.jpg"
-              alt="Mastery and Precision"
-              width={600}
-              height={800}
-              className={sec10Styles.cardImageElement}
-            />
-          </div>
-          <div className={sec10Styles.imageOverlay} />
-        </div>
+    <section className="py-24 lg:py-32 bg-accent text-white">
+      <div className="max-w-[1000px] mx-auto px-6 lg:px-12 text-center">
+        <motion.div
+          className="flex flex-col items-center gap-6"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+        >
+          <img
+            src="/assets/cubix/images/many-cubix-on-a-holy-tree.png"
+            alt="Cubix community"
+            className="w-full max-w-[500px] h-auto object-contain"
+          />
 
-        <div className={sec10Styles.rightCard}>
-          <div className={sec10Styles.cardContent}>
-            <span className={sec10Styles.cardLabel}>The Mission</span>
-          <h2 className={sec10Styles.cardTitle}>100x or nothing.</h2>
-            <p className={sec10Styles.cardDescription}>
-              Make engineers genuinely better at understanding systems. That's it.
-              No corporate nonsense. Just engineering, done right.
-            </p>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight uppercase leading-tight">
+            Understand the systems.
+          </h2>
 
-            <div className={sec10Styles.ctaButton}>
-              <Link href="/roadmaps" className={sec10Styles.ctaPrimary}>
-                Get started <ArrowRight size={16} />
-              </Link>
-            </div>
+          <p className="text-lg text-white/70 leading-relaxed max-w-lg">
+            Don&apos;t just use technology.
+            Build it. Understand it. Improve it.
+          </p>
 
-            <div className={sec10Styles.trustIndicators}>
-              <div className={sec10Styles.trustItem}>
-                <span className={sec10Styles.trustNumber}>4</span>
-                <span className={sec10Styles.trustLabel}>Products live</span>
-              </div>
-            </div>
-          </div>
-        </div>
+          <Link
+            href="/roadmaps"
+            className="inline-flex items-center gap-3 px-12 py-5 text-white text-base font-bold uppercase tracking-wider transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full after:bg-accent-yellow after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
+          >
+            Start Building
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

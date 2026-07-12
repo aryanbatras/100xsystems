@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Head from 'next/head';
+
 import Link from 'next/link';
 import styles from '../_styles/css/articles.module.css';
 import { InlineSearch } from './search.feature';
@@ -50,14 +50,6 @@ export function ArticlesPage({ articles }: { articles: ArticleItem[] }) {
 
   return (
       <>
-      <Head>
-        <title>Articles - 100x Systems</title>
-        <meta name="description" content="Explore our collection of articles on systems thinking, engineering, and innovation." />
-        <meta property="og:title" content="Articles - 100x Systems" />
-        <meta property="og:description" content="Explore our collection of articles on systems thinking, engineering, and innovation." />
-        <meta property="og:type" content="website" />
-      </Head>
-
       <div className={styles.articlesContainer}>
         <div className={styles.articlesWrapper}>
           <header className={styles.articlesHeader}>

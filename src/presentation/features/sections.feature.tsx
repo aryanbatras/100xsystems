@@ -6,7 +6,7 @@ import { X } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useVideoAutoplay, useContactForm } from '../../application/hooks';
 import React, { useState, useRef, useEffect } from 'react';
 import cinematicStyles from '../_styles/css/sections-home-cinematic.module.css';

@@ -11,8 +11,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PageFrame } from '../_components/components.layout';
-import { Button, Input, PageHeader } from '../_components/components.atomic';
+import { Button, Input } from '@/presentation/__components';
 
 // ============================================================
 // Source: profile.tsx
@@ -28,7 +27,7 @@ export function ProfilePage() {
     is_mentor: false, mentorship_areas: [] as string[], is_public: true
   });
 
-  if (loading) return <PageFrame>Loading...</PageFrame>;
+  if (loading) return <div className="p-6">Loading...</div>;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,29 +37,56 @@ export function ProfilePage() {
   const updateField = (field: string, value: any) => setFormData(prev => ({ ...prev, [field]: value }));
 
   return (
-    <PageFrame>
-      <PageHeader title="Profile" subtitle="Manage your personal information"
-        actions={
-          <Button variant={isEditing ? 'secondary' : 'primary'} onClick={() => setIsEditing(!isEditing)}>
-            {isEditing ? 'Cancel' : 'Edit Profile'}
-          </Button>
-        }
-      />
+    <div className="p-6 max-w-4xl mx-auto">
+      <div className="flex flex-col gap-4 mb-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl font-bold text-fg sm:text-3xl">Profile</h1>
+            <p className="mt-1 text-sm text-fg-secondary max-w-2xl">Manage your personal information</p>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            <Button variant={isEditing ? 'ghost' : 'primary'} onClick={() => setIsEditing(!isEditing)}>
+              {isEditing ? 'Cancel' : 'Edit Profile'}
+            </Button>
+          </div>
+        </div>
+      </div>
       <form onSubmit={handleSubmit} className="max-w-2xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input label="Email" disabled />
-          <Input label="Username" name="username" value={formData.username} onChange={(e) => updateField(e.target.name, e.target.value)} disabled={!isEditing} />
-          <Input label="Full Name" name="full_name" value={formData.full_name} onChange={(e) => updateField(e.target.name, e.target.value)} disabled={!isEditing} />
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-500">Email</label>
+            <Input disabled />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-500">Username</label>
+            <Input name="username" value={formData.username} onChange={(e) => updateField(e.target.name, e.target.value)} disabled={!isEditing} />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-500">Full Name</label>
+            <Input name="full_name" value={formData.full_name} onChange={(e) => updateField(e.target.name, e.target.value)} disabled={!isEditing} />
+          </div>
           <div className="md:col-span-2 flex flex-col gap-1">
             <label className="text-[10px] font-semibold uppercase tracking-[0.6px] text-[#76777d]">Bio</label>
             <textarea name="bio" value={formData.bio} onChange={(e) => updateField(e.target.name, e.target.value)} disabled={!isEditing} rows={3}
               className="w-full border border-[#e5e5e5] px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-[#572EFF]/20"
             />
           </div>
-          <Input label="GitHub" name="github_username" value={formData.github_username} onChange={(e) => updateField(e.target.name, e.target.value)} disabled={!isEditing} />
-          <Input label="LinkedIn URL" name="linkedin_url" value={formData.linkedin_url} onChange={(e) => updateField(e.target.name, e.target.value)} disabled={!isEditing} />
-          <Input label="Website" name="website_url" value={formData.website_url} onChange={(e) => updateField(e.target.name, e.target.value)} disabled={!isEditing} />
-          <Input label="Location" name="location" value={formData.location} onChange={(e) => updateField(e.target.name, e.target.value)} disabled={!isEditing} />
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-500">GitHub</label>
+            <Input name="github_username" value={formData.github_username} onChange={(e) => updateField(e.target.name, e.target.value)} disabled={!isEditing} />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-500">LinkedIn URL</label>
+            <Input name="linkedin_url" value={formData.linkedin_url} onChange={(e) => updateField(e.target.name, e.target.value)} disabled={!isEditing} />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-500">Website</label>
+            <Input name="website_url" value={formData.website_url} onChange={(e) => updateField(e.target.name, e.target.value)} disabled={!isEditing} />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-500">Location</label>
+            <Input name="location" value={formData.location} onChange={(e) => updateField(e.target.name, e.target.value)} disabled={!isEditing} />
+          </div>
         </div>
         {isEditing && (
           <div className="mt-6">
@@ -68,6 +94,6 @@ export function ProfilePage() {
           </div>
         )}
       </form>
-    </PageFrame>
+    </div>
   );
 }

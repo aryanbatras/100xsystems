@@ -5,7 +5,7 @@ import { QuillDelta, ArticleMetadata } from '../../application/types/shared.type
 import { ArticleUpdater } from '../../infrastructure/articleUpdater';
 import styles from '../_styles/css/admin-admin.module.css';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 /**
  * ## Admin

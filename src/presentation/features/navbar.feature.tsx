@@ -2,11 +2,9 @@
 
 import styles from '../_styles/css/navbar-navbar.module.css';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 import React, { useState, useEffect, useRef } from 'react';
-import { CgMenuHotdog } from 'react-icons/cg';
-import { IoChevronDown } from 'react-icons/io5';
-import { RxCross1 } from 'react-icons/rx';
+import { MenuIcon, XIcon, ChevronDownIcon } from '@animateicons/react/lucide';
 /**
  * ## Navbar
  *
@@ -29,7 +27,7 @@ export function Navbar(): React.ReactElement {
   const [isWhiteTheme, setIsWhiteTheme] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
+  const pathname = usePathname();
 
   // Routes that should use white theme
   const whiteThemeRoutes = [
@@ -48,12 +46,11 @@ export function Navbar(): React.ReactElement {
 
   useEffect(() => {
     // Check if current route should use white theme
-    const currentPath = router.pathname;
     const shouldUseWhiteTheme = whiteThemeRoutes.some(
-      (route) => currentPath === route || currentPath.startsWith(route + "/"),
+      (route) => pathname === route || pathname.startsWith(route + "/"),
     );
     setIsWhiteTheme(shouldUseWhiteTheme);
-  }, [router.pathname]);
+  }, [pathname]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -88,8 +85,8 @@ export function Navbar(): React.ReactElement {
 
   // Don't render navbar on article slug pages (static pages)
   if (
-    router.pathname.startsWith("/articles/") &&
-    router.pathname !== "/articles"
+    pathname.startsWith("/articles/") &&
+    pathname !== "/articles"
   ) {
     return <div></div>;
   }
@@ -149,7 +146,7 @@ export function Navbar(): React.ReactElement {
                 aria-expanded={activeDropdown === "resources"}
               >
                 Resources{" "}
-                <IoChevronDown
+                <ChevronDownIcon size={16}
                   className={`${styles.dropdownIcon} ${activeDropdown === "resources" ? styles.rotated : ""}`}
                 />
               </button>
@@ -171,7 +168,7 @@ export function Navbar(): React.ReactElement {
                 aria-expanded={activeDropdown === "learn"}
               >
                 Learn{" "}
-                <IoChevronDown
+                <ChevronDownIcon size={16}
                   className={`${styles.dropdownIcon} ${activeDropdown === "learn" ? styles.rotated : ""}`}
                 />
               </button>
@@ -201,7 +198,7 @@ export function Navbar(): React.ReactElement {
                 aria-expanded={activeDropdown === "about"}
               >
                 About{" "}
-                <IoChevronDown
+                <ChevronDownIcon size={16}
                   className={`${styles.dropdownIcon} ${activeDropdown === "about" ? styles.rotated : ""}`}
                 />
               </button>
@@ -225,7 +222,7 @@ export function Navbar(): React.ReactElement {
             className={styles.menuButton}
             onClick={() => setIsMenuOpen(true)}
           >
-            <CgMenuHotdog />
+            <MenuIcon size={22} />
           </button>
         ) : null}
       </nav>
@@ -235,7 +232,7 @@ export function Navbar(): React.ReactElement {
             className={styles.crossButton}
             onClick={() => setIsMenuOpen(false)}
           >
-            <RxCross1 />
+            <XIcon size={22} />
           </button>
           <div className={styles.mobileNav}>
             <div className={styles.mobileNavSection}>
