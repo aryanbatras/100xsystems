@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
-import faqStyles from '../_styles/css/sections-home-faq.module.css';
 
 const faqs = [
   {
@@ -24,7 +23,7 @@ const faqs = [
   },
   {
     q: 'Is this a company or a side project?',
-    a: 'It started as a side project. It\'s being built like a company. Full commitment The goal is to become a full-fledged organization — but right now it\'s early, honest, and growing.',
+    a: 'It started as a side project. It\'s being built like a company. Full commitment. The goal is to become a full-fledged organization — but right now it\'s early, honest, and growing.',
   },
   {
     q: 'Is the learning platform free?',
@@ -44,27 +43,31 @@ export function HomeFAQ() {
   };
 
   return (
-    <section className={`${faqStyles.faqSection} glass-card section-padding`}>
-      <div className={faqStyles.container}>
-        <div className={faqStyles.header}>
-          <span className={faqStyles.label}>FAQ</span>
-          <h2 className={faqStyles.title}>Questions, answered.</h2>
-          <p className={faqStyles.description}>
+    <section className="py-24 px-4 bg-white">
+      <div className="max-w-[800px] mx-auto">
+        <div className="text-center mb-12">
+          <span className="inline-block text-[11px] tracking-[0.15em] uppercase text-fg-muted font-medium mb-4">
+            FAQ
+          </span>
+          <h2 className="text-4xl md:text-5xl font-bold text-fg tracking-tight uppercase mb-4">
+            Questions, answered.
+          </h2>
+          <p className="text-lg text-fg-secondary">
             The ones we actually hear. No corporate fluff.
           </p>
         </div>
 
-        <div className={faqStyles.list}>
+        <div className="flex flex-col gap-2">
           {faqs.map((faq, index) => (
-            <div key={index} className={faqStyles.item}>
+            <div key={index} className="border border-border bg-white transition-colors hover:border-border-hover">
               <button
-                className={faqStyles.question}
+                className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left cursor-pointer"
                 onClick={() => toggleFAQ(index)}
                 aria-expanded={openIndex === index}
               >
-                <span className={faqStyles.questionText}>{faq.q}</span>
+                <span className="text-base text-fg font-medium leading-snug">{faq.q}</span>
                 <motion.span
-                  className={faqStyles.icon}
+                  className="shrink-0 text-fg-muted"
                   animate={{ rotate: openIndex === index ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -74,13 +77,15 @@ export function HomeFAQ() {
               <AnimatePresence>
                 {openIndex === index && (
                   <motion.div
-                    className={faqStyles.answer}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    className="overflow-hidden"
                   >
-                    <p className={faqStyles.answerText}>{faq.a}</p>
+                    <p className="px-6 pb-5 text-sm text-fg-secondary leading-relaxed">
+                      {faq.a}
+                    </p>
                   </motion.div>
                 )}
               </AnimatePresence>

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Loading } from "@/presentation/features/loading.feature";
-import { Navbar } from "@/presentation/features/navbar.feature";
-import { Footer } from "@/presentation/features/footer.feature";
+import { Header, Footer } from "@/presentation/__components";
 import Script from "next/script";
 import "./globals.css";
 import { ScrollRestoration } from "./scroll-restoration";
@@ -69,6 +68,16 @@ export const metadata: Metadata = {
   },
 };
 
+const headerItems = [
+  { id: 'roadmaps', label: 'Roadmaps', href: '/roadmaps' },
+  { id: 'resources', label: 'Resources', href: '/resources' },
+  { id: 'dsa', label: 'DSA', href: '/dsa' },
+  { id: 'about', label: 'About', children: [
+    { id: 'about-us', label: 'About Us', href: '/about' },
+    { id: 'contact', label: 'Contact', href: '/contact' },
+  ]},
+];
+
 export default function RootLayout({
   children,
 }: {
@@ -77,7 +86,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Google Fonts: Plus Jakarta Sans */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -88,18 +96,15 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
           rel="stylesheet"
         />
-
-        {/* Canonical URL */}
         <link rel="canonical" href="https://www.100xsystems.dev/" />
       </head>
       <body className="antialiased">
         <ScrollRestoration />
         <Loading />
-        <Navbar />
-        {children}
+        <Header items={headerItems} />
+        <main>{children}</main>
         <Footer />
 
-        {/* Google AdSense */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6524892676012386"
@@ -107,7 +112,6 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
 
-        {/* Schema.org structured data */}
         <Script
           id="schema-structured-data"
           type="application/ld+json"

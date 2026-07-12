@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import styles from '../_styles/css/sections-home-products.module.css';
+import { motion } from 'motion/react';
 
 const products = [
   {
@@ -12,7 +12,7 @@ const products = [
       'Not a course. Not a tutorial. A platform for engineers who want to build real systems. The first of many 100XSystems products.',
     url: 'https://startx.100xsystems.dev',
     screenshot: '/websites/startx.100xsystems.dev.png',
-    flagship: false
+    flagship: true
   },
   {
     name: 'Peerly',
@@ -42,45 +42,60 @@ const products = [
 
 export function HomeProducts() {
   return (
-    <section id="products" className={`${styles.section} glass-card section-padding`}>
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <span className={styles.label}>Products</span>
-          <h2 className={styles.title}>What we ship</h2>
-          <p className={styles.description}>
+    <section id="products" className="py-24 px-4 bg-white">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="text-center mb-16">
+          <span className="inline-block text-[11px] tracking-[0.15em] uppercase text-fg-muted font-medium mb-4">
+            Products
+          </span>
+          <h2 className="text-4xl md:text-5xl font-bold text-fg tracking-tight uppercase mb-4">
+            What we ship
+          </h2>
+          <p className="text-lg text-fg-secondary max-w-xl mx-auto leading-relaxed">
             Currently 4 products in production. More on the way.
           </p>
         </div>
 
-        <div className={styles.grid}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {products.map((product, index) => (
-            <a
+            <motion.a
               key={product.name}
               href={product.url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`${styles.card} ${product.flagship ? styles.flagshipCard : ''}`}
-              style={{ '--delay': `${index * 100}ms` } as React.CSSProperties}
+              className={`group flex flex-col border border-border transition-all duration-400 overflow-hidden relative ${
+                product.flagship
+                  ? 'border-accent bg-accent-bg/30'
+                  : 'bg-white hover:border-border-hover hover:shadow-sm'
+              }`}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              {product.flagship && <span className={styles.flagshipBadge}>Flagship</span>}
-              <div className={styles.cardImage}>
+              {product.flagship && (
+                <span className="absolute top-3 right-3 z-10 text-[10px] tracking-[0.1em] uppercase px-2.5 py-1 text-accent font-medium">
+                  Flagship
+                </span>
+              )}
+              <div className="relative w-full aspect-video overflow-hidden bg-surface-secondary">
                 <Image
                   src={product.screenshot}
                   alt={`${product.name} screenshot`}
                   fill
-                  className={styles.screenshot}
+                  className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
-              <div className={styles.cardBody}>
-                <div className={styles.cardHeader}>
-                  <span className={styles.cardName}>{product.name}</span>
-                  <ArrowRight size={14} className={styles.cardArrow} />
+              <div className="p-6 flex flex-col gap-2 flex-1">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-lg font-semibold text-fg">{product.name}</span>
+                  <ArrowRight size={14} className="text-fg-muted transition-all duration-300 group-hover:text-fg group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </div>
-                <p className={styles.cardTagline}>{product.tagline}</p>
-                <p className={styles.cardDescription}>{product.description}</p>
+                <p className="text-sm text-fg-secondary font-medium">{product.tagline}</p>
+                <p className="text-sm text-fg-muted leading-relaxed mt-1">{product.description}</p>
               </div>
-            </a>
+            </motion.a>
           ))}
         </div>
       </div>
