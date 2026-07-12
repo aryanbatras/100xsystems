@@ -5,6 +5,7 @@ import {
   NumberTicker, BlurFade, AnimatedList, AnimatedListItem,
   SkewButton, GooeyCheckbox, ExpandInput, BookLoader,
   IconAnimatedGridPattern,
+  PixelImage, Highlighter, WordRotate,
 } from '../components.animations';
 import { Button } from '../components.atomic';
 
@@ -224,6 +225,81 @@ export const IconAnimatedGridPatternDemo: Story = {
       <div className="relative h-[80vh] w-full overflow-hidden">
         <IconAnimatedGridPattern />
       </div>
+    </div>
+  ),
+};
+
+export const PixelImageDemo: Story = {
+  name: 'PixelImage',
+  render: () => (
+    <div className="flex flex-col gap-8 p-8">
+      <p className="text-xs text-fg-muted uppercase tracking-wider font-semibold">
+        Pixelated image reveal animation:
+      </p>
+      <div className="flex flex-wrap gap-8">
+        <div className="flex flex-col items-center gap-2">
+          <PixelImage src="https://picsum.photos/seed/pixel1/600/600" grid="6x4" />
+          <span className="text-xs text-fg-muted">6x4 grid</span>
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <PixelImage src="https://picsum.photos/seed/pixel2/600/600" grid="8x8" />
+          <span className="text-xs text-fg-muted">8x8 grid</span>
+        </div>
+      </div>
+    </div>
+  ),
+};
+
+export const HighlighterDemo: Story = {
+  name: 'Highlighter',
+  render: () => (
+    <div className="flex flex-col gap-6 p-8 max-w-lg">
+      <p className="text-xs text-fg-muted uppercase tracking-wider font-semibold">
+        Human-drawn marker stroke effect:
+      </p>
+      <p className="text-lg text-fg">
+        The{' '}
+        <Highlighter action="underline" color="#FF9800">
+          Magic UI Highlighter
+        </Highlighter>{' '}
+        makes important{' '}
+        <Highlighter action="highlight" color="#87CEFA">
+          text stand out
+        </Highlighter>{' '}
+        effortlessly.
+      </p>
+      <p className="text-lg text-fg">
+        You can also{' '}
+        <Highlighter action="box" color="#c084fc">
+          use a box
+        </Highlighter>{' '}
+        or{' '}
+        <Highlighter action="circle" color="#f87171">
+          circle
+        </Highlighter>{' '}
+        annotation.
+      </p>
+    </div>
+  ),
+};
+
+export const WordRotateDemo: Story = {
+  name: 'WordRotate',
+  render: () => (
+    <div className="flex flex-col gap-8 p-8">
+      <p className="text-xs text-fg-muted uppercase tracking-wider font-semibold">
+        Vertical rotation of words:
+      </p>
+      <WordRotate
+        words={['Engineers', 'Designers', 'Founders', 'Creators']}
+        duration={2500}
+        className="text-4xl font-bold text-accent"
+      />
+      <WordRotate
+        words={['React', 'Next.js', 'TypeScript', 'Tailwind']}
+        duration={2000}
+        className="text-2xl font-semibold text-fg"
+      />
     </div>
   ),
 };

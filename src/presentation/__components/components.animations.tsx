@@ -12,6 +12,7 @@
 import React, {
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   useCallback,
@@ -1330,7 +1331,6 @@ export function IconAnimatedGridPattern({
         const row = Math.floor((e.clientY - preTop - 1) / height);
         if (col >= 0 && row >= 0 && col < cols && row < rows) {
           const prev = hoveredCellRef.current;
-          // If the mouse entered a new cell, push the previous cell to the trail
           if (prev && (prev.col !== col || prev.row !== row)) {
             addTrail(prev.col, prev.row);
           }
@@ -1345,7 +1345,6 @@ export function IconAnimatedGridPattern({
         setHoveredCell(null);
       }}
     >
-      {/* Glass boxes — only yellow by default; purple on hover */}
       {bgSquares.map((sq, idx) => {
         const isHovered = hoveredCell !== null && hoveredCell.col === sq.pos[0] && hoveredCell.row === sq.pos[1];
         const glass = GLASS_COLORS[isHovered ? 'purple' : sq.colorVariant];
@@ -1361,22 +1360,21 @@ export function IconAnimatedGridPattern({
               background: glass.background,
               boxShadow: glass.boxShadow,
             } as React.CSSProperties}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{
-            duration,
-            ease: [0.4, 0, 0.2, 1],
-            repeat: 1,
-            delay: idx * 0.1,
-            repeatType: 'reverse',
-            repeatDelay,
-          }}
-          onAnimationComplete={() => repositionBg(sq.id)}
-        />
-      );
-    })}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              duration,
+              ease: [0.4, 0, 0.2, 1],
+              repeat: 1,
+              delay: idx * 0.1,
+              repeatType: 'reverse',
+              repeatDelay,
+            }}
+            onAnimationComplete={() => repositionBg(sq.id)}
+          />
+        );
+      })}
 
-      {/* Trail cells — purple cells fading out after mouse leaves */}
       {trailCells.map((tc) => (
         <motion.div
           key={`trail-${tc.id}`}
@@ -1396,7 +1394,6 @@ export function IconAnimatedGridPattern({
         />
       ))}
 
-      {/* Temporary purple box on hovered cell — covers empty cells & icon cells */}
       {hoveredCell && !bgSquares.some(sq => sq.pos[0] === hoveredCell.col && sq.pos[1] === hoveredCell.row) && (
         <div
           className="absolute"
@@ -1411,7 +1408,6 @@ export function IconAnimatedGridPattern({
         />
       )}
 
-      {/* White vignette overlay — fades to white at edges */}
       <div
         className="pointer-events-none absolute inset-0 z-10"
         style={{
@@ -1419,7 +1415,6 @@ export function IconAnimatedGridPattern({
         }}
       />
 
-      {/* Icons — glassy shine, slow fade in, quick fade out */}
       {iconSquares.map((ic, idx) => {
         const { Component, label } = ICON_LIST[ic.iconIdx % ICON_LIST.length];
         return (
@@ -1451,5 +1446,266 @@ export function IconAnimatedGridPattern({
         );
       })}
     </motion.div>
+  );
+}
+
+// ─── PixelImage ─────────────────────────────────────────────────────
+
+type PixelGrid = { rows: number; cols: number };
+
+const DEFAULT_PIXEL_GRIDS: Record<string, PixelGrid> = {
+  '6x4': { rows: 4, cols: 6 },
+  '8x8': { rows: 8, cols: 8 },
+  '8x3': { rows: 3, cols: 8 },
+  '4x6': { rows: 6, cols: 4 },
+  '3x8': { rows: 8, cols: 3 },
+};
+
+type PredefinedPixelGridKey = keyof typeof DEFAULT_PIXEL_GRIDS;
+
+export interface PixelImageProps {
+  src: string;
+  grid?: PredefinedPixelGridKey;
+  customGrid?: PixelGrid;
+  grayscaleAnimation?: boolean;
+  pixelFadeInDuration?: number;
+  maxAnimationDelay?: number;
+  colorRevealDelay?: number;
+  className?: string;
+}
+
+export const PixelImage = ({
+  src,
+  grid = '6x4',
+  grayscaleAnimation = true,
+  pixelFadeInDuration = 1000,
+  maxAnimationDelay = 1200,
+  colorRevealDelay = 1300,
+  customGrid,
+  className,
+}: PixelImageProps) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [showColor, setShowColor] = useState(false);
+
+  const MIN_GRID = 1;
+  const MAX_GRID = 16;
+
+  const { rows, cols } = useMemo(() => {
+    const isValidGrid = (g?: PixelGrid) => {
+      if (!g) return false;
+      return (
+        Number.isInteger(g.rows) &&
+        Number.isInteger(g.cols) &&
+        g.rows >= MIN_GRID &&
+        g.cols >= MIN_GRID &&
+        g.rows <= MAX_GRID &&
+        g.cols <= MAX_GRID
+      );
+    };
+    return isValidGrid(customGrid) ? customGrid! : DEFAULT_PIXEL_GRIDS[grid];
+  }, [customGrid, grid]);
+
+  useEffect(() => {
+    setIsVisible(true);
+    const colorTimeout = setTimeout(() => {
+      setShowColor(true);
+    }, colorRevealDelay);
+    return () => clearTimeout(colorTimeout);
+  }, [colorRevealDelay]);
+
+  const pieces = useMemo(() => {
+    const total = rows * cols;
+    return Array.from({ length: total }, (_, index) => {
+      const row = Math.floor(index / cols);
+      const col = index % cols;
+      const clipPath = `polygon(
+        ${col * (100 / cols)}% ${row * (100 / rows)}%,
+        ${(col + 1) * (100 / cols)}% ${row * (100 / rows)}%,
+        ${(col + 1) * (100 / cols)}% ${(row + 1) * (100 / rows)}%,
+        ${col * (100 / cols)}% ${(row + 1) * (100 / rows)}%
+      )`;
+      const delay = Math.random() * maxAnimationDelay;
+      return { clipPath, delay };
+    });
+  }, [rows, cols, maxAnimationDelay]);
+
+  return (
+    <div className={cn('relative h-72 w-72 select-none md:h-96 md:w-96', className)}>
+      {pieces.map((piece, index) => (
+        <div
+          key={index}
+          className={cn(
+            'absolute inset-0 transition-all ease-out',
+            isVisible ? 'opacity-100' : 'opacity-0',
+          )}
+          style={{
+            clipPath: piece.clipPath,
+            transitionDelay: `${piece.delay}ms`,
+            transitionDuration: `${pixelFadeInDuration}ms`,
+          }}
+        >
+          <img
+            src={src}
+            alt={`Pixel image piece ${index + 1}`}
+            className={cn(
+              'z-1 rounded-[2.5rem] object-cover',
+              grayscaleAnimation && (showColor ? 'grayscale-0' : 'grayscale'),
+            )}
+            style={{
+              transition: grayscaleAnimation
+                ? `filter ${pixelFadeInDuration}ms cubic-bezier(0.4, 0, 0.2, 1)`
+                : 'none',
+            }}
+            draggable={false}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// ─── Highlighter ────────────────────────────────────────────────────
+
+import { annotate } from 'rough-notation';
+import type { RoughAnnotation } from 'rough-notation/lib/model';
+
+type AnnotationAction =
+  | 'highlight'
+  | 'underline'
+  | 'box'
+  | 'circle'
+  | 'strike-through'
+  | 'crossed-off'
+  | 'bracket';
+
+export interface HighlighterProps {
+  children: React.ReactNode;
+  action?: AnnotationAction;
+  color?: string;
+  strokeWidth?: number;
+  animationDuration?: number;
+  iterations?: number;
+  padding?: number;
+  multiline?: boolean;
+  isView?: boolean;
+  className?: string;
+}
+
+export function Highlighter({
+  children,
+  action = 'highlight',
+  color = '#ffd1dc',
+  strokeWidth = 1.5,
+  animationDuration = 600,
+  iterations = 2,
+  padding = 2,
+  multiline = true,
+  isView = false,
+  className,
+}: HighlighterProps) {
+  const elementRef = useRef<HTMLSpanElement>(null);
+
+  const isInViewResult = useInView(elementRef, {
+    once: true,
+    margin: '-10%',
+  });
+
+  const shouldShow = !isView || isInViewResult;
+
+  useLayoutEffect(() => {
+    const element = elementRef.current;
+    let annotation: RoughAnnotation | null = null;
+    let resizeObserver: ResizeObserver | null = null;
+
+    if (shouldShow && element) {
+      const annotationConfig = {
+        type: action,
+        color,
+        strokeWidth,
+        animationDuration,
+        iterations,
+        padding,
+        multiline,
+      };
+
+      const currentAnnotation = annotate(element, annotationConfig);
+      annotation = currentAnnotation;
+      currentAnnotation.show();
+
+      resizeObserver = new ResizeObserver(() => {
+        currentAnnotation.hide();
+        currentAnnotation.show();
+      });
+
+      resizeObserver.observe(element);
+      resizeObserver.observe(document.body);
+    }
+
+    return () => {
+      annotation?.remove();
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
+    };
+  }, [
+    shouldShow,
+    action,
+    color,
+    strokeWidth,
+    animationDuration,
+    iterations,
+    padding,
+    multiline,
+  ]);
+
+  return (
+    <span ref={elementRef} className={cn('relative inline-block bg-transparent', className)}>
+      {children}
+    </span>
+  );
+}
+
+// ─── WordRotate ─────────────────────────────────────────────────────
+
+export interface WordRotateProps {
+  words: string[];
+  duration?: number;
+  motionProps?: MotionProps;
+  className?: string;
+}
+
+export function WordRotate({
+  words,
+  duration = 2500,
+  motionProps = {
+    initial: { opacity: 0, y: -50 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: 50 },
+    transition: { duration: 0.25, ease: 'easeOut' },
+  },
+  className,
+}: WordRotateProps) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prevIndex) => (prevIndex + 1) % words.length);
+    }, duration);
+
+    return () => clearInterval(interval);
+  }, [words, duration]);
+
+  return (
+    <div className="overflow-hidden py-2">
+      <AnimatePresence mode="wait">
+        <motion.h1
+          key={words[index]}
+          className={cn(className)}
+          {...motionProps}
+        >
+          {words[index]}
+        </motion.h1>
+      </AnimatePresence>
+    </div>
   );
 }
