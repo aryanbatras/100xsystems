@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { cn } from '@/application/lib/utils';
 import { MarkdownRenderer } from '@/lib/markdown-renderer';
 import {
@@ -17,10 +17,12 @@ import {
   type ReadingFont,
 } from '@/lib/reading-context';
 import { ReadingToolbar } from '@/components/reading/ReadingToolbar';
-import { FileTree, buildHeadingTree } from '@/components/toc/FileTree';
+
 import { MobileNav, SidebarNav } from '@/presentation/__components';
 import type { MobileNavItem, SidebarNavItem } from '@/presentation/__components';
 import type { ChapterMeta, ChapterContent } from '@/lib/mdx';
+import { useRouter } from 'next/navigation';
+
 
 interface ChapterPageClientProps {
   slug: string;
@@ -142,6 +144,108 @@ function MobileSettingsPanel({ onClose }: { onClose: () => void }) {
   );
 }
 
+/** ── Lesson Outline — Sticky ToC with dock zoom, no icons ── */
+
+interface OutlineItem {
+  id: string;
+  text: string;
+  level: number;
+  indent: string;
+}
+
+function LessonOutline({
+  headings,
+  activeId,
+  onSelect,
+}: {
+  headings: { id: string; text: string; level: number }[];
+  activeId: string;
+  onSelect: (id: string) => void;
+}) {
+  const mouseY = useMotionValue(Infinity);
+
+  // Build flat outline items with indentation
+  const items: OutlineItem[] = useMemo(() => {
+    const result: OutlineItem[] = [];
+    for (const h of headings) {
+      let indent = '';
+      if (h.level === 2) indent = 'pl-0';
+      else if (h.level === 3) indent = 'pl-4';
+      else if (h.level >= 4) indent = 'pl-8';
+      result.push({ id: h.id, text: h.text, level: h.level, indent });
+    }
+    return result;
+  }, [headings]);
+
+  return (
+    <div
+      onMouseMove={(e) => mouseY.set(e.pageY)}
+      onMouseLeave={() => mouseY.set(Infinity)}
+      className="flex flex-col"
+    >
+      {/* "Lesson content" heading */}
+      <span className="text-xs font-bold uppercase tracking-[0.15em] text-fg-muted mb-5 block">
+        Lesson content
+      </span>
+
+      <div className="flex flex-col space-y-1.5">
+        {items.map((item) => (
+          <OutlineRow
+            key={item.id}
+            item={item}
+            mouseY={mouseY}
+            isActive={item.id === activeId}
+            onSelect={onSelect}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Single outline row with dock-like zoom on mouse proximity */
+function OutlineRow({
+  item,
+  mouseY,
+  isActive,
+  onSelect,
+}: {
+  item: OutlineItem;
+  mouseY: ReturnType<typeof useMotionValue<number>>;
+  isActive: boolean;
+  onSelect: (id: string) => void;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const size = 1;
+  const magnification = 1.035;
+  const dist = 120;
+
+  const distanceCalc = useTransform(mouseY, (val: number) => {
+    const bounds = ref.current?.getBoundingClientRect() ?? { y: 0, height: 0 };
+    return val - bounds.y - bounds.height / 2;
+  });
+
+  const scaleTransform = useTransform(distanceCalc, [-dist, 0, dist], [size, magnification, size]);
+  const scale = useSpring(scaleTransform, { mass: 0.1, stiffness: 150, damping: 12 });
+
+  return (
+    <motion.div
+      ref={ref}
+      style={{ scale }}
+      onClick={() => onSelect(item.id)}
+      className={cn(
+        'cursor-pointer text-sm leading-snug py-2',
+        item.indent,
+        isActive
+          ? 'bg-accent text-white font-bold'
+          : 'hover:bg-accent-yellow hover:text-white',
+      )}
+    >
+      <span className="block truncate px-2">{item.text}</span>
+    </motion.div>
+  );
+}
+
 /** Copy button */
 function CopyButton({ content }: { content: string }) {
   const [copied, setCopied] = useState(false);
@@ -161,10 +265,20 @@ function CopyButton({ content }: { content: string }) {
 
 function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevChapter, nextChapter, content }: ChapterPageClientProps) {
   const { settings } = useReadingSettings();
+  const router = useRouter();
+
+  // Track navigation to show skeleton while RSC data loads
+  const [isNavigating, setIsNavigating] = useState(false);
+  useEffect(() => {
+    setIsNavigating(false);
+  }, [chapter.meta.slug]);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeHeading, setActiveHeading] = useState<string>('');
   const [fullscreen, setFullscreen] = useState(false);
   const [mobileSettingsOpen, setMobileSettingsOpen] = useState(false);
+  const [showOutline, setShowOutline] = useState(true);
+  const footerSentinelRef = useRef<HTMLDivElement>(null);
 
   // MobileNav items
   const mobileItems: MobileNavItem[] = useMemo(() => [
@@ -216,6 +330,35 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
     return () => { clearTimeout(timer); observer.disconnect(); visibleHeadings.clear(); };
   }, [content]);
 
+  // Hide outline when scrolling past content, show when scrolling back up past it
+  const prevScrollY = useRef(0);
+  const outlineDisabled = useRef(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      const sentinel = footerSentinelRef.current;
+      if (!sentinel) return;
+
+      const sentinelTop = sentinel.getBoundingClientRect().top;
+      const scrollingDown = window.scrollY > prevScrollY.current;
+      prevScrollY.current = window.scrollY;
+
+      // Sentinel has entered or passed the viewport (user scrolled past it going down)
+      const isPastSentinel = sentinelTop < window.innerHeight;
+
+      if (isPastSentinel && scrollingDown && !outlineDisabled.current) {
+        setShowOutline(false);
+        outlineDisabled.current = true;
+      } else if (sentinelTop > window.innerHeight && outlineDisabled.current) {
+        // Sentinel is now below viewport (user scrolled back up past it)
+        setShowOutline(true);
+        outlineDisabled.current = false;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Fullscreen listener
   useEffect(() => {
     const handleFSChange = () => setFullscreen(!!document.fullscreenElement);
@@ -230,12 +373,17 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
     iconName: 'bookmark',
   })), [chapters, slug, language]);
 
-  const handleSidebarNav = useCallback(() => {
+  const navigateToChapter = useCallback((chapterSlug: string) => {
+    setIsNavigating(true);
     setSidebarOpen(false);
-  }, []);
+    router.push(`/systems/${slug}/${language}/chapters/${chapterSlug}`);
+  }, [slug, language, router]);
+
+  const handleSidebarNav = useCallback((item: SidebarNavItem) => {
+    navigateToChapter(item.id);
+  }, [navigateToChapter]);
 
   const headings = useMemo(() => extractHeadings(content), [content]);
-  const headingTree = useMemo(() => buildHeadingTree(headings), [headings]);
   const contentMaxW = contentWidthClass(settings.contentWidth);
   const fontClass = fontFamilyClass(settings.font);
   const articleFontSize = fontSizeRem(settings.fontSize);
@@ -247,7 +395,7 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
     : 'prose-headings:text-amber-900 prose-p:text-amber-800 prose-blockquote:border-l-amber-600 prose-blockquote:bg-amber-100/40 prose-code:text-amber-900 prose-code:bg-amber-100 prose-a:text-amber-700 prose-strong:text-amber-900 prose-li:text-amber-800 prose-hr:border-amber-200';
 
   return (
-    <div className="min-h-screen flex justify-center bg-white">
+    <div className="min-h-screen bg-white flex justify-center">
       <div className="flex w-full max-w-[1440px]">
         {/* ── Left Sidebar — Original SidebarNav with text labels ── */}
         <div
@@ -277,7 +425,7 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
           />
         )}
 
-        {/* ── Main Content ── */}
+        {/* ── Main Content (scrollable) ── */}
         <div className={cn('flex-1 min-w-0', settings.mode === 'sepia' ? 'bg-amber-50' : 'bg-white', fontClass)}>
           <div className={cn('mx-auto px-6 lg:px-12 py-12 lg:py-16', contentMaxW)}>
             {/* Top Bar */}
@@ -317,32 +465,55 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
             </div>
 
             {/* Markdown Content — inline style for guaranteed font-size and line-height */}
-            <article
-              style={{ fontSize: articleFontSize, lineHeight: articleLineHeight }}
-              className={cn(
-                'prose max-w-none prose-headings:font-bold prose-headings:tracking-tight',
-                'prose-h2:text-[1.75rem] lg:prose-h2:text-[2rem] prose-h2:mt-12 prose-h2:mb-6 prose-h2:leading-tight prose-h2:scroll-mt-20',
-                'prose-h3:text-[1.25rem] lg:prose-h3:text-[1.375rem] prose-h3:mt-10 prose-h3:mb-4 prose-h3:scroll-mt-20',
-                'prose-p:mb-6',
-                'prose-a:font-semibold hover:prose-a:underline decoration-accent underline-offset-2',
-                'prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-[0.875em] prose-code:rounded',
-                'prose-pre:p-0 prose-pre:overflow-x-auto prose-pre:rounded-none prose-pre:bg-transparent',
-                'prose-img:my-10 prose-img:mx-auto prose-img:rounded-none',
-                'prose-strong:font-bold', 'prose-li:mb-2',
-                'prose-blockquote:border-l-[3px] prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic prose-blockquote:my-8',
-                '[&_code]:before:content-none [&_code]:after:content-none',
-                modeClasses,
-                settings.font === 'serif' && 'prose-headings:font-serif',
+            <div className="relative">
+              {isNavigating && (
+                <div className="absolute inset-0 z-10 bg-white/95 animate-pulse">
+                  <div className="space-y-4 pt-16">
+                    <div className="h-4 w-24 bg-surface-secondary rounded" />
+                    <div className="h-10 w-3/4 bg-surface-secondary rounded-lg" />
+                    <div className="h-4 w-full bg-surface-secondary rounded mt-10" />
+                    <div className="h-4 w-5/6 bg-surface-secondary rounded" />
+                    <div className="h-4 w-4/5 bg-surface-secondary rounded" />
+                    <div className="h-4 w-full bg-surface-secondary rounded mt-8" />
+                    <div className="h-4 w-3/4 bg-surface-secondary rounded" />
+                    <div className="h-4 w-2/3 bg-surface-secondary rounded" />
+                    <div className="h-4 w-5/6 bg-surface-secondary rounded mt-8" />
+                    <div className="h-4 w-full bg-surface-secondary rounded" />
+                    <div className="h-4 w-4/5 bg-surface-secondary rounded" />
+                    <div className="h-4 w-3/4 bg-surface-secondary rounded" />
+                  </div>
+                </div>
               )}
-            >
-              <MarkdownRenderer source={content} codeTheme={settings.codeTheme} />
-            </article>
+              <article
+                style={{ fontSize: articleFontSize, lineHeight: articleLineHeight }}
+                className={cn(
+                  'prose max-w-none prose-headings:font-bold prose-headings:tracking-tight',
+                  'prose-h2:text-[1.75rem] lg:prose-h2:text-[2rem] prose-h2:mt-12 prose-h2:mb-6 prose-h2:leading-tight prose-h2:scroll-mt-20',
+                  'prose-h3:text-[1.25rem] lg:prose-h3:text-[1.375rem] prose-h3:mt-10 prose-h3:mb-4 prose-h3:scroll-mt-20',
+                  'prose-p:mb-6',
+                  'prose-a:font-semibold hover:prose-a:underline decoration-accent underline-offset-2',
+                  'prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-[0.875em] prose-code:rounded',
+                  'prose-pre:p-0 prose-pre:overflow-x-auto prose-pre:rounded-none prose-pre:bg-transparent',
+                  'prose-img:my-10 prose-img:mx-auto prose-img:rounded-none',
+                  'prose-strong:font-bold', 'prose-li:mb-2',
+                  'prose-blockquote:border-l-[3px] prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic prose-blockquote:my-8',
+                  '[&_code]:before:content-none [&_code]:after:content-none',
+                  modeClasses,
+                  settings.font === 'serif' && 'prose-headings:font-serif',
+                )}
+              >
+                <MarkdownRenderer source={content} codeTheme={settings.codeTheme} />
+              </article>
+            </div>
+
+            {/* Sentinel — triggers outline to hide when approaching footer */}
+            <div ref={footerSentinelRef} className="h-px" />
 
             {/* Chapter Navigation */}
             <div className="mt-16 pt-8">
               <div className="flex items-center justify-between">
                 {prevChapter ? (
-                  <a href={`/systems/${slug}/${language}/chapters/${prevChapter.slug}`} className="group">
+                  <button onClick={() => navigateToChapter(prevChapter.slug)} className="group text-left cursor-pointer">
                     <div className="flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80 transition-colors">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 group-hover:-translate-x-0.5 transition-transform">
                         <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
@@ -352,10 +523,10 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
                         <div className="text-sm">{prevChapter.title}</div>
                       </div>
                     </div>
-                  </a>
+                  </button>
                 ) : <div />}
                 {nextChapter ? (
-                  <a href={`/systems/${slug}/${language}/chapters/${nextChapter.slug}`} className="group text-right">
+                  <button onClick={() => navigateToChapter(nextChapter.slug)} className="group text-right cursor-pointer">
                     <div className="flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80 transition-colors">
                       <div>
                         <div className="text-[9px] text-fg-muted uppercase tracking-wider">Next</div>
@@ -365,7 +536,7 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
                         <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
                       </svg>
                     </div>
-                  </a>
+                  </button>
                 ) : (
                   <a href={`/systems/${slug}`} className="flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80 transition-colors">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
@@ -379,21 +550,35 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
           </div>
         </div>
 
-        {/* ── Right Sidebar — File Tree Table of Contents ── */}
+        {/* ── Right Sidebar — Lesson Outline with dock zoom ── */}
         {headings.length > 0 && (
-          <aside className="hidden xl:block w-56 shrink-0">
-            <div className="sticky top-0 h-screen overflow-y-auto pt-20 pr-8">
-              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-fg-muted mb-5">On this page</p>
-              <FileTree
-                nodes={headingTree}
-                activeId={activeHeading}
-                rootLabel={chapter.meta.title}
-                onSelect={(id) => {
-                  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }}
-              />
-            </div>
-          </aside>
+          <aside className="hidden xl:block w-72 shrink-0" />
+        )}
+
+        {/* ── Fixed Outline — hides near footer ── */}
+        {headings.length > 0 && (
+          <div
+            style={{
+              position: 'fixed',
+              top: '14rem',
+              right: 'max(0px, calc((100vw - 1440px) / 2))',
+              width: '18rem',
+              height: '60vh',
+              overflowY: 'auto',
+            }}
+            className={cn(
+              'hidden xl:block pr-8 transition-opacity duration-300',
+              showOutline ? 'opacity-100' : 'opacity-0 pointer-events-none',
+            )}
+          >
+            <LessonOutline
+              headings={headings}
+              activeId={activeHeading}
+              onSelect={(id) => {
+                document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+            />
+          </div>
         )}
 
         {/* Back to top */}

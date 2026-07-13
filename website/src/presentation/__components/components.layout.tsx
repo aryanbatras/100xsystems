@@ -295,7 +295,7 @@ export function SidebarNav({ items, activeId, onItemClick, className }: SidebarN
             <a
               key={item.id}
               href={item.href || '#'}
-              onClick={() => onItemClick?.(item)}
+              onClick={(e) => { e.preventDefault(); onItemClick?.(item); }}
               className={cn(
                 'flex items-center gap-3 w-full transition-all duration-200 group',
                 isActive
