@@ -81,10 +81,7 @@ const headerItems = [
   { id: 'systems', label: 'Systems', href: '/systems' },
   { id: 'languages', label: 'Languages', href: '/languages' },
   { id: 'search', label: 'Search', href: '/search' },
-  { id: 'about', label: 'About', children: [
-    { id: 'about-us', label: 'About Us', href: '/about' },
-    { id: 'contact', label: 'Contact', href: '/contact' },
-  ]},
+
 ];
 
 export default function RootLayout({

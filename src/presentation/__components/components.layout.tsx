@@ -493,8 +493,9 @@ export function Footer({ className }: FooterProps) {
         {/* Nav links + social */}
         <div className="flex flex-col items-center gap-4">
           <div className="flex items-center flex-wrap justify-center gap-2">
-            <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/about'}>ABOUT</Button>
-            <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/contact'}>CONTACT</Button>
+            <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/systems'}>SYSTEMS</Button>
+            <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/languages'}>LANGUAGES</Button>
+            <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/search'}>SEARCH</Button>
             <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/privacy'}>PRIVACY</Button>
             <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/terms'}>TERMS</Button>
           </div>
