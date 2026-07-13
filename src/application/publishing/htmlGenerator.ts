@@ -1,64 +1,20 @@
 /**
- * ## Publishing Domain: HTML Generator
- *
- * High-level publishing workflow functions that orchestrate the
- * end-to-end process: slug generation → HTML conversion → GitHub publish.
- *
- * WHY SEPARATE FROM THE PUBLISHING SERVICE:
- *   These are thin convenience wrappers that the presentation layer
- *   calls directly. The heavier orchestration logic lives in
- *   PublishingService.
- *
- * @packageDocumentation
+ * @deprecated HTML publishing system has been removed.
+ * Content is now managed through Markdown/MDX files in the monorepo.
  */
 
-import { HtmlConverter } from '../../infrastructure/converters/htmlConverter';
-import { ImageProcessor } from '../../infrastructure/imageProcessor';
-import { GitHubPublisher } from '../../infrastructure/api/githubPublisher';
-import { SlugGenerator } from '../domain/slugGenerator';
-import { QuillDelta, UploadedImage } from '../types/shared.types';
-import { log } from '../../infrastructure/utils';
-
-/**
- * Generates a URL-safe slug from an article title.
- *
- * @param title - The article title
- * @returns A URL-safe, hyphenated slug string
- *
- * @public
- */
 export const generateSlug = (title: string): string => {
-  return SlugGenerator.generateSlug(title);
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 80);
 };
 
-/**
- * Converts a Quill Delta to a complete HTML document.
- *
- * @param delta - The Quill Delta document
- * @param title - Article title for the HTML title tag
- * @param slug - Article slug for image URL generation
- * @param uploadedImages - Previously uploaded image references
- * @returns Complete HTML document string with metadata
- *
- * @public
- */
-export const generateHTML = (delta: QuillDelta, title: string, slug: string, uploadedImages: UploadedImage[]): string => {
-  const result = HtmlConverter.convertDeltaToHtml(delta, title, slug, uploadedImages);
-  return result.html;
+export const generateHTML = (_delta: any, title: string, _slug: string, _uploadedImages: any[]): string => {
+  return `<!DOCTYPE html><html><head><title>${title}</title></head><body><p>HTML generation has been removed. Content is now managed via MDX files.</p></body></html>`;
 };
 
-/**
- * Publishes an HTML string to GitHub Pages storage.
- *
- * @param slug - The article slug for the file path
- * @param html - The complete HTML document to publish
- * @throws If the publish operation fails
- *
- * @public
- */
-export const publishHTMLToGitHub = async (slug: string, html: string): Promise<void> => {
-  const result = await GitHubPublisher.publishHTML(slug, html);
-  if (!result.success) {
-    throw new Error(result.error || 'Publishing failed');
-  }
+export const publishHTMLToGitHub = async (_slug: string, _html: string): Promise<void> => {
+  throw new Error('Publishing to GitHub has been removed. Content is now managed via MDX files in the monorepo.');
 };

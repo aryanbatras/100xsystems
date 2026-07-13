@@ -1,0 +1,14 @@
+{
+  "title": "Java",
+  "description": "Master Java programming from fundamentals to advanced enterprise patterns. Condensed curriculum focused on systems thinking, not just syntax.",
+  "icon": "☕",
+  "chapters": [
+    {
+      "slug": "01-basics",
+      "title": "Java Fundamentals",
+      "order": 1,
+      "description": "Variables, types, control flow, and object-oriented programming",
+      "estimatedTime": "4 hours"
+    }
+  ]
+}

@@ -5,20 +5,23 @@ import Script from "next/script";
 import "./globals.css";
 import { ScrollRestoration } from "./scroll-restoration";
 
+// Ensure highlight.js CSS is available for syntax highlighting in MDX
+import "highlight.js/styles/github.css";
+
 export const metadata: Metadata = {
   title: {
     default: "100xSystems - Transform Developers into 100xEngineers",
     template: "%s - 100xSystems",
   },
   description:
-    "Comprehensive platform for structured software engineering education and system optimization. Transform into a 100xEngineer through depth-first learning methodologies, machine-readable configurations, and scalable system patterns.",
+    "Comprehensive platform for structured software engineering education and system optimization. Transform into a 100xEngineer through depth-first learning methodologies.",
   keywords: [
     "100xEngineer",
     "software engineering",
     "system design",
     "development education",
     "scalable systems",
-    "AI integration",
+    "systems thinking",
     "technical learning",
     "programming patterns",
     "system optimization",
@@ -47,7 +50,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "100xSystems - Transform Developers into 100xEngineers",
     description:
-      "Comprehensive platform for structured software engineering education and system optimization. Transform into a 100xEngineer through depth-first learning methodologies.",
+      "Comprehensive platform for structured software engineering education and system optimization.",
     images: ["https://www.100xsystems.dev/100xsystems.webp"],
   },
   icons: {
@@ -75,9 +78,9 @@ const headerItems = [
     { id: 'tools', label: '100X Tools', href: 'https://tools.100xsystems.dev', description: 'Privacy-first browser utilities' },
     { id: 'blog', label: 'Engineering Blog', href: 'https://blog.100xsystems.dev', description: 'Deep dives. No fluff.' },
   ]},
-  { id: 'roadmaps', label: 'Roadmaps', href: '/roadmaps' },
-  { id: 'resources', label: 'Resources', href: '/resources' },
-  { id: 'dsa', label: 'DSA', href: '/dsa' },
+  { id: 'systems', label: 'Systems', href: '/systems' },
+  { id: 'languages', label: 'Languages', href: '/languages' },
+  { id: 'search', label: 'Search', href: '/search' },
   { id: 'about', label: 'About', children: [
     { id: 'about-us', label: 'About Us', href: '/about' },
     { id: 'contact', label: 'Contact', href: '/contact' },

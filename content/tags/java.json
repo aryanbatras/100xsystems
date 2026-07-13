@@ -1,0 +1,34 @@
+{
+  "tag": "java",
+  "displayName": "Java",
+  "description": "Master Java programming with the best resources. From fundamentals to enterprise applications with Spring Boot.",
+  "youtube": [
+    "https://youtube.com/@amigoscode",
+    "https://youtube.com/@JavaBrains",
+    "https://youtube.com/@CodingWithJohn",
+    "https://youtube.com/@Telusko"
+  ],
+  "websites": [
+    "https://docs.oracle.com/en/java",
+    "https://www.baeldung.com",
+    "https://www.vogella.com/tutorials",
+    "https://www.javatpoint.com"
+  ],
+  "articles": [
+    "https://www.baeldung.com/java-tutorial",
+    "https://reflectoring.io",
+    "https://spring.io/guides"
+  ],
+  "courses": [
+    "https://www.udemy.com/course/java-the-complete-java-developer-course",
+    "https://www.coursera.org/specializations/java-programming"
+  ],
+  "books": [
+    "https://www.oreilly.com/library/view/effective-java-3rd/9780134686097",
+    "https://www.manning.com/books/spring-in-action"
+  ],
+  "tools": [
+    "https://start.spring.io",
+    "https://sdkman.io"
+  ]
+}

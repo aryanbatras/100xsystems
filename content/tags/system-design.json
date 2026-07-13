@@ -1,0 +1,33 @@
+{
+  "tag": "system-design",
+  "displayName": "System Design",
+  "description": "Learn how to design scalable, reliable, and maintainable software systems. From architecture patterns to distributed systems.",
+  "youtube": [
+    "https://youtube.com/@ByteByteGo",
+    "https://youtube.com/@SystemDesignInterview",
+    "https://youtube.com/@gkcs",
+    "https://youtube.com/@codekarle",
+    "https://youtube.com/@TechWithNikola"
+  ],
+  "websites": [
+    "https://systemdesign.one",
+    "https://highscalability.com",
+    "https://github.com/donnemartin/system-design-primer",
+    "https://awesome-system-design.com",
+    "https://martinfowler.com/architecture"
+  ],
+  "articles": [
+    "https://blog.hellointerview.com",
+    "https://blog.pragmaticengineer.com/category/system-design",
+    "https://www.infoq.com/architecture-design"
+  ],
+  "courses": [
+    "https://www.coursera.org/specializations/software-design-architecture",
+    "https://www.udacity.com/course/software-architecture-and-design--nd089"
+  ],
+  "books": [
+    "https://dataintensive.net",
+    "https://docs.microsoft.com/en-us/azure/architecture/patterns"
+  ],
+  "tools": []
+}

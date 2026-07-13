@@ -1,0 +1,18 @@
+{
+  "title": "Microservices Architecture",
+  "description": "A comprehensive guide to designing, building, and deploying microservices-based systems. Covers service decomposition, inter-service communication, and deployment strategies.",
+  "longDescription": "Microservices architecture is a design approach where a single application is composed of many loosely coupled and independently deployable services. This guide covers everything from service decomposition to observability.",
+  "type": "outsourced",
+  "languages": [],
+  "languageAgnostic": true,
+  "prerequisites": ["system-design-fundamentals", "rest-apis"],
+  "skills": ["Service Decomposition", "API Gateway Design", "Event-Driven Architecture", "Container Orchestration", "Observability"],
+  "technologies": ["Docker", "Kubernetes", "Kafka", "gRPC", "Prometheus", "Grafana"],
+  "estimatedTime": "60 hours",
+  "difficulty": "advanced",
+  "sourceUrl": "https://microservices.io",
+  "author": "Various Authors",
+  "tags": ["microservices", "architecture", "distributed-systems", "devops"],
+  "hasTemplate": false,
+  "hasSpecification": false
+}

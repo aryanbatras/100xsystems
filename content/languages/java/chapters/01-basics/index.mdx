@@ -1,0 +1,123 @@
+---
+title: "Java Fundamentals"
+description: "Learn Java from a systems perspective — not just syntax but how to think in Java"
+order: 1
+estimatedTime: "4 hours"
+---
+
+# Java Fundamentals
+
+Welcome to Java. We'll learn this language differently — not by memorizing syntax, but by understanding how Java enables you to build systems.
+
+## The Java Philosophy
+
+Java's core principles make it ideal for large-scale systems:
+
+1. **Write Once, Run Anywhere** — The JVM makes your code portable
+2. **Strong Typing** — Catches errors at compile time
+3. **Object-Oriented** — Models real-world relationships
+4. **Rich Standard Library** — Batteries included
+
+```java
+// Your first Java program — but let's understand what's happening
+public class HelloSystem {
+    public static void main(String[] args) {
+        // System.out is a PrintStream connected to the console
+        // println is a method that writes a line and flushes the buffer
+        System.out.println("Hello, Systems Engineer!");
+    }
+}
+```
+
+## Variables & Types
+
+Java is statically typed — every variable has a fixed type:
+
+```java
+// Primitive types — stored directly in stack memory
+int count = 42;              // 32-bit integer
+long population = 8_000_000_000L;  // 64-bit integer
+double price = 29.99;        // 64-bit floating point
+boolean isReady = true;      // true or false
+char grade = 'A';            // Single 16-bit Unicode character
+
+// Reference types — stored in heap, variable holds a reference
+String message = "Systems thinking";  // Immutable string
+int[] numbers = {1, 2, 3, 4, 5};     // Array
+```
+
+## Control Flow
+
+```java
+// Conditionals
+int score = 85;
+
+if (score >= 90) {
+    System.out.println("Excellent");
+} else if (score >= 70) {
+    System.out.println("Good");
+} else {
+    System.out.println("Keep studying");
+}
+
+// Loops
+for (int i = 0; i < 5; i++) {
+    System.out.println("Iteration: " + i);
+}
+
+// Enhanced for loop (for-each)
+String[] topics = {"variables", "control flow", "OOP"};
+for (String topic : topics) {
+    System.out.println("Learning: " + topic);
+}
+```
+
+## Object-Oriented Programming
+
+Java's OOP model is the foundation for building modular, testable systems:
+
+```java
+// Define a class — a blueprint for objects
+public class SystemComponent {
+    // Fields (state)
+    private String name;
+    private int version;
+    
+    // Constructor
+    public SystemComponent(String name, int version) {
+        this.name = name;
+        this.version = version;
+    }
+    
+    // Methods (behavior)
+    public void deploy() {
+        System.out.println("Deploying " + name + " v" + version);
+    }
+    
+    // Getters and setters — encapsulation
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+```
+
+## Knowledge Check
+
+<KnowledgeCheck
+  question="What makes Java's 'Write Once, Run Anywhere' possible?"
+  answers={[
+    { id: "a", text: "The Java compiler generates different binaries for each OS", correct: false },
+    { id: "b", text: "The Java Virtual Machine (JVM) abstracts away the underlying hardware and OS", correct: true },
+    { id: "c", text: "Java only runs on Linux systems", correct: false },
+    { id: "d", text: "Java code is interpreted directly by the browser", correct: false }
+  ]}
+  explanation="The JVM is a virtualized execution environment that translates Java bytecode into native machine instructions at runtime. This abstraction layer means the same bytecode can run on any platform with a compatible JVM."
+/>
+
+## Next Steps
+
+Now that you understand Java fundamentals, you're ready to apply this knowledge by building systems. Check out the Java implementations in our [systems section](/systems).

@@ -1,6 +1,5 @@
 'use client';
 
-import { AnimatedCard, AnimatedSection, InteractiveButton, AnimatedTitle, AnimatedDescription, AnimatedTechGrid } from './animated.feature';
 import styles from '../_styles/css/sections-paths-pathcards.module.css';
 import { X } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -12,6 +11,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import cinematicStyles from '../_styles/css/sections-home-cinematic.module.css';
 import sharedStyles from '../_styles/css/sections-home-shared.module.css';
 import { CubeSmall, CubeHover } from './animation.feature';
+import { AnimatedCard, AnimatedSection, InteractiveButton, AnimatedTitle, AnimatedDescription, AnimatedTechGrid } from './animated.feature';
 import { FaMicrophone, FaAws } from 'react-icons/fa';
 import {
   SiJavascript,

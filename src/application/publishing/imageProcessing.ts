@@ -1,53 +1,19 @@
 /**
- * ## Publishing Domain: Image Processing Wrappers
- *
- * Thin convenience wrappers around the ImageProcessor infrastructure
- * service. Exists so the presentation layer can import from the
- * application layer rather than directly from infrastructure.
- *
- * @packageDocumentation
+ * @deprecated Image processing system has been removed.
+ * Images are now managed through the public/ directory alongside content.
  */
 
-import { ImageProcessor } from '../../infrastructure/imageProcessor';
-import { ImageData, UploadedImage } from '../types/shared.types';
+export type ImageData = { dataUrl: string; fileName: string; };
+export type UploadedImage = { url: string; fileName: string; };
 
-export type { ImageData, UploadedImage };
-
-/**
- * Extracts base64 image data from a Quill Delta document.
- *
- * @param delta - The Quill Delta document to scan
- * @returns Array of extracted image data (base64 + metadata)
- *
- * @public
- */
-export const extractImagesFromDelta = (delta: any): Promise<ImageData[]> => {
-  return ImageProcessor.extractImagesFromDelta(delta);
+export const extractImagesFromDelta = async (_delta: any): Promise<ImageData[]> => {
+  return [];
 };
 
-/**
- * Compresses a base64 image using browser-image-compression.
- *
- * @param file - Base64 data URL of the image
- * @param imageIndex - Index for progress logging
- * @param totalImages - Total count for progress context
- * @returns Compressed base64 data URL
- *
- * @public
- */
-export const compressImage = async (file: string, imageIndex: number, totalImages: number): Promise<string> => {
-  return ImageProcessor.compressImage(file, imageIndex, totalImages);
+export const compressImage = async (file: string, _imageIndex: number, _totalImages: number): Promise<string> => {
+  return file;
 };
 
-/**
- * Uploads processed images to the GitHub storage repository.
- *
- * @param images - Array of image data to upload
- * @param slug - Article slug for folder naming
- * @returns Array of upload results with public URLs
- *
- * @public
- */
-export const uploadImagesToGitHub = async (images: ImageData[], slug: string): Promise<UploadedImage[]> => {
-  return ImageProcessor.uploadImagesToGitHub(images, slug);
+export const uploadImagesToGitHub = async (_images: ImageData[], _slug: string): Promise<UploadedImage[]> => {
+  return [];
 };

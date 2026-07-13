@@ -1,0 +1,174 @@
+---
+title: "Setting Up Your Development Environment"
+description: "Configure your local development environment for building Cloudy Code"
+order: 2
+estimatedTime: "45 minutes"
+---
+
+# Setting Up Your Development Environment
+
+Before we start coding, let's set up a proper development environment. This ensures consistency across contributors and makes debugging much easier.
+
+## Prerequisites
+
+Make sure you have the following installed:
+
+- **Git** (v2.30+)
+- **Docker** (v24+)
+- **Node.js** (v20+) — for frontend tooling
+- A **code editor** of your choice
+
+## Project Structure
+
+Here's how we'll organize our monorepo:
+
+```
+cloudy-code/
+├── frontend/          # React/Next.js frontend
+├── collaboration/    # WebSocket collaboration server
+├── executor/         # Docker-based code execution
+├── file-service/     # File storage service
+├── docker-compose.yml
+└── README.md
+```
+
+## Docker Setup
+
+We'll use Docker Compose to orchestrate our services:
+
+```yaml
+# docker-compose.yml
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: cloudycode
+      POSTGRES_USER: cloudy
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  collaboration:
+    build: ./collaboration
+    ports:
+      - "3001:3001"
+    depends_on:
+      - redis
+
+volumes:
+  pgdata:
+```
+
+## Environment Variables
+
+<LanguageTabs>
+  <TabItem value="typescript" label="TypeScript">
+    ```typescript
+    // .env.local
+    DATABASE_URL="postgresql://cloudy:${DB_PASSWORD}@localhost:5432/cloudycode"
+    REDIS_URL="redis://localhost:6379"
+    WS_PORT=3001
+    JWT_SECRET="${JWT_SECRET}"
+    ```
+    
+    We'll use `dotenv` to load these variables:
+    
+    ```typescript
+    import { config } from 'dotenv';
+    import { resolve } from 'path';
+
+    config({ path: resolve(__dirname, '../.env.local') });
+
+    export const env = {
+      databaseUrl: process.env.DATABASE_URL!,
+      redisUrl: process.env.REDIS_URL!,
+      wsPort: parseInt(process.env.WS_PORT || '3001', 10),
+      jwtSecret: process.env.JWT_SECRET!,
+    };
+    ```
+  </TabItem>
+  <TabItem value="java" label="Java">
+    ```properties
+    # application.properties
+    spring.datasource.url=jdbc:postgresql://localhost:5432/cloudycode
+    spring.datasource.username=cloudy
+    spring.datasource.password=${DB_PASSWORD}
+    spring.redis.host=localhost
+    spring.redis.port=6379
+    server.port=3001
+    jwt.secret=${JWT_SECRET}
+    ```
+    
+    Create a configuration class to access these:
+    
+    ```java
+    @Configuration
+    @ConfigurationProperties(prefix = "app")
+    public class AppConfig {
+      private String jwtSecret;
+      private int wsPort = 3001;
+      
+      // getters and setters
+    }
+    ```
+  </TabItem>
+  <TabItem value="python" label="Python">
+    ```bash
+    # .env
+    DATABASE_URL=postgresql://cloudy:${DB_PASSWORD}@localhost:5432/cloudycode
+    REDIS_URL=redis://localhost:6379
+    WS_PORT=3001
+    JWT_SECRET=${JWT_SECRET}
+    ```
+    
+    Load with `python-dotenv`:
+    
+    ```python
+    # app/config.py
+    from pydantic_settings import BaseSettings
+    
+    class Settings(BaseSettings):
+      database_url: str
+      redis_url: str
+      ws_port: int = 3001
+      jwt_secret: str
+      
+      class Config:
+        env_file = ".env"
+    
+    settings = Settings()
+    ```
+  </TabItem>
+</LanguageTabs>
+
+## Verification
+
+Run the following to verify your setup:
+
+```bash
+docker compose up -d
+echo "Services should be running..."
+curl http://localhost:3001/health
+```
+
+## Knowledge Check
+
+<KnowledgeCheck
+  question="Why do we use Docker Compose instead of running services directly?"
+  answers={[
+    { id: "a", text: "It's faster than running services directly", correct: false },
+    { id: "b", text: "It ensures consistent environments across development machines", correct: true },
+    { id: "c", text: "It automatically deploys to production", correct: false },
+    { id: "d", text: "It's the only way to run PostgreSQL", correct: false }
+  ]}
+  explanation="Docker Compose defines and runs multi-container applications, ensuring every developer gets the exact same environment regardless of their host OS or installed software."
+/>
