@@ -3,12 +3,10 @@
  *
  * Utilities for reading, parsing, and processing Markdown content files
  * from the `curriculum/` directory. Uses gray-matter for frontmatter.
- * Chapter pages use `react-markdown` for rendering.
  *
- * Systems support language-specific subdirectories:
- *   curriculum/systems/{system}/{language}/chapters/{chapter}/index.md
- *
- * No meta.json files needed — everything is inferred from directory structure.
+ * Flat structure:
+ *   curriculum/systems/{slug}/chapters/{chapter}/index.md
+ *   curriculum/systems/{slug}/languages/{lang}/
  *
  * @packageDocumentation
  */
@@ -30,8 +28,6 @@ export interface ChapterMeta {
   slug: string;
   title: string;
   order: number;
-  description: string;
-  estimatedTime?: string;
 }
 
 export interface ChapterContent {
@@ -42,27 +38,11 @@ export interface ChapterContent {
   frontmatter: Record<string, any>;
 }
 
-export interface SystemLanguage {
-  slug: string;
-  displayName: string;
-  chapters: ChapterMeta[];
-}
-
 export interface SystemMeta {
   slug: string;
   title: string;
-  description: string;
-  longDescription?: string;
-  type: 'handcrafted' | 'outsourced';
-  languages: SystemLanguage[];
-  prerequisites: string[];
-  skills: string[];
-  technologies: string[];
-  estimatedTime: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  sourceUrl?: string;
-  author?: string;
-  tags: string[];
+  languages: string[];
+  chapters: ChapterMeta[];
   hasTemplate: boolean;
   hasSpecification: boolean;
   templateInstallCmd?: string;
@@ -72,12 +52,8 @@ export interface SystemMeta {
 export interface LanguageMeta {
   slug: string;
   title: string;
-  description: string;
-  icon?: string;
   chapters: ChapterMeta[];
 }
-
-// ─── Paths ──────────────────────────────────────────────────────────
 
 // ─── Helpers ────────────────────────────────────────────────────────
 
@@ -113,8 +89,6 @@ function readChaptersFromDir(chaptersDir: string): ChapterMeta[] {
           slug: chapterDir,
           title: data.title || slugToDisplayName(chapterDir),
           order: data.order || chapters.length + 1,
-          description: data.description || '',
-          estimatedTime: data.estimatedTime,
         });
       } catch {
         // Skip files with invalid frontmatter
@@ -132,33 +106,21 @@ export function getAllSystemSlugs(): string[] {
   try {
     if (!fs.existsSync(SYSTEMS_DIR)) return [];
     return fs.readdirSync(SYSTEMS_DIR).filter((name) => {
-      const dir = path.join(SYSTEMS_DIR, name);
-      return isDirectory(dir);
+      return isDirectory(path.join(SYSTEMS_DIR, name));
     });
   } catch {
     return [];
   }
 }
 
-/** Get languages available for a system */
-export function getSystemLanguages(systemSlug: string): SystemLanguage[] {
+/** Get language slugs available for a system (e.g., ["java", "python"]) */
+export function getSystemLanguages(systemSlug: string): string[] {
   try {
-    const systemDir = path.join(SYSTEMS_DIR, systemSlug);
-    if (!fs.existsSync(systemDir)) return [];
-
-    return fs.readdirSync(systemDir)
-      .filter((name) => {
-        const dir = path.join(systemDir, name);
-        return isDirectory(dir) && name !== 'chapters';
-      })
-      .map((langSlug) => {
-        const chaptersDir = path.join(systemDir, langSlug, 'chapters');
-        return {
-          slug: langSlug,
-          displayName: slugToDisplayName(langSlug),
-          chapters: readChaptersFromDir(chaptersDir),
-        };
-      });
+    const langDir = path.join(SYSTEMS_DIR, systemSlug, 'languages');
+    if (!fs.existsSync(langDir)) return [];
+    return fs.readdirSync(langDir).filter((name) => {
+      return isDirectory(path.join(langDir, name));
+    });
   } catch {
     return [];
   }
@@ -169,21 +131,15 @@ export function getSystemMeta(slug: string): SystemMeta | null {
     const systemDir = path.join(SYSTEMS_DIR, slug);
     if (!fs.existsSync(systemDir)) return null;
 
+    const chaptersDir = path.join(systemDir, 'chapters');
+    const chapters = readChaptersFromDir(chaptersDir);
     const languages = getSystemLanguages(slug);
 
     return {
       slug,
       title: slugToDisplayName(slug),
-      description: '',
-      type: 'handcrafted',
       languages,
-      prerequisites: [],
-      skills: [],
-      technologies: [],
-      estimatedTime: '',
-      difficulty: 'beginner',
-      author: '100xSystems',
-      tags: [slug],
+      chapters,
       hasTemplate: false,
       hasSpecification: false,
     };
@@ -216,7 +172,7 @@ export function getChapterContent(
   chapterSlug: string
 ): ChapterContent | null {
   try {
-    const mdPath = path.join(SYSTEMS_DIR, systemSlug, language, 'chapters', chapterSlug, 'index.md');
+    const mdPath = path.join(SYSTEMS_DIR, systemSlug, 'chapters', chapterSlug, 'index.md');
     if (!fs.existsSync(mdPath)) return null;
 
     const fileContent = fs.readFileSync(mdPath, 'utf-8');
@@ -230,8 +186,6 @@ export function getChapterContent(
         slug: chapterSlug,
         title: data.title || slugToDisplayName(chapterSlug),
         order,
-        description: data.description || '',
-        estimatedTime: data.estimatedTime,
       },
       systemSlug,
       language,
@@ -239,7 +193,7 @@ export function getChapterContent(
       frontmatter: data,
     };
   } catch (error) {
-    console.error(`Failed to read chapter ${systemSlug}/${language}/${chapterSlug}:`, error);
+    console.error(`Failed to read chapter ${systemSlug}/${chapterSlug}:`, error);
     return null;
   }
 }
@@ -250,8 +204,7 @@ export function getAllLanguageSlugs(): string[] {
   try {
     if (!fs.existsSync(LANGUAGES_DIR)) return [];
     return fs.readdirSync(LANGUAGES_DIR).filter((name) => {
-      const dir = path.join(LANGUAGES_DIR, name);
-      return isDirectory(dir);
+      return isDirectory(path.join(LANGUAGES_DIR, name));
     });
   } catch {
     return [];
@@ -263,12 +216,10 @@ export function getLanguageMeta(slug: string): LanguageMeta | null {
     const langDir = path.join(LANGUAGES_DIR, slug);
     if (!fs.existsSync(langDir)) return null;
 
-    const chaptersDir = path.join(LANGUAGES_DIR, slug, 'chapters');
+    const chaptersDir = path.join(langDir, 'chapters');
     return {
       slug,
       title: slugToDisplayName(slug),
-      description: '',
-      icon: undefined,
       chapters: readChaptersFromDir(chaptersDir),
     };
   } catch {

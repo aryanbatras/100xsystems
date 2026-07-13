@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Heading, Text, Badge, Icon, Breadcrumbs, Divider } from '@/presentation/__components';
 import { getLanguageMeta, getHandcraftedSystems } from '@/lib/mdx';
 
 interface Props {
@@ -15,7 +14,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${lang.title} - Languages`,
-    description: lang.description,
   };
 }
 
@@ -24,74 +22,54 @@ export default async function LanguageDetailPage({ params }: Props) {
   const lang = getLanguageMeta(slug);
   if (!lang) notFound();
 
-  // Find systems that support this language
+  // Find systems that support this language (languages is now string[])
   const relatedSystems = getHandcraftedSystems().filter(
-    (s) => s.languages.some((l) => l.slug === slug)
+    (s) => s.languages.includes(slug)
   );
 
   return (
     <div className="min-h-screen py-16 px-4">
       <div className="max-w-[900px] mx-auto">
-        {/* Breadcrumbs */}
-        <Breadcrumbs
-          items={[
-            { label: 'Languages', href: '/languages' },
-            { label: lang.title },
-          ]}
-          className="mb-8"
-        />
+        {/* Back link */}
+        <div className="mb-8">
+          <a href="/languages" className="text-xs font-bold uppercase tracking-wider text-fg-muted hover:text-accent transition-colors">
+            ← Languages
+          </a>
+        </div>
 
         {/* Language Header */}
         <div className="mb-10">
-          <div className="text-4xl mb-4">{lang.icon || '📄'}</div>
-          <Heading variant="h2" className="uppercase tracking-tight mb-2">
+          <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight mb-2 text-fg">
             {lang.title}
-          </Heading>
-          <Text variant="body-lg" className="text-fg-secondary">
-            {lang.description}
-          </Text>
+          </h1>
+          <p className="text-sm text-fg-secondary">
+            {lang.chapters.length} chapters
+          </p>
         </div>
-
-        <Divider className="mb-10" />
 
         {/* Chapters */}
         <div className="mb-12">
-          <Heading variant="h4" className="uppercase tracking-wider mb-6">
-            Curriculum ({lang.chapters.length} chapters)
-          </Heading>
+          <p className="text-xs font-bold uppercase tracking-wider text-fg-muted mb-6">Curriculum</p>
 
           {lang.chapters.length === 0 ? (
-            <div className="border border-dashed border-border p-8 text-center">
-              <Icon name="file" size={24} className="text-fg-muted mx-auto mb-2" />
-              <Text variant="muted">Chapters coming soon.</Text>
-            </div>
+            <p className="text-sm text-fg-muted">Chapters coming soon.</p>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-px">
               {lang.chapters.map((chapter, idx) => (
                 <Link
                   key={chapter.slug}
                   href={`/languages/${slug}/${chapter.slug}`}
-                  className="flex items-center gap-4 p-4 border border-border bg-white hover:border-accent/40 transition-all duration-200 group"
+                  className="flex items-center gap-4 px-4 py-3 transition-all duration-200 hover:bg-accent/5 group"
                 >
-                  <div className="flex items-center justify-center w-10 h-10 bg-accent-bg text-accent text-sm font-bold shrink-0">
+                  <span className="flex items-center justify-center w-8 h-8 text-xs font-bold text-accent shrink-0 border border-accent/20">
                     {String(idx + 1).padStart(2, '0')}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-semibold text-fg group-hover:text-accent transition-colors">
-                      {chapter.title}
-                    </h3>
-                    <p className="text-xs text-fg-secondary mt-0.5 line-clamp-1">
-                      {chapter.description}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    {chapter.estimatedTime && (
-                      <span className="text-[10px] text-fg-muted whitespace-nowrap">
-                        {chapter.estimatedTime}
-                      </span>
-                    )}
-                    <Icon name="arrow-right" size={14} className="text-fg-muted group-hover:text-accent transition-colors" />
-                  </div>
+                  </span>
+                  <h3 className="text-sm font-semibold text-fg group-hover:text-accent transition-colors">
+                    {chapter.title}
+                  </h3>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-auto shrink-0 text-fg-muted opacity-50 group-hover:text-accent group-hover:opacity-100 transition-all">
+                    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                  </svg>
                 </Link>
               ))}
             </div>
@@ -100,34 +78,27 @@ export default async function LanguageDetailPage({ params }: Props) {
 
         {/* Related Systems */}
         {relatedSystems.length > 0 && (
-          <>
-            <Divider className="mb-10" />
-            <div>
-              <Heading variant="h4" className="uppercase tracking-wider mb-6">
-                Systems You Can Build with {lang.title}
-              </Heading>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {relatedSystems.map((system) => (
-                  <Link
-                    key={system.slug}
-                    href={`/systems/${system.slug}`}
-                    className="block border border-border bg-white p-4 hover:border-accent transition-all duration-200 group"
-                  >
-                    <h3 className="text-sm font-semibold text-fg group-hover:text-accent transition-colors mb-1">
-                      {system.title}
-                    </h3>
-                    <p className="text-xs text-fg-secondary line-clamp-2 mb-3">
-                      {system.description}
-                    </p>
-                    <div className="flex items-center gap-1 text-xs font-semibold text-accent opacity-0 group-hover:opacity-100 transition-opacity">
-                      Build This System
-                      <Icon name="arrow-right" size={12} />
-                    </div>
-                  </Link>
-                ))}
-              </div>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-fg-muted mb-6">
+              Systems You Can Build with {lang.title}
+            </p>
+            <div className="space-y-px">
+              {relatedSystems.map((system) => (
+                <Link
+                  key={system.slug}
+                  href={`/systems/${system.slug}`}
+                  className="flex items-center gap-4 px-4 py-3 transition-all duration-200 hover:bg-accent/5 group"
+                >
+                  <span className="text-sm font-semibold text-fg group-hover:text-accent transition-colors">
+                    {system.title}
+                  </span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-auto shrink-0 text-fg-muted opacity-0 group-hover:text-accent group-hover:opacity-100 transition-all">
+                    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </Link>
+              ))}
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>

@@ -15,8 +15,8 @@ export async function generateStaticParams() {
     const system = getSystemMeta(systemSlug);
     if (system) {
       for (const lang of system.languages) {
-        for (const ch of lang.chapters) {
-          params.push({ slug: systemSlug, language: lang.slug, chapterSlug: ch.slug });
+        for (const ch of system.chapters) {
+          params.push({ slug: systemSlug, language: lang, chapterSlug: ch.slug });
         }
       }
     }
@@ -32,7 +32,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${chapter.meta.title} - ${slug} - Systems`,
-    description: chapter.meta.description,
   };
 }
 
@@ -43,8 +42,7 @@ export default async function ChapterPage({ params }: Props) {
 
   if (!system || !chapter) notFound();
 
-  const langObj = system.languages.find((l) => l.slug === language);
-  const chapters = langObj?.chapters || [];
+  const chapters = system.chapters;
   const currentIndex = chapters.findIndex((ch) => ch.slug === chapterSlug);
   const prevChapter = currentIndex > 0 ? chapters[currentIndex - 1] : null;
   const nextChapter = currentIndex < chapters.length - 1 ? chapters[currentIndex + 1] : null;

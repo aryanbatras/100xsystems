@@ -1,33 +1,27 @@
 import type { Metadata } from 'next';
-import { Heading, Text, Badge } from '@/presentation/__components';
-import { SystemsListing } from '../SystemsListing';
 import { getOutsourcedSystems } from '@/lib/mdx';
+import { SystemsListing } from '../SystemsListing';
 
 export const metadata: Metadata = {
   title: 'Outsourced Systems',
-  description: 'Curated resources from across the web. We don\'t own this content — we help you find the best learning materials.',
+  description: 'Curated resources from across the web. We help you find the best learning materials.',
 };
 
 export default function OutsourcedSystemsPage() {
   const outsourced = getOutsourcedSystems();
 
   return (
-    <div className="min-h-screen py-16 px-4">
-      <div className="max-w-[1200px] mx-auto">
-        <div className="mb-12 text-center">
-          <Badge variant="yellow" size="sm" className="mb-4">
-            OUTSOURCED SYSTEMS
-          </Badge>
-          <Heading variant="h1" className="uppercase tracking-tight mb-3">
-            Curated from the Web
-          </Heading>
-          <Text variant="body-lg" className="max-w-2xl mx-auto">
-            We don&apos;t own this content. These are the best systems engineering resources from across
-            the internet, curated and organized to help you find exactly what you need.
-          </Text>
+    <div className="min-h-screen py-20 px-4">
+      <div className="max-w-[900px] mx-auto">
+        <div className="mb-14">
+          <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight mb-4 text-fg">
+            Outsourced Systems
+          </h1>
+          <p className="text-base text-fg-secondary leading-relaxed max-w-xl">
+            Curated resources from across the web. We help you find the best learning materials.
+          </p>
         </div>
-
-        <SystemsListing handcrafted={[]} outsourced={outsourced} />
+        <SystemsListing systems={outsourced} />
       </div>
     </div>
   );

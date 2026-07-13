@@ -1,8 +1,8 @@
 /**
  * ## Reading Context
  *
- * Provides reading customization state — font size, line height, reading mode (light/sepia/dark),
- * and font family — for the chapter reading experience.
+ * Provides reading customization state — font size, line height, reading mode,
+ * font family, code block theme, and content width — for the chapter reading experience.
  *
  * @packageDocumentation
  */
@@ -13,14 +13,18 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from '
 
 export type ReadingFontSize = 'small' | 'medium' | 'large' | 'xlarge';
 export type ReadingLineHeight = 'tight' | 'normal' | 'relaxed' | 'wide';
-export type ReadingMode = 'light' | 'sepia' | 'dark';
-export type ReadingFont = 'sans' | 'serif' | 'mono';
+export type ReadingMode = 'light' | 'sepia';
+export type ReadingFont = 'system-ui' | 'inter' | 'charter' | 'atkinson' | 'open-dyslexic';
+export type CodeTheme = 'oneLight' | 'github' | 'coy';
+export type ContentWidth = 'wide' | 'wider' | 'widest';
 
 export interface ReadingSettings {
   fontSize: ReadingFontSize;
   lineHeight: ReadingLineHeight;
   mode: ReadingMode;
   font: ReadingFont;
+  codeTheme: CodeTheme;
+  contentWidth: ContentWidth;
 }
 
 interface ReadingContextValue {
@@ -29,14 +33,18 @@ interface ReadingContextValue {
   setLineHeight: (height: ReadingLineHeight) => void;
   setMode: (mode: ReadingMode) => void;
   setFont: (font: ReadingFont) => void;
+  setCodeTheme: (theme: CodeTheme) => void;
+  setContentWidth: (width: ContentWidth) => void;
   resetDefaults: () => void;
 }
 
 const DEFAULT_SETTINGS: ReadingSettings = {
-  fontSize: 'medium',
+  fontSize: 'large',     // bigger default
   lineHeight: 'relaxed',
   mode: 'light',
-  font: 'sans',
+  font: 'system-ui',
+  codeTheme: 'oneLight',
+  contentWidth: 'wider', // wider default
 };
 
 const ReadingContext = createContext<ReadingContextValue | null>(null);
@@ -66,10 +74,23 @@ export function ReadingProvider({ children }: { children: ReactNode }) {
   const setLineHeight = (lineHeight: ReadingLineHeight) => setSettings((s) => ({ ...s, lineHeight }));
   const setMode = (mode: ReadingMode) => setSettings((s) => ({ ...s, mode }));
   const setFont = (font: ReadingFont) => setSettings((s) => ({ ...s, font }));
+  const setCodeTheme = (codeTheme: CodeTheme) => setSettings((s) => ({ ...s, codeTheme }));
+  const setContentWidth = (contentWidth: ContentWidth) => setSettings((s) => ({ ...s, contentWidth }));
   const resetDefaults = () => setSettings(DEFAULT_SETTINGS);
 
   return (
-    <ReadingContext.Provider value={{ settings, setFontSize, setLineHeight, setMode, setFont, resetDefaults }}>
+    <ReadingContext.Provider
+      value={{
+        settings,
+        setFontSize,
+        setLineHeight,
+        setMode,
+        setFont,
+        setCodeTheme,
+        setContentWidth,
+        resetDefaults,
+      }}
+    >
       {children}
     </ReadingContext.Provider>
   );
@@ -79,4 +100,24 @@ export function useReadingSettings() {
   const ctx = useContext(ReadingContext);
   if (!ctx) throw new Error('useReadingSettings must be used within a ReadingProvider');
   return ctx;
+}
+
+/** Map contentWidth setting to Tailwind max-w class */
+export function contentWidthClass(width: ContentWidth): string {
+  switch (width) {
+    case 'wide': return 'max-w-[720px]';
+    case 'wider': return 'max-w-[880px]';
+    case 'widest': return 'max-w-[1040px]';
+  }
+}
+
+/** Map font setting to CSS font-family */
+export function fontFamilyClass(font: ReadingFont): string {
+  switch (font) {
+    case 'system-ui': return '';
+    case 'inter': return 'font-sans';
+    case 'charter': return 'font-serif';
+    case 'atkinson': return 'font-sans';
+    case 'open-dyslexic': return 'font-sans';
+  }
 }
