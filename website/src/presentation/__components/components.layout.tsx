@@ -125,7 +125,7 @@ export interface HeaderProps {
   className?: string;
 }
 
-export function Header({ logo, items, actions, sticky = true, activeId, className }: HeaderProps) {
+export function Header({ logo, items, actions, sticky = false, activeId, className }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (

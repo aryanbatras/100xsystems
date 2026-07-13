@@ -374,7 +374,7 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
             // Mobile: fixed overlay (max-lg ONLY — no fixed/sticky conflict)
             'max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-50',
             // Desktop: sticky in flex flow
-            'lg:sticky lg:inset-auto lg:top-28 lg:z-auto lg:h-[calc(100vh-7rem)]',
+            'lg:sticky lg:inset-auto lg:top-0 lg:z-auto lg:h-screen',
             // Mobile slide animation
             sidebarOpen ? 'translate-x-0' : '-translate-x-full',
             'lg:translate-x-0 max-lg:transition-transform max-lg:duration-300',
@@ -521,7 +521,7 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
         {/* ── Right Sidebar — Lesson Outline (sticky on desktop) ── */}
         {headings.length > 0 && (
           <aside className="hidden xl:block w-72 shrink-0">
-            <div className="sticky top-28 h-[calc(100vh-7rem)] overflow-y-auto pr-8">
+            <div className="sticky top-10 h-screen overflow-y-auto pr-8">
               <LessonOutline
                 headings={headings}
                 activeId={activeHeading}
