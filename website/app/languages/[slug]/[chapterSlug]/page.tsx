@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { Heading, Text, Badge, Breadcrumbs, Icon, Divider } from '@/presentation/__components';
 import { getLanguageMeta, getAllLanguageSlugs } from '@/lib/mdx';
-import { MdxRenderer } from '@/lib/mdx-renderer';
+import { MarkdownRenderer } from '@/lib/markdown-renderer';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -10,6 +10,8 @@ import matter from 'gray-matter';
 interface Props {
   params: Promise<{ slug: string; chapterSlug: string }>;
 }
+
+const CURRICULUM_ROOT = path.join(process.cwd(), '..', 'curriculum');
 
 export async function generateStaticParams() {
   const slugs = getAllLanguageSlugs();
@@ -32,11 +34,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = getLanguageMeta(slug);
   if (!lang) return { title: 'Not Found' };
 
-  const mdxPath = path.join(process.cwd(), 'content', 'languages', slug, 'chapters', chapterSlug, 'index.mdx');
+  const mdPath = path.join(CURRICULUM_ROOT, 'languages', slug, 'chapters', chapterSlug, 'index.md');
   let title = chapterSlug;
   try {
-    if (fs.existsSync(mdxPath)) {
-      const { data } = matter(fs.readFileSync(mdxPath, 'utf-8'));
+    if (fs.existsSync(mdPath)) {
+      const { data } = matter(fs.readFileSync(mdPath, 'utf-8'));
       title = data.title || title;
     }
   } catch {}
@@ -51,11 +53,10 @@ export default async function LanguageChapterPage({ params }: Props) {
   const lang = getLanguageMeta(slug);
   if (!lang) notFound();
 
-  // Read the MDX file
-  const mdxPath = path.join(process.cwd(), 'content', 'languages', slug, 'chapters', chapterSlug, 'index.mdx');
-  if (!fs.existsSync(mdxPath)) notFound();
+  const mdPath = path.join(CURRICULUM_ROOT, 'languages', slug, 'chapters', chapterSlug, 'index.md');
+  if (!fs.existsSync(mdPath)) notFound();
 
-  const fileContent = fs.readFileSync(mdxPath, 'utf-8');
+  const fileContent = fs.readFileSync(mdPath, 'utf-8');
   const { data, content } = matter(fileContent);
 
   const chapterIndex = lang.chapters.findIndex((ch) => ch.slug === chapterSlug);
@@ -64,7 +65,7 @@ export default async function LanguageChapterPage({ params }: Props) {
 
   return (
     <div className="min-h-screen py-16 px-4">
-      <div className="max-w-[900px] mx-auto">
+      <div className="max-w-[780px] mx-auto">
         {/* Breadcrumbs */}
         <Breadcrumbs
           items={[
@@ -98,24 +99,25 @@ export default async function LanguageChapterPage({ params }: Props) {
 
         <Divider className="mb-8" />
 
-        {/* MDX Content */}
-        <article className="prose prose-sm max-w-none
+        {/* Markdown Content */}
+        <article className="prose prose-lg max-w-none
           prose-headings:text-fg prose-headings:font-bold prose-headings:tracking-tight
-          prose-h2:text-[1.5rem] prose-h2:mt-10 prose-h2:mb-4 prose-h2:uppercase prose-h2:tracking-wider
-          prose-h3:text-[1.125rem] prose-h3:mt-8 prose-h3:mb-3
-          prose-p:text-fg-secondary prose-p:leading-relaxed
+          prose-h2:text-[1.75rem] prose-h2:mt-12 prose-h2:mb-4 prose-h2:leading-tight
+          prose-h3:text-[1.375rem] prose-h3:mt-10 prose-h3:mb-3
+          prose-p:text-[1.0625rem] prose-p:text-fg prose-p:leading-[1.75] prose-p:mb-6
           prose-a:text-accent prose-a:font-semibold hover:prose-a:underline
-          prose-code:text-fg prose-code:bg-surface-secondary prose-code:px-1.5 prose-code:py-0.5 prose-code:text-sm prose-code:font-mono
-          prose-pre:bg-surface-secondary prose-pre:border prose-pre:border-border
+          prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-[0.875rem]
+          prose-pre:overflow-x-auto prose-pre:p-5 prose-pre:bg-surface-secondary
+          prose-img:my-8
           prose-strong:text-fg
-          prose-ul:text-fg-secondary
-          prose-ol:text-fg-secondary
-          prose-li:leading-relaxed
-          prose-blockquote:border-l-accent prose-blockquote:bg-accent-bg/20 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:not-italic
-          [&_pre]:overflow-x-auto [&_pre]:p-4 [&_pre]:text-sm
+          prose-ul:text-fg prose-ul:leading-[1.75]
+          prose-ol:text-fg prose-ol:leading-[1.75]
+          prose-li:mb-2
+          prose-blockquote:border-l-[3px] prose-blockquote:border-l-accent prose-blockquote:bg-accent-bg/10 prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic
+          [&_pre]:text-[0.875rem] [&_pre]:leading-[1.6]
           [&_code]:before:content-none [&_code]:after:content-none
         ">
-          <MdxRenderer source={content} />
+          <MarkdownRenderer source={content} />
         </article>
 
         {/* Chapter Navigation */}

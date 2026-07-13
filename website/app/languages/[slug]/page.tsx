@@ -26,7 +26,7 @@ export default async function LanguageDetailPage({ params }: Props) {
 
   // Find systems that support this language
   const relatedSystems = getHandcraftedSystems().filter(
-    (s) => s.languages.includes(slug)
+    (s) => s.languages.some((l) => l.slug === slug)
   );
 
   return (

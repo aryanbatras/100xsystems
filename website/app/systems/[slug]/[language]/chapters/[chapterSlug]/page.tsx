@@ -1,24 +1,24 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { Heading, Text, Badge, Breadcrumbs, Icon, Divider } from '@/presentation/__components';
 import { getSystemMeta, getChapterContent, getAllSystemSlugs } from '@/lib/mdx';
-import { MdxRenderer } from '@/lib/mdx-renderer';
 import { ChapterPageClient } from './ChapterPageClient';
 
 interface Props {
-  params: Promise<{ slug: string; chapterSlug: string }>;
+  params: Promise<{ slug: string; language: string; chapterSlug: string }>;
 }
 
 export async function generateStaticParams() {
   const slugs = getAllSystemSlugs();
-  const params: Array<{ slug: string; chapterSlug: string }> = [];
+  const params: Array<{ slug: string; language: string; chapterSlug: string }> = [];
 
   for (const systemSlug of slugs) {
     const system = getSystemMeta(systemSlug);
     if (system) {
-      system.chapters.forEach((ch) => {
-        params.push({ slug: systemSlug, chapterSlug: ch.slug });
-      });
+      for (const lang of system.languages) {
+        for (const ch of lang.chapters) {
+          params.push({ slug: systemSlug, language: lang.slug, chapterSlug: ch.slug });
+        }
+      }
     }
   }
 
@@ -26,8 +26,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug, chapterSlug } = await params;
-  const chapter = getChapterContent(slug, chapterSlug);
+  const { slug, language, chapterSlug } = await params;
+  const chapter = getChapterContent(slug, language, chapterSlug);
   if (!chapter) return { title: 'Chapter Not Found' };
 
   return {
@@ -37,22 +37,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ChapterPage({ params }: Props) {
-  const { slug, chapterSlug } = await params;
+  const { slug, language, chapterSlug } = await params;
   const system = getSystemMeta(slug);
-  const chapter = getChapterContent(slug, chapterSlug);
+  const chapter = getChapterContent(slug, language, chapterSlug);
 
   if (!system || !chapter) notFound();
 
-  const currentIndex = system.chapters.findIndex((ch) => ch.slug === chapterSlug);
-  const prevChapter = currentIndex > 0 ? system.chapters[currentIndex - 1] : null;
-  const nextChapter = currentIndex < system.chapters.length - 1 ? system.chapters[currentIndex + 1] : null;
+  const langObj = system.languages.find((l) => l.slug === language);
+  const chapters = langObj?.chapters || [];
+  const currentIndex = chapters.findIndex((ch) => ch.slug === chapterSlug);
+  const prevChapter = currentIndex > 0 ? chapters[currentIndex - 1] : null;
+  const nextChapter = currentIndex < chapters.length - 1 ? chapters[currentIndex + 1] : null;
 
   return (
     <ChapterPageClient
       slug={slug}
+      language={language}
       systemTitle={system.title}
       chapter={chapter}
-      chapters={system.chapters}
+      chapters={chapters}
       prevChapter={prevChapter}
       nextChapter={nextChapter}
       content={chapter.content}

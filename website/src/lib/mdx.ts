@@ -1,10 +1,14 @@
 /**
- * ## MDX Content Library
+ * ## Markdown Content Library
  *
- * Utilities for reading, parsing, and processing MDX content files
- * from the `content/` directory. Uses gray-matter for frontmatter.
- * Chapter pages use `next-mdx-remote/rsc` which compiles raw markdown
- * on the server, so no pre-serialization is needed here.
+ * Utilities for reading, parsing, and processing Markdown content files
+ * from the `curriculum/` directory. Uses gray-matter for frontmatter.
+ * Chapter pages use `react-markdown` for rendering.
+ *
+ * Systems support language-specific subdirectories:
+ *   curriculum/systems/{system}/{language}/chapters/{chapter}/index.md
+ *
+ * No meta.json files needed — everything is inferred from directory structure.
  *
  * @packageDocumentation
  */
@@ -13,30 +17,14 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
-// ─── Types ──────────────────────────────────────────────────────────
+// ─── Paths ──────────────────────────────────────────────────────────
 
-export interface SystemMeta {
-  slug: string;
-  title: string;
-  description: string;
-  longDescription?: string;
-  type: 'handcrafted' | 'outsourced';
-  languages: string[];
-  languageAgnostic: boolean;
-  prerequisites: string[];
-  skills: string[];
-  technologies: string[];
-  estimatedTime: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  sourceUrl?: string;
-  author?: string;
-  tags: string[];
-  chapters: ChapterMeta[];
-  hasTemplate: boolean;
-  hasSpecification: boolean;
-  templateInstallCmd?: string;
-  specificationInstallCmd?: string;
-}
+const CURRICULUM_ROOT = path.join(process.cwd(), '..', 'curriculum');
+const SYSTEMS_DIR = path.join(CURRICULUM_ROOT, 'systems');
+const LANGUAGES_DIR = path.join(CURRICULUM_ROOT, 'languages');
+const TAGS_DIR = path.join(CURRICULUM_ROOT, 'tags');
+
+// ─── Types ──────────────────────────────────────────────────────────
 
 export interface ChapterMeta {
   slug: string;
@@ -49,8 +37,36 @@ export interface ChapterMeta {
 export interface ChapterContent {
   meta: ChapterMeta;
   systemSlug: string;
+  language: string;
   content: string;
   frontmatter: Record<string, any>;
+}
+
+export interface SystemLanguage {
+  slug: string;
+  displayName: string;
+  chapters: ChapterMeta[];
+}
+
+export interface SystemMeta {
+  slug: string;
+  title: string;
+  description: string;
+  longDescription?: string;
+  type: 'handcrafted' | 'outsourced';
+  languages: SystemLanguage[];
+  prerequisites: string[];
+  skills: string[];
+  technologies: string[];
+  estimatedTime: string;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  sourceUrl?: string;
+  author?: string;
+  tags: string[];
+  hasTemplate: boolean;
+  hasSpecification: boolean;
+  templateInstallCmd?: string;
+  specificationInstallCmd?: string;
 }
 
 export interface LanguageMeta {
@@ -63,22 +79,86 @@ export interface LanguageMeta {
 
 // ─── Paths ──────────────────────────────────────────────────────────
 
-// In monorepo: project root = website/, curriculum/ is a sibling
-const CURRICULUM_ROOT = path.join(process.cwd(), '..', 'curriculum');
-const CONTENT_ROOT = CURRICULUM_ROOT;
-const SYSTEMS_DIR = path.join(CONTENT_ROOT, 'systems');
-const LANGUAGES_DIR = path.join(CONTENT_ROOT, 'languages');
-const TAGS_DIR = path.join(CONTENT_ROOT, 'tags');
+// ─── Helpers ────────────────────────────────────────────────────────
+
+function slugToDisplayName(slug: string): string {
+  return slug
+    .split(/[-_]/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+function isDirectory(dir: string): boolean {
+  try {
+    return fs.statSync(dir).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+function readChaptersFromDir(chaptersDir: string): ChapterMeta[] {
+  const chapters: ChapterMeta[] = [];
+  if (!fs.existsSync(chaptersDir)) return chapters;
+
+  const chapterDirs = fs.readdirSync(chaptersDir).filter((name) => {
+    return isDirectory(path.join(chaptersDir, name));
+  });
+
+  chapterDirs.sort().forEach((chapterDir) => {
+    const mdPath = path.join(chaptersDir, chapterDir, 'index.md');
+    if (fs.existsSync(mdPath)) {
+      try {
+        const { data } = matter(fs.readFileSync(mdPath, 'utf-8'));
+        chapters.push({
+          slug: chapterDir,
+          title: data.title || slugToDisplayName(chapterDir),
+          order: data.order || chapters.length + 1,
+          description: data.description || '',
+          estimatedTime: data.estimatedTime,
+        });
+      } catch {
+        // Skip files with invalid frontmatter
+      }
+    }
+  });
+
+  return chapters;
+}
 
 // ─── System Reading ─────────────────────────────────────────────────
 
+/** Get all system slugs (e.g., "claude-code") */
 export function getAllSystemSlugs(): string[] {
   try {
     if (!fs.existsSync(SYSTEMS_DIR)) return [];
     return fs.readdirSync(SYSTEMS_DIR).filter((name) => {
       const dir = path.join(SYSTEMS_DIR, name);
-      return fs.statSync(dir).isDirectory() && fs.existsSync(path.join(dir, 'meta.json'));
+      return isDirectory(dir);
     });
+  } catch {
+    return [];
+  }
+}
+
+/** Get languages available for a system */
+export function getSystemLanguages(systemSlug: string): SystemLanguage[] {
+  try {
+    const systemDir = path.join(SYSTEMS_DIR, systemSlug);
+    if (!fs.existsSync(systemDir)) return [];
+
+    return fs.readdirSync(systemDir)
+      .filter((name) => {
+        const dir = path.join(systemDir, name);
+        return isDirectory(dir) && name !== 'chapters';
+      })
+      .map((langSlug) => {
+        const chaptersDir = path.join(systemDir, langSlug, 'chapters');
+        return {
+          slug: langSlug,
+          displayName: slugToDisplayName(langSlug),
+          chapters: readChaptersFromDir(chaptersDir),
+        };
+      });
   } catch {
     return [];
   }
@@ -86,54 +166,26 @@ export function getAllSystemSlugs(): string[] {
 
 export function getSystemMeta(slug: string): SystemMeta | null {
   try {
-    const metaPath = path.join(SYSTEMS_DIR, slug, 'meta.json');
-    if (!fs.existsSync(metaPath)) return null;
-    const raw = JSON.parse(fs.readFileSync(metaPath, 'utf-8'));
-    const chaptersDir = path.join(SYSTEMS_DIR, slug, 'chapters');
-    const chapters: ChapterMeta[] = [];
+    const systemDir = path.join(SYSTEMS_DIR, slug);
+    if (!fs.existsSync(systemDir)) return null;
 
-    if (fs.existsSync(chaptersDir)) {
-      const chapterDirs = fs.readdirSync(chaptersDir).filter((name) => {
-        const dir = path.join(chaptersDir, name);
-        return fs.statSync(dir).isDirectory();
-      });
-      chapterDirs.sort().forEach((chapterDir) => {
-        const mdxPath = path.join(chaptersDir, chapterDir, 'index.mdx');
-        if (fs.existsSync(mdxPath)) {
-          const fileContent = fs.readFileSync(mdxPath, 'utf-8');
-          const { data } = matter(fileContent);
-          chapters.push({
-            slug: chapterDir,
-            title: data.title || chapterDir,
-            order: data.order || chapters.length + 1,
-            description: data.description || '',
-            estimatedTime: data.estimatedTime,
-          });
-        }
-      });
-    }
+    const languages = getSystemLanguages(slug);
 
     return {
       slug,
-      title: raw.title || slug,
-      description: raw.description || '',
-      longDescription: raw.longDescription,
-      type: raw.type || 'handcrafted',
-      languages: raw.languages || [],
-      languageAgnostic: raw.languageAgnostic ?? true,
-      prerequisites: raw.prerequisites || [],
-      skills: raw.skills || [],
-      technologies: raw.technologies || [],
-      estimatedTime: raw.estimatedTime || '',
-      difficulty: raw.difficulty || 'beginner',
-      sourceUrl: raw.sourceUrl,
-      author: raw.author,
-      tags: raw.tags || [],
-      chapters,
-      hasTemplate: raw.hasTemplate ?? false,
-      hasSpecification: raw.hasSpecification ?? false,
-      templateInstallCmd: raw.templateInstallCmd,
-      specificationInstallCmd: raw.specificationInstallCmd,
+      title: slugToDisplayName(slug),
+      description: '',
+      type: 'handcrafted',
+      languages,
+      prerequisites: [],
+      skills: [],
+      technologies: [],
+      estimatedTime: '',
+      difficulty: 'beginner',
+      author: '100xSystems',
+      tags: [slug],
+      hasTemplate: false,
+      hasSpecification: false,
     };
   } catch {
     return null;
@@ -149,24 +201,25 @@ export function getAllSystems(): SystemMeta[] {
 }
 
 export function getHandcraftedSystems(): SystemMeta[] {
-  return getAllSystems().filter((s) => s.type === 'handcrafted');
+  return getAllSystems();
 }
 
 export function getOutsourcedSystems(): SystemMeta[] {
-  return getAllSystems().filter((s) => s.type === 'outsourced');
+  return [];
 }
 
 // ─── Chapter Reading ────────────────────────────────────────────────
 
 export function getChapterContent(
   systemSlug: string,
+  language: string,
   chapterSlug: string
 ): ChapterContent | null {
   try {
-    const mdxPath = path.join(SYSTEMS_DIR, systemSlug, 'chapters', chapterSlug, 'index.mdx');
-    if (!fs.existsSync(mdxPath)) return null;
+    const mdPath = path.join(SYSTEMS_DIR, systemSlug, language, 'chapters', chapterSlug, 'index.md');
+    if (!fs.existsSync(mdPath)) return null;
 
-    const fileContent = fs.readFileSync(mdxPath, 'utf-8');
+    const fileContent = fs.readFileSync(mdPath, 'utf-8');
     const { data, content } = matter(fileContent);
 
     const orderMatch = chapterSlug.match(/^(\d+)/);
@@ -175,17 +228,18 @@ export function getChapterContent(
     return {
       meta: {
         slug: chapterSlug,
-        title: data.title || chapterSlug,
+        title: data.title || slugToDisplayName(chapterSlug),
         order,
         description: data.description || '',
         estimatedTime: data.estimatedTime,
       },
       systemSlug,
+      language,
       content,
       frontmatter: data,
     };
   } catch (error) {
-    console.error(`Failed to read chapter ${systemSlug}/${chapterSlug}:`, error);
+    console.error(`Failed to read chapter ${systemSlug}/${language}/${chapterSlug}:`, error);
     return null;
   }
 }
@@ -197,7 +251,7 @@ export function getAllLanguageSlugs(): string[] {
     if (!fs.existsSync(LANGUAGES_DIR)) return [];
     return fs.readdirSync(LANGUAGES_DIR).filter((name) => {
       const dir = path.join(LANGUAGES_DIR, name);
-      return fs.statSync(dir).isDirectory() && fs.existsSync(path.join(dir, 'meta.json'));
+      return isDirectory(dir);
     });
   } catch {
     return [];
@@ -206,39 +260,16 @@ export function getAllLanguageSlugs(): string[] {
 
 export function getLanguageMeta(slug: string): LanguageMeta | null {
   try {
-    const metaPath = path.join(LANGUAGES_DIR, slug, 'meta.json');
-    if (!fs.existsSync(metaPath)) return null;
-    const raw = JSON.parse(fs.readFileSync(metaPath, 'utf-8'));
+    const langDir = path.join(LANGUAGES_DIR, slug);
+    if (!fs.existsSync(langDir)) return null;
 
     const chaptersDir = path.join(LANGUAGES_DIR, slug, 'chapters');
-    const chapters: ChapterMeta[] = [];
-
-    if (fs.existsSync(chaptersDir)) {
-      const chapterDirs = fs.readdirSync(chaptersDir).filter((name) => {
-        const dir = path.join(chaptersDir, name);
-        return fs.statSync(dir).isDirectory();
-      });
-      chapterDirs.sort().forEach((chapterDir) => {
-        const mdxPath = path.join(chaptersDir, chapterDir, 'index.mdx');
-        if (fs.existsSync(mdxPath)) {
-          const { data } = matter(fs.readFileSync(mdxPath, 'utf-8'));
-          chapters.push({
-            slug: chapterDir,
-            title: data.title || chapterDir,
-            order: data.order || chapters.length + 1,
-            description: data.description || '',
-            estimatedTime: data.estimatedTime,
-          });
-        }
-      });
-    }
-
     return {
       slug,
-      title: raw.title || slug,
-      description: raw.description || '',
-      icon: raw.icon,
-      chapters,
+      title: slugToDisplayName(slug),
+      description: '',
+      icon: undefined,
+      chapters: readChaptersFromDir(chaptersDir),
     };
   } catch {
     return null;

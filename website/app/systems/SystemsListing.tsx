@@ -21,29 +21,17 @@ export function SystemsListing({ handcrafted: allHandcrafted, outsourced: allOut
     const CardContent = (
       <div
         className={cn(
-          'group relative p-6 border transition-all duration-300 cursor-pointer',
-          'bg-white',
+          'group relative p-6 transition-all duration-300 cursor-pointer border-none',
           isHovered
-            ? 'border-accent shadow-[0_0_20px_-4px_rgba(98,37,230,0.15)]'
-            : 'border-border hover:border-accent/50',
+            ? 'bg-accent/5'
+            : 'bg-transparent hover:bg-accent/[0.03]',
         )}
         onMouseEnter={() => setHoveredCard(system.slug)}
         onMouseLeave={() => setHoveredCard(null)}
       >
-        {/* Purple hover gradient overlay */}
-        <div
-          className={cn(
-            'absolute inset-0 transition-opacity duration-300 pointer-events-none',
-            isHovered ? 'opacity-100' : 'opacity-0',
-          )}
-          style={{
-            background: 'linear-gradient(135deg, rgba(98,37,230,0.03) 0%, rgba(98,37,230,0.08) 100%)',
-          }}
-        />
-
         <div className="relative z-10">
           {/* Header */}
-          <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="flex items-start justify-between gap-3 mb-2">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <h3 className={cn(
@@ -53,13 +41,13 @@ export function SystemsListing({ handcrafted: allHandcrafted, outsourced: allOut
                   {system.title}
                 </h3>
                 {isOutsourced && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-amber-100 text-amber-800">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-amber-50 text-amber-700">
                     <Icon name="external-link" size={10} />
                     External
                   </span>
                 )}
               </div>
-              <div className="flex items-center gap-2 text-xs text-fg-muted">
+              <div className="flex items-center gap-2 text-xs text-fg-muted mt-1">
                 <Badge variant={system.difficulty === 'advanced' ? 'black' : system.difficulty === 'intermediate' ? 'purple' : 'yellow'} size="sm">
                   {system.difficulty}
                 </Badge>
@@ -69,12 +57,12 @@ export function SystemsListing({ handcrafted: allHandcrafted, outsourced: allOut
           </div>
 
           {/* Description */}
-          <p className="text-xs text-fg-secondary leading-relaxed mb-4 line-clamp-2">
+          <p className="text-sm text-fg-secondary leading-relaxed mb-4 line-clamp-2">
             {system.description}
           </p>
 
           {/* Skills/Tags */}
-          <div className="flex flex-wrap gap-1.5 mb-4">
+          <div className="flex flex-wrap gap-1.5 mb-3">
             {system.skills.slice(0, 4).map((skill) => (
               <Tag key={skill} variant="brand" size="sm">{skill}</Tag>
             ))}
@@ -84,32 +72,34 @@ export function SystemsListing({ handcrafted: allHandcrafted, outsourced: allOut
           </div>
 
           {/* Stats row */}
-          <div className="flex items-center gap-4 pt-3 border-t border-border">
-            <div className="flex items-center gap-1.5 text-xs text-fg-muted">
+          <div className="flex items-center gap-4 text-xs text-fg-muted">
+            <span className="flex items-center gap-1.5">
               <Icon name="file" size={12} />
-              <span>{system.chapters.length} chapters</span>
-            </div>
-            {!system.languageAgnostic && system.languages.length > 0 && (
-              <div className="flex items-center gap-1.5 text-xs text-fg-muted">
+              {system.languages.reduce((sum, l) => sum + l.chapters.length, 0)} chapters
+            </span>
+            {system.languages.length > 0 && (
+              <span className="flex items-center gap-1.5">
                 <Icon name="globe" size={12} />
-                <span>{system.languages.length} languages</span>
-              </div>
+                {system.languages.length} {system.languages.length === 1 ? 'language' : 'languages'}
+              </span>
             )}
             {system.hasTemplate && (
-              <div className="flex items-center gap-1.5 text-xs text-fg-muted">
+              <span className="flex items-center gap-1.5">
                 <Icon name="download" size={12} />
-                <span>Template</span>
-              </div>
+                Template
+              </span>
             )}
           </div>
 
           {/* Hover indicator */}
           <div className={cn(
             'mt-3 flex items-center gap-1 text-xs font-semibold transition-all duration-200',
-            isHovered ? 'text-accent opacity-100' : 'text-accent opacity-0',
+            isHovered ? 'text-accent opacity-100 translate-x-0' : 'text-accent opacity-0 -translate-x-2',
           )}>
             {isOutsourced ? 'Visit Resource' : 'Start Learning'}
-            <Icon name="arrow-right" size={12} />
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+            </svg>
           </div>
         </div>
       </div>
@@ -127,26 +117,28 @@ export function SystemsListing({ handcrafted: allHandcrafted, outsourced: allOut
   };
 
   return (
-    <div className="space-y-16">
+    <div className="space-y-20">
       {/* ── Handcrafted Systems ── */}
       <section>
-        <div className="flex items-center gap-3 mb-8">
-          <div className="h-px flex-1 bg-border" />
-          <Badge variant="purple" size="sm">HANDCRAFTED</Badge>
-          <div className="h-px flex-1 bg-border" />
+        <div className="mb-10">
+          <div className="flex items-center gap-4 mb-3">
+            <Icon name="star" size={20} className="text-accent" />
+            <Heading variant="h4" className="uppercase tracking-wider">
+              Handcrafted
+            </Heading>
+          </div>
+          <Text variant="body" className="text-fg-secondary">
+            Systems we built from scratch with complete tutorials. Learn by building production-grade software.
+          </Text>
         </div>
 
-        <Text variant="body" className="text-center max-w-xl mx-auto mb-8 text-fg-secondary">
-          Systems we built from scratch with complete tutorials. Learn by building production-grade software.
-        </Text>
-
         {allHandcrafted.length === 0 ? (
-          <div className="text-center py-16 border border-dashed border-border">
-            <Icon name="folder" size={32} className="text-fg-muted mx-auto mb-3" />
+          <div className="text-center py-16 text-fg-muted">
+            <Icon name="folder" size={32} className="mx-auto mb-3" />
             <Text variant="muted">No handcrafted systems yet. Check back soon!</Text>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {allHandcrafted.map((system) => (
               <SystemCard key={system.slug} system={system} />
             ))}
@@ -156,23 +148,25 @@ export function SystemsListing({ handcrafted: allHandcrafted, outsourced: allOut
 
       {/* ── Outsourced Systems ── */}
       <section>
-        <div className="flex items-center gap-3 mb-8">
-          <div className="h-px flex-1 bg-border" />
-          <Badge variant="yellow" size="sm">OUTSOURCED</Badge>
-          <div className="h-px flex-1 bg-border" />
+        <div className="mb-10">
+          <div className="flex items-center gap-4 mb-3">
+            <Icon name="globe" size={20} className="text-amber-600" />
+            <Heading variant="h4" className="uppercase tracking-wider">
+              Outsourced
+            </Heading>
+          </div>
+          <Text variant="body" className="text-fg-secondary">
+            Curated resources from across the web. We help you find the best learning materials.
+          </Text>
         </div>
 
-        <Text variant="body" className="text-center max-w-xl mx-auto mb-8 text-fg-secondary">
-          Curated resources from across the web. We don&apos;t own this content — we help you find the best learning materials.
-        </Text>
-
         {allOutsourced.length === 0 ? (
-          <div className="text-center py-16 border border-dashed border-border">
-            <Icon name="globe" size={32} className="text-fg-muted mx-auto mb-3" />
+          <div className="text-center py-16 text-fg-muted">
+            <Icon name="globe" size={32} className="mx-auto mb-3" />
             <Text variant="muted">No outsourced systems yet. Check back soon!</Text>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {allOutsourced.map((system) => (
               <SystemCard key={system.slug} system={system} isOutsourced />
             ))}

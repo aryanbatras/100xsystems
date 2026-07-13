@@ -1,7 +1,7 @@
 /**
  * ## ReadingToolbar
  *
- * Floating toolbar for customizing reading experience — font size, line height,
+ * Borderless reading customization toolbar — font size, line height,
  * reading mode (light/sepia/dark), and font family.
  *
  * @packageDocumentation
@@ -13,30 +13,30 @@ import { useState } from 'react';
 import { useReadingSettings, type ReadingFontSize, type ReadingLineHeight, type ReadingMode, type ReadingFont } from '@/lib/reading-context';
 import { cn } from '@/application/lib/utils';
 
-const FONT_SIZES: { key: ReadingFontSize; label: string; className: string }[] = [
-  { key: 'small', label: 'S', className: 'text-sm' },
-  { key: 'medium', label: 'M', className: 'text-base' },
-  { key: 'large', label: 'L', className: 'text-lg' },
-  { key: 'xlarge', label: 'XL', className: 'text-xl' },
+const FONT_SIZES: { key: ReadingFontSize; label: string }[] = [
+  { key: 'small', label: 'S' },
+  { key: 'medium', label: 'M' },
+  { key: 'large', label: 'L' },
+  { key: 'xlarge', label: 'XL' },
 ];
 
-const LINE_HEIGHTS: { key: ReadingLineHeight; label: string; value: string }[] = [
-  { key: 'tight', label: 'Tight', value: '1.4' },
-  { key: 'normal', label: 'Normal', value: '1.6' },
-  { key: 'relaxed', label: 'Relaxed', value: '1.8' },
-  { key: 'wide', label: 'Wide', value: '2.0' },
+const LINE_HEIGHTS: { key: ReadingLineHeight; label: string }[] = [
+  { key: 'tight', label: 'Tight' },
+  { key: 'normal', label: 'Normal' },
+  { key: 'relaxed', label: 'Relaxed' },
+  { key: 'wide', label: 'Wide' },
 ];
 
-const MODES: { key: ReadingMode; label: string; bg: string; text: string }[] = [
-  { key: 'light', label: 'Light', bg: 'bg-white', text: 'text-fg' },
-  { key: 'sepia', label: 'Sepia', bg: 'bg-amber-50', text: 'text-amber-900' },
-  { key: 'dark', label: 'Dark', bg: 'bg-slate-900', text: 'text-slate-100' },
+const MODES: { key: ReadingMode; label: string }[] = [
+  { key: 'light', label: 'Light' },
+  { key: 'sepia', label: 'Sepia' },
+  { key: 'dark', label: 'Dark' },
 ];
 
-const FONTS: { key: ReadingFont; label: string; className: string }[] = [
-  { key: 'sans', label: 'Sans', className: 'font-sans' },
-  { key: 'serif', label: 'Serif', className: 'font-serif' },
-  { key: 'mono', label: 'Mono', className: 'font-mono' },
+const FONTS: { key: ReadingFont; label: string }[] = [
+  { key: 'sans', label: 'Sans' },
+  { key: 'serif', label: 'Serif' },
+  { key: 'mono', label: 'Mono' },
 ];
 
 export function ReadingToolbar({ className }: { className?: string }) {
@@ -45,10 +45,13 @@ export function ReadingToolbar({ className }: { className?: string }) {
 
   return (
     <div className={cn('relative', className)}>
-      {/* Toggle Button */}
+      {/* Toggle Button — borderless */}
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider text-fg-muted hover:text-accent bg-white border border-border hover:border-accent transition-all duration-200"
+        className={cn(
+          'flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-wider transition-colors duration-200',
+          open ? 'text-accent' : 'text-fg-muted hover:text-accent'
+        )}
         title="Reading settings"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -60,7 +63,7 @@ export function ReadingToolbar({ className }: { className?: string }) {
 
       {/* Dropdown Panel */}
       {open && (
-        <div className="absolute right-0 top-full mt-1 z-50 w-72 bg-white border border-border shadow-lg p-5 space-y-5">
+        <div className="absolute right-0 top-full mt-1 z-50 w-72 bg-white shadow-lg border border-gray-200 p-5 space-y-5">
           {/* Font Size */}
           <div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-fg-muted mb-2">Font Size</p>
@@ -73,7 +76,7 @@ export function ReadingToolbar({ className }: { className?: string }) {
                     'flex-1 py-2 text-xs font-semibold transition-all duration-150',
                     settings.fontSize === s.key
                       ? 'bg-accent text-white'
-                      : 'bg-surface-secondary text-fg-secondary hover:bg-accent/10'
+                      : 'text-fg-secondary hover:text-accent'
                   )}
                 >
                   {s.label}
@@ -94,9 +97,8 @@ export function ReadingToolbar({ className }: { className?: string }) {
                     'flex-1 py-2 text-xs font-semibold transition-all duration-150',
                     settings.lineHeight === h.key
                       ? 'bg-accent text-white'
-                      : 'bg-surface-secondary text-fg-secondary hover:bg-accent/10'
+                      : 'text-fg-secondary hover:text-accent'
                   )}
-                  title={`Line height: ${h.value}`}
                 >
                   {h.label}
                 </button>
@@ -113,10 +115,10 @@ export function ReadingToolbar({ className }: { className?: string }) {
                   key={m.key}
                   onClick={() => setMode(m.key)}
                   className={cn(
-                    'flex-1 py-2 text-xs font-semibold transition-all duration-150 border',
+                    'flex-1 py-2 text-xs font-semibold transition-all duration-150',
                     settings.mode === m.key
-                      ? 'border-accent bg-accent text-white'
-                      : 'border-border bg-surface-secondary text-fg-secondary hover:border-accent'
+                      ? 'bg-accent text-white'
+                      : 'text-fg-secondary hover:text-accent'
                   )}
                 >
                   {m.label}
@@ -137,7 +139,7 @@ export function ReadingToolbar({ className }: { className?: string }) {
                     'flex-1 py-2 text-xs font-semibold transition-all duration-150',
                     settings.font === f.key
                       ? 'bg-accent text-white'
-                      : 'bg-surface-secondary text-fg-secondary hover:bg-accent/10'
+                      : 'text-fg-secondary hover:text-accent'
                   )}
                 >
                   {f.label}
