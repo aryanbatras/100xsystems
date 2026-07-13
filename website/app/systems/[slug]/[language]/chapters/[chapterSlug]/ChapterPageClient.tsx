@@ -277,8 +277,6 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
   const [activeHeading, setActiveHeading] = useState<string>('');
   const [fullscreen, setFullscreen] = useState(false);
   const [mobileSettingsOpen, setMobileSettingsOpen] = useState(false);
-  const [showOutline, setShowOutline] = useState(true);
-  const footerSentinelRef = useRef<HTMLDivElement>(null);
 
   // MobileNav items
   const mobileItems: MobileNavItem[] = useMemo(() => [
@@ -330,34 +328,7 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
     return () => { clearTimeout(timer); observer.disconnect(); visibleHeadings.clear(); };
   }, [content]);
 
-  // Hide outline when scrolling past content, show when scrolling back up past it
-  const prevScrollY = useRef(0);
-  const outlineDisabled = useRef(false);
-  useEffect(() => {
-    const handleScroll = () => {
-      const sentinel = footerSentinelRef.current;
-      if (!sentinel) return;
 
-      const sentinelTop = sentinel.getBoundingClientRect().top;
-      const scrollingDown = window.scrollY > prevScrollY.current;
-      prevScrollY.current = window.scrollY;
-
-      // Sentinel has entered or passed the viewport (user scrolled past it going down)
-      const isPastSentinel = sentinelTop < window.innerHeight;
-
-      if (isPastSentinel && scrollingDown && !outlineDisabled.current) {
-        setShowOutline(false);
-        outlineDisabled.current = true;
-      } else if (sentinelTop > window.innerHeight && outlineDisabled.current) {
-        // Sentinel is now below viewport (user scrolled back up past it)
-        setShowOutline(true);
-        outlineDisabled.current = false;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // Fullscreen listener
   useEffect(() => {
@@ -397,17 +368,17 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
   return (
     <div className="min-h-screen bg-white flex justify-center">
       <div className="flex w-full max-w-[1440px]">
-        {/* ── Left Sidebar — Original SidebarNav with text labels ── */}
+        {/* ── Left Sidebar — sticky on desktop, overlay on mobile ── */}
         <div
           className={cn(
-            // Mobile: fixed overlay sliding from left
-            'fixed inset-y-0 left-0 z-50',
-            // Desktop: in the page flow
-            'lg:relative lg:inset-auto lg:z-auto',
-            // Slide animation (mobile) / always visible (desktop)
+            // Mobile: fixed overlay (max-lg ONLY — no fixed/sticky conflict)
+            'max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-50',
+            // Desktop: sticky in flex flow
+            'lg:sticky lg:inset-auto lg:top-28 lg:z-auto lg:h-[calc(100vh-7rem)]',
+            // Mobile slide animation
             sidebarOpen ? 'translate-x-0' : '-translate-x-full',
-            'lg:translate-x-0 transition-transform duration-300',
-            'shrink-0',
+            'lg:translate-x-0 max-lg:transition-transform max-lg:duration-300',
+            'shrink-0 overflow-y-auto',
           )}
         >
           <SidebarNav
@@ -506,9 +477,6 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
               </article>
             </div>
 
-            {/* Sentinel — triggers outline to hide when approaching footer */}
-            <div ref={footerSentinelRef} className="h-px" />
-
             {/* Chapter Navigation */}
             <div className="mt-16 pt-8">
               <div className="flex items-center justify-between">
@@ -550,35 +518,19 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
           </div>
         </div>
 
-        {/* ── Right Sidebar — Lesson Outline with dock zoom ── */}
+        {/* ── Right Sidebar — Lesson Outline (sticky on desktop) ── */}
         {headings.length > 0 && (
-          <aside className="hidden xl:block w-72 shrink-0" />
-        )}
-
-        {/* ── Fixed Outline — hides near footer ── */}
-        {headings.length > 0 && (
-          <div
-            style={{
-              position: 'fixed',
-              top: '14rem',
-              right: 'max(0px, calc((100vw - 1440px) / 2))',
-              width: '18rem',
-              height: '60vh',
-              overflowY: 'auto',
-            }}
-            className={cn(
-              'hidden xl:block pr-8 transition-opacity duration-300',
-              showOutline ? 'opacity-100' : 'opacity-0 pointer-events-none',
-            )}
-          >
-            <LessonOutline
-              headings={headings}
-              activeId={activeHeading}
-              onSelect={(id) => {
-                document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }}
-            />
-          </div>
+          <aside className="hidden xl:block w-72 shrink-0">
+            <div className="sticky top-28 h-[calc(100vh-7rem)] overflow-y-auto pr-8">
+              <LessonOutline
+                headings={headings}
+                activeId={activeHeading}
+                onSelect={(id) => {
+                  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+              />
+            </div>
+          </aside>
         )}
 
         {/* Back to top */}
