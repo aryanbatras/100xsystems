@@ -1,0 +1,181 @@
+---
+title: "File Service with JPA"
+description: "Build a persistent file system using Spring Data JPA and PostgreSQL"
+order: 5
+estimatedTime: "1 hour"
+---
+
+# File Service with JPA
+
+Now we'll build the file service that stores and manages project files in PostgreSQL using JPA.
+
+## File Entity
+
+```java
+// src/main/java/com/cloudcode/files/FileEntity.java
+package com.cloudcode.files;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "project_files")
+public class FileEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+
+    @Column(nullable = false)
+    private String projectId;
+
+    @Column(nullable = false)
+    private String path; // e.g., "/src/main/java/com/cloudcode/App.java"
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String content;
+
+    @Column(nullable = false)
+    private String language;
+
+    @Version
+    private Long version;
+
+    @Column(nullable = false)
+    private String createdBy;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    // Getters and setters
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+    public String getProjectId() { return projectId; }
+    public void setProjectId(String projectId) { this.projectId = projectId; }
+    public String getPath() { return path; }
+    public void setPath(String path) { this.path = path; }
+    public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
+    public String getLanguage() { return language; }
+    public void setLanguage(String language) { this.language = language; }
+    public Long getVersion() { return version; }
+    public String getCreatedBy() { return createdBy; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+}
+```
+
+## File Repository
+
+```java
+// src/main/java/com/cloudcode/files/FileRepository.java
+package com.cloudcode.files;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface FileRepository extends JpaRepository<FileEntity, String> {
+    List<FileEntity> findByProjectIdOrderByPath(String projectId);
+    Optional<FileEntity> findByProjectIdAndPath(String projectId, String path);
+    void deleteByProjectIdAndPath(String projectId, String path);
+    long countByProjectId(String projectId);
+}
+```
+
+## File Controller (REST API)
+
+```java
+// src/main/java/com/cloudcode/files/FileController.java
+package com.cloudcode.files;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/files")
+public class FileController {
+
+    private final FileRepository fileRepository;
+
+    public FileController(FileRepository fileRepository) {
+        this.fileRepository = fileRepository;
+    }
+
+    @GetMapping("/{projectId}")
+    public ResponseEntity<List<FileEntity>> listFiles(@PathVariable String projectId) {
+        return ResponseEntity.ok(fileRepository.findByProjectIdOrderByPath(projectId));
+    }
+
+    @GetMapping("/{projectId}/**")
+    public ResponseEntity<FileEntity> getFile(
+            @PathVariable String projectId,
+            HttpServletRequest request) {
+        String path = extractPath(request);
+        return fileRepository.findByProjectIdAndPath(projectId, path)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/{projectId}/**")
+    public ResponseEntity<FileEntity> saveFile(
+            @PathVariable String projectId,
+            @RequestBody String content,
+            HttpServletRequest request) {
+        String path = extractPath(request);
+        // Optimistic locking via @Version handles concurrent edits
+        FileEntity file = fileRepository
+            .findByProjectIdAndPath(projectId, path)
+            .orElse(new FileEntity());
+
+        file.setProjectId(projectId);
+        file.setPath(path);
+        file.setContent(content);
+        file.setLanguage(detectLanguage(path));
+
+        return ResponseEntity.ok(fileRepository.save(file));
+    }
+
+    private String extractPath(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        return uri.substring(uri.indexOf('/', 1) + 1); // after /api/files/{projectId}/
+    }
+
+    private String detectLanguage(String path) {
+        if (path.endsWith(".java")) return "java";
+        if (path.endsWith(".py")) return "python";
+        if (path.endsWith(".ts") || path.endsWith(".tsx")) return "typescript";
+        if (path.endsWith(".json")) return "json";
+        return "text";
+    }
+}
+```
+
+## Knowledge Check
+
+<KnowledgeCheck
+  question="Why do we use @Version annotation on the version field in our JPA entity?"
+  answers={[
+    { id: "a", text: "It automatically increments the version number on every read", correct: false },
+    { id: "b", text: "It enables optimistic locking to prevent lost updates when multiple users edit the same file simultaneously", correct: true },
+    { id: "c", text: "It's required by PostgreSQL for all tables", correct: false },
+    { id: "d", text: "It speeds up database queries", correct: false }
+  ]}
+  explanation="The @Version annotation enables JPA optimistic locking. When two users save the same file concurrently, Hibernate checks the version at update time. If the version in the database is higher than the entity's version, an OptimisticLockException is thrown, preventing one user's changes from silently overwriting another's. This is critical for collaborative editing."
+/>
+
+## Next Steps
+
+With file persistence working, we'll implement the Docker-based code execution service that runs user code safely in isolated containers.

@@ -1,0 +1,147 @@
+---
+title: "Docker Code Executor"
+description: "Build a secure, containerized code execution service using Docker and Java"
+order: 6
+estimatedTime: "1.5 hours"
+---
+
+# Docker Code Executor
+
+CloudCode needs to run user code safely. We'll build a Docker-based execution service that isolates each execution in a fresh container, preventing one user's code from affecting others.
+
+## Docker Service
+
+```java
+// src/main/java/com/cloudcode/execution/DockerService.java
+package com.cloudcode.execution;
+
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.model.*;
+import com.github.dockerjava.core.DockerClientBuilder;
+import org.springframework.stereotype.Service;
+
+import java.io.ByteArrayOutputStream;
+import java.util.List;
+
+@Service
+public class DockerService {
+
+    private final DockerClient dockerClient;
+
+    public DockerService() {
+        this.dockerClient = DockerClientBuilder.getInstance().build();
+    }
+
+    public ExecutionResult executeCode(
+            String code,
+            String language,
+            int timeoutSeconds) {
+
+        String image = getImageForLanguage(language);
+        String containerId = null;
+
+        try {
+            // Pull image if not present
+            dockerClient.pullImageCmd(image).start().awaitCompletion();
+
+            // Create container
+            CreateContainerResponse container = dockerClient
+                .createContainerCmd(image)
+                .withCmd("sh", "-c", code)
+                .withHostConfig(HostConfig.newHostConfig()
+                    .withMemory(256 * 1024 * 1024L)      // 256MB limit
+                    .withMemorySwap(0L)                    // No swap
+                    .withCpuCount(1L)                      // 1 CPU core
+                    .withReadonlyRootfs(true)              // Read-only filesystem
+                    .withAutoRemove(true))                 // Auto cleanup
+                .withNetworkDisabled(true)                 // No network
+                .exec();
+
+            containerId = container.getId();
+
+            // Start container
+            dockerClient.startContainerCmd(containerId).exec();
+
+            // Wait for completion with timeout
+            dockerClient.waitContainerCmd(containerId)
+                .exec(new WaitContainerResultCallback())
+                .awaitStatusCode(timeoutSeconds, java.util.concurrent.TimeUnit.SECONDS);
+
+            // Get logs
+            ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+            ByteArrayOutputStream stderr = new ByteArrayOutputStream();
+
+            dockerClient.logContainerCmd(containerId)
+                .withStdOut(true)
+                .withStdErr(true)
+                .exec(new LogContainerResultCallback())
+                .awaitCompletion();
+
+            return new ExecutionResult(
+                stdout.toString(),
+                stderr.toString(),
+                true,
+                null
+            );
+
+        } catch (Exception e) {
+            return new ExecutionResult(
+                null,
+                null,
+                false,
+                "Execution failed: " + e.getMessage()
+            );
+        } finally {
+            // Cleanup
+            if (containerId != null) {
+                try {
+                    dockerClient.removeContainerCmd(containerId)
+                        .withForce(true)
+                        .exec();
+                } catch (Exception ignored) {}
+            }
+        }
+    }
+
+    private String getImageForLanguage(String language) {
+        return switch (language.toLowerCase()) {
+            case "java" -> "openjdk:21-slim";
+            case "python" -> "python:3.12-slim";
+            case "typescript", "javascript" -> "node:20-slim";
+            default -> "alpine:latest";
+        };
+    }
+}
+```
+
+## Execution Result Model
+
+```java
+// src/main/java/com/cloudcode/execution/ExecutionResult.java
+package com.cloudcode.execution;
+
+public record ExecutionResult(
+    String stdout,
+    String stderr,
+    boolean success,
+    String error
+) {}
+```
+
+## Knowledge Check
+
+<KnowledgeCheck
+  question="Why do we run containers with read-only rootfs, no network, 256MB memory, and auto-remove?"
+  answers={[
+    { id: "a", text: "To make the code run faster", correct: false },
+    { id: "b", text: "To implement defense-in-depth security: preventing file system writes eliminates persistence attacks, disabling network prevents data exfiltration, memory limits prevent DoS, and auto-remove prevents container sprawl", correct: true },
+    { id: "c", text: "Because Docker requires these settings", correct: false },
+    { id: "d", text: "To reduce cloud costs", correct: false }
+  ]}
+  explanation="Each security measure addresses a specific attack vector: read-only rootfs prevents malicious code from modifying system files; disabled network prevents the code from making external connections (data exfiltration, crypto mining callbacks); 256MB memory limit prevents fork bombs and memory exhaustion; auto-remove ensures containers don't accumulate. Together, these create a secure sandbox for executing untrusted user code."
+/>
+
+## Next Steps
+
+In the final chapter, we'll deploy CloudCode to production and set up monitoring, logging, and CI/CD pipelines.

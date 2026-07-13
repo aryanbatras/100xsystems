@@ -1,0 +1,204 @@
+---
+title: "WebSocket Collaboration"
+description: "Implement real-time collaborative editing using Spring WebSocket"
+order: 4
+estimatedTime: "1.5 hours"
+---
+
+# WebSocket Collaboration
+
+Real-time collaboration is the heart of CloudCode. Multiple developers need to edit the same file simultaneously, with changes broadcast to all connected clients instantly.
+
+## WebSocket Configuration
+
+Spring Boot makes WebSocket setup straightforward:
+
+```java
+// src/main/java/com/cloudcode/config/WebSocketConfig.java
+package com.cloudcode.config;
+
+import com.cloudcode.collaboration.EditorHandler;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+
+@Configuration
+@EnableWebSocket
+public class WebSocketConfig implements WebSocketConfigurer {
+
+    private final EditorHandler editorHandler;
+
+    public WebSocketConfig(EditorHandler editorHandler) {
+        this.editorHandler = editorHandler;
+    }
+
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(editorHandler, "/ws/editor")
+                .setAllowedOrigins("*")
+                .withSockJS();
+    }
+}
+```
+
+## The Editor Handler
+
+The WebSocket handler manages connections, document state, and broadcasts changes:
+
+```java
+// src/main/java/com/cloudcode/collaboration/EditorHandler.java
+package com.cloudcode.collaboration;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.*;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+@Component
+public class EditorHandler extends TextWebSocketHandler {
+
+    private final Map<String, Set<WebSocketSession>> documentSessions = new ConcurrentHashMap<>();
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) {
+        String documentId = extractDocumentId(session);
+        documentSessions
+            .computeIfAbsent(documentId, k -> new CopyOnWriteArraySet<>())
+            .add(session);
+        System.out.println("User connected to document: " + documentId);
+    }
+
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
+        String payload = message.getPayload();
+        String documentId = extractDocumentId(session);
+
+        // Broadcast the change to all OTHER clients in the same document
+        Set<WebSocketSession> sessions = documentSessions.get(documentId);
+        if (sessions != null) {
+            for (WebSocketSession ws : sessions) {
+                if (ws.isOpen() && !ws.getId().equals(session.getId())) {
+                    ws.sendMessage(new TextMessage(payload));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        String documentId = extractDocumentId(session);
+        Set<WebSocketSession> sessions = documentSessions.get(documentId);
+        if (sessions != null) {
+            sessions.remove(session);
+            if (sessions.isEmpty()) {
+                documentSessions.remove(documentId);
+            }
+        }
+    }
+
+    private String extractDocumentId(WebSocketSession session) {
+        String path = session.getUri().getPath();
+        String query = session.getUri().getQuery();
+        // Extract document ID from query params: /ws/editor?doc=123
+        if (query != null && query.startsWith("doc=")) {
+            return query.substring(4);
+        }
+        return "default";
+    }
+}
+```
+
+## Conflict Resolution with OT
+
+For real-world collaboration, we need Operational Transformation (OT):
+
+```java
+// src/main/java/com/cloudcode/collaboration/OperationalTransform.java
+package com.cloudcode.collaboration;
+
+import java.util.*;
+
+public class OperationalTransform {
+
+    public record Operation(String type, int position, String text, int userId, long timestamp) {}
+
+    // Transform operation against concurrent operations
+    public static Operation transform(Operation op, Operation against) {
+        return switch (op.type()) {
+            case "insert" -> transformInsert(op, against);
+            case "delete" -> transformDelete(op, against);
+            default -> op;
+        };
+    }
+
+    private static Operation transformInsert(Operation insert, Operation against) {
+        return switch (against.type()) {
+            case "insert" -> {
+                if (against.position() <= insert.position()) {
+                    yield new Operation("insert",
+                        insert.position() + against.text().length(),
+                        insert.text(), insert.userId(), insert.timestamp());
+                }
+                yield insert;
+            }
+            case "delete" -> {
+                if (against.position() < insert.position()) {
+                    yield new Operation("insert",
+                        insert.position() - against.text().length(),
+                        insert.text(), insert.userId(), insert.timestamp());
+                }
+                yield insert;
+            }
+            default -> insert;
+        };
+    }
+
+    private static Operation transformDelete(Operation delete, Operation against) {
+        return switch (against.type()) {
+            case "insert" -> {
+                if (against.position() <= delete.position()) {
+                    yield new Operation("delete",
+                        delete.position() + against.text().length(),
+                        delete.text(), delete.userId(), delete.timestamp());
+                }
+                yield delete;
+            }
+            case "delete" -> {
+                if (against.position() < delete.position()) {
+                    yield new Operation("delete",
+                        delete.position() - against.text().length(),
+                        delete.text(), delete.userId(), delete.timestamp());
+                }
+                yield delete;
+            }
+            default -> delete;
+        };
+    }
+}
+```
+
+## Knowledge Check
+
+<KnowledgeCheck
+  question="Why do we use ConcurrentHashMap and CopyOnWriteArraySet for managing WebSocket sessions?"
+  answers={[
+    { id: "a", text: "They're the fastest Java collections available", correct: false },
+    { id: "b", text: "WebSocket handlers are called from multiple threads; these collections provide thread-safe iteration and modification without explicit synchronization", correct: true },
+    { id: "c", text: "They prevent memory leaks automatically", correct: false },
+    { id: "d", text: "They're required by the WebSocket API specification", correct: false }
+  ]}
+  explanation="Spring's WebSocket handlers process connections, messages, and closures on different threads (often from the Netty or Tomcat worker pool). ConcurrentHashMap allows safe concurrent reads/writes to the session map, while CopyOnWriteArraySet provides thread-safe iteration — critical because we iterate sessions while broadcasting messages. Synchronized blocks would create contention under load."
+/>
+
+## Next Steps
+
+With real-time collaboration working, we'll next implement the file system service using JPA to persist documents and manage project structures.
