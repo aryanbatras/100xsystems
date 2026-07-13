@@ -14,7 +14,7 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from '
 export type ReadingFontSize = 'small' | 'medium' | 'large' | 'xlarge';
 export type ReadingLineHeight = 'tight' | 'normal' | 'relaxed' | 'wide';
 export type ReadingMode = 'light' | 'sepia';
-export type ReadingFont = 'system-ui' | 'inter' | 'charter' | 'atkinson' | 'open-dyslexic';
+export type ReadingFont = 'sans' | 'serif';
 export type CodeTheme = 'oneLight' | 'github' | 'coy';
 export type ContentWidth = 'wide' | 'wider' | 'widest';
 
@@ -39,12 +39,12 @@ interface ReadingContextValue {
 }
 
 const DEFAULT_SETTINGS: ReadingSettings = {
-  fontSize: 'large',     // bigger default
+  fontSize: 'large',
   lineHeight: 'relaxed',
   mode: 'light',
-  font: 'system-ui',
+  font: 'sans',
   codeTheme: 'oneLight',
-  contentWidth: 'wider', // wider default
+  contentWidth: 'wider',
 };
 
 const ReadingContext = createContext<ReadingContextValue | null>(null);
@@ -52,7 +52,6 @@ const ReadingContext = createContext<ReadingContextValue | null>(null);
 export function ReadingProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<ReadingSettings>(DEFAULT_SETTINGS);
 
-  // Load saved settings from localStorage on mount
   useEffect(() => {
     try {
       const saved = localStorage.getItem('cloudcode-reading-settings');
@@ -63,7 +62,6 @@ export function ReadingProvider({ children }: { children: ReactNode }) {
     } catch {}
   }, []);
 
-  // Persist settings to localStorage
   useEffect(() => {
     try {
       localStorage.setItem('cloudcode-reading-settings', JSON.stringify(settings));
@@ -114,10 +112,27 @@ export function contentWidthClass(width: ContentWidth): string {
 /** Map font setting to CSS font-family */
 export function fontFamilyClass(font: ReadingFont): string {
   switch (font) {
-    case 'system-ui': return '';
-    case 'inter': return 'font-sans';
-    case 'charter': return 'font-serif';
-    case 'atkinson': return 'font-sans';
-    case 'open-dyslexic': return 'font-sans';
+    case 'sans': return 'font-sans';
+    case 'serif': return 'font-serif';
+  }
+}
+
+/** Get font-size in rem from setting */
+export function fontSizeRem(size: ReadingFontSize): string {
+  switch (size) {
+    case 'small': return '0.875rem';
+    case 'medium': return '1rem';
+    case 'large': return '1.125rem';
+    case 'xlarge': return '1.25rem';
+  }
+}
+
+/** Get line-height value from setting */
+export function lineHeightValue(height: ReadingLineHeight): number {
+  switch (height) {
+    case 'tight': return 1.4;
+    case 'normal': return 1.6;
+    case 'relaxed': return 1.8;
+    case 'wide': return 2.0;
   }
 }

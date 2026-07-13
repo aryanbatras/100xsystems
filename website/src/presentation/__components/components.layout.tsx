@@ -254,9 +254,10 @@ export function Header({ logo, items, actions, sticky = true, activeId, classNam
   );
 }
 
-// ─── SidebarNav — Borderless, with Shadow ───────────────────────────
-// No gap between items. Matching dock magnification behavior on mouse hover.
-// Uses mouseY for vertical tracking (same physics as dock's horizontal tracking).
+// ─── SidebarNav — Expandable, Flush Left, with Text Labels ────────
+// Default: narrow icon strip flush to left edge.
+// Hover: expands to show text labels alongside icons.
+// No gap between items. Dock magnification + text reveal.
 
 export interface SidebarNavItem {
   id: string;
@@ -274,32 +275,39 @@ export interface SidebarNavProps {
 
 export function SidebarNav({ items, activeId, onItemClick, className }: SidebarNavProps) {
   const mouseY = useMotionValue(Infinity);
+  const [expanded, setExpanded] = useState(false);
 
   return (
     <nav
       onMouseMove={(e) => mouseY.set(e.pageY)}
-      onMouseLeave={() => mouseY.set(Infinity)}
+      onMouseLeave={() => { mouseY.set(Infinity); setExpanded(false); }}
+      onMouseEnter={() => setExpanded(true)}
       className={cn(
-        'flex flex-col items-center bg-white min-h-full w-auto',
-        'shadow-[inset_-1px_0_0_rgba(0,0,0,0.04),2px_0_8px_-4px_rgba(0,0,0,0.06)]',
+        'flex flex-col bg-white min-h-full transition-all duration-300 ease-out',
+        expanded ? 'w-72' : 'w-[60px]',
         className,
       )}
     >
-      {/* No gap between items — magnification on hover */}
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-start pt-4">
         {items.map((item) => {
           const isActive = activeId === item.id;
           return (
-            <SidebarIcon
+            <a
               key={item.id}
-              mouseY={mouseY}
-              isActive={isActive}
+              href={item.href || '#'}
+              onClick={() => onItemClick?.(item)}
+              className={cn(
+                'flex items-center gap-3 w-full transition-all duration-200 group',
+                isActive
+                  ? 'bg-accent-yellow text-black'
+                  : 'text-fg-secondary hover:bg-accent hover:text-white',
+                expanded ? 'px-4 py-3' : 'px-[19px] py-3',
+              )}
             >
-              <a
-                href={item.href || '#'}
-                onClick={() => onItemClick?.(item)}
-                title={item.label}
-                className="flex items-center justify-center w-full h-full"
+              {/* Icon with magnification */}
+              <SidebarIcon
+                mouseY={mouseY}
+                isActive={isActive}
               >
                 {item.iconName ? (
                   <AnimatedIcon
@@ -316,8 +324,19 @@ export function SidebarNav({ items, activeId, onItemClick, className }: SidebarN
                     {item.label[0]}
                   </span>
                 )}
-              </a>
-            </SidebarIcon>
+              </SidebarIcon>
+
+              {/* Label — fades in on hover */}
+              <span className={cn(
+                'text-[11px] font-bold whitespace-nowrap transition-all duration-200',
+                expanded
+                  ? 'opacity-100 translate-x-0'
+                  : 'opacity-0 -translate-x-2 pointer-events-none',
+                isActive ? 'text-black' : 'text-fg-secondary group-hover:text-white',
+              )}>
+                {item.label}
+              </span>
+            </a>
           );
         })}
       </div>
@@ -347,17 +366,16 @@ function SidebarIcon({ mouseY, isActive, children }: SidebarIconProps) {
   const sizeTransform = useTransform(distanceCalc, [-dist, 0, dist], [size, magnification, size]);
   const scaleSize = useSpring(sizeTransform, { mass: 0.1, stiffness: 150, damping: 12 });
 
-  return (
-    <motion.div
-      ref={ref}
-      style={{ width: scaleSize, height: scaleSize }}
-      className={cn(
-        'flex items-center justify-center transition-colors duration-150',
-        isActive
-          ? 'bg-accent-yellow text-black'
-          : 'text-fg-secondary hover:bg-accent hover:text-white',
-      )}
-    >
+  return (      <motion.div
+        ref={ref}
+        style={{ width: scaleSize, height: scaleSize }}
+        className={cn(
+          'flex items-center justify-center shrink-0 transition-colors duration-150',
+          isActive
+            ? 'text-black'
+            : 'text-fg-secondary group-hover:text-white',
+        )}
+      >
       {children}
     </motion.div>
   );

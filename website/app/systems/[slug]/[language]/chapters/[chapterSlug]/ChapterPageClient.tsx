@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/application/lib/utils';
 import { MarkdownRenderer } from '@/lib/markdown-renderer';
 import {
@@ -8,9 +9,17 @@ import {
   useReadingSettings,
   contentWidthClass,
   fontFamilyClass,
-  type ReadingSettings,
+  fontSizeRem,
+  lineHeightValue,
+  type ReadingFontSize,
+  type ReadingLineHeight,
+  type ReadingMode,
+  type ReadingFont,
 } from '@/lib/reading-context';
 import { ReadingToolbar } from '@/components/reading/ReadingToolbar';
+import { FileTree, buildHeadingTree } from '@/components/toc/FileTree';
+import { MobileNav, SidebarNav } from '@/presentation/__components';
+import type { MobileNavItem, SidebarNavItem } from '@/presentation/__components';
 import type { ChapterMeta, ChapterContent } from '@/lib/mdx';
 
 interface ChapterPageClientProps {
@@ -41,58 +50,110 @@ function extractHeadings(markdown: string): { id: string; text: string; level: n
   return headings;
 }
 
-/** Maps reading settings to Tailwind prose classes */
-function useReadingClasses(settings: ReadingSettings) {
-  return useMemo(() => {
-    const sizeMap: Record<string, string> = {
-      small: 'prose-sm',
-      medium: 'prose-base',
-      large: 'prose-lg',
-      xlarge: 'prose-xl',
-    };
-    const heightMap: Record<string, string> = {
-      tight: 'prose-p:leading-[1.4] prose-li:leading-[1.4]',
-      normal: 'prose-p:leading-[1.6] prose-li:leading-[1.6]',
-      relaxed: 'prose-p:leading-[1.8] prose-li:leading-[1.8]',
-      wide: 'prose-p:leading-[2.0] prose-li:leading-[2.0]',
-    };
-    const modeMap: Record<string, string> = {
-      light: 'bg-white text-fg',
-      sepia: 'bg-amber-50 text-amber-900',
-    };
-    const fontMap: Record<string, string> = {
-      'system-ui': '',
-      inter: 'font-sans',
-      charter: 'font-serif',
-      atkinson: 'font-sans',
-      'open-dyslexic': 'font-sans',
-    };
+/** Mobile settings panel */
+function MobileSettingsPanel({ onClose }: { onClose: () => void }) {
+  const { settings, setFontSize, setLineHeight, setMode, setFont, resetDefaults } = useReadingSettings();
 
-    return `${sizeMap[settings.fontSize]} ${heightMap[settings.lineHeight]} ${modeMap[settings.mode]} ${fontMap[settings.font]}`;
-  }, [settings]);
+  const sizes: { key: ReadingFontSize; label: string }[] = [
+    { key: 'small', label: 'S' },
+    { key: 'medium', label: 'M' },
+    { key: 'large', label: 'L' },
+    { key: 'xlarge', label: 'XL' },
+  ];
+  const heights: { key: ReadingLineHeight; label: string }[] = [
+    { key: 'tight', label: 'Tight' },
+    { key: 'normal', label: 'Normal' },
+    { key: 'relaxed', label: 'Relaxed' },
+    { key: 'wide', label: 'Wide' },
+  ];
+  const modes: { key: ReadingMode; label: string }[] = [
+    { key: 'light', label: 'Light' },
+    { key: 'sepia', label: 'Sepia' },
+  ];
+  const fonts: { key: ReadingFont; label: string }[] = [
+    { key: 'sans', label: 'Sans' },
+    { key: 'serif', label: 'Serif' },
+  ];
+
+  return (
+    <motion.div
+      initial={{ y: 300, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: 300, opacity: 0 }}
+      transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+      className="fixed bottom-0 left-0 right-0 z-50 bg-white shadow-[0_-4px_20px_-6px_rgba(0,0,0,0.12)] px-5 pt-5 pb-8 max-h-[70vh] overflow-y-auto rounded-t-xl border-t border-gray-100"
+    >
+      <div className="flex items-center justify-between mb-5">
+        <p className="text-xs font-bold uppercase tracking-widest text-fg">Settings</p>
+        <button onClick={onClose} className="p-1 text-fg-muted hover:text-fg transition-colors">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-fg-muted mb-2">Size</p>
+          <div className="flex gap-1.5 flex-wrap">
+            {sizes.map((s) => (
+              <button key={s.key} onClick={() => setFontSize(s.key)} className={cn('px-3 py-1.5 text-xs font-semibold transition-all duration-150', settings.fontSize === s.key ? 'bg-accent text-white' : 'text-fg-secondary bg-gray-100 hover:bg-gray-200')}>
+                {s.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-fg-muted mb-2">Height</p>
+          <div className="flex gap-1.5 flex-wrap">
+            {heights.map((h) => (
+              <button key={h.key} onClick={() => setLineHeight(h.key)} className={cn('px-3 py-1.5 text-xs font-semibold transition-all duration-150', settings.lineHeight === h.key ? 'bg-accent text-white' : 'text-fg-secondary bg-gray-100 hover:bg-gray-200')}>
+                {h.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-fg-muted mb-2">Mode</p>
+          <div className="flex gap-1.5 flex-wrap">
+            {modes.map((m) => (
+              <button key={m.key} onClick={() => setMode(m.key)} className={cn('px-3 py-1.5 text-xs font-semibold transition-all duration-150', settings.mode === m.key ? 'bg-accent text-white' : 'text-fg-secondary bg-gray-100 hover:bg-gray-200')}>
+                {m.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-fg-muted mb-2">Font</p>
+          <div className="flex gap-1.5 flex-wrap">
+            {fonts.map((f) => (
+              <button key={f.key} onClick={() => setFont(f.key)} className={cn('px-3 py-1.5 text-xs font-semibold transition-all duration-150', settings.font === f.key ? 'bg-accent text-white' : 'text-fg-secondary bg-gray-100 hover:bg-gray-200')}>
+                {f.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <button onClick={resetDefaults} className="mt-5 w-full py-3 text-[10px] font-bold uppercase tracking-widest text-fg-muted hover:text-accent transition-colors">
+        Reset defaults
+      </button>
+    </motion.div>
+  );
 }
 
-/** Borderless copy button for LLM prompts */
+/** Copy button */
 function CopyButton({ content }: { content: string }) {
   const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
+  const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(content);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {}
-  };
-
+  }, [content]);
   return (
-    <button
-      onClick={handleCopy}
-      className="flex items-center gap-2 px-2 py-2 text-xs font-bold uppercase tracking-wider transition-colors duration-200 text-fg-muted hover:text-accent"
-      title="Copy content for use with LLM"
-    >
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-      </svg>
+    <button onClick={handleCopy} className="flex items-center gap-2 px-2 py-2 text-xs font-bold uppercase tracking-wider transition-colors duration-200 text-fg-muted hover:text-accent" title="Copy content for use with LLM">
       {copied ? 'Copied!' : 'Copy'}
     </button>
   );
@@ -100,190 +161,180 @@ function CopyButton({ content }: { content: string }) {
 
 function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevChapter, nextChapter, content }: ChapterPageClientProps) {
   const { settings } = useReadingSettings();
-  const readingClasses = useReadingClasses(settings);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeHeading, setActiveHeading] = useState<string>('');
   const [fullscreen, setFullscreen] = useState(false);
+  const [mobileSettingsOpen, setMobileSettingsOpen] = useState(false);
 
-  // Track active heading for ToC highlighting
+  // MobileNav items
+  const mobileItems: MobileNavItem[] = useMemo(() => [
+    { id: 'settings', label: 'Settings', iconName: 'settings' },
+    { id: 'copy', label: 'Copy', iconName: 'copy' },
+    { id: 'fullscreen', label: fullscreen ? 'Exit' : 'Fullscreen', iconName: fullscreen ? 'minimize' : 'maximize' },
+  ], [fullscreen]);
+
+  const handleMobileNav = useCallback((item: MobileNavItem) => {
+    if (item.id === 'settings') {
+      setMobileSettingsOpen(prev => !prev);
+    } else if (item.id === 'fullscreen') {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    } else if (item.id === 'copy') {
+      navigator.clipboard.writeText(content).catch(() => {});
+    }
+  }, [content]);
+
+  // Robust IntersectionObserver for ToC active heading
   useEffect(() => {
+    const visibleHeadings = new Map<string, number>();
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            setActiveHeading(entry.target.id);
-            break;
+            visibleHeadings.set(entry.target.id, entry.boundingClientRect.top);
+          } else {
+            visibleHeadings.delete(entry.target.id);
           }
         }
+        let bestId = '';
+        let bestTop = Infinity;
+        for (const [id, top] of visibleHeadings) {
+          if (top < bestTop) { bestTop = top; bestId = id; }
+        }
+        if (bestId) setActiveHeading(bestId);
       },
-      { rootMargin: '-80px 0px -60% 0px' }
+      { rootMargin: '-80px 0px -60% 0px', threshold: 0 }
     );
 
     const timer = setTimeout(() => {
       document.querySelectorAll('article h2[id], article h3[id], article h4[id]').forEach((el) => observer.observe(el));
     }, 200);
 
-    return () => {
-      clearTimeout(timer);
-      observer.disconnect();
-    };
+    return () => { clearTimeout(timer); observer.disconnect(); visibleHeadings.clear(); };
   }, [content]);
 
-  // Listen for fullscreen changes
+  // Fullscreen listener
   useEffect(() => {
     const handleFSChange = () => setFullscreen(!!document.fullscreenElement);
     document.addEventListener('fullscreenchange', handleFSChange);
     return () => document.removeEventListener('fullscreenchange', handleFSChange);
   }, []);
 
+  const sidebarItems: SidebarNavItem[] = useMemo(() => chapters.map(ch => ({
+    id: ch.slug,
+    label: ch.title,
+    href: `/systems/${slug}/${language}/chapters/${ch.slug}`,
+    iconName: 'bookmark',
+  })), [chapters, slug, language]);
+
+  const handleSidebarNav = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
+
   const headings = useMemo(() => extractHeadings(content), [content]);
+  const headingTree = useMemo(() => buildHeadingTree(headings), [headings]);
   const contentMaxW = contentWidthClass(settings.contentWidth);
   const fontClass = fontFamilyClass(settings.font);
+  const articleFontSize = fontSizeRem(settings.fontSize);
+  const articleLineHeight = lineHeightValue(settings.lineHeight);
+
+  // Build mode-specific prose classes
+  const modeClasses = settings.mode === 'light'
+    ? 'prose-headings:text-fg prose-p:text-fg prose-blockquote:border-l-accent prose-blockquote:bg-accent/5 prose-code:text-pink-600 prose-code:bg-pink-50 prose-a:text-accent prose-strong:text-fg prose-li:text-fg prose-hr:border-gray-200'
+    : 'prose-headings:text-amber-900 prose-p:text-amber-800 prose-blockquote:border-l-amber-600 prose-blockquote:bg-amber-100/40 prose-code:text-amber-900 prose-code:bg-amber-100 prose-a:text-amber-700 prose-strong:text-amber-900 prose-li:text-amber-800 prose-hr:border-amber-200';
 
   return (
-    <div className="min-h-screen flex justify-center">
-      {/* Outer container */}
+    <div className="min-h-screen flex justify-center bg-white">
       <div className="flex w-full max-w-[1440px]">
-        {/* Left Sidebar — Chapter Navigation — minimal margin */ }
-        <aside className={cn(
-          'fixed lg:sticky top-0 left-0 z-40 h-screen overflow-y-auto transition-all duration-300 bg-white',
-          sidebarOpen ? 'w-56 translate-x-0' : 'w-0 -translate-x-full lg:w-56 lg:translate-x-0',
-        )}>
-          <div className="pt-4 pr-3 pb-4 pl-3">
-            {/* System link */}
-            <div className="mb-6 pl-2">
-              <a
-                href={`/systems/${slug}`}
-                className="text-xs font-bold text-fg hover:text-accent transition-colors"
-              >
-                ← {systemTitle}
-              </a>
-            </div>
+        {/* ── Left Sidebar — Original SidebarNav with text labels ── */}
+        <div
+          className={cn(
+            // Mobile: fixed overlay sliding from left
+            'fixed inset-y-0 left-0 z-50',
+            // Desktop: in the page flow
+            'lg:relative lg:inset-auto lg:z-auto',
+            // Slide animation (mobile) / always visible (desktop)
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+            'lg:translate-x-0 transition-transform duration-300',
+            'shrink-0',
+          )}
+        >
+          <SidebarNav
+            items={sidebarItems}
+            activeId={chapter.meta.slug}
+            onItemClick={handleSidebarNav}
+          />
+        </div>
 
-            {/* Chapters — minimal margin, compact */}
-            <div className="pl-2">
-              <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-fg-muted mb-3">Chapters</p>
-              <div className="space-y-px">
-                {chapters.map((ch) => (
-                  <a
-                    key={ch.slug}
-                    href={`/systems/${slug}/${language}/chapters/${ch.slug}`}
-                    className={cn(
-                      'block px-2 py-1.5 text-xs transition-all duration-150',
-                      ch.slug === chapter.meta.slug
-                        ? 'bg-accent !text-white font-bold'
-                        : 'text-fg hover:bg-accent/5'
-                    )}
-                  >
-                    <span className="text-[9px] mr-1.5 opacity-50">{String(ch.order).padStart(2, '0')}</span>
-                    {ch.title}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </aside>
-
-        {/* Overlay (mobile) */}
+        {/* Mobile overlay — closes sidebar on tap */}
         {sidebarOpen && (
-          <div className="fixed inset-0 bg-black/20 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
+          <div
+            className="fixed inset-0 bg-black/20 z-40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
         )}
 
-        {/* Main Content Area */}
-        <div className={cn(
-          'flex-1 min-w-0 transition-all duration-300',
-          settings.mode === 'sepia' ? 'bg-amber-50' : 'bg-white',
-          fontClass,
-        )}>
+        {/* ── Main Content ── */}
+        <div className={cn('flex-1 min-w-0', settings.mode === 'sepia' ? 'bg-amber-50' : 'bg-white', fontClass)}>
           <div className={cn('mx-auto px-6 lg:px-12 py-12 lg:py-16', contentMaxW)}>
-            {/* Top Bar — simpler, borderless */}
+            {/* Top Bar */}
             <div className="flex items-center justify-between mb-10">
               <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setSidebarOpen(!sidebarOpen)}
-                  className="lg:hidden p-2 -ml-2 text-fg-secondary hover:text-accent transition-colors"
-                  aria-label="Toggle sidebar"
-                >
+                <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-2 -ml-2 text-fg-secondary hover:text-accent transition-colors" aria-label="Toggle sidebar">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
                   </svg>
                 </button>
-                <span className="text-xs text-fg-muted font-medium">
-                  {systemTitle} / {chapter.meta.title}
-                </span>
+                <span className="text-xs text-fg-muted font-medium hidden sm:inline">{systemTitle} / {chapter.meta.title}</span>
               </div>
-              <div className="flex items-center gap-px">
+              <div className="hidden sm:flex items-center gap-px">
                 <CopyButton content={content} />
                 <ReadingToolbar />
-                {/* Fullscreen toggle */}
-                <button
-                  onClick={() => {
-                    if (!document.fullscreenElement) {
-                      document.documentElement.requestFullscreen();
-                    } else {
-                      document.exitFullscreen();
-                    }
-                  }}
-                  className="flex items-center gap-2 px-2 py-2 text-xs font-bold uppercase tracking-wider transition-colors duration-200 text-fg-muted hover:text-accent"
-                  title={fullscreen ? 'Exit fullscreen' : 'Fullscreen'}
-                >
+                <button onClick={() => { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }}
+                  className="flex items-center gap-2 px-2 py-2 text-xs font-bold uppercase tracking-wider transition-colors duration-200 text-fg-muted hover:text-accent" title={fullscreen ? 'Exit fullscreen' : 'Fullscreen'}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     {fullscreen ? (
-                      <>
-                        <polyline points="4 14 10 14 10 20" />
-                        <polyline points="20 10 14 10 14 4" />
-                        <line x1="14" y1="10" x2="21" y2="3" />
-                        <line x1="3" y1="21" x2="10" y2="14" />
-                      </>
+                      <><polyline points="4 14 10 14 10 20" /><polyline points="20 10 14 10 14 4" /><line x1="14" y1="10" x2="21" y2="3" /><line x1="3" y1="21" x2="10" y2="14" /></>
                     ) : (
-                      <>
-                        <polyline points="15 3 21 3 21 9" />
-                        <polyline points="9 21 3 21 3 15" />
-                        <line x1="21" y1="3" x2="14" y2="10" />
-                        <line x1="3" y1="21" x2="10" y2="14" />
-                      </>
+                      <><polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" /></>
                     )}
                   </svg>
                 </button>
               </div>
             </div>
 
-            {/* Chapter Header — minimal */}
+            {/* Chapter Header */}
             <div className="mb-8">
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-accent">
-                  Chapter {chapter.meta.order}
-                </span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-accent">Chapter {chapter.meta.order}</span>
                 <span className="text-[10px] text-fg-muted">·</span>
-                <span className="text-[10px] font-medium text-fg-muted uppercase tracking-wider">
-                  {language}
-                </span>
+                <span className="text-[10px] font-medium text-fg-muted uppercase tracking-wider">{language}</span>
               </div>
-              <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight mb-3 leading-tight text-fg">
-                {chapter.meta.title}
-              </h1>
+              <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight mb-3 leading-tight text-fg">{chapter.meta.title}</h1>
             </div>
 
-            {/* Markdown Content — bigger prose, wider */}
-            <article className={cn(
-              'prose max-w-none transition-all duration-200',
-              readingClasses,
-              'prose-headings:font-bold prose-headings:tracking-tight',
-              'prose-h2:text-[1.75rem] lg:prose-h2:text-[2rem] prose-h2:mt-12 prose-h2:mb-6 prose-h2:leading-tight prose-h2:scroll-mt-20',
-              'prose-h3:text-[1.25rem] lg:prose-h3:text-[1.375rem] prose-h3:mt-10 prose-h3:mb-4 prose-h3:scroll-mt-20',
-              'prose-p:mb-6 prose-p:leading-[1.75]',
-              'prose-a:font-semibold hover:prose-a:underline decoration-accent underline-offset-2',
-              'prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-[0.875em] prose-code:rounded',
-              'prose-pre:p-0 prose-pre:overflow-x-auto prose-pre:rounded-none prose-pre:bg-transparent',
-              'prose-img:my-10 prose-img:mx-auto prose-img:rounded-none',
-              'prose-strong:font-bold',
-              'prose-li:mb-2 prose-li:leading-[1.75]',
-              'prose-blockquote:border-l-[3px] prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic prose-blockquote:my-8',
-              '[&_code]:before:content-none [&_code]:after:content-none',
-              settings.mode === 'light' && 'prose-headings:text-fg prose-p:text-fg prose-blockquote:border-l-accent prose-blockquote:bg-accent/5 prose-code:text-pink-600 prose-code:bg-pink-50 prose-a:text-accent prose-strong:text-fg prose-li:text-fg prose-hr:border-gray-200',
-              settings.mode === 'sepia' && 'prose-headings:text-amber-900 prose-p:text-amber-800 prose-blockquote:border-l-amber-600 prose-blockquote:bg-amber-100/40 prose-code:text-amber-900 prose-code:bg-amber-100 prose-a:text-amber-700 prose-strong:text-amber-900 prose-li:text-amber-800 prose-hr:border-amber-200',
-              settings.font === 'charter' && 'prose-headings:font-serif',
-            )}>
+            {/* Markdown Content — inline style for guaranteed font-size and line-height */}
+            <article
+              style={{ fontSize: articleFontSize, lineHeight: articleLineHeight }}
+              className={cn(
+                'prose max-w-none prose-headings:font-bold prose-headings:tracking-tight',
+                'prose-h2:text-[1.75rem] lg:prose-h2:text-[2rem] prose-h2:mt-12 prose-h2:mb-6 prose-h2:leading-tight prose-h2:scroll-mt-20',
+                'prose-h3:text-[1.25rem] lg:prose-h3:text-[1.375rem] prose-h3:mt-10 prose-h3:mb-4 prose-h3:scroll-mt-20',
+                'prose-p:mb-6',
+                'prose-a:font-semibold hover:prose-a:underline decoration-accent underline-offset-2',
+                'prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-[0.875em] prose-code:rounded',
+                'prose-pre:p-0 prose-pre:overflow-x-auto prose-pre:rounded-none prose-pre:bg-transparent',
+                'prose-img:my-10 prose-img:mx-auto prose-img:rounded-none',
+                'prose-strong:font-bold', 'prose-li:mb-2',
+                'prose-blockquote:border-l-[3px] prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic prose-blockquote:my-8',
+                '[&_code]:before:content-none [&_code]:after:content-none',
+                modeClasses,
+                settings.font === 'serif' && 'prose-headings:font-serif',
+              )}
+            >
               <MarkdownRenderer source={content} codeTheme={settings.codeTheme} />
             </article>
 
@@ -328,38 +379,55 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
           </div>
         </div>
 
-        {/* Right Sidebar — Table of Contents — compact, bigger text */}
+        {/* ── Right Sidebar — File Tree Table of Contents ── */}
         {headings.length > 0 && (
-          <aside className="hidden xl:block w-48 shrink-0">
-            <div className="sticky top-0 h-screen overflow-y-auto pt-16 pr-4">
-              <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-fg-muted mb-4">On this page</p>
-              <nav className="space-y-1.5">
-                {headings.map((h) => (
-                  <a
-                    key={h.id}
-                    href={`#${h.id}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document.getElementById(h.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }}
-                    className={cn(
-                      'block text-sm leading-relaxed transition-all duration-150',
-                      h.level === 2 && 'pl-0',
-                      h.level === 3 && 'pl-3',
-                      h.level === 4 && 'pl-6',
-                      activeHeading === h.id
-                        ? 'text-accent font-semibold'
-                        : 'text-fg-muted hover:text-fg'
-                    )}
-                  >
-                    {h.text}
-                  </a>
-                ))}
-              </nav>
+          <aside className="hidden xl:block w-56 shrink-0">
+            <div className="sticky top-0 h-screen overflow-y-auto pt-20 pr-8">
+              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-fg-muted mb-5">On this page</p>
+              <FileTree
+                nodes={headingTree}
+                activeId={activeHeading}
+                rootLabel={chapter.meta.title}
+                onSelect={(id) => {
+                  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+              />
             </div>
           </aside>
         )}
+
+        {/* Back to top */}
+        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-20 right-6 z-40 w-10 h-10 flex items-center justify-center bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.04),0_4px_12px_-4px_rgba(0,0,0,0.1)] text-fg-muted hover:text-accent transition-all duration-200"
+          aria-label="Back to top">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" />
+          </svg>
+        </button>
       </div>
+
+      {/* ── Mobile Nav ── */}
+      <div className="fixed bottom-4 right-4 z-50 sm:hidden">
+        <MobileNav items={mobileItems} activeId="" onNavigate={handleMobileNav} />
+      </div>
+
+      {/* ── Mobile Settings Panel ── */}
+      <AnimatePresence>
+        {mobileSettingsOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/20 z-40 sm:hidden"
+              onClick={() => setMobileSettingsOpen(false)}
+            />
+            <div className="sm:hidden relative z-50">
+              <MobileSettingsPanel onClose={() => setMobileSettingsOpen(false)} />
+            </div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
