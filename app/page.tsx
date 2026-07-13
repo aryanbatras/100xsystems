@@ -7,7 +7,6 @@ import { HomeLearningPhilosophy } from '@/presentation/features/homeLearningPhil
 import { HomeCubix } from '@/presentation/features/homeCubix.feature';
 import { HomeOpenSource } from '@/presentation/features/homeOpenSource.feature';
 import { HomeMission } from '@/presentation/features/homeMission.feature';
-import { HomeSection10 } from '@/presentation/features/homeSection10.feature';
 
 export default function HomePage() {
   return (
@@ -21,7 +20,6 @@ export default function HomePage() {
       <HomeCubix />
       <HomeOpenSource />
       <HomeMission />
-      <HomeSection10 />
     </>
   );
 }

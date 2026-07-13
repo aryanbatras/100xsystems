@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Loading } from "@/presentation/features/loading.feature";
 import { Header, Footer } from "@/presentation/__components";
 import Script from "next/script";
@@ -110,7 +111,7 @@ export default function RootLayout({
         <Header
           items={headerItems}
           logo={
-            <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <img
                 src="/assets/cubix/base/cubix-brand-logo.png"
                 alt="Cubix"
@@ -119,7 +120,7 @@ export default function RootLayout({
               <span className="text-xl lg:text-2xl font-extrabold text-fg tracking-tight select-none uppercase">
                 100XSYSTEMS
               </span>
-            </div>
+            </Link>
           }
         />
         <main>{children}</main>

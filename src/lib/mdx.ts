@@ -253,16 +253,22 @@ export function getAllLanguages(): LanguageMeta[] {
 
 // ─── Tag Search Data ────────────────────────────────────────────────
 
+export interface ResourceItem {
+  title: string;
+  description: string;
+  url: string;
+}
+
 export interface TagSearchData {
   tag: string;
   displayName: string;
   description: string;
-  youtube: string[];
-  websites: string[];
-  articles: string[];
-  courses: string[];
-  books: string[];
-  tools: string[];
+  youtube: ResourceItem[];
+  websites: ResourceItem[];
+  articles: ResourceItem[];
+  courses: ResourceItem[];
+  books: ResourceItem[];
+  tools: ResourceItem[];
 }
 
 export function getAllTagSlugs(): string[] {

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Heading, Text, Badge, Tag, Icon } from '@/presentation/__components';
+import { Heading, Text, Badge } from '@/presentation/__components';
 import { SearchPageClient } from './SearchPageClient';
 import { getAllTags } from '@/lib/mdx';
 
@@ -28,33 +28,7 @@ export default function SearchPage() {
           </Text>
         </div>
 
-        {/* Browse by Tag */}
-        <div className="mb-10">
-          <Heading variant="h4" className="uppercase tracking-wider mb-4 text-center">
-            Browse by Topic
-          </Heading>
-          <div className="flex flex-wrap justify-center gap-3">
-            {tags.length === 0 ? (
-              <Text variant="muted">No tags available yet. Check back soon!</Text>
-            ) : (
-              tags.map((tag) => (
-                <Tag
-                  key={tag.tag}
-                  variant="brand"
-                  size="lg"
-                  className="cursor-pointer hover:opacity-80 transition-opacity text-base px-6 py-3"
-                  onClick={() => {
-                    document.getElementById(`section-${tag.tag}`)?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  {tag.displayName}
-                </Tag>
-              ))
-            )}
-          </div>
-        </div>
-
-        {/* Resource Sections */}
+        {/* Resource Sections — client component handles interactivity */}
         <SearchPageClient tags={tags} />
       </div>
     </div>

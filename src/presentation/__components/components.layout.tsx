@@ -477,8 +477,10 @@ function DockIcon({ mouseX, isActive, badge, children }: DockIconProps) {
   );
 }
 
-// ─── Footer — Modern Minimal, Purple Ghost Links ────────────────────
-// Links styled as purpleGhost buttons. Rich text.
+// ─── Footer — 90/10 Split: Purple CTA + Compact Nav Links ───────────
+// Footer container is exactly min-h-screen.
+// Purple section uses flex-1 (~90%), bottom nav uses auto height (~10%).
+// Content in purple section is centered within its flex-1 space.
 
 export interface FooterProps {
   className?: string;
@@ -488,39 +490,68 @@ export function Footer({ className }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className={cn('group bg-surface-secondary border-t border-border', className)}>
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
-        {/* Nav links + social */}
-        <div className="flex flex-col items-center gap-4">
-          <div className="flex items-center flex-wrap justify-center gap-2">
-            <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/systems'}>SYSTEMS</Button>
-            <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/languages'}>LANGUAGES</Button>
-            <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/search'}>SEARCH</Button>
-            <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/privacy'}>PRIVACY</Button>
-            <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/terms'}>TERMS</Button>
-          </div>
+    <footer className={cn('min-h-screen flex flex-col', className)}>
+      {/* Purple CTA Section — flex-1 fills remaining space (~90%) */}
+      <div className="flex-1 bg-accent text-white flex items-center justify-center px-6 lg:px-12">
+        <div className="max-w-[1000px] mx-auto text-center">
+          <div className="flex flex-col items-center gap-4 lg:gap-6">
+            <img
+              src="/assets/cubix/images/many-cubix-on-a-holy-tree.png"
+              alt="Cubix community"
+              className="w-full max-w-[400px] lg:max-w-[500px] h-auto object-contain"
+            />
 
-          <div className="flex items-center gap-3">
-            <a href="https://github.com/100xsystems" target="_blank" rel="noopener noreferrer" className="p-2 text-fg-secondary transition-all duration-200 hover:text-accent" aria-label="GitHub">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />
-              </svg>
-            </a>
-            <a href="https://www.linkedin.com/company/100xsystems/" target="_blank" rel="noopener noreferrer" className="p-2 text-fg-secondary transition-all duration-200 hover:text-accent" aria-label="LinkedIn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
-              </svg>
-            </a>
-            <a href="mailto:admin@100xsystems.dev" className="p-2 text-fg-secondary transition-all duration-200 hover:text-accent" aria-label="Email">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-              </svg>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight uppercase leading-tight">
+              Understand the systems.
+            </h2>
+
+            <p className="text-base md:text-lg text-white/70 leading-relaxed max-w-md">
+              Don&apos;t just use technology.
+              Build it. Understand it. Improve it.
+            </p>
+
+            <a
+              href="/systems"
+              className="inline-flex items-center gap-3 px-10 py-4 text-white text-sm font-bold uppercase tracking-wider transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full after:bg-accent-yellow after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
+            >
+              Start Building
             </a>
           </div>
+        </div>
+      </div>
 
-          <span className="text-xs font-semibold text-fg-muted select-none uppercase tracking-wider">
-            &copy; {currentYear} 100XSYSTEMS
-          </span>
+      {/* Bottom Nav Section — compact, ~10% of screen */}
+      <div className="bg-surface-secondary py-4">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+          <div className="flex flex-col items-center gap-2">
+            <div className="flex items-center flex-wrap justify-center gap-2">
+              <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/systems'}>SYSTEMS</Button>
+              <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/languages'}>LANGUAGES</Button>
+              <Button variant="purpleGhost" size="default" onClick={() => window.location.href = '/search'}>SEARCH</Button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <a href="https://github.com/100xsystems" target="_blank" rel="noopener noreferrer" className="p-1.5 text-fg-secondary transition-all duration-200 hover:text-accent" aria-label="GitHub">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-fg-secondary transition-colors">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+              </a>
+              <a href="https://www.linkedin.com/company/100xsystems/" target="_blank" rel="noopener noreferrer" className="p-1.5 text-fg-secondary transition-all duration-200 hover:text-accent" aria-label="LinkedIn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+                </svg>
+              </a>
+              <a href="mailto:admin@100xsystems.dev" className="p-1.5 text-fg-secondary transition-all duration-200 hover:text-accent" aria-label="Email">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                </svg>
+              </a>
+            </div>
+
+            <span className="text-[10px] font-semibold text-fg-muted select-none uppercase tracking-wider">
+              &copy; {currentYear} 100XSYSTEMS
+            </span>
+          </div>
         </div>
       </div>
     </footer>

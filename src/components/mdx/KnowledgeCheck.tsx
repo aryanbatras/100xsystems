@@ -26,7 +26,7 @@ interface KnowledgeCheckProps {
   className?: string;
 }
 
-export function KnowledgeCheck({ question, answers, explanation, className }: KnowledgeCheckProps) {
+export function KnowledgeCheck({ question, answers = [], explanation, className }: KnowledgeCheckProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
 

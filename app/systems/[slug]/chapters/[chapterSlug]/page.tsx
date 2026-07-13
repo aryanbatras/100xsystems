@@ -82,23 +82,26 @@ export default async function ChapterPage({ params }: Props) {
 
         <Divider className="mb-8" />
 
-        {/* MDX Content */}
-        <article className="prose prose-sm max-w-none
+        {/* MDX Content — Medium-like reading experience */}
+        <article className="prose prose-lg max-w-none
           prose-headings:text-fg prose-headings:font-bold prose-headings:tracking-tight
-          prose-h2:text-[1.5rem] prose-h2:mt-10 prose-h2:mb-4 prose-h2:uppercase prose-h2:tracking-wider
-          prose-h3:text-[1.125rem] prose-h3:mt-8 prose-h3:mb-3
-          prose-p:text-fg-secondary prose-p:leading-relaxed
+          prose-h2:text-[1.75rem] prose-h2:mt-12 prose-h2:mb-4 prose-h2:uppercase prose-h2:tracking-wider
+          prose-h3:text-[1.375rem] prose-h3:mt-10 prose-h3:mb-3
+          prose-p:text-[1.0625rem] prose-p:text-fg prose-p:leading-[1.75] prose-p:mb-6
           prose-a:text-accent prose-a:font-semibold hover:prose-a:underline
-          prose-code:text-fg prose-code:bg-surface-secondary prose-code:px-1.5 prose-code:py-0.5 prose-code:text-sm prose-code:font-mono
-          prose-pre:bg-surface-secondary prose-pre:border prose-pre:border-border
-          prose-img:border prose-img:border-border
+          prose-code:text-fg prose-code:bg-surface-secondary prose-code:px-1.5 prose-code:py-0.5 prose-code:text-[0.875rem] prose-code:font-mono
+          prose-pre:bg-surface-secondary prose-pre:p-5 prose-pre:text-[0.875rem] prose-pre:leading-[1.6]
+          prose-img:my-8
           prose-strong:text-fg
-          prose-ul:text-fg-secondary
-          prose-ol:text-fg-secondary
-          prose-li:leading-relaxed
-          prose-blockquote:border-l-accent prose-blockquote:bg-accent-bg/20 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:not-italic
-          [&_pre]:overflow-x-auto [&_pre]:p-4 [&_pre]:text-sm
+          prose-ul:text-fg prose-ul:leading-[1.75] prose-ul:text-[1.0625rem]
+          prose-ol:text-fg prose-ol:leading-[1.75] prose-ol:text-[1.0625rem]
+          prose-li:mb-2
+          prose-blockquote:border-l-[3px] prose-blockquote:border-l-accent prose-blockquote:bg-accent-bg/10 prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic prose-blockquote:text-fg prose-blockquote:text-[1.0625rem] prose-blockquote:leading-[1.75]
+          [&_pre]:overflow-x-auto [&_pre]:p-5 [&_pre]:text-[0.875rem]
           [&_code]:before:content-none [&_code]:after:content-none
+          [&_p_code]:text-[0.875rem]
+          [&_h2]:text-fg
+          [&_h3]:text-fg
         ">
           <MdxRenderer source={chapter.content} />
         </article>

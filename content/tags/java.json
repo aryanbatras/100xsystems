@@ -3,32 +3,32 @@
   "displayName": "Java",
   "description": "Master Java programming with the best resources. From fundamentals to enterprise applications with Spring Boot.",
   "youtube": [
-    "https://youtube.com/@amigoscode",
-    "https://youtube.com/@JavaBrains",
-    "https://youtube.com/@CodingWithJohn",
-    "https://youtube.com/@Telusko"
+    { "title": "Amigoscode", "description": "Practical Java and Spring Boot tutorials with real-world projects", "url": "https://youtube.com/@amigoscode" },
+    { "title": "Java Brains", "description": "In-depth Java concepts explained clearly with great code examples", "url": "https://youtube.com/@JavaBrains" },
+    { "title": "Coding with John", "description": "Modern Java features and best practices for everyday programming", "url": "https://youtube.com/@CodingWithJohn" },
+    { "title": "Telusko", "description": "Comprehensive Java tutorials from basics to advanced topics", "url": "https://youtube.com/@Telusko" }
   ],
   "websites": [
-    "https://docs.oracle.com/en/java",
-    "https://www.baeldung.com",
-    "https://www.vogella.com/tutorials",
-    "https://www.javatpoint.com"
+    { "title": "Oracle Java Documentation", "description": "Official Java language specification and API documentation", "url": "https://docs.oracle.com/en/java" },
+    { "title": "Baeldung", "description": "In-depth Java and Spring tutorials with practical code examples", "url": "https://www.baeldung.com" },
+    { "title": "Vogella Tutorials", "description": "High-quality Eclipse and Java development tutorials", "url": "https://www.vogella.com/tutorials" },
+    { "title": "JavaTpoint", "description": "Simple and comprehensive Java programming tutorials for beginners", "url": "https://www.javatpoint.com" }
   ],
   "articles": [
-    "https://www.baeldung.com/java-tutorial",
-    "https://reflectoring.io",
-    "https://spring.io/guides"
+    { "title": "Baeldung Java Tutorial", "description": "Comprehensive guide covering all aspects of Java programming", "url": "https://www.baeldung.com/java-tutorial" },
+    { "title": "Reflectoring", "description": "Thoughtful articles about Java design patterns and clean code", "url": "https://reflectoring.io" },
+    { "title": "Spring Guides", "description": "Official Spring getting-started guides and tutorials", "url": "https://spring.io/guides" }
   ],
   "courses": [
-    "https://www.udemy.com/course/java-the-complete-java-developer-course",
-    "https://www.coursera.org/specializations/java-programming"
+    { "title": "Complete Java Developer Course", "description": "Udemy's most comprehensive Java programming course", "url": "https://www.udemy.com/course/java-the-complete-java-developer-course" },
+    { "title": "Java Programming Specialization", "description": "Coursera specialization from Duke University covering core Java", "url": "https://www.coursera.org/specializations/java-programming" }
   ],
   "books": [
-    "https://www.oreilly.com/library/view/effective-java-3rd/9780134686097",
-    "https://www.manning.com/books/spring-in-action"
+    { "title": "Effective Java (3rd Edition)", "description": "Joshua Bloch's essential guide to Java best practices", "url": "https://www.oreilly.com/library/view/effective-java-3rd/9780134686097" },
+    { "title": "Spring in Action", "description": "Practical guide to building enterprise applications with Spring", "url": "https://www.manning.com/books/spring-in-action" }
   ],
   "tools": [
-    "https://start.spring.io",
-    "https://sdkman.io"
+    { "title": "Spring Initializr", "description": "Bootstrap Spring Boot projects with custom dependencies", "url": "https://start.spring.io" },
+    { "title": "SDKMAN", "description": "Software Development Kit Manager for managing Java versions", "url": "https://sdkman.io" }
   ]
 }
