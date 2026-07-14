@@ -19,5 +19,6 @@ website/storybook-static/**
 # Misc
 *.log
 
-
 website/supabase/
+
+.mimocode/**

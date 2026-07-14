@@ -80,8 +80,13 @@ const headerItems = [
     { id: 'tools', label: '100X Tools', href: 'https://tools.100xsystems.dev', description: 'Privacy-first browser utilities' },
     { id: 'blog', label: 'Engineering Blog', href: 'https://blog.100xsystems.dev', description: 'Deep dives. No fluff.' },
   ]},
-  { id: 'systems', label: 'Systems', href: '/systems' },
-  { id: 'languages', label: 'Languages', href: '/languages' },
+  { id: 'knowledge', label: 'Knowledge Base', children: [
+    { id: 'systems', label: 'Systems', href: '/systems', description: 'Build real software systems' },
+    { id: 'principles', label: 'Principles', href: '/principles', description: 'Foundational engineering principles' },
+    { id: 'patterns', label: 'Patterns', href: '/patterns', description: 'Design patterns & blueprints' },
+    { id: 'tools', label: 'Tools', href: '/tools', description: 'Essential dev tools' },
+    { id: 'technologies', label: 'Technologies', href: '/technologies', description: 'Key technologies & platforms' },
+  ]},
   { id: 'search', label: 'Search', href: '/search' },
 
 ];

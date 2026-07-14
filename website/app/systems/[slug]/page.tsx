@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getSystemMeta } from '@/lib/mdx';
+import { getSystemMeta, getSystemFlatFiles } from '@/lib/mdx';
 import { SystemDetailClient } from './SystemDetailClient';
 
 interface Props {
@@ -11,10 +11,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const system = getSystemMeta(slug);
   if (!system) return { title: 'System Not Found' };
-
-  return {
-    title: `${system.title} - Systems`,
-  };
+  return { title: `${system.title} - Systems` };
 }
 
 export default async function SystemDetailPage({ params }: Props) {
@@ -22,5 +19,7 @@ export default async function SystemDetailPage({ params }: Props) {
   const system = getSystemMeta(slug);
   if (!system) notFound();
 
-  return <SystemDetailClient system={system} />;
+  const flatFiles = getSystemFlatFiles(slug);
+
+  return <SystemDetailClient system={system} flatFiles={flatFiles} />;
 }

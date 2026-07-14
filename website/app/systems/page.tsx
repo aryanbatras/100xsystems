@@ -13,7 +13,7 @@ export default function SystemsPage() {
   return (
     <div className="min-h-screen py-20 px-4">
       <div className="max-w-[900px] mx-auto">
-        {/* Header — minimal, no badges */}
+        {/* Header */}
         <div className="mb-14">
           <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight mb-4 text-fg">
             Systems
