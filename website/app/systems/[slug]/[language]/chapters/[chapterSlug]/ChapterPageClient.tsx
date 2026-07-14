@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'motion/react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
@@ -165,8 +165,6 @@ function LessonOutline({
   activeId: string;
   onSelect: (id: string) => void;
 }) {
-  const mouseY = useMotionValue(Infinity);
-
   // Build flat outline items with indentation
   const items: OutlineItem[] = useMemo(() => {
     const result: OutlineItem[] = [];
@@ -181,11 +179,7 @@ function LessonOutline({
   }, [headings]);
 
   return (
-    <div
-      onMouseMove={(e) => mouseY.set(e.pageY)}
-      onMouseLeave={() => mouseY.set(Infinity)}
-      className="flex flex-col"
-    >
+    <div className="flex flex-col">
       {/* "Lesson content" heading */}
       <span className="text-xs font-bold uppercase tracking-[0.15em] text-fg-muted mb-5 block">
         Lesson content
@@ -196,7 +190,6 @@ function LessonOutline({
           <OutlineRow
             key={item.id}
             item={item}
-            mouseY={mouseY}
             isActive={item.id === activeId}
             onSelect={onSelect}
           />
@@ -206,46 +199,29 @@ function LessonOutline({
   );
 }
 
-/** Single outline row with dock-like zoom on mouse proximity */
+/** Single outline row */
 function OutlineRow({
   item,
-  mouseY,
   isActive,
   onSelect,
 }: {
   item: OutlineItem;
-  mouseY: ReturnType<typeof useMotionValue<number>>;
   isActive: boolean;
   onSelect: (id: string) => void;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const size = 1;
-  const magnification = 1.035;
-  const dist = 120;
-
-  const distanceCalc = useTransform(mouseY, (val: number) => {
-    const bounds = ref.current?.getBoundingClientRect() ?? { y: 0, height: 0 };
-    return val - bounds.y - bounds.height / 2;
-  });
-
-  const scaleTransform = useTransform(distanceCalc, [-dist, 0, dist], [size, magnification, size]);
-  const scale = useSpring(scaleTransform, { mass: 0.1, stiffness: 150, damping: 12 });
-
   return (
-    <motion.div
-      ref={ref}
-      style={{ scale }}
+    <div
       onClick={() => onSelect(item.id)}
       className={cn(
-        'cursor-pointer text-sm leading-snug py-2',
+        'cursor-pointer text-sm leading-snug py-2 rounded-sm transition-colors duration-150',
         item.indent,
         isActive
-          ? 'bg-accent text-white font-bold'
-          : 'hover:bg-accent-yellow hover:text-white',
+          ? 'text-fg font-semibold'
+          : 'text-fg-secondary hover:bg-accent hover:text-white',
       )}
     >
       <span className="block truncate px-2">{item.text}</span>
-    </motion.div>
+    </div>
   );
 }
 
@@ -378,156 +354,159 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
 
   return (
     <>
-      {/* ── Smooth Wrapper (all scrollable content) ── */}
-      <div id="smooth-wrapper">
+      {/* ── Fixed sidebars (outside smooth-wrapper) ── */}
+      <div
+        className={cn(
+          'fixed inset-y-0 left-0 z-50',
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+          'lg:translate-x-0 transition-transform duration-300',
+          'shrink-0 overflow-y-auto hide-scrollbar',
+        )}
+      >
+        <SidebarNav
+          items={sidebarItems}
+          activeId={chapter.meta.slug}
+          onItemClick={handleSidebarNav}
+        />
+      </div>
+
+      {/* Mobile overlay — closes sidebar on tap */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {headings.length > 0 && (
+        <aside className="fixed right-0 top-0 h-screen z-30 hidden xl:block w-72 bg-white">
+          <div className="h-full overflow-y-auto pr-8 pl-6 pt-10">
+            <LessonOutline
+              headings={headings}
+              activeId={activeHeading}
+              onSelect={(id) => {
+                ScrollSmoother.get()?.scrollTo(`#${id}`, true, 'top top');
+              }}
+            />
+          </div>
+        </aside>
+      )}
+
+      {/* ── Smooth Wrapper (main scrollable content only) ── */}
+      <div id="smooth-wrapper" className="relative z-10">
         <div id="smooth-content">
-          <div className="min-h-screen bg-white flex justify-center">
-            <div className="flex w-full max-w-[1440px]">
-              {/* ── Left Sidebar — sticky on desktop, overlay on mobile ── */}
-              <div
-                className={cn(
-                  'max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-50',
-                  'lg:sticky lg:inset-auto lg:top-0 lg:z-auto lg:h-screen',
-                  sidebarOpen ? 'translate-x-0' : '-translate-x-full',
-                  'lg:translate-x-0 max-lg:transition-transform max-lg:duration-300',
-                  'shrink-0 overflow-y-auto hide-scrollbar',
-                )}
-              >
-                <SidebarNav
-                  items={sidebarItems}
-                  activeId={chapter.meta.slug}
-                  onItemClick={handleSidebarNav}
+          <div className={cn('min-h-screen lg:ml-[60px] xl:mr-72', settings.mode === 'sepia' ? 'bg-amber-50' : 'bg-white', fontClass)}>
+            <div className={cn('mx-auto px-6 lg:px-12 py-12 lg:py-16', contentMaxW)}>
+              {/* Logo + Back */}
+              <a href="/" className="inline-flex items-center gap-3 mb-8 hover:opacity-80 transition-opacity">
+                <img
+                  src="/assets/cubix/base/cubix-brand-logo.png"
+                  alt="Cubix"
+                  className="h-8 w-auto lg:h-10"
                 />
-              </div>
+                <span className="text-lg lg:text-xl font-extrabold text-fg tracking-tight select-none uppercase">
+                  100XSYSTEMS
+                </span>
+              </a>
 
-              {/* Mobile overlay — closes sidebar on tap */}
-              {sidebarOpen && (
-                <div
-                  className="fixed inset-0 bg-black/20 z-40 lg:hidden"
-                  onClick={() => setSidebarOpen(false)}
-                />
-              )}
-
-              {/* ── Main Content (scrollable) ── */}
-              <div className={cn('flex-1 min-w-0', settings.mode === 'sepia' ? 'bg-amber-50' : 'bg-white', fontClass)}>
-                <div className="relative">
-                  <div className={cn('mx-auto px-6 lg:px-12 py-12 lg:py-16', contentMaxW)}>
-                    {/* Top Bar */}
-                    <div className="flex items-center justify-between mb-10">
-                      <div className="flex items-center gap-2">
-                        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-2 -ml-2 text-fg-secondary hover:text-accent transition-colors" aria-label="Toggle sidebar">
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
-                          </svg>
-                        </button>
-                        <span className="text-xs text-fg-muted font-medium hidden sm:inline">{systemTitle} / {chapter.meta.title}</span>
-                      </div>
-                      <div className="hidden sm:flex items-center gap-px">
-                        <CopyButton content={content} />
-                        <ReadingToolbar />
-                        <button onClick={() => { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }}
-                          className="flex items-center gap-2 px-2 py-2 text-xs font-bold uppercase tracking-wider transition-colors duration-200 text-fg-muted hover:text-accent" title={fullscreen ? 'Exit fullscreen' : 'Fullscreen'}>
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                            {fullscreen ? (
-                              <><polyline points="4 14 10 14 10 20" /><polyline points="20 10 14 10 14 4" /><line x1="14" y1="10" x2="21" y2="3" /><line x1="3" y1="21" x2="10" y2="14" /></>
-                            ) : (
-                              <><polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" /></>
-                            )}
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Chapter Header */}
-                    <div className="mb-8">
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-accent">Chapter {chapter.meta.order}</span>
-                        <span className="text-[10px] text-fg-muted">·</span>
-                        <span className="text-[10px] font-medium text-fg-muted uppercase tracking-wider">{language}</span>
-                      </div>
-                      <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight mb-3 leading-tight text-fg">{chapter.meta.title}</h1>
-                    </div>
-
-                    {/* Markdown Content */}
-                    <div>
-                      <article
-                        style={{ fontSize: articleFontSize, lineHeight: articleLineHeight }}
-                        className={cn(
-                          'prose max-w-none prose-headings:font-bold prose-headings:tracking-tight',
-                          'prose-h2:text-[1.75rem] lg:prose-h2:text-[2rem] prose-h2:mt-12 prose-h2:mb-6 prose-h2:leading-tight prose-h2:scroll-mt-20',
-                          'prose-h3:text-[1.25rem] lg:prose-h3:text-[1.375rem] prose-h3:mt-10 prose-h3:mb-4 prose-h3:scroll-mt-20',
-                          'prose-p:mb-6',
-                          'prose-a:font-semibold hover:prose-a:underline decoration-accent underline-offset-2',
-                          'prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-[0.875em] prose-code:rounded',
-                          'prose-pre:p-0 prose-pre:overflow-x-auto prose-pre:rounded-none prose-pre:bg-transparent',
-                          'prose-img:my-10 prose-img:mx-auto prose-img:rounded-none',
-                          'prose-strong:font-bold', 'prose-li:mb-2',
-                          'prose-blockquote:border-l-[3px] prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic prose-blockquote:my-8',
-                          '[&_code]:before:content-none [&_code]:after:content-none',
-                          modeClasses,
-                          settings.font === 'serif' && 'prose-headings:font-serif',
-                        )}
-                      >
-                        <MarkdownRenderer source={bodyContent} codeTheme={settings.codeTheme} />
-                      </article>
-                    </div>
-
-                    {/* Chapter Navigation */}
-                    <div className="mt-16 pt-8">
-                      <div className="flex items-center justify-between">
-                        {prevChapter ? (
-                          <button onClick={() => navigateToChapter(prevChapter.slug)} className="group text-left cursor-pointer">
-                            <div className="flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80 transition-colors">
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 group-hover:-translate-x-0.5 transition-transform">
-                                <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
-                              </svg>
-                              <div className="text-left">
-                                <div className="text-[9px] text-fg-muted uppercase tracking-wider">Previous</div>
-                                <div className="text-sm">{prevChapter.title}</div>
-                              </div>
-                            </div>
-                          </button>
-                        ) : <div />}
-                        {nextChapter ? (
-                          <button onClick={() => navigateToChapter(nextChapter.slug)} className="group text-right cursor-pointer">
-                            <div className="flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80 transition-colors">
-                              <div>
-                                <div className="text-[9px] text-fg-muted uppercase tracking-wider">Next</div>
-                                <div className="text-sm">{nextChapter.title}</div>
-                              </div>
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 group-hover:translate-x-0.5 transition-transform">
-                                <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
-                              </svg>
-                            </div>
-                          </button>
-                        ) : (
-                          <a href={`/systems/${slug}`} className="flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80 transition-colors">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
-                              <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            Complete
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+              {/* Top Bar */}
+              <div className="flex items-center justify-between mb-10">
+                <div className="flex items-center gap-2">
+                  <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-2 -ml-2 text-fg-secondary hover:text-accent transition-colors" aria-label="Toggle sidebar">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                  </button>
+                  <span className="text-xs text-fg-muted font-medium hidden sm:inline">{systemTitle} / {chapter.meta.title}</span>
+                </div>
+                <div className="hidden sm:flex items-center gap-px">
+                  <CopyButton content={content} />
+                  <ReadingToolbar />
+                  <button onClick={() => { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }}
+                    className="flex items-center gap-2 px-2 py-2 text-xs font-bold uppercase tracking-wider transition-colors duration-200 text-fg-muted hover:text-accent" title={fullscreen ? 'Exit fullscreen' : 'Fullscreen'}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      {fullscreen ? (
+                        <><polyline points="4 14 10 14 10 20" /><polyline points="20 10 14 10 14 4" /><line x1="14" y1="10" x2="21" y2="3" /><line x1="3" y1="21" x2="10" y2="14" /></>
+                      ) : (
+                        <><polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" /></>
+                      )}
+                    </svg>
+                  </button>
                 </div>
               </div>
 
-              {/* ── Right Sidebar — Lesson Outline (sticky on desktop) ── */}
-              {headings.length > 0 && (
-                <aside className="hidden xl:block w-72 shrink-0">
-                  <div className="sticky top-10 h-screen overflow-y-auto pr-8">
-                    <LessonOutline
-                      headings={headings}
-                      activeId={activeHeading}
-                      onSelect={(id) => {
-                        ScrollSmoother.get()?.scrollTo(`#${id}`, true, 'top top');
-                      }}
-                    />
-                  </div>
-                </aside>
-              )}
+              {/* Chapter Header */}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-accent">Chapter {chapter.meta.order}</span>
+                  <span className="text-[10px] text-fg-muted">·</span>
+                  <span className="text-[10px] font-medium text-fg-muted uppercase tracking-wider">{language}</span>
+                </div>
+                <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight mb-3 leading-tight text-fg">{chapter.meta.title}</h1>
+              </div>
+
+              {/* Markdown Content */}
+              <div>
+                <article
+                  style={{ fontSize: articleFontSize, lineHeight: articleLineHeight }}
+                  className={cn(
+                    'prose max-w-none prose-headings:font-bold prose-headings:tracking-tight',
+                    'prose-h2:text-[1.75rem] lg:prose-h2:text-[2rem] prose-h2:mt-12 prose-h2:mb-6 prose-h2:leading-tight prose-h2:scroll-mt-20',
+                    'prose-h3:text-[1.25rem] lg:prose-h3:text-[1.375rem] prose-h3:mt-10 prose-h3:mb-4 prose-h3:scroll-mt-20',
+                    'prose-p:mb-6',
+                    'prose-a:font-semibold hover:prose-a:underline decoration-accent underline-offset-2',
+                    'prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-[0.875em] prose-code:rounded',
+                    'prose-pre:p-0 prose-pre:overflow-x-auto prose-pre:rounded-none prose-pre:bg-transparent',
+                    'prose-img:my-10 prose-img:mx-auto prose-img:rounded-none',
+                    'prose-strong:font-bold', 'prose-li:mb-2',
+                    'prose-blockquote:border-l-[3px] prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic prose-blockquote:my-8',
+                    '[&_code]:before:content-none [&_code]:after:content-none',
+                    modeClasses,
+                    settings.font === 'serif' && 'prose-headings:font-serif',
+                  )}
+                >
+                  <MarkdownRenderer source={bodyContent} codeTheme={settings.codeTheme} />
+                </article>
+              </div>
+
+              {/* Chapter Navigation */}
+              <div className="mt-16 pt-8">
+                <div className="flex items-center justify-between">
+                  {prevChapter ? (
+                    <button onClick={() => navigateToChapter(prevChapter.slug)} className="group text-left cursor-pointer">
+                      <div className="flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80 transition-colors">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 group-hover:-translate-x-0.5 transition-transform">
+                          <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
+                        </svg>
+                        <div className="text-left">
+                          <div className="text-[9px] text-fg-muted uppercase tracking-wider">Previous</div>
+                          <div className="text-sm">{prevChapter.title}</div>
+                        </div>
+                      </div>
+                    </button>
+                  ) : <div />}
+                  {nextChapter ? (
+                    <button onClick={() => navigateToChapter(nextChapter.slug)} className="group text-right cursor-pointer">
+                      <div className="flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80 transition-colors">
+                        <div>
+                          <div className="text-[9px] text-fg-muted uppercase tracking-wider">Next</div>
+                          <div className="text-sm">{nextChapter.title}</div>
+                        </div>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 group-hover:translate-x-0.5 transition-transform">
+                          <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                        </svg>
+                      </div>
+                    </button>
+                  ) : (
+                    <a href={`/systems/${slug}`} className="flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80 transition-colors">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      Complete
+                    </a>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>

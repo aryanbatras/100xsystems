@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Loading } from "@/presentation/features/loading.feature";
-import { Header, Footer } from "@/presentation/__components";
+import { Header } from "@/presentation/__components";
+import { FooterWrapper } from "./layout-footer-wrapper";
 import Script from "next/script";
 import "./globals.css";
 import { ScrollRestoration } from "./scroll-restoration";
@@ -124,7 +125,7 @@ export default function RootLayout({
           }
         />
         <main>{children}</main>
-        <Footer />
+        <FooterWrapper />
 
         <Script
           async
