@@ -25,6 +25,7 @@ import { MobileNav, SidebarNav } from '@/presentation/__components';
 import type { MobileNavItem, SidebarNavItem } from '@/presentation/__components';
 import type { SystemMeta, SystemFileEntry } from '@/lib/mdx';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface SystemFileReadingClientProps {
   system: SystemMeta;
@@ -383,16 +384,38 @@ function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile }
         <div id="smooth-content">
           <div className={cn('min-h-screen lg:ml-[60px] xl:mr-72', settings.mode === 'sepia' ? 'bg-amber-50' : 'bg-white', fontClass)}>
             <div className={cn('mx-auto px-6 lg:px-12 py-12 lg:py-16', contentMaxW)}>
-              <a href="/" className="inline-flex items-center gap-3 mb-8 hover:opacity-80 transition-opacity">
-                <img
-                  src="/assets/cubix/base/cubix-brand-logo.png"
-                  alt="Cubix"
-                  className="h-8 w-auto lg:h-10"
-                />
-                <span className="text-lg lg:text-xl font-extrabold text-fg tracking-tight select-none uppercase">
-                  100XSYSTEMS
-                </span>
-              </a>
+              <div className="flex items-center justify-between mb-8">
+                <a href="/" className="inline-flex items-center gap-3 hover:opacity-80 transition-opacity">
+                  <img
+                    src="/assets/cubix/base/cubix-brand-logo.png"
+                    alt="Cubix"
+                    className="h-8 w-auto lg:h-10"
+                  />
+                  <span className="text-lg lg:text-xl font-extrabold text-fg tracking-tight select-none uppercase">
+                    100XSYSTEMS
+                  </span>
+                </a>
+                <nav className="hidden sm:flex items-center gap-1">
+                  <Link href="/systems" className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-fg-secondary hover:text-accent transition-colors relative after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2px] after:bg-accent-yellow after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300">
+                    Systems
+                  </Link>
+                  <Link href="/principles" className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-fg-secondary hover:text-accent transition-colors relative after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2px] after:bg-accent-yellow after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300">
+                    Principles
+                  </Link>
+                  <Link href="/patterns" className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-fg-secondary hover:text-accent transition-colors relative after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2px] after:bg-accent-yellow after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300">
+                    Patterns
+                  </Link>
+                  <Link href="/tools" className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-fg-secondary hover:text-accent transition-colors relative after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2px] after:bg-accent-yellow after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300">
+                    Tools
+                  </Link>
+                  <Link href="/technologies" className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-fg-secondary hover:text-accent transition-colors relative after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2px] after:bg-accent-yellow after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300">
+                    Technologies
+                  </Link>
+                  <Link href="/search" className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-fg-secondary hover:text-accent transition-colors relative after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2px] after:bg-accent-yellow after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300">
+                    Search
+                  </Link>
+                </nav>
+              </div>
 
               <div className="flex items-center justify-between mb-10">
                 <div className="flex items-center gap-2">
@@ -401,7 +424,9 @@ function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile }
                       <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
                     </svg>
                   </button>
-                  <span className="text-xs text-fg-muted font-medium hidden sm:inline">{system.title} / {file.title}</span>
+                  <a href={`/systems/${system.slug}`} className="text-xs text-fg-muted font-medium hidden sm:inline hover:text-accent transition-colors">{system.title}</a>
+                  <span className="text-xs text-fg-muted hidden sm:inline">/</span>
+                  <span className="text-xs text-fg font-medium hidden sm:inline">{file.title}</span>
                 </div>
                 <div className="hidden sm:flex items-center gap-px">
                   <CopyButton content={file.content} />
@@ -422,7 +447,7 @@ function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile }
               <div className="mb-8">
                 <div className="flex items-center gap-2 mb-3">
                   {file.frontmatter.difficulty && (
-                    <span className={cn('text-[10px] font-bold uppercase tracking-wider', difficultyStyles[file.frontmatter.difficulty] || 'bg-surface-secondary text-fg-muted')}>
+                    <span className={cn('text-[10px] font-bold uppercase tracking-wider px-2.5 py-1', difficultyStyles[file.frontmatter.difficulty] || 'bg-surface-secondary text-fg-muted')}>
                       {file.frontmatter.difficulty}
                     </span>
                   )}
