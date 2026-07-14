@@ -246,9 +246,9 @@ function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile, 
     ScrollSmoother.create({
       wrapper: '#smooth-wrapper',
       content: '#smooth-content',
-      smooth: 1.2,
-      effects: true,
-      normalizeScroll: true,
+      smooth: 1,
+      effects: false,
+      normalizeScroll: false,
     });
     return () => { ScrollSmoother.get()?.kill(); };
   }, []);
@@ -350,7 +350,7 @@ function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile, 
           'fixed inset-y-0 left-0 z-50',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full',
           'lg:translate-x-0 transition-transform duration-300',
-          'shrink-0 overflow-y-auto hide-scrollbar',
+          'shrink-0',
         )}
       >
         <SidebarNav

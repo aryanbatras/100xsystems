@@ -291,6 +291,17 @@ export function SidebarNav({ items, activeId, onItemClick, className }: SidebarN
     return () => document.removeEventListener('mousemove', onMove);
   }, []);
 
+  // Prevent GSAP ScrollSmoother from stealing wheel events on the sidebar
+  useEffect(() => {
+    const el = navRef.current;
+    if (!el) return;
+    const handler = (e: WheelEvent) => {
+      e.stopPropagation();
+    };
+    el.addEventListener('wheel', handler, { passive: false });
+    return () => el.removeEventListener('wheel', handler);
+  }, []);
+
   return (
     <nav
       ref={navRef}
@@ -298,7 +309,7 @@ export function SidebarNav({ items, activeId, onItemClick, className }: SidebarN
       onMouseLeave={() => { mouseY.set(Infinity); setExpanded(false); }}
       onMouseEnter={() => setExpanded(true)}
       className={cn(
-        'flex flex-col bg-white min-h-full transition-all duration-300 ease-out',
+        'flex flex-col bg-white h-full overflow-y-auto hide-scrollbar transition-all duration-300 ease-out',
         expanded ? 'w-72' : 'w-[60px]',
         className,
       )}

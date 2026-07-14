@@ -371,7 +371,7 @@ function KnowledgeReadingContent({ item, domain, sidebarItems }: KnowledgeItemDe
           'fixed inset-y-0 left-0 z-50',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full',
           'lg:translate-x-0 transition-transform duration-300',
-          'shrink-0 overflow-y-auto hide-scrollbar',
+          'shrink-0',
         )}
       >
         <SidebarNav
