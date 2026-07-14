@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Loading } from "@/presentation/features/loading.feature";
-import { Header } from "@/presentation/__components";
 import { FooterWrapper } from "./layout-footer-wrapper";
+import { HeaderWrapper } from "./layout-header-wrapper";
 import Script from "next/script";
 import "./globals.css";
 import { ScrollRestoration } from "./scroll-restoration";
@@ -108,7 +108,7 @@ export default function RootLayout({
       <body className="antialiased">
         <ScrollRestoration />
         <Loading />
-        <Header
+        <HeaderWrapper
           items={headerItems}
           logo={
             <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">

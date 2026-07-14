@@ -28,9 +28,9 @@ export const useLoadingScreen = () => {
   const pathname = usePathname();
   const prevPathRef = useRef<string | null>(null);
 
-  /** Returns true if the path looks like a chapter page */
-  const isChapterPage = (path: string): boolean =>
-    /^\/systems\/[^\/]+\/[^\/]+\/chapters\/[^\/]+\/?$/.test(path);
+  /** Returns true if the path is a reading page (has /read/ prefix) */
+  const isReadingPage = (path: string): boolean =>
+    path.includes('/read/');
 
   const hideLoader = () => {
     const timer = setTimeout(() => {
@@ -52,9 +52,8 @@ export const useLoadingScreen = () => {
     const prevPath = prevPathRef.current;
     prevPathRef.current = pathname;
 
-    // Skip loading screen when navigating between chapters within the same system
-    // (ChapterPageClient swaps content client-side via history.pushState)
-    if (prevPath && isChapterPage(prevPath) && isChapterPage(pathname)) {
+    // Skip loading screen when navigating between reading pages (client-side content swap)
+    if (prevPath && isReadingPage(prevPath) && isReadingPage(pathname)) {
       return;
     }
 

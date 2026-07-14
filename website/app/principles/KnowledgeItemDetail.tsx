@@ -335,13 +335,13 @@ function KnowledgeReadingContent({ item, domain, sidebarItems }: KnowledgeItemDe
   const sidebarNavItems: SidebarNavItem[] = useMemo(() => sidebarItems.map(si => ({
     id: si.slug,
     label: si.title,
-    href: `/${domain}/${si.slug}`,
+    href: `/${domain}/read/${si.slug}`,
     iconName: 'bookmark',
   })), [sidebarItems, domain]);
 
   const navigateToItem = useCallback((slug: string) => {
     setSidebarOpen(false);
-    router.push(`/${domain}/${slug}`);
+    router.push(`/${domain}/read/${slug}`);
   }, [domain, router]);
 
   const handleSidebarNav = useCallback((item: SidebarNavItem) => {

@@ -30,7 +30,7 @@ export function KnowledgeDomainListing({ items, domain }: KnowledgeDomainListing
         return (
           <Link
             key={item.slug}
-            href={`/${domain}/${item.slug}`}
+            href={`/${domain}/read/${item.slug}`}
             className={cn(
               'group block px-5 py-6 transition-all duration-200',
               isHovered ? 'bg-accent' : 'hover:bg-accent/[0.03]',

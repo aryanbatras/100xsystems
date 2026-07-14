@@ -130,7 +130,7 @@ export function Header({ logo, items, actions, sticky = false, activeId, classNa
 
   return (
     <header className={cn(
-      'bg-white/95 backdrop-blur-sm z-50',
+      'bg-white/95 backdrop-blur-sm relative z-50',
       sticky && 'sticky top-0',
       className,
     )}>

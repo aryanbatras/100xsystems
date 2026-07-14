@@ -5,9 +5,9 @@ import { Footer } from '@/presentation/__components';
 
 export function FooterWrapper() {
   const pathname = usePathname();
-  const isChapterPage = pathname.includes('/chapters/');
+  const isReadingPage = pathname.includes('/read/');
 
-  if (isChapterPage) return null;
+  if (isReadingPage) return null;
 
   return <Footer />;
 }
