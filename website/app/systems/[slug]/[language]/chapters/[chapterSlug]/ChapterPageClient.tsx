@@ -267,21 +267,6 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
   const { settings } = useReadingSettings();
   const router = useRouter();
 
-  // Track navigation to show skeleton while RSC data loads
-  const [isNavigating, setIsNavigating] = useState(false);
-  const hideAfterRef = useRef(0);
-
-  useEffect(() => {
-    if (!isNavigating) return;
-    const remaining = hideAfterRef.current - Date.now();
-    if (remaining <= 0) {
-      setIsNavigating(false);
-    } else {
-      const timer = setTimeout(() => setIsNavigating(false), remaining);
-      return () => clearTimeout(timer);
-    }
-  }, [chapter.meta.slug, isNavigating]);
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeHeading, setActiveHeading] = useState<string>('');
   const [fullscreen, setFullscreen] = useState(false);
@@ -354,8 +339,6 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
   })), [chapters, slug, language]);
 
   const navigateToChapter = useCallback((chapterSlug: string) => {
-    hideAfterRef.current = Date.now() + 2500;
-    setIsNavigating(true);
     setSidebarOpen(false);
     router.push(`/systems/${slug}/${language}/chapters/${chapterSlug}`);
   }, [slug, language, router]);
@@ -412,47 +395,6 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
         {/* ── Main Content (scrollable) ── */}
         <div className={cn('flex-1 min-w-0', settings.mode === 'sepia' ? 'bg-amber-50' : 'bg-white', fontClass)}>
           <div className="relative">
-            {/* Full-page skeleton — covers title, chapter header, content, and nav */}
-            {isNavigating && (
-              <div className="absolute inset-0 z-10 bg-white/95 animate-pulse px-6 lg:px-12 py-12 lg:py-16">
-                {/* Top bar skeleton */}
-                <div className="flex items-center justify-between mb-10">
-                  <div className="h-4 w-48 bg-surface-secondary rounded" />
-                  <div className="flex gap-2">
-                    <div className="h-4 w-14 bg-surface-secondary rounded" />
-                    <div className="h-4 w-14 bg-surface-secondary rounded" />
-                    <div className="h-4 w-14 bg-surface-secondary rounded" />
-                  </div>
-                </div>
-                {/* Chapter header skeleton */}
-                <div className="mb-8">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="h-3 w-20 bg-surface-secondary rounded" />
-                    <div className="h-3 w-3 bg-surface-secondary rounded-full" />
-                    <div className="h-3 w-12 bg-surface-secondary rounded" />
-                  </div>
-                  <div className="h-10 w-3/4 bg-surface-secondary rounded-lg mb-3" />
-                </div>
-                {/* Content lines skeleton */}
-                <div className="space-y-4">
-                  <div className="h-4 w-full bg-surface-secondary rounded" />
-                  <div className="h-4 w-5/6 bg-surface-secondary rounded" />
-                  <div className="h-4 w-4/5 bg-surface-secondary rounded" />
-                  <div className="h-4 w-full bg-surface-secondary rounded mt-8" />
-                  <div className="h-4 w-3/4 bg-surface-secondary rounded" />
-                  <div className="h-4 w-2/3 bg-surface-secondary rounded" />
-                  <div className="h-4 w-5/6 bg-surface-secondary rounded mt-8" />
-                  <div className="h-4 w-full bg-surface-secondary rounded" />
-                  <div className="h-4 w-4/5 bg-surface-secondary rounded" />
-                  <div className="h-4 w-3/4 bg-surface-secondary rounded" />
-                </div>
-                {/* Navigation buttons skeleton */}
-                <div className="mt-16 pt-8 flex items-center justify-between">
-                  <div className="h-8 w-40 bg-surface-secondary rounded" />
-                  <div className="h-8 w-40 bg-surface-secondary rounded" />
-                </div>
-              </div>
-            )}
             <div className={cn('mx-auto px-6 lg:px-12 py-12 lg:py-16', contentMaxW)}>
               {/* Top Bar */}
               <div className="flex items-center justify-between mb-10">
@@ -557,20 +499,7 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
         </div>
 
         {/* ── Right Sidebar — Lesson Outline (sticky on desktop) ── */}
-        {isNavigating ? (
-          <aside className="hidden xl:block w-72 shrink-0">
-            <div className="sticky top-10 h-screen overflow-y-auto pr-8 animate-pulse">
-              <div className="h-3 w-28 bg-surface-secondary rounded mb-5" />
-              <div className="space-y-3">
-                <div className="h-4 w-full bg-surface-secondary rounded" />
-                <div className="h-4 w-4/5 bg-surface-secondary rounded" />
-                <div className="h-4 w-3/4 bg-surface-secondary rounded" />
-                <div className="h-4 w-5/6 bg-surface-secondary rounded" />
-                <div className="h-4 w-full bg-surface-secondary rounded" />
-              </div>
-            </div>
-          </aside>
-        ) : headings.length > 0 && (
+        {headings.length > 0 && (
           <aside className="hidden xl:block w-72 shrink-0">
             <div className="sticky top-10 h-screen overflow-y-auto pr-8">
               <LessonOutline
