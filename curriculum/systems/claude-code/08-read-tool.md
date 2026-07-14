@@ -1,8 +1,8 @@
 ---
 title: "Advertise and Execute the Read Tool"
 description: "Define tool schemas that let the LLM read files from the project"
-order: 4
-estimatedTime: "1 hour"
+order: 8
+difficulty: "Advanced"
 ---
 
 # Advertise and Execute the Read Tool
@@ -38,15 +38,13 @@ public record ToolDefinition(
         return new ToolDefinition(
             "read",
             "Read the contents of a file in the project. " +
-            "Returns the file content as text. Use this when you " +
-            "need to examine code, configuration files, or any text file.",
+            "Returns the file content as text.",
             Map.of(
                 "type", "object",
                 "properties", Map.of(
                     "filePath", Map.of(
                         "type", "string",
-                        "description", "The path to the file to read, " +
-                        "relative to the project root"
+                        "description", "The path to the file to read, relative to the project root"
                     )
                 ),
                 "required", java.util.List.of("filePath")
@@ -123,23 +121,19 @@ public class ReadToolHandler implements ToolHandler {
             var filePath = (String) args.get("filePath");
             var resolved = projectRoot.resolve(filePath).normalize();
 
-            // Security: prevent path traversal
             if (!resolved.startsWith(projectRoot)) {
-                return new ToolResult(false,
-                    "Access denied: file is outside the project directory");
+                return new ToolResult(false, "Access denied: file is outside the project directory");
             }
 
             if (!Files.exists(resolved)) {
-                return new ToolResult(false,
-                    "File not found: " + filePath);
+                return new ToolResult(false, "File not found: " + filePath);
             }
 
             var content = Files.readString(resolved);
             return new ToolResult(true, content);
 
         } catch (IOException e) {
-            return new ToolResult(false,
-                "Error reading file: " + e.getMessage());
+            return new ToolResult(false, "Error reading file: " + e.getMessage());
         }
     }
 }
@@ -159,12 +153,4 @@ if (!resolved.startsWith(projectRoot)) {
     throw new SecurityException("Path traversal detected");
 }
 ```
-
-## Knowledge Check
-
-```knowledgecheck
-{
-  "question": "Why do we need to explicitly define tool schemas instead of just hardcoding file-reading logic?",
-  "explanation": "Tool schemas are how the LLM knows what actions are available and when to use them. Without schemas, the model would just generate text describing what it wants to do — but it couldn't actually execute anything. The schema tells the LLM: 'Here's a function you can call, here's what it does, and here are the parameters it needs.' This separation of definition from execution is what makes AI agents extensible — you can add new capabilities without changing the model."
-}
 ```

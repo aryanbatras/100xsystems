@@ -1,8 +1,8 @@
 ---
 title: "Communicate with the LLM"
 description: "Connect to an LLM via a REST API and send structured requests"
-order: 3
-estimatedTime: "45 minutes"
+order: 7
+difficulty: "Intermediate"
 ---
 
 # Communicate with the LLM
@@ -98,8 +98,7 @@ public Flux<String> streamResponse(String prompt) {
 
 private String parseDelta(String data) {
     // Parse SSE delta from streaming response
-    // Each event contains a content block delta
-    return data; // Simplified — real parsing extracts the text delta
+    return data;
 }
 ```
 
@@ -112,7 +111,6 @@ public String sendMessageWithRetry(String prompt, int maxRetries) {
             return sendMessage(prompt);
         } catch (Exception e) {
             if (attempt == maxRetries) throw e;
-            // Exponential backoff
             try {
                 Thread.sleep((long) Math.pow(2, attempt) * 1000);
             } catch (InterruptedException ie) {
@@ -124,12 +122,4 @@ public String sendMessageWithRetry(String prompt, int maxRetries) {
     return "";
 }
 ```
-
-## Knowledge Check
-
-```knowledgecheck
-{
-  "question": "Why do we use RestClient instead of raw HttpURLConnection for API calls?",
-  "explanation": "Raw HttpURLConnection requires manually handling connection pooling, timeouts, retries, error handling, request/response serialization, and streaming. Spring's RestClient (or WebClient for reactive) gives you all of this out of the box with a clean builder pattern. When your API calls need retry logic with exponential backoff, proper error mapping, and streaming support, using a raw HTTP client becomes a significant maintenance burden."
-}
 ```

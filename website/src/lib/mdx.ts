@@ -4,10 +4,7 @@
  * Utilities for reading, parsing, and processing Markdown content files
  * from the `curriculum/` directory. Uses gray-matter for frontmatter.
  *
- * All content files are flat .md files (no subdirectories), with order
- * derived from frontmatter `order` or numeric filename prefix.
- *
- * @packageDocumentation
+ * All content is flat .md files with order from frontmatter or numeric filename prefix.
  */
 
 import fs from 'fs';
@@ -27,29 +24,35 @@ const TECHNOLOGIES_DIR = path.join(CURRICULUM_ROOT, 'technologies');
 
 // ─── Types ──────────────────────────────────────────────────────────
 
-export interface ChapterMeta {
-  slug: string;
-  title: string;
-  order: number;
-}
-
-export interface ChapterContent {
-  meta: ChapterMeta;
-  systemSlug: string;
-  language: string;
-  content: string;
-  frontmatter: Record<string, any>;
-}
-
+/** A system meta (from index.md or slug) */
 export interface SystemMeta {
   slug: string;
   title: string;
-  languages: string[];
-  chapters: ChapterMeta[];
+  description: string;
+  difficulty: string;
+  tags: string[];
+  order: number;
   hasTemplate: boolean;
   hasSpecification: boolean;
   templateInstallCmd?: string;
   specificationInstallCmd?: string;
+}
+
+/** A flat file entry within a system */
+export interface SystemFileEntry {
+  slug: string;
+  title: string;
+  order: number;
+  description: string;
+  content: string;
+  frontmatter: Record<string, any>;
+}
+
+/** Chapter metadata used in language pages */
+export interface ChapterMeta {
+  slug: string;
+  title: string;
+  order: number;
 }
 
 export interface LanguageMeta {
@@ -65,16 +68,6 @@ export interface KnowledgeItem {
   description: string;
   difficulty: string;
   tags: string[];
-  content: string;
-  frontmatter: Record<string, any>;
-}
-
-/** A flat file entry within a system (e.g., architecture-overview.md) */
-export interface SystemFileEntry {
-  slug: string;
-  title: string;
-  order: number;
-  description: string;
   content: string;
   frontmatter: Record<string, any>;
 }
@@ -95,43 +88,15 @@ function isDirectory(dir: string): boolean {
   catch { return false; }
 }
 
-/** Extract slug from filename by removing prefix (e.g., "01-cap-theorem.md" → "cap-theorem") */
 function fileToSlug(filename: string): string {
   const base = filename.replace(/\.md$/, '');
-  // Strip numeric prefix like "01-", "02-"
   return base.replace(/^\d+[-_]/, '');
 }
 
-/** Get order from filename prefix or frontmatter */
 function getOrderFromFile(filename: string, frontmatterOrder?: number): number {
   if (frontmatterOrder !== undefined) return frontmatterOrder;
   const match = filename.match(/^(\d+)/);
   return match ? parseInt(match[1], 10) : 999;
-}
-
-function readChaptersFromDir(chaptersDir: string): ChapterMeta[] {
-  const chapters: ChapterMeta[] = [];
-  if (!fs.existsSync(chaptersDir)) return chapters;
-
-  const chapterDirs = fs.readdirSync(chaptersDir).filter((name) => {
-    return isDirectory(path.join(chaptersDir, name));
-  });
-
-  chapterDirs.sort().forEach((chapterDir) => {
-    const mdPath = path.join(chaptersDir, chapterDir, 'index.md');
-    if (fs.existsSync(mdPath)) {
-      try {
-        const { data } = matter(fs.readFileSync(mdPath, 'utf-8'));
-        chapters.push({
-          slug: chapterDir,
-          title: data.title || slugToDisplayName(chapterDir),
-          order: data.order || chapters.length + 1,
-        });
-      } catch {}
-    }
-  });
-
-  return chapters;
 }
 
 /** Read .md files from a flat directory (no subdirectories) */
@@ -196,15 +161,7 @@ export function getAllSystemSlugs(): string[] {
   } catch { return []; }
 }
 
-export function getSystemLanguages(systemSlug: string): string[] {
-  try {
-    const langDir = path.join(SYSTEMS_DIR, systemSlug, 'languages');
-    if (!fs.existsSync(langDir)) return [];
-    return fs.readdirSync(langDir).filter((name) => isDirectory(path.join(langDir, name)));
-  } catch { return []; }
-}
-
-/** Read system flat files (root-level .md files, excluding chapters/ and languages/) */
+/** Read system flat files (root-level .md files) */
 export function getSystemFlatFiles(systemSlug: string): SystemFileEntry[] {
   const entries: SystemFileEntry[] = [];
 
@@ -213,7 +170,8 @@ export function getSystemFlatFiles(systemSlug: string): SystemFileEntry[] {
     if (!fs.existsSync(systemDir)) return entries;
 
     const files = fs.readdirSync(systemDir)
-      .filter((f) => f.endsWith('.md'));
+      .filter((f) => f.endsWith('.md'))
+      .filter((f) => f !== 'index.md'); // skip system metadata
 
     files.sort().forEach((filename) => {
       try {
@@ -237,20 +195,42 @@ export function getSystemFlatFiles(systemSlug: string): SystemFileEntry[] {
   return entries;
 }
 
+/** Get a single flat file from a system */
+export function getSystemFile(systemSlug: string, fileSlug: string): SystemFileEntry | null {
+  const files = getSystemFlatFiles(systemSlug);
+  return files.find((f) => f.slug === fileSlug) || null;
+}
+
 export function getSystemMeta(slug: string): SystemMeta | null {
   try {
     const systemDir = path.join(SYSTEMS_DIR, slug);
     if (!fs.existsSync(systemDir)) return null;
 
-    const chaptersDir = path.join(systemDir, 'chapters');
-    const chapters = readChaptersFromDir(chaptersDir);
-    const languages = getSystemLanguages(slug);
+    const indexMdPath = path.join(systemDir, 'index.md');
+    let title = slugToDisplayName(slug);
+    let description = '';
+    let difficulty = 'Intermediate';
+    let tags: string[] = [];
+    let order = 999;
+
+    if (fs.existsSync(indexMdPath)) {
+      try {
+        const { data } = matter(fs.readFileSync(indexMdPath, 'utf-8'));
+        title = data.title || title;
+        description = data.description || '';
+        difficulty = data.difficulty || difficulty;
+        tags = data.tags || [];
+        order = data.order ?? order;
+      } catch {}
+    }
 
     return {
       slug,
-      title: slugToDisplayName(slug),
-      languages,
-      chapters,
+      title,
+      description,
+      difficulty,
+      tags,
+      order,
       hasTemplate: false,
       hasSpecification: false,
     };
@@ -261,33 +241,11 @@ export function getAllSystems(): SystemMeta[] {
   return getAllSystemSlugs()
     .map((slug) => getSystemMeta(slug))
     .filter((s): s is SystemMeta => s !== null)
-    .sort((a, b) => a.title.localeCompare(b.title));
+    .sort((a, b) => a.order - b.order);
 }
 
 export function getHandcraftedSystems(): SystemMeta[] { return getAllSystems(); }
 export function getOutsourcedSystems(): SystemMeta[] { return []; }
-
-// ─── Chapter Reading ────────────────────────────────────────────────
-
-export function getChapterContent(systemSlug: string, language: string, chapterSlug: string): ChapterContent | null {
-  try {
-    const mdPath = path.join(SYSTEMS_DIR, systemSlug, 'chapters', chapterSlug, 'index.md');
-    if (!fs.existsSync(mdPath)) return null;
-
-    const fileContent = fs.readFileSync(mdPath, 'utf-8');
-    const { data, content } = matter(fileContent);
-    const orderMatch = chapterSlug.match(/^(\d+)/);
-    const order = orderMatch ? parseInt(orderMatch[1]) : 0;
-
-    return {
-      meta: { slug: chapterSlug, title: data.title || slugToDisplayName(chapterSlug), order },
-      systemSlug, language, content, frontmatter: data,
-    };
-  } catch (error) {
-    console.error(`Failed to read chapter ${systemSlug}/${chapterSlug}:`, error);
-    return null;
-  }
-}
 
 // ─── Language Reading ───────────────────────────────────────────────
 
@@ -302,7 +260,7 @@ export function getLanguageMeta(slug: string): LanguageMeta | null {
   try {
     const langDir = path.join(LANGUAGES_DIR, slug);
     if (!fs.existsSync(langDir)) return null;
-    return { slug, title: slugToDisplayName(slug), chapters: readChaptersFromDir(path.join(langDir, 'chapters')) };
+    return { slug, title: slugToDisplayName(slug), chapters: [] };
   } catch { return null; }
 }
 

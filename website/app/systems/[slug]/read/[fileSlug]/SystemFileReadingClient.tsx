@@ -23,20 +23,22 @@ import { ReadingToolbar } from '@/components/reading/ReadingToolbar';
 
 import { MobileNav, SidebarNav } from '@/presentation/__components';
 import type { MobileNavItem, SidebarNavItem } from '@/presentation/__components';
-import type { ChapterMeta, ChapterContent } from '@/lib/mdx';
+import type { SystemMeta, SystemFileEntry } from '@/lib/mdx';
 import { useRouter } from 'next/navigation';
 
-
-interface ChapterPageClientProps {
-  slug: string;
-  language: string;
-  systemTitle: string;
-  chapter: ChapterContent;
-  chapters: ChapterMeta[];
-  prevChapter: ChapterMeta | null;
-  nextChapter: ChapterMeta | null;
-  content: string;
+interface SystemFileReadingClientProps {
+  system: SystemMeta;
+  file: SystemFileEntry;
+  allFiles: SystemFileEntry[];
+  prevFile: SystemFileEntry | null;
+  nextFile: SystemFileEntry | null;
 }
+
+const difficultyStyles: Record<string, string> = {
+  Beginner: 'bg-accent text-white',
+  Intermediate: 'bg-accent-yellow text-black',
+  Advanced: 'bg-fg text-white',
+};
 
 /** Extract headings from markdown for the ToC */
 function extractHeadings(markdown: string): { id: string; text: string; level: number }[] {
@@ -147,8 +149,7 @@ function MobileSettingsPanel({ onClose }: { onClose: () => void }) {
   );
 }
 
-/** ── Lesson Outline — Sticky ToC with dock zoom, no icons ── */
-
+/** ── Lesson Outline — Sticky ToC ── */
 interface OutlineItem {
   id: string;
   text: string;
@@ -165,7 +166,6 @@ function LessonOutline({
   activeId: string;
   onSelect: (id: string) => void;
 }) {
-  // Build flat outline items with indentation
   const items: OutlineItem[] = useMemo(() => {
     const result: OutlineItem[] = [];
     for (const h of headings) {
@@ -180,11 +180,9 @@ function LessonOutline({
 
   return (
     <div className="flex flex-col">
-      {/* "Lesson content" heading */}
       <span className="text-xs font-bold uppercase tracking-[0.15em] text-fg-muted mb-5 block">
         Lesson content
       </span>
-
       <div className="flex flex-col space-y-1.5">
         {items.map((item) => (
           <OutlineRow
@@ -199,7 +197,6 @@ function LessonOutline({
   );
 }
 
-/** Single outline row */
 function OutlineRow({
   item,
   isActive,
@@ -242,7 +239,7 @@ function CopyButton({ content }: { content: string }) {
   );
 }
 
-function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevChapter, nextChapter, content }: ChapterPageClientProps) {
+function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile }: SystemFileReadingClientProps) {
   const { settings } = useReadingSettings();
   const router = useRouter();
 
@@ -263,28 +260,26 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
   const [fullscreen, setFullscreen] = useState(false);
   const [mobileSettingsOpen, setMobileSettingsOpen] = useState(false);
 
-  // MobileNav items
   const mobileItems: MobileNavItem[] = useMemo(() => [
     { id: 'settings', label: 'Settings', iconName: 'settings' },
     { id: 'copy', label: 'Copy', iconName: 'copy' },
     { id: 'fullscreen', label: fullscreen ? 'Exit' : 'Fullscreen', iconName: fullscreen ? 'minimize' : 'maximize' },
-  ], [fullscreen]);
+  ] as MobileNavItem[], [fullscreen]);
 
-  const handleMobileNav = useCallback((item: MobileNavItem) => {
-    if (item.id === 'settings') {
+  const handleMobileNav = useCallback((navItem: MobileNavItem) => {
+    if (navItem.id === 'settings') {
       setMobileSettingsOpen(prev => !prev);
-    } else if (item.id === 'fullscreen') {
+    } else if (navItem.id === 'fullscreen') {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
       } else {
         document.exitFullscreen();
       }
-    } else if (item.id === 'copy') {
-      navigator.clipboard.writeText(content).catch(() => {});
+    } else if (navItem.id === 'copy') {
+      navigator.clipboard.writeText(file.content).catch(() => {});
     }
-  }, [content]);
+  }, [file.content]);
 
-  // Robust IntersectionObserver for ToC active heading
   useEffect(() => {
     const visibleHeadings = new Map<string, number>();
     const observer = new IntersectionObserver(
@@ -311,50 +306,43 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
     }, 200);
 
     return () => { clearTimeout(timer); observer.disconnect(); visibleHeadings.clear(); };
-  }, [content]);
+  }, [file.content]);
 
-
-
-  // Fullscreen listener
   useEffect(() => {
     const handleFSChange = () => setFullscreen(!!document.fullscreenElement);
     document.addEventListener('fullscreenchange', handleFSChange);
     return () => document.removeEventListener('fullscreenchange', handleFSChange);
   }, []);
 
-  const sidebarItems: SidebarNavItem[] = useMemo(() => chapters.map(ch => ({
-    id: ch.slug,
-    label: ch.title,
-    href: `/systems/${slug}/${language}/chapters/${ch.slug}`,
+  const sidebarNavItems: SidebarNavItem[] = useMemo(() => allFiles.map(f => ({
+    id: f.slug,
+    label: f.title,
+    href: `/systems/${system.slug}/read/${f.slug}`,
     iconName: 'bookmark',
-  })), [chapters, slug, language]);
+  })), [allFiles, system.slug]);
 
-  const navigateToChapter = useCallback((chapterSlug: string) => {
+  const navigateToFile = useCallback((slug: string) => {
     setSidebarOpen(false);
-    router.push(`/systems/${slug}/${language}/chapters/${chapterSlug}`);
-  }, [slug, language, router]);
+    router.push(`/systems/${system.slug}/read/${slug}`);
+  }, [system.slug, router]);
 
-  const handleSidebarNav = useCallback((item: SidebarNavItem) => {
-    navigateToChapter(item.id);
-  }, [navigateToChapter]);
+  const handleSidebarNav = useCallback((navItem: SidebarNavItem) => {
+    navigateToFile(navItem.id);
+  }, [navigateToFile]);
 
-  // Strip the first # heading from markdown since it's already shown in the Chapter Header section
-  const bodyContent = useMemo(() => content.replace(/^\s*# .+(\n|$)/, ''), [content]);
-
-  const headings = useMemo(() => extractHeadings(content), [content]);
+  const bodyContent = useMemo(() => file.content.replace(/^\s*# .+(\n|$)/, ''), [file.content]);
+  const headings = useMemo(() => extractHeadings(file.content), [file.content]);
   const contentMaxW = contentWidthClass(settings.contentWidth);
   const fontClass = fontFamilyClass(settings.font);
   const articleFontSize = fontSizeRem(settings.fontSize);
   const articleLineHeight = lineHeightValue(settings.lineHeight);
 
-  // Build mode-specific prose classes
   const modeClasses = settings.mode === 'light'
     ? 'prose-headings:text-fg prose-p:text-fg prose-blockquote:border-l-accent prose-blockquote:bg-accent/5 prose-code:text-pink-600 prose-code:bg-pink-50 prose-a:text-accent prose-strong:text-fg prose-li:text-fg prose-hr:border-gray-200'
     : 'prose-headings:text-amber-900 prose-p:text-amber-800 prose-blockquote:border-l-amber-600 prose-blockquote:bg-amber-100/40 prose-code:text-amber-900 prose-code:bg-amber-100 prose-a:text-amber-700 prose-strong:text-amber-900 prose-li:text-amber-800 prose-hr:border-amber-200';
 
   return (
     <>
-      {/* ── Fixed sidebars (outside smooth-wrapper) ── */}
       <div
         className={cn(
           'fixed inset-y-0 left-0 z-50',
@@ -364,13 +352,12 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
         )}
       >
         <SidebarNav
-          items={sidebarItems}
-          activeId={chapter.meta.slug}
+          items={sidebarNavItems}
+          activeId={file.slug}
           onItemClick={handleSidebarNav}
         />
       </div>
 
-      {/* Mobile overlay — closes sidebar on tap */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/20 z-40 lg:hidden"
@@ -392,12 +379,10 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
         </aside>
       )}
 
-      {/* ── Smooth Wrapper (main scrollable content only) ── */}
       <div id="smooth-wrapper" className="relative z-10">
         <div id="smooth-content">
           <div className={cn('min-h-screen lg:ml-[60px] xl:mr-72', settings.mode === 'sepia' ? 'bg-amber-50' : 'bg-white', fontClass)}>
             <div className={cn('mx-auto px-6 lg:px-12 py-12 lg:py-16', contentMaxW)}>
-              {/* Logo + Back */}
               <a href="/" className="inline-flex items-center gap-3 mb-8 hover:opacity-80 transition-opacity">
                 <img
                   src="/assets/cubix/base/cubix-brand-logo.png"
@@ -409,7 +394,6 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
                 </span>
               </a>
 
-              {/* Top Bar */}
               <div className="flex items-center justify-between mb-10">
                 <div className="flex items-center gap-2">
                   <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-2 -ml-2 text-fg-secondary hover:text-accent transition-colors" aria-label="Toggle sidebar">
@@ -417,10 +401,10 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
                       <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
                     </svg>
                   </button>
-                  <span className="text-xs text-fg-muted font-medium hidden sm:inline">{systemTitle} / {chapter.meta.title}</span>
+                  <span className="text-xs text-fg-muted font-medium hidden sm:inline">{system.title} / {file.title}</span>
                 </div>
                 <div className="hidden sm:flex items-center gap-px">
-                  <CopyButton content={content} />
+                  <CopyButton content={file.content} />
                   <ReadingToolbar />
                   <button onClick={() => { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }}
                     className="flex items-center gap-2 px-2 py-2 text-xs font-bold uppercase tracking-wider transition-colors duration-200 text-fg-muted hover:text-accent" title={fullscreen ? 'Exit fullscreen' : 'Fullscreen'}>
@@ -435,17 +419,19 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
                 </div>
               </div>
 
-              {/* Chapter Header */}
               <div className="mb-8">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-accent">Chapter {chapter.meta.order}</span>
+                  {file.frontmatter.difficulty && (
+                    <span className={cn('text-[10px] font-bold uppercase tracking-wider', difficultyStyles[file.frontmatter.difficulty] || 'bg-surface-secondary text-fg-muted')}>
+                      {file.frontmatter.difficulty}
+                    </span>
+                  )}
                   <span className="text-[10px] text-fg-muted">·</span>
-                  <span className="text-[10px] font-medium text-fg-muted uppercase tracking-wider">{language}</span>
+                  <span className="text-[10px] font-medium text-fg-muted uppercase tracking-wider">{system.title}</span>
                 </div>
-                <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight mb-3 leading-tight text-fg">{chapter.meta.title}</h1>
+                <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight mb-3 leading-tight text-fg">{file.title}</h1>
               </div>
 
-              {/* Markdown Content */}
               <div>
                 <article
                   style={{ fontSize: articleFontSize, lineHeight: articleLineHeight }}
@@ -469,28 +455,27 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
                 </article>
               </div>
 
-              {/* Chapter Navigation */}
               <div className="mt-16 pt-8">
                 <div className="flex items-center justify-between">
-                  {prevChapter ? (
-                    <button onClick={() => navigateToChapter(prevChapter.slug)} className="group text-left cursor-pointer">
+                  {prevFile ? (
+                    <button onClick={() => navigateToFile(prevFile.slug)} className="group text-left cursor-pointer">
                       <div className="flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80 transition-colors">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 group-hover:-translate-x-0.5 transition-transform">
                           <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
                         </svg>
                         <div className="text-left">
                           <div className="text-[9px] text-fg-muted uppercase tracking-wider">Previous</div>
-                          <div className="text-sm">{prevChapter.title}</div>
+                          <div className="text-sm">{prevFile.title}</div>
                         </div>
                       </div>
                     </button>
                   ) : <div />}
-                  {nextChapter ? (
-                    <button onClick={() => navigateToChapter(nextChapter.slug)} className="group text-right cursor-pointer">
+                  {nextFile ? (
+                    <button onClick={() => navigateToFile(nextFile.slug)} className="group text-right cursor-pointer">
                       <div className="flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80 transition-colors">
                         <div>
                           <div className="text-[9px] text-fg-muted uppercase tracking-wider">Next</div>
-                          <div className="text-sm">{nextChapter.title}</div>
+                          <div className="text-sm">{nextFile.title}</div>
                         </div>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 group-hover:translate-x-0.5 transition-transform">
                           <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
@@ -498,11 +483,11 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
                       </div>
                     </button>
                   ) : (
-                    <a href={`/systems/${slug}`} className="flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80 transition-colors">
+                    <a href={`/systems/${system.slug}`} className="flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80 transition-colors">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
-                      Complete
+                      Back to {system.title}
                     </a>
                   )}
                 </div>
@@ -512,7 +497,6 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
         </div>
       </div>
 
-      {/* ── Fixed elements (outside smooth-wrapper) ── */}
       <button onClick={() => ScrollSmoother.get()?.scrollTo(0, true, 'top')}
         className="fixed bottom-20 right-6 z-40 w-10 h-10 flex items-center justify-center bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.04),0_4px_12px_-4px_rgba(0,0,0,0.1)] text-fg-muted hover:text-accent transition-all duration-200"
         aria-label="Back to top">
@@ -545,10 +529,10 @@ function ChapterContent({ slug, language, systemTitle, chapter, chapters, prevCh
   );
 }
 
-export function ChapterPageClient(props: ChapterPageClientProps) {
+export function SystemFileReadingClient(props: SystemFileReadingClientProps) {
   return (
     <ReadingProvider>
-      <ChapterContent {...props} />
+      <SystemFileReadingContent {...props} />
     </ReadingProvider>
   );
 }

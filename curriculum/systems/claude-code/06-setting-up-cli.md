@@ -1,8 +1,8 @@
 ---
 title: "Setting Up the CLI Framework"
 description: "Build the command-line interface for Claude Code using Spring Shell"
-order: 2
-estimatedTime: "1 hour"
+order: 6
+difficulty: "Intermediate"
 ---
 
 # Setting Up the CLI Framework

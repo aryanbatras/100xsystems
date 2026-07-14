@@ -22,9 +22,9 @@ export default async function LanguageDetailPage({ params }: Props) {
   const lang = getLanguageMeta(slug);
   if (!lang) notFound();
 
-  // Find systems that support this language (languages is now string[])
+  // Find systems that reference this language in their tags
   const relatedSystems = getHandcraftedSystems().filter(
-    (s) => s.languages.includes(slug)
+    (s) => s.tags && s.tags.some(t => t.toLowerCase().includes(slug.toLowerCase()))
   );
 
   return (

@@ -1,8 +1,8 @@
 ---
 title: "Introduction to Claude Code"
 description: "Understand what we're building and the system architecture"
-order: 1
-estimatedTime: "30 minutes"
+order: 5
+difficulty: "Beginner"
 ---
 
 # Introduction to Claude Code
