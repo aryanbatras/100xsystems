@@ -74,14 +74,8 @@ export const metadata: Metadata = {
 };
 
 const headerItems = [
-  { id: 'products', label: 'Products', children: [
-    { id: 'startx', label: 'StartX', href: 'https://startx.100xsystems.dev', description: 'Generate & research ideas into X-Factor systems' },
-    { id: 'peerly', label: 'Peerly', href: 'https://peerly.100xsystems.dev', description: 'Peer-to-peer collaborative learning' },
-    { id: 'tools', label: '100X Tools', href: 'https://tools.100xsystems.dev', description: 'Privacy-first browser utilities' },
-    { id: 'blog', label: 'Engineering Blog', href: 'https://blog.100xsystems.dev', description: 'Deep dives. No fluff.' },
-  ]},
+  { id: 'systems', label: 'Systems', href: '/systems' },
   { id: 'knowledge', label: 'Knowledge Base', children: [
-    { id: 'systems', label: 'Systems', href: '/systems', description: 'Build real software systems' },
     { id: 'principles', label: 'Principles', href: '/principles', description: 'Foundational engineering principles' },
     { id: 'patterns', label: 'Patterns', href: '/patterns', description: 'Design patterns & blueprints' },
     { id: 'tools', label: 'Tools', href: '/tools', description: 'Essential dev tools' },

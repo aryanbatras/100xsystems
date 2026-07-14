@@ -63,7 +63,7 @@ export function Dropdown({ trigger, items, align = 'left', className, onItemSele
             transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
             style={{ transformOrigin: align === 'right' ? 'top right' : 'top left' }}
             className={cn(
-              'absolute top-full z-50 w-max max-w-[calc(100vw-2rem)]',
+              'absolute top-full z-[999] w-max max-w-[calc(100vw-2rem)]',
               'shadow-[inset_0_1px_3px_rgba(0,0,0,0.06),0_10px_30px_-10px_rgba(0,0,0,0.15)]',
               align === 'right' ? 'right-0' : 'left-0',
               className,
