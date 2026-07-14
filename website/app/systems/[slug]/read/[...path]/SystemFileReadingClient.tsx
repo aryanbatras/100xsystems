@@ -30,9 +30,10 @@ import Link from 'next/link';
 interface SystemFileReadingClientProps {
   system: SystemMeta;
   file: SystemFileEntry;
-  allFiles: SystemFileEntry[];
-  prevFile: SystemFileEntry | null;
-  nextFile: SystemFileEntry | null;
+  allFiles: Array<{ slug: string; title: string; order: number; pathSegments: string[] }>;
+  prevFile: { slug: string; title: string } | null;
+  nextFile: { slug: string; title: string } | null;
+  folderTag: string;
 }
 
 const difficultyStyles: Record<string, string> = {
@@ -41,7 +42,6 @@ const difficultyStyles: Record<string, string> = {
   Advanced: 'bg-fg text-white',
 };
 
-/** Extract headings from markdown for the ToC */
 function extractHeadings(markdown: string): { id: string; text: string; level: number }[] {
   const headings: { id: string; text: string; level: number }[] = [];
   const regex = /^(#{2,4})\s+(.+)$/gm;
@@ -58,7 +58,6 @@ function extractHeadings(markdown: string): { id: string; text: string; level: n
   return headings;
 }
 
-/** Mobile settings panel */
 function MobileSettingsPanel({ onClose }: { onClose: () => void }) {
   const { settings, setFontSize, setLineHeight, setMode, setFont, resetDefaults } = useReadingSettings();
 
@@ -150,7 +149,6 @@ function MobileSettingsPanel({ onClose }: { onClose: () => void }) {
   );
 }
 
-/** ── Lesson Outline — Sticky ToC ── */
 interface OutlineItem {
   id: string;
   text: string;
@@ -223,7 +221,6 @@ function OutlineRow({
   );
 }
 
-/** Copy button */
 function CopyButton({ content }: { content: string }) {
   const [copied, setCopied] = useState(false);
   const handleCopy = useCallback(async () => {
@@ -240,7 +237,7 @@ function CopyButton({ content }: { content: string }) {
   );
 }
 
-function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile }: SystemFileReadingClientProps) {
+function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile, folderTag }: SystemFileReadingClientProps) {
   const { settings } = useReadingSettings();
   const router = useRouter();
 
@@ -315,17 +312,21 @@ function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile }
     return () => document.removeEventListener('fullscreenchange', handleFSChange);
   }, []);
 
+  // Build sidebar nav items with correct read/ path
   const sidebarNavItems: SidebarNavItem[] = useMemo(() => allFiles.map(f => ({
     id: f.slug,
     label: f.title,
-    href: `/systems/${system.slug}/read/${f.slug}`,
+    href: `/systems/${system.slug}/read/${f.pathSegments.join('/')}`,
     iconName: 'bookmark',
   })), [allFiles, system.slug]);
 
   const navigateToFile = useCallback((slug: string) => {
-    setSidebarOpen(false);
-    router.push(`/systems/${system.slug}/read/${slug}`);
-  }, [system.slug, router]);
+    const target = allFiles.find(f => f.slug === slug);
+    if (target) {
+      setSidebarOpen(false);
+      router.push(`/systems/${system.slug}/read/${target.pathSegments.join('/')}`);
+    }
+  }, [allFiles, system.slug, router]);
 
   const handleSidebarNav = useCallback((navItem: SidebarNavItem) => {
     navigateToFile(navItem.id);
@@ -426,6 +427,8 @@ function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile }
                   </button>
                   <a href={`/systems/${system.slug}`} className="text-xs text-fg-muted font-medium hidden sm:inline hover:text-accent transition-colors">{system.title}</a>
                   <span className="text-xs text-fg-muted hidden sm:inline">/</span>
+                  <span className="text-[10px] text-fg-muted uppercase font-medium hidden sm:inline hover:text-accent transition-colors">{folderTag}</span>
+                  <span className="text-xs text-fg-muted hidden sm:inline">/</span>
                   <span className="text-xs text-fg font-medium hidden sm:inline">{file.title}</span>
                 </div>
                 <div className="hidden sm:flex items-center gap-px">
@@ -453,6 +456,12 @@ function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile }
                   )}
                   <span className="text-[10px] text-fg-muted">·</span>
                   <span className="text-[10px] font-medium text-fg-muted uppercase tracking-wider">{system.title}</span>
+                  {folderTag && (
+                    <>
+                      <span className="text-[10px] text-fg-muted">·</span>
+                      <span className="text-[10px] font-medium text-fg-muted uppercase tracking-wider">{folderTag}</span>
+                    </>
+                  )}
                 </div>
                 <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight mb-3 leading-tight text-fg">{file.title}</h1>
               </div>

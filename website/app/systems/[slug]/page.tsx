@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getSystemMeta, getSystemFlatFiles } from '@/lib/mdx';
+import { getSystemMeta, getSystemFolderTags } from '@/lib/mdx';
 import { SystemDetailClient } from './SystemDetailClient';
 
 interface Props {
@@ -19,7 +19,7 @@ export default async function SystemDetailPage({ params }: Props) {
   const system = getSystemMeta(slug);
   if (!system) notFound();
 
-  const flatFiles = getSystemFlatFiles(slug);
+  const folderTags = getSystemFolderTags(slug);
 
-  return <SystemDetailClient system={system} flatFiles={flatFiles} />;
+  return <SystemDetailClient system={system} folderTags={folderTags} />;
 }
