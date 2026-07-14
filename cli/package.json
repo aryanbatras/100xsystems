@@ -1,0 +1,38 @@
+{
+  "name": "@100xsystems/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "CLI for 100xSystems — build real systems, take quizzes, and verify your implementations.",
+  "bin": {
+    "100x": "./dist/index.js"
+  },
+  "files": [
+    "dist/",
+    "src/templates/"
+  ],
+  "scripts": {
+    "build": "tsc && cp -r src/templates dist/templates",
+    "prepublishOnly": "npm run build",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "inquirer": "^12.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/100xsystems/100xsystems"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
