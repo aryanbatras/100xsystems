@@ -1,8 +1,0 @@
-.animatedSection {
-  position: relative;
-  overflow: hidden;
-}
-
-.animatedSection > * {
-  will-change: transform, opacity;
-}

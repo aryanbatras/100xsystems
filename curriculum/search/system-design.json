@@ -1,0 +1,33 @@
+{
+  "tag": "system-design",
+  "displayName": "System Design",
+  "description": "Learn how to design scalable, reliable, and maintainable software systems. From architecture patterns to distributed systems.",
+  "youtube": [
+    { "title": "ByteByteGo", "description": "Animated system design concepts made easy to understand", "url": "https://youtube.com/@ByteByteGo" },
+    { "title": "System Design Interview", "description": "Comprehensive system design interview preparation content", "url": "https://youtube.com/@SystemDesignInterview" },
+    { "title": "Gaurav Sen (GKCS)", "description": "Deep system design explanations with real-world architecture examples", "url": "https://youtube.com/@gkcs" },
+    { "title": "CodeKarle", "description": "Practical system design walkthroughs for popular services", "url": "https://youtube.com/@codekarle" },
+    { "title": "Tech With Nikola", "description": "Modern system design concepts with clear architectural diagrams", "url": "https://youtube.com/@TechWithNikola" }
+  ],
+  "websites": [
+    { "title": "System Design One", "description": "Curated collection of system design concepts explained clearly", "url": "https://systemdesign.one" },
+    { "title": "High Scalability", "description": "Case studies of how large-scale systems are built and operated", "url": "https://highscalability.com" },
+    { "title": "System Design Primer", "description": "GitHub's most popular system design learning resource", "url": "https://github.com/donnemartin/system-design-primer" },
+    { "title": "Awesome System Design", "description": "Curated list of resources for learning system design", "url": "https://awesome-system-design.com" },
+    { "title": "Martin Fowler Architecture", "description": "Expert insights on software architecture and design patterns", "url": "https://martinfowler.com/architecture" }
+  ],
+  "articles": [
+    { "title": "Hello Interview Blog", "description": "System design interview insights and deep technical articles", "url": "https://blog.hellointerview.com" },
+    { "title": "Pragmatic Engineer System Design", "description": "Real-world system design analysis from a senior engineer", "url": "https://blog.pragmaticengineer.com/category/system-design" },
+    { "title": "InfoQ Architecture & Design", "description": "Latest trends and practices in software architecture", "url": "https://www.infoq.com/architecture-design" }
+  ],
+  "courses": [
+    { "title": "Software Design & Architecture", "description": "Coursera specialization from top universities covering architecture patterns", "url": "https://www.coursera.org/specializations/software-design-architecture" },
+    { "title": "Software Architecture Nanodegree", "description": "Udacity's project-based software architecture course", "url": "https://www.udacity.com/course/software-architecture-and-design--nd089" }
+  ],
+  "books": [
+    { "title": "Designing Data-Intensive Applications", "description": "The definitive guide to distributed systems and data architecture", "url": "https://dataintensive.net" },
+    { "title": "Azure Architecture Patterns", "description": "Microsoft's comprehensive guide to cloud architecture patterns", "url": "https://docs.microsoft.com/en-us/azure/architecture/patterns" }
+  ],
+  "tools": []
+}
