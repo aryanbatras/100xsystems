@@ -276,9 +276,24 @@ export interface SidebarNavProps {
 export function SidebarNav({ items, activeId, onItemClick, className }: SidebarNavProps) {
   const mouseY = useMotionValue(Infinity);
   const [expanded, setExpanded] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
+
+  // After remount, check if mouse is already over the sidebar and expand
+  useEffect(() => {
+    if (!navRef.current) return;
+    const onMove = (e: MouseEvent) => {
+      const rect = navRef.current?.getBoundingClientRect();
+      if (rect && e.clientX >= rect.left && e.clientX <= rect.right) {
+        setExpanded(true);
+      }
+    };
+    document.addEventListener('mousemove', onMove, { once: true });
+    return () => document.removeEventListener('mousemove', onMove);
+  }, []);
 
   return (
     <nav
+      ref={navRef}
       onMouseMove={(e) => mouseY.set(e.pageY)}
       onMouseLeave={() => { mouseY.set(Infinity); setExpanded(false); }}
       onMouseEnter={() => setExpanded(true)}
