@@ -19,6 +19,7 @@ import { coy } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import type { Components } from 'react-markdown';
 import type { CodeTheme } from '@/lib/reading-context';
 import { KnowledgeCheck } from '@/components/mdx/KnowledgeCheck';
+import { MermaidDiagram } from '@/components/mdx/MermaidDiagram';
 
 interface MarkdownRendererProps {
   source: string;
@@ -39,6 +40,12 @@ function createComponents(theme: CodeTheme): Components {
     code: ({ className, children, ...props }) => {
       const match = /language-(\w+)/.exec(className || '');
       const lang = match ? match[1] : '';
+
+      // Handle mermaid diagram blocks
+      if (lang === 'mermaid') {
+        const chart = String(children).replace(/\n$/, '');
+        return <MermaidDiagram chart={chart} />;
+      }
 
       // Handle knowledgecheck fenced blocks
       if (lang === 'knowledgecheck') {

@@ -39,6 +39,7 @@ export default function Quiz({ args }: Props) {
     setReady(true);
   }, [systemSlug]);
 
+  // ─── Error state ────────────────────────────────────────────────
   if (error) {
     return (
       <Box flexDirection="column" paddingX={2}>
@@ -47,6 +48,7 @@ export default function Quiz({ args }: Props) {
     );
   }
 
+  // ─── Loading state ──────────────────────────────────────────────
   if (!ready) {
     return (
       <Box flexDirection="column" paddingX={2}>
@@ -55,11 +57,40 @@ export default function Quiz({ args }: Props) {
     );
   }
 
+  // ─── Quiz welcome + interactive quiz ───────────────────────────
+  const lessonQuizzes = quizzes.filter((q: any) => q._source === 'lesson');
+  const folderQuizzes = quizzes.filter((q: any) => q._source !== 'lesson');
+
   return (
-    <QuizApp
-      quizzes={quizzes}
-      systemTitle={systemTitle}
-      onDone={() => {}}
-    />
+    <Box flexDirection="column">
+      {lessonQuizzes.length > 0 && (
+        <Box flexDirection="column" paddingX={2} paddingY={1}>
+          <Text bold>{'  '}📚 Lesson Quizzes ({lessonQuizzes.length})</Text>
+          {lessonQuizzes.map((q: any, i: number) => (
+            <Text key={`lq-${i}`} dimColor>
+              {'  '}• {q.title}
+              {q._track && q._module && (
+                <Text dimColor> — {q._track} / {q._module}</Text>
+              )}
+            </Text>
+          ))}
+        </Box>
+      )}
+      {folderQuizzes.length > 0 && (
+        <Box flexDirection="column" paddingX={2} paddingY={1}>
+          <Text bold>{'  '}📁 System Quizzes ({folderQuizzes.length})</Text>
+          {folderQuizzes.map((q: any, i: number) => (
+            <Text key={`fq-${i}`} dimColor>{'  '}• {q.title}</Text>
+          ))}
+        </Box>
+      )}
+      <Box paddingX={2} paddingY={1}>
+        <QuizApp
+          quizzes={quizzes}
+          systemTitle={systemTitle}
+          onDone={() => {}}
+        />
+      </Box>
+    </Box>
   );
 }

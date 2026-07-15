@@ -7,8 +7,13 @@ import { HomeLearningPhilosophy } from '@/presentation/features/homeLearningPhil
 import { HomeCubix } from '@/presentation/features/homeCubix.feature';
 import { HomeOpenSource } from '@/presentation/features/homeOpenSource.feature';
 import { HomeMission } from '@/presentation/features/homeMission.feature';
+import { HomeContinueLearning } from '@/presentation/features/homeContinueLearning.feature';
+import { getAllSystems } from '@/lib/mdx';
+import type { SystemMeta } from '@/lib/mdx';
 
 export default function HomePage() {
+  const systems: SystemMeta[] = getAllSystems();
+
   return (
     <>
       <HomeHero />
@@ -20,6 +25,7 @@ export default function HomePage() {
       <HomeCubix />
       <HomeOpenSource />
       <HomeMission />
+      <HomeContinueLearning systems={systems} />
     </>
   );
 }

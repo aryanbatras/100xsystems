@@ -1,7 +1,19 @@
+/**
+ * ## Validate Action
+ *
+ * Runs validation checks against a user's project.
+ * Integrates with the executor plugin system for lesson-specific validation.
+ *
+ * @packageDocumentation
+ */
+
 import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import { readProjectConfig } from '../scaffold/index.js';
+import { registry, runLessonValidators } from '../executors/index.js';
+import type { ExecutorResult } from '../executors/index.js';
+import { CURRICULUM_DIR } from '../reader/index.js';
 
 // ─── Exported Types ─────────────────────────────────────────────────
 
@@ -9,14 +21,15 @@ export interface ValidationResult {
   check: string;
   status: 'pass' | 'warn' | 'fail';
   message: string;
-  category: 'documentation' | 'structure' | 'code' | 'git';
+  category: 'documentation' | 'structure' | 'code' | 'git' | 'validation' | 'test' | 'build' | 'lesson';
+  details?: string;
 }
 
-// ─── Public API (data-only — Pastel commands handle Ink display) ───
+// ─── Public API ─────────────────────────────────────────────────────
 
 /**
  * Run validation checks and return results.
- * Callers render display themselves (no console.log side effects).
+ * Integrates with the executor plugin system to run lesson-specific validators.
  */
 export async function runValidation(
   projectDir: string,
@@ -28,6 +41,7 @@ export async function runValidation(
 
   const results: ValidationResult[] = [];
 
+  // Run standard documentation & structure checks
   results.push(...checkDocumentation(projectDir));
   results.push(...checkStructure(projectDir));
 
@@ -37,15 +51,284 @@ export async function runValidation(
     // git not available — skip
   }
 
+  // Run executor-based validators from the curriculum
+  const systemSlug = (config.system as string) || '';
+  const language = (config.language as string) || '';
+  if (systemSlug) {
+    try {
+      const lessonResults = await runLessonValidatorsFromCurriculum(projectDir, systemSlug, language);
+      results.push(...lessonResults);
+    } catch (err: any) {
+      results.push({
+        check: 'executors',
+        status: 'warn',
+        message: `Could not run lesson validators: ${err.message}`,
+        category: 'lesson',
+      });
+    }
+  }
+
   results.sort((a, b) => {
-    const order = { fail: 0, warn: 1, pass: 2 };
-    return order[a.status] - order[b.status];
+    const order: Record<string, number> = { fail: 0, warn: 1, pass: 2 };
+    return (order[a.status] ?? 0) - (order[b.status] ?? 0);
   });
 
   return results;
 }
 
-// ─── Checks ─────────────────────────────────────────────────────────
+// ─── Lesson Validator Integration ───────────────────────────────────
+
+/**
+ * Execute all validators defined in the system's lesson frontmatter.
+ * Walks the matching track directory looking for lesson.md files with
+ * frontmatter validation configs. Filters by the user's language.
+ */
+async function runLessonValidatorsFromCurriculum(
+  projectDir: string,
+  systemSlug: string,
+  language: string
+): Promise<ValidationResult[]> {
+  const results: ValidationResult[] = [];
+  const systemDir = path.join(CURRICULUM_DIR(), 'systems', systemSlug);
+  if (!fs.existsSync(systemDir)) return results;
+
+  // Only run validators from the track matching the user's language
+  const trackPrefix = `track-${language.toLowerCase()}`;
+  const tracks = fs.readdirSync(systemDir).filter((name) => {
+    if (!name.startsWith('track-')) return false;
+    const stat = fs.statSync(path.join(systemDir, name));
+    if (!stat.isDirectory()) return false;
+    return name.toLowerCase() === trackPrefix.toLowerCase();
+  });
+
+  for (const track of tracks) {
+    const trackDir = path.join(systemDir, track);
+    const lessons = findLessonsWithValidators(trackDir);
+
+    for (const lesson of lessons) {
+      const ctx = {
+        projectDir,
+        lessonDir: lesson.dir,
+        workspace: systemSlug,
+      };
+
+      const executorResults = await runLessonValidators(lesson.validators, ctx);
+
+      for (const er of executorResults) {
+        results.push({
+          check: er.check,
+          status: er.status as 'pass' | 'warn' | 'fail',
+          message: er.message,
+          category: er.category as any,
+          details: er.details,
+        });
+      }
+    }
+  }
+
+  return results;
+}
+
+/**
+ * Walk a track directory recursively to find lessons with frontmatter validation configs.
+ */
+function findLessonsWithValidators(trackDir: string): Array<{ dir: string; validators: any[] }> {
+  const lessons: Array<{ dir: string; validators: any[] }> = [];
+
+  function walk(dir: string) {
+    if (!fs.existsSync(dir)) return;
+
+    try {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+      const mdFiles = entries.filter(
+        (e) => e.isFile() && e.name.endsWith('.md') && !e.name.startsWith('.')
+      );
+
+      for (const mdFile of mdFiles) {
+        const mdPath = path.join(dir, mdFile.name);
+        try {
+          const content = fs.readFileSync(mdPath, 'utf-8');
+          const frontmatterMatch = content.match(/^---\s*\n([\s\S]*?)\n---\s*\n/);
+
+          if (frontmatterMatch) {
+            const yamlBlock = frontmatterMatch[1];
+            const validationMatch = yamlBlock.match(/validation:\s*\n([\s\S]*?)(?=\n\w+:|$)/);
+            if (validationMatch) {
+              const validators = parseValidationBlock(validationMatch[1]);
+              if (validators.length > 0) {
+                lessons.push({ dir, validators });
+              }
+            }
+          }
+        } catch { /* skip unreadable files */ }
+      }
+
+      const subdirs = entries.filter(
+        (e) => e.isDirectory() && !e.name.startsWith('.') && e.name !== 'node_modules'
+      );
+      for (const subdir of subdirs) {
+        walk(path.join(dir, subdir.name));
+      }
+    } catch { /* skip unreadable directories */ }
+  }
+
+  walk(trackDir);
+  return lessons;
+}
+
+/**
+ * Parse a YAML validation block from frontmatter.
+ * Handles both flat and nested key-value pairs with proper indentation tracking.
+ *
+ * Handles formats like:
+ * ```yaml
+ * validation:
+ *   - type: file-exists
+ *     path: "src/main.ts"
+ *   - type: http
+ *     url: "http://localhost:3000/health"
+ *     method: GET
+ *     expect_status: 200
+ *     headers:
+ *       Authorization: "Bearer token"
+ *   - type: docker
+ *     check: compose-services
+ *     services:
+ *       - "api"
+ *       - "db"
+ * ```
+ */
+function parseValidationBlock(yamlStr: string): Record<string, any>[] {
+  const validators: Record<string, any>[] = [];
+  const lines = yamlStr.split('\n');
+
+  let currentValidator: Record<string, any> | null = null;
+  let currentNestedKey: string | null = null;
+  let currentArray: string[] | null = null;
+  let inArray = false;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    const indent = line.search(/\S/);
+
+    // Start of a new validator (list item at top level)
+    if (trimmed.startsWith('- ') && indent < 4) {
+      if (currentValidator) {
+        // Finalize any pending nested value
+        if (currentNestedKey && currentArray) {
+          currentValidator[currentNestedKey] = [...currentArray];
+          currentArray = null;
+          currentNestedKey = null;
+          inArray = false;
+        }
+        validators.push(currentValidator);
+      }
+      currentValidator = {};
+      currentNestedKey = null;
+      currentArray = null;
+      inArray = false;
+
+      const afterDash = trimmed.slice(2).trim();
+      const colonIdx = afterDash.indexOf(':');
+      if (colonIdx !== -1) {
+        const key = afterDash.slice(0, colonIdx).trim();
+        const value = afterDash.slice(colonIdx + 1).trim();
+        if (value) {
+          currentValidator[key] = parseYamlValue(value);
+        } else {
+          // Value might be on next lines
+          currentNestedKey = key;
+        }
+      }
+      continue;
+    }
+
+    // Handle list items in arrays (like services list)
+    if (trimmed.startsWith('- ') && inArray && currentArray) {
+      currentArray.push(parseYamlValue(trimmed.slice(2).trim()) as string);
+      continue;
+    }
+
+    // Handle key-value pairs
+    const colonIdx = trimmed.indexOf(':');
+    if (colonIdx === -1) {
+      // Could be continuation of a value
+      if (currentNestedKey && currentValidator && typeof currentValidator[currentNestedKey] === 'string') {
+        currentValidator[currentNestedKey] += ' ' + trimmed;
+      }
+      continue;
+    }
+
+    const key = trimmed.slice(0, colonIdx).trim();
+    let value = trimmed.slice(colonIdx + 1).trim();
+
+    if (currentValidator) {
+      // FINALIZE any pending array before processing new key-value pair
+      if (currentNestedKey && currentArray && currentArray.length > 0 && !inArray) {
+        currentValidator[currentNestedKey] = [...currentArray];
+        currentArray = null;
+        currentNestedKey = null;
+      }
+
+      if (!value) {
+        // This could be the start of a nested block or array
+        // Save previous array if exists
+        if (currentNestedKey && currentArray && currentArray.length > 0) {
+          currentValidator[currentNestedKey] = [...currentArray];
+        }
+        currentNestedKey = key;
+        currentArray = [];
+        inArray = true; // Assume array until proven otherwise
+        continue;
+      }
+
+      // It's a simple key: value pair
+      currentValidator[key] = parseYamlValue(value);
+      // Reset array tracking since we're in a key: value pair, not an array
+      if (inArray && currentNestedKey && currentArray && currentArray.length > 0) {
+        currentValidator[currentNestedKey] = [...currentArray];
+        currentArray = null;
+        currentNestedKey = null;
+      }
+      inArray = false;
+    }
+  }
+
+  // Finalize last validator
+  if (currentValidator) {
+    if (currentNestedKey && currentArray && currentArray.length > 0) {
+      currentValidator[currentNestedKey] = [...currentArray];
+    }
+    validators.push(currentValidator);
+  }
+
+  return validators;
+}
+
+function parseYamlValue(value: string): any {
+  const trimmed = value.trim();
+
+  // Remove surrounding quotes
+  if ((trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+      (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+    return trimmed.slice(1, -1);
+  }
+
+  // Parse numbers
+  const num = Number(trimmed);
+  if (!isNaN(num) && trimmed !== '') return num;
+
+  // Parse booleans
+  if (trimmed === 'true') return true;
+  if (trimmed === 'false') return false;
+
+  return trimmed;
+}
+
+// ─── Standard Checks ────────────────────────────────────────────────
 
 export function checkDocumentation(projectDir: string): ValidationResult[] {
   const results: ValidationResult[] = [];
@@ -129,7 +412,7 @@ export function checkStructure(projectDir: string): ValidationResult[] {
   // Check for source code directory
   const srcDir = path.join(projectDir, 'src');
   if (fs.existsSync(srcDir)) {
-    const srcFiles = fs.readdirSync(srcDir).filter((f) => {
+    const srcFiles = fs.readdirSync(srcDir).filter((f: string) => {
       const fullPath = path.join(srcDir, f);
       return fs.statSync(fullPath).isFile() && !f.startsWith('.');
     });
@@ -142,8 +425,8 @@ export function checkStructure(projectDir: string): ValidationResult[] {
     // Maybe Java structure
     const javaDir = path.join(projectDir, 'src', 'main', 'java');
     if (fs.existsSync(javaDir)) {
-      const javaFiles = fs.readdirSync(javaDir, { recursive: true })
-        .filter((f): f is string => typeof f === 'string' && f.endsWith('.java'));
+      const javaFiles = fs.readdirSync(javaDir, { recursive: true } as any)
+        .filter((f: any): f is string => typeof f === 'string' && (f as string).endsWith('.java'));
       if (javaFiles.length > 0) {
         results.push({ check: 'source', status: 'pass', message: `Java source files found (${javaFiles.length})`, category: 'structure' });
       } else {
@@ -157,7 +440,7 @@ export function checkStructure(projectDir: string): ValidationResult[] {
   // Check for design/ directory
   const designDir = path.join(projectDir, 'design');
   if (fs.existsSync(designDir)) {
-    const designFiles = fs.readdirSync(designDir).filter((f) => f.endsWith('.md'));
+    const designFiles = fs.readdirSync(designDir).filter((f: string) => f.endsWith('.md'));
     results.push({ check: 'design-dir', status: 'pass', message: `design/ directory with ${designFiles.length} file(s)`, category: 'structure' });
   }
 

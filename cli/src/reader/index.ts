@@ -42,6 +42,10 @@ function getRootDir(): string {
   return _rootDir;
 }
 
+// Export findRootDir so that validate.ts (and other consumers) can resolve the
+// curriculum path without importing from a non-public API.
+export const resolveRootDir = getRootDir;
+
 export const CURRICULUM_DIR = () => path.join(getRootDir(), 'curriculum');
 export const SYSTEMS_DIR = () => path.join(CURRICULUM_DIR(), 'systems');
 export const KNOWLEDGE_BASE_DIR = () => path.join(CURRICULUM_DIR(), 'knowledge-base');

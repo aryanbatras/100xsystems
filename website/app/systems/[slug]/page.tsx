@@ -1,6 +1,11 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getSystemMeta, getSystemFolderTags } from '@/lib/mdx';
+import {
+  getSystemMeta,
+  getSystemFolderTags,
+  getSystemTrackTree,
+  systemHasTracks,
+} from '@/lib/mdx';
 import { SystemDetailClient } from './SystemDetailClient';
 
 interface Props {
@@ -19,7 +24,16 @@ export default async function SystemDetailPage({ params }: Props) {
   const system = getSystemMeta(slug);
   if (!system) notFound();
 
+  const hasTracks = systemHasTracks(slug);
   const folderTags = getSystemFolderTags(slug);
+  const trackTree = hasTracks ? getSystemTrackTree(slug) : [];
 
-  return <SystemDetailClient system={system} folderTags={folderTags} />;
+  return (
+    <SystemDetailClient
+      system={system}
+      folderTags={folderTags}
+      hasTracks={hasTracks}
+      trackTree={trackTree}
+    />
+  );
 }

@@ -2,19 +2,25 @@
  * ## Markdown Content Library
  *
  * Utilities for reading, parsing, and processing Markdown content files
- * from the `curriculum/` directory. Uses gray-matter for frontmatter.
+ * from the `curriculum/` directory.
+ *
+ * Supports both old folder_tag structure (architecture/, tradeoffs/, etc.)
+ * and new lesson/track/module structure (track-x/module-x/lesson-x.md).
  *
  * Curriculum structure:
  *   curriculum/
  *     knowledge-base/      (principles, patterns, tools, technologies)
- *     search/              (formerly tags/ — JSON metadata files)
+ *     search/              (JSON metadata files)
  *     systems/
  *       [slug]/
- *         index.md         (system metadata)
- *         [folder_tag]/    (architecture, diagrams, tradeoffs, etc.)
+ *         index.md         (system metadata with track definitions)
+ *         track-{lang}/    (NEW: language-specific tracks)
+ *           module-{n}/
+ *             lesson-n.md  (lesson with frontmatter)
+ *             quiz.md
+ *             challenge.md
+ *         {folder_tag}/    (OLD: architecture, diagrams, tradeoffs, etc.)
  *           file.md
- *           [subfolder]/   (e.g. implementation/java/)
- *             file.md
  */
 
 import fs from 'fs';
@@ -31,7 +37,6 @@ const KNOWLEDGE_BASE_DIR = path.join(CURRICULUM_ROOT, 'knowledge-base');
 
 // ─── Types ──────────────────────────────────────────────────────────
 
-/** A system meta (from index.md) */
 export interface SystemMeta {
   slug: string;
   title: string;
@@ -41,11 +46,52 @@ export interface SystemMeta {
   order: number;
   hasTemplate: boolean;
   hasSpecification: boolean;
+  tracks?: TrackMeta[];
   templateInstallCmd?: string;
   specificationInstallCmd?: string;
 }
 
-/** A file entry within a system's folder_tag */
+export interface TrackMeta {
+  slug: string;
+  title: string;
+  language: string;
+  difficulty: string;
+}
+
+export interface ModuleMeta {
+  slug: string;
+  title: string;
+  order: number;
+  lessons: LessonMeta[];
+}
+
+export interface TrackModuleNode {
+  module: ModuleMeta;
+  lessons: LessonMeta[];
+}
+
+export interface SystemTrackTree {
+  track: TrackMeta;
+  modules: TrackModuleNode[];
+  lessonCount: number;
+}
+
+export interface LessonMeta {
+  slug: string;
+  title: string;
+  order: number;
+  description: string;
+  content: string;
+  frontmatter: Record<string, any>;
+  track: string;
+  module: string;
+  pathSegments: string[];
+  estimatedTime?: string;
+  difficulty?: string;
+  knowledgeRefs?: string[];
+  prerequisites?: string[];
+}
+
 export interface SystemFileEntry {
   slug: string;
   title: string;
@@ -53,16 +99,19 @@ export interface SystemFileEntry {
   description: string;
   content: string;
   frontmatter: Record<string, any>;
+  knowledgeRefs?: string[];
+  estimatedTime?: string;
+  difficulty?: string;
+  trackSlug?: string;
+  moduleSlug?: string;
 }
 
-/** A folder_tag within a system (e.g., architecture, diagrams) */
 export interface SystemFolderTag {
-  tag: string;           // folder name (e.g., "architecture")
-  displayName: string;   // human-readable (e.g., "Architecture")
+  tag: string;
+  displayName: string;
   children: SystemFolderEntry[];
 }
 
-/** An entry inside a folder_tag — could be a file or a subfolder */
 export interface SystemFolderEntry {
   type: 'file' | 'folder';
   slug: string;
@@ -70,20 +119,9 @@ export interface SystemFolderEntry {
   order: number;
 }
 
-/** Chapter metadata used in language pages */
-export interface ChapterMeta {
-  slug: string;
-  title: string;
-  order: number;
-}
+export interface ChapterMeta { slug: string; title: string; order: number; }
+export interface LanguageMeta { slug: string; title: string; chapters: ChapterMeta[]; }
 
-export interface LanguageMeta {
-  slug: string;
-  title: string;
-  chapters: ChapterMeta[];
-}
-
-/** A knowledge domain item (principle, pattern, tool, technology) */
 export interface KnowledgeItem {
   slug: string;
   title: string;
@@ -96,23 +134,25 @@ export interface KnowledgeItem {
 
 export type KnowledgeDomain = 'principles' | 'patterns' | 'tools' | 'technologies';
 
+export interface ResourceItem { title: string; description: string; url: string; }
+export interface TagSearchData {
+  tag: string; displayName: string; description: string;
+  youtube: ResourceItem[]; websites: ResourceItem[]; articles: ResourceItem[];
+  courses: ResourceItem[]; books: ResourceItem[]; tools: ResourceItem[];
+}
+
 // ─── Helpers ────────────────────────────────────────────────────────
 
 function slugToDisplayName(slug: string): string {
-  return slug
-    .split(/[-_]/)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+  return slug.split(/[-_]/).map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
 function isDirectory(dir: string): boolean {
-  try { return fs.statSync(dir).isDirectory(); }
-  catch { return false; }
+  try { return fs.statSync(dir).isDirectory(); } catch { return false; }
 }
 
 function fileToSlug(filename: string): string {
-  const base = filename.replace(/\.md$/, '');
-  return base.replace(/^\d+[-_]/, '');
+  return filename.replace(/\.md$/, '').replace(/^\d+[-_]/, '');
 }
 
 function getOrderFromFile(filename: string, frontmatterOrder?: number): number {
@@ -121,15 +161,10 @@ function getOrderFromFile(filename: string, frontmatterOrder?: number): number {
   return match ? parseInt(match[1], 10) : 999;
 }
 
-/** Read .md files from a flat directory (no subdirectories) */
 function readFlatMarkdownFiles(dir: string): Array<{ filename: string; content: string; data: Record<string, any> }> {
   const results: Array<{ filename: string; content: string; data: Record<string, any> }> = [];
   if (!fs.existsSync(dir)) return results;
-
-  const files = fs.readdirSync(dir)
-    .filter((f) => f.endsWith('.md'))
-    .sort();
-
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith('.md')).sort();
   files.forEach((filename) => {
     try {
       const raw = fs.readFileSync(path.join(dir, filename), 'utf-8');
@@ -137,16 +172,14 @@ function readFlatMarkdownFiles(dir: string): Array<{ filename: string; content: 
       results.push({ filename, content, data });
     } catch {}
   });
-
   return results;
 }
 
-// ─── Knowledge Domain Reading (from knowledge-base/) ────────────────
+// ─── Knowledge Domain Reading ───────────────────────────────────────
 
 export function getKnowledgeItems(domain: KnowledgeDomain): KnowledgeItem[] {
   const dir = path.join(KNOWLEDGE_BASE_DIR, domain);
   const files = readFlatMarkdownFiles(dir);
-
   return files.map(({ filename, content, data }) => ({
     slug: fileToSlug(filename),
     title: data.title || slugToDisplayName(fileToSlug(filename)),
@@ -155,19 +188,184 @@ export function getKnowledgeItems(domain: KnowledgeDomain): KnowledgeItem[] {
     tags: data.tags || [],
     content,
     frontmatter: data,
-  })).sort((a, b) => {
-    const orderA = a.frontmatter.order ?? 999;
-    const orderB = b.frontmatter.order ?? 999;
-    return orderA - orderB;
-  });
+  })).sort((a, b) => (a.frontmatter.order ?? 999) - (b.frontmatter.order ?? 999));
 }
 
 export function getKnowledgeItem(domain: KnowledgeDomain, slug: string): KnowledgeItem | null {
-  const items = getKnowledgeItems(domain);
-  return items.find((item) => item.slug === slug) || null;
+  return getKnowledgeItems(domain).find((item) => item.slug === slug) || null;
 }
 
-// ─── System Reading (folder_tag structure) ──────────────────────────
+// ─── Dependency Graph ─────────────────────────────────────────────
+
+export interface DependencyNode {
+  id: string;
+  type: 'system' | 'principle' | 'pattern' | 'tool' | 'technology';
+  title: string;
+  description: string;
+  difficulty: string;
+  href: string;
+  /** Number of lessons in this system (0 for KB items) */
+  lessonCount: number;
+  // D3 force simulation properties (mutated at runtime)
+  x?: number;
+  y?: number;
+  fx?: number | null;
+  fy?: number | null;
+  vx?: number;
+  vy?: number;
+}
+
+export interface DependencyEdge {
+  source: string;
+  target: string;
+  /** How many references justify this edge — stronger = thicker line */
+  weight: number;
+  label?: string;
+}
+
+export interface DependencyGraph {
+  nodes: DependencyNode[];
+  edges: DependencyEdge[];
+  stats: {
+    systemCount: number;
+    kbItemCount: number;
+    edgeCount: number;
+  };
+}
+
+/**
+ * Build a full dependency graph across all systems and knowledge base entries.
+ *
+ * Sources:
+ *   - `prerequisites` in lesson frontmatter → links to other systems
+ *   - `knowledge_refs` in lesson frontmatter → links to KB items
+ *   - System `order` field → implicit prerequisite ordering
+ */
+export function getDependencyGraph(): DependencyGraph {
+  const systems = getAllSystems();
+  const nodesMap = new Map<string, DependencyNode>();
+  const edgeMap = new Map<string, DependencyEdge>();
+
+  // Add system nodes
+  for (const sys of systems) {
+    const lessons = getAllSystemLessons(sys.slug);
+    nodesMap.set(sys.slug, {
+      id: sys.slug,
+      type: 'system',
+      title: sys.title,
+      description: sys.description,
+      difficulty: sys.difficulty,
+      href: `/systems/${sys.slug}`,
+      lessonCount: lessons.length,
+    });
+
+    // Collect all prerequisites and knowledge_refs from this system's lessons
+    const allPrereqs = new Set<string>();
+    const allRefs = new Set<string>();
+
+    for (const lesson of lessons) {
+      if (lesson.prerequisites) {
+        for (const prereq of lesson.prerequisites) {
+          allPrereqs.add(prereq);
+        }
+      }
+      if (lesson.knowledgeRefs) {
+        for (const ref of lesson.knowledgeRefs) {
+          allRefs.add(ref);
+        }
+      }
+    }
+
+    // Add edges for prerequisites (targeting other systems)
+    for (const prereq of allPrereqs) {
+      // Check if the prerequisite slug matches a system slug
+      const targetSystem = systems.find((s) => s.slug === prereq);
+      if (targetSystem) {
+        const edgeKey = `${prereq}→${sys.slug}`;
+        const existing = edgeMap.get(edgeKey);
+        if (existing) {
+          existing.weight++;
+        } else {
+          edgeMap.set(edgeKey, {
+            source: prereq,
+            target: sys.slug,
+            weight: 1,
+            label: 'prerequisite',
+          });
+        }
+      }
+    }
+
+    // Add edges for knowledge_refs (targeting KB items)
+    for (const ref of allRefs) {
+      // Resolve the KB item to get its domain
+      const domains = ['principles', 'patterns', 'tools', 'technologies'] as const;
+      for (const domain of domains) {
+        const item = getKnowledgeItem(domain, ref);
+        if (item) {
+          const kbId = `${domain}:${ref}`;
+          if (!nodesMap.has(kbId)) {
+            nodesMap.set(kbId, {
+              id: kbId,
+              type: domain === 'principles' ? 'principle'
+                : domain === 'patterns' ? 'pattern'
+                : domain === 'tools' ? 'tool'
+                : 'technology',
+              title: item.title,
+              description: item.description,
+              difficulty: item.difficulty,
+              href: `/${domain}/read/${ref}`,
+              lessonCount: 0,
+            });
+          }
+
+          const edgeKey = `${sys.slug}→${kbId}`;
+          const existing = edgeMap.get(edgeKey);
+          if (existing) {
+            existing.weight++;
+          } else {
+            edgeMap.set(edgeKey, {
+              source: sys.slug,
+              target: kbId,
+              weight: 1,
+              label: 'references',
+            });
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  // Add implicit order-based edges (lower order → higher order)
+  const sorted = [...systems].sort((a, b) => a.order - b.order);
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const edgeKey = `${sorted[i].slug}→${sorted[i + 1].slug}`;
+    if (!edgeMap.has(edgeKey)) {
+      edgeMap.set(edgeKey, {
+        source: sorted[i].slug,
+        target: sorted[i + 1].slug,
+        weight: 1,
+        label: 'sequential',
+      });
+    }
+  }
+
+  const nodes = Array.from(nodesMap.values());
+  const edges = Array.from(edgeMap.values());
+
+  return {
+    nodes,
+    edges,
+    stats: {
+      systemCount: systems.length,
+      kbItemCount: nodes.length - systems.length,
+      edgeCount: edges.length,
+    },
+  };
+}
+
+// ─── System Reading (NEW: Lesson/Track/Module) ──────────────────────
 
 export function getAllSystemSlugs(): string[] {
   try {
@@ -176,100 +374,235 @@ export function getAllSystemSlugs(): string[] {
   } catch { return []; }
 }
 
-/** Get all folder_tags for a system (top-level directories excluding hidden and index.md) */
+/**
+ * Get all tracks for a system by scanning for track-* directories
+ * and reading track metadata from index.md frontmatter.
+ */
+export function getSystemTracks(systemSlug: string): TrackMeta[] {
+  const tracks: TrackMeta[] = [];
+  const systemDir = path.join(SYSTEMS_DIR, systemSlug);
+  if (!fs.existsSync(systemDir)) return tracks;
+
+  // Try reading track definitions from index.md frontmatter first
+  const indexMdPath = path.join(systemDir, 'index.md');
+  if (fs.existsSync(indexMdPath)) {
+    try {
+      const { data } = matter(fs.readFileSync(indexMdPath, 'utf-8'));
+      if (data.tracks && Array.isArray(data.tracks)) {
+        return data.tracks.map((t: any) => ({
+          slug: t.slug || '',
+          title: t.title || slugToDisplayName(t.slug || ''),
+          language: t.language || '',
+          difficulty: t.difficulty || data.difficulty || 'Intermediate',
+        }));
+      }
+    } catch {}
+  }
+
+  // Fallback: scan for track-* directories
+  try {
+    const items = fs.readdirSync(systemDir).filter((name) => name.startsWith('track-'));
+    items.sort().forEach((name) => {
+      if (isDirectory(path.join(systemDir, name))) {
+        tracks.push({
+          slug: name,
+          title: slugToDisplayName(name.replace(/^track-/, '')),
+          language: name.replace(/^track-/, ''),
+          difficulty: 'Intermediate',
+        });
+      }
+    });
+  } catch {}
+  return tracks;
+}
+
+/**
+ * Get all modules for a track by scanning module-* directories.
+ */
+export function getTrackModules(systemSlug: string, trackSlug: string): ModuleMeta[] {
+  const modules: ModuleMeta[] = [];
+  const trackDir = path.join(SYSTEMS_DIR, systemSlug, trackSlug);
+  if (!fs.existsSync(trackDir)) return modules;
+
+  try {
+    const items = fs.readdirSync(trackDir).filter((name) => name.startsWith('module-')).sort();
+    items.forEach((name) => {
+      const moduleDir = path.join(trackDir, name);
+      if (!isDirectory(moduleDir)) return;
+      const lessons = getModuleLessons(systemSlug, trackSlug, name);
+      modules.push({
+        slug: name,
+        title: (() => {
+          const raw = name.replace(/^module-\d+-?/, '').replace(/[-_]/g, ' ').trim();
+          return raw ? slugToDisplayName(raw) : `Module ${getOrderFromFile(name)}`;
+        })(),
+        order: getOrderFromFile(name),
+        lessons,
+      });
+    });
+  } catch {}
+  return modules;
+}
+
+/**
+ * Get all lessons for a module by scanning for .md files (excluding quiz.md, challenge.md).
+ */
+export function getModuleLessons(systemSlug: string, trackSlug: string, moduleSlug: string): LessonMeta[] {
+  const lessons: LessonMeta[] = [];
+  const moduleDir = path.join(SYSTEMS_DIR, systemSlug, trackSlug, moduleSlug);
+  if (!fs.existsSync(moduleDir)) return lessons;
+
+  try {
+    const files = fs.readdirSync(moduleDir)
+      .filter((f) => f.endsWith('.md') && !f.startsWith('.') && f !== 'quiz.md' && f !== 'challenge.md')
+      .sort();
+    files.forEach((filename) => {
+      try {
+        const fullPath = path.join(moduleDir, filename);
+        const raw = fs.readFileSync(fullPath, 'utf-8');
+        const { data, content } = matter(raw);
+        const slug = fileToSlug(filename);
+        lessons.push({
+          slug,
+          title: data.title || slugToDisplayName(slug),
+          order: getOrderFromFile(filename, data.order),
+          description: data.description || content.slice(0, 200).replace(/#+\s+/g, '').trim() + '...',
+          content,
+          frontmatter: data,
+          track: trackSlug,
+          module: moduleSlug,
+          pathSegments: [trackSlug, moduleSlug, slug],
+          estimatedTime: data.estimated_time,
+          difficulty: data.difficulty,
+          knowledgeRefs: data.knowledge_refs,
+          prerequisites: data.prerequisites,
+        });
+      } catch {}
+    });
+    lessons.sort((a, b) => a.order - b.order);
+  } catch {}
+  return lessons;
+}
+
+/**
+ * Get all lessons across all tracks/modules (flattened for sidebar nav).
+ */
+export function getAllSystemLessons(systemSlug: string): LessonMeta[] {
+  const all: LessonMeta[] = [];
+  const tracks = getSystemTracks(systemSlug);
+  for (const track of tracks) {
+    const modules = getTrackModules(systemSlug, track.slug);
+    for (const mod of modules) {
+      all.push(...mod.lessons);
+    }
+  }
+  return all.sort((a, b) => a.order - b.order);
+}
+
+/**
+ * Get a lesson by its path segments (track-slug/module-slug/lesson-slug).
+ */
+export function getLessonByPath(systemSlug: string, pathSegments: string[]): LessonMeta | null {
+  const all = getAllSystemLessons(systemSlug);
+  const pathStr = pathSegments.join('/');
+  return all.find((l) => l.pathSegments.join('/') === pathStr) || null;
+}
+
+/**
+ * Get lesson by its slug (search all tracks/modules).
+ */
+export function getLessonBySlug(systemSlug: string, lessonSlug: string): LessonMeta | null {
+  const all = getAllSystemLessons(systemSlug);
+  return all.find((l) => l.slug === lessonSlug) || null;
+}
+
+/**
+ * Build a tree of tracks → modules → lessons for a system.
+ * Used by the system detail page to render hierarchy navigation.
+ */
+export function getSystemTrackTree(systemSlug: string): SystemTrackTree[] {
+  const tracks = getSystemTracks(systemSlug);
+  return tracks.map((track) => {
+    const modules = getTrackModules(systemSlug, track.slug);
+    const moduleNodes: TrackModuleNode[] = modules.map((mod) => ({
+      module: mod,
+      lessons: mod.lessons,
+    }));
+    const lessonCount = moduleNodes.reduce((sum, m) => sum + m.lessons.length, 0);
+    return { track, modules: moduleNodes, lessonCount };
+  });
+}
+
+/**
+ * Check if a system has tracks (new structure).
+ */
+export function systemHasTracks(systemSlug: string): boolean {
+  return getSystemTracks(systemSlug).length > 0;
+}
+
+/**
+ * Get lesson navigation (prev/next) across all tracks.
+ */
+export function getLessonNavigation(systemSlug: string, lessonSlug: string): { prev: LessonMeta | null; next: LessonMeta | null } {
+  const all = getAllSystemLessons(systemSlug);
+  const idx = all.findIndex((l) => l.slug === lessonSlug);
+  return {
+    prev: idx > 0 ? all[idx - 1] : null,
+    next: idx < all.length - 1 ? all[idx + 1] : null,
+  };
+}
+
+// ─── System Reading (OLD: folder_tag structure — backward compatible) ──
+
 export function getSystemFolderTags(systemSlug: string): SystemFolderTag[] {
   const tags: SystemFolderTag[] = [];
   try {
     const systemDir = path.join(SYSTEMS_DIR, systemSlug);
     if (!fs.existsSync(systemDir)) return tags;
-
     const items = fs.readdirSync(systemDir).filter((name) => !name.startsWith('.'));
-    const folderTags = items.filter((name) => isDirectory(path.join(systemDir, name))).sort();
-
+    const folderTags = items.filter((name) => isDirectory(path.join(systemDir, name)) && !name.startsWith('track-')).sort();
     folderTags.forEach((tag) => {
       const tagDir = path.join(systemDir, tag);
       const children = readFolderEntries(tagDir, tag);
-      tags.push({
-        tag,
-        displayName: slugToDisplayName(tag),
-        children,
-      });
+      tags.push({ tag, displayName: slugToDisplayName(tag), children });
     });
   } catch {}
   return tags;
 }
 
-/** Read entries (files + subfolders) inside a folder_tag directory */
 function readFolderEntries(dir: string, tag: string): SystemFolderEntry[] {
   const entries: SystemFolderEntry[] = [];
   if (!fs.existsSync(dir)) return entries;
-
   try {
     const items = fs.readdirSync(dir).filter((name) => !name.startsWith('.'));
-
-    // Collect folders and .md files separately
     const folders: { name: string; order: number }[] = [];
-    const mdFiles: { name: string; order: number }[] = [];
-
+    const mdFiles: { name: string; order: number; data: Record<string, any> }[] = [];
     items.forEach((name) => {
       const fullPath = path.join(dir, name);
       if (isDirectory(fullPath)) {
         folders.push({ name, order: 999 });
       } else if (name.endsWith('.md')) {
-        // Parse frontmatter for order
         try {
           const raw = fs.readFileSync(fullPath, 'utf-8');
           const { data } = matter(raw);
-          mdFiles.push({ name, order: getOrderFromFile(name, data.order) });
-        } catch {
-          mdFiles.push({ name, order: getOrderFromFile(name) });
-        }
+          mdFiles.push({ name, order: getOrderFromFile(name, data.order), data });
+        } catch { mdFiles.push({ name, order: getOrderFromFile(name), data: {} }); }
       }
     });
-
-    // Sort folders first (by name), then files (by order)
     folders.sort((a, b) => a.name.localeCompare(b.name));
     mdFiles.sort((a, b) => a.order - b.order);
-
-    // Add folders
-    folders.forEach((f) => {
-      entries.push({
-        type: 'folder',
-        slug: f.name,
-        title: slugToDisplayName(f.name),
-        order: f.order,
-      });
-    });
-
-    // Add files
+    folders.forEach((f) => entries.push({ type: 'folder', slug: f.name, title: slugToDisplayName(f.name), order: f.order }));
     mdFiles.forEach((f) => {
       const slug = fileToSlug(f.name);
-      const title = (() => {
-        try {
-          const raw = fs.readFileSync(path.join(dir, f.name), 'utf-8');
-          const { data } = matter(raw);
-          return data.title || slugToDisplayName(slug);
-        } catch {
-          return slugToDisplayName(slug);
-        }
-      })();
-      entries.push({
-        type: 'file',
-        slug,
-        title,
-        order: f.order,
-      });
+      entries.push({ type: 'file', slug, title: f.data.title || slugToDisplayName(slug), order: f.order });
     });
   } catch {}
-
   return entries;
 }
 
-/** Get the folder path segments for a system's folder_tag */
 export function getSystemTagPaths(systemSlug: string): string[][] {
   const tags = getSystemFolderTags(systemSlug);
   const paths: string[][] = [];
-
   function walk(prefix: string[], tagDir: string) {
     if (!fs.existsSync(tagDir)) return;
     try {
@@ -284,43 +617,47 @@ export function getSystemTagPaths(systemSlug: string): string[][] {
       });
     } catch {}
   }
-
   tags.forEach((tag) => {
     const tagDir = path.join(SYSTEMS_DIR, systemSlug, tag.tag);
     walk([tag.tag], tagDir);
   });
-
   return paths;
 }
 
-/** 
- * Read content from a file at a path relative to the system directory.
- * filePathSegments is e.g. ['architecture', 'architecture-overview'] or ['implementation', 'java', 'java-setup']
- * The last segment is a slug (without numeric prefix). We search the directory for a matching file.
- */
 export function getSystemFileAtPath(systemSlug: string, filePathSegments: string[]): SystemFileEntry | null {
+  // First try lesson path
+  const lesson = getLessonByPath(systemSlug, filePathSegments);
+  if (lesson) {
+    return {
+      slug: lesson.slug,
+      title: lesson.title,
+      order: lesson.order,
+      description: lesson.description,
+      content: lesson.content,
+      frontmatter: lesson.frontmatter,
+      knowledgeRefs: lesson.knowledgeRefs,
+      estimatedTime: lesson.estimatedTime,
+      difficulty: lesson.difficulty,
+      trackSlug: lesson.track,
+      moduleSlug: lesson.module,
+    };
+  }
+
+  // Fallback to old folder_tag structure
   try {
     if (filePathSegments.length === 0) return null;
-
-    // Directory = all segments except the last (which is the file slug)
     const dirSegments = filePathSegments.slice(0, -1);
     const fileSlug = filePathSegments[filePathSegments.length - 1];
     const dirPath = path.join(SYSTEMS_DIR, systemSlug, ...dirSegments);
-
     if (!fs.existsSync(dirPath)) return null;
-
-    // Find the file whose slug matches (files may have numeric prefixes)
     const files = fs.readdirSync(dirPath).filter((f) => f.endsWith('.md'));
     const matchingFile = files.find((f) => fileToSlug(f) === fileSlug);
     if (!matchingFile) return null;
-
-    const filePath = path.join(dirPath, matchingFile);
-    const raw = fs.readFileSync(filePath, 'utf-8');
+    const raw = fs.readFileSync(path.join(dirPath, matchingFile), 'utf-8');
     const { data, content } = matter(raw);
-    const slug = fileToSlug(matchingFile);
     return {
-      slug,
-      title: data.title || slugToDisplayName(slug),
+      slug: fileToSlug(matchingFile),
+      title: data.title || slugToDisplayName(fileToSlug(matchingFile)),
       order: getOrderFromFile(matchingFile, data.order),
       description: data.description || content.slice(0, 200).replace(/#+\s+/g, '').trim() + '...',
       content,
@@ -329,10 +666,6 @@ export function getSystemFileAtPath(systemSlug: string, filePathSegments: string
   } catch { return null; }
 }
 
-/**
- * Check if a path resolves to a directory (folder_tag or subfolder)
- * pathSegments is e.g. ['architecture'] or ['implementation', 'java']
- */
 export function systemHasDirectory(systemSlug: string, pathSegments: string[]): boolean {
   try {
     const dirPath = path.join(SYSTEMS_DIR, systemSlug, ...pathSegments);
@@ -340,11 +673,10 @@ export function systemHasDirectory(systemSlug: string, pathSegments: string[]): 
   } catch { return false; }
 }
 
-/**
- * Check if a path resolves to a file (by slug matching in the parent directory)
- * pathSegments is e.g. ['architecture', 'architecture-overview']
- */
 export function systemHasFile(systemSlug: string, pathSegments: string[]): boolean {
+  // Check lessons first
+  if (getLessonByPath(systemSlug, pathSegments)) return true;
+  // Fallback to old structure
   try {
     if (pathSegments.length === 0) return false;
     const dirSegments = pathSegments.slice(0, -1);
@@ -356,24 +688,25 @@ export function systemHasFile(systemSlug: string, pathSegments: string[]): boole
   } catch { return false; }
 }
 
-/**
- * Read the contents of a directory within a system (used for folder browsing).
- * Returns entries of files and subdirectories.
- */
 export function getSystemDirectoryContents(systemSlug: string, pathSegments: string[]): SystemFolderEntry[] {
   try {
     const dirPath = path.join(SYSTEMS_DIR, systemSlug, ...pathSegments);
     if (!fs.existsSync(dirPath) || !fs.statSync(dirPath).isDirectory()) return [];
-
     const lastSegment = pathSegments.length > 0 ? pathSegments[pathSegments.length - 1] : '';
     return readFolderEntries(dirPath, lastSegment);
   } catch { return []; }
 }
 
-/** Get all files across all folder_tags (flattened, for sidebar nav) */
 export function getAllSystemFiles(systemSlug: string): Array<{ slug: string; title: string; order: number; pathSegments: string[] }> {
   const result: Array<{ slug: string; title: string; order: number; pathSegments: string[] }> = [];
 
+  // Add lessons from tracks
+  const lessons = getAllSystemLessons(systemSlug);
+  for (const lesson of lessons) {
+    result.push({ slug: lesson.slug, title: lesson.title, order: lesson.order, pathSegments: lesson.pathSegments });
+  }
+
+  // Add files from old folder_tag structure
   function walk(dir: string, pathSegments: string[]) {
     if (!fs.existsSync(dir)) return;
     try {
@@ -386,13 +719,11 @@ export function getAllSystemFiles(systemSlug: string): Array<{ slug: string; tit
           try {
             const raw = fs.readFileSync(fullPath, 'utf-8');
             const { data } = matter(raw);
-            const slug = fileToSlug(name);
-            // Store pathSegments using the slug (no numeric prefix) so URLs are clean
             result.push({
-              slug,
-              title: data.title || slugToDisplayName(slug),
+              slug: fileToSlug(name),
+              title: data.title || slugToDisplayName(fileToSlug(name)),
               order: getOrderFromFile(name, data.order),
-              pathSegments: [...pathSegments, slug],
+              pathSegments: [...pathSegments, fileToSlug(name)],
             });
           } catch {}
         }
@@ -405,18 +736,14 @@ export function getAllSystemFiles(systemSlug: string): Array<{ slug: string; tit
   return result;
 }
 
-/** 
- * Backward-compatible: get all flat files from a system (used by old reading page).
- * Now returns files from ALL folder_tags, not just root-level.
- */
 export function getSystemFlatFiles(systemSlug: string): SystemFileEntry[] {
   const entries: SystemFileEntry[] = [];
-
-  function walk(dir: string) {
+  function walk(dir: string, isTopLevel?: boolean) {
     if (!fs.existsSync(dir)) return;
     try {
       const items = fs.readdirSync(dir).filter((name) => !name.startsWith('.'));
       items.forEach((name) => {
+        if (isTopLevel && name.startsWith('track-') && isDirectory(path.join(dir, name))) return; // Skip track dirs
         const fullPath = path.join(dir, name);
         if (isDirectory(fullPath)) {
           walk(fullPath);
@@ -424,10 +751,9 @@ export function getSystemFlatFiles(systemSlug: string): SystemFileEntry[] {
           try {
             const raw = fs.readFileSync(fullPath, 'utf-8');
             const { data, content } = matter(raw);
-            const slug = fileToSlug(name);
             entries.push({
-              slug,
-              title: data.title || slugToDisplayName(slug),
+              slug: fileToSlug(name),
+              title: data.title || slugToDisplayName(fileToSlug(name)),
               order: getOrderFromFile(name, data.order),
               description: data.description || content.slice(0, 200).replace(/#+\s+/g, '').trim() + '...',
               content,
@@ -438,30 +764,31 @@ export function getSystemFlatFiles(systemSlug: string): SystemFileEntry[] {
       });
     } catch {}
   }
-
-  walk(path.join(SYSTEMS_DIR, systemSlug));
+  walk(path.join(SYSTEMS_DIR, systemSlug), true);
   entries.sort((a, b) => a.order - b.order);
   return entries;
 }
 
-/** Get a single file by slug (backward-compatible, searches all folder_tags) */
 export function getSystemFile(systemSlug: string, fileSlug: string): SystemFileEntry | null {
-  const files = getSystemFlatFiles(systemSlug);
-  return files.find((f) => f.slug === fileSlug) || null;
+  // Try lesson first
+  const lesson = getLessonBySlug(systemSlug, fileSlug);
+  if (lesson) {
+    return { slug: lesson.slug, title: lesson.title, order: lesson.order, description: lesson.description, content: lesson.content, frontmatter: lesson.frontmatter };
+  }
+  return getSystemFlatFiles(systemSlug).find((f) => f.slug === fileSlug) || null;
 }
 
-/** Get system metadata from index.md */
 export function getSystemMeta(slug: string): SystemMeta | null {
   try {
     const systemDir = path.join(SYSTEMS_DIR, slug);
     if (!fs.existsSync(systemDir)) return null;
-
     const indexMdPath = path.join(systemDir, 'index.md');
     let title = slugToDisplayName(slug);
     let description = '';
     let difficulty = 'Intermediate';
     let tags: string[] = [];
     let order = 999;
+    let tracks: TrackMeta[] | undefined;
 
     if (fs.existsSync(indexMdPath)) {
       try {
@@ -471,18 +798,15 @@ export function getSystemMeta(slug: string): SystemMeta | null {
         difficulty = data.difficulty || difficulty;
         tags = data.tags || [];
         order = data.order ?? order;
+        if (data.tracks) tracks = data.tracks;
       } catch {}
     }
 
     return {
-      slug,
-      title,
-      description,
-      difficulty,
-      tags,
-      order,
+      slug, title, description, difficulty, tags, order,
       hasTemplate: false,
       hasSpecification: false,
+      tracks,
     };
   } catch { return null; }
 }
@@ -521,14 +845,7 @@ export function getAllLanguages(): LanguageMeta[] {
     .sort((a, b) => a.title.localeCompare(b.title));
 }
 
-// ─── Search / Tag Data (from search/ directory) ─────────────────────
-
-export interface ResourceItem { title: string; description: string; url: string; }
-export interface TagSearchData {
-  tag: string; displayName: string; description: string;
-  youtube: ResourceItem[]; websites: ResourceItem[]; articles: ResourceItem[];
-  courses: ResourceItem[]; books: ResourceItem[]; tools: ResourceItem[];
-}
+// ─── Search / Tag Data ──────────────────────────────────────────────
 
 export function getAllTagSlugs(): string[] {
   try {

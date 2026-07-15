@@ -14,6 +14,7 @@ import {
   isInsideMonorepo,
 } from '../actions/submit.js';
 import type { SubmitAnswers, BuildResult } from '../actions/submit.js';
+import type { PrResult } from '../actions/submit-pr.js';
 import { runValidation } from '../actions/validate.js';
 import type { ValidationResult } from '../actions/validate.js';
 
@@ -39,7 +40,8 @@ type SubmitPhase =
   | { name: 'auth'; ctx: SharedContext }
   | { name: 'metadata'; ctx: SharedContext; user: string; defaultRepoUrl: string | null }
   | { name: 'building'; ctx: SharedContext; answers: SubmitAnswers; user: string }
-  | { name: 'done'; result: BuildResult };
+  | { name: 'creating-pr'; ctx: SharedContext; buildResult: BuildResult }
+  | { name: 'done'; result: BuildResult; prResult: PrResult | null };
 
 export default function Submit({ args }: Props) {
   const [systemSlug] = args;
@@ -109,7 +111,7 @@ export default function Submit({ args }: Props) {
     });
   }, []);
 
-  // ─── Building → Done transition ────────────────────────────────
+  // ─── Building → Creating PR transition ───────────────────────────
 
   useEffect(() => {
     if (phase.name !== 'building') return;
@@ -118,13 +120,40 @@ export default function Submit({ args }: Props) {
       try {
         const p = phase as Extract<SubmitPhase, { name: 'building' }>;
         const { answers, user } = p;
-        const { projectDir, slug, systemTitle } = p.ctx;
+        const { projectDir, slug } = p.ctx;
         const result = buildReviewPackage(projectDir, slug, user, answers);
         updateSubmissionsIndex(slug, result.metadata);
-        markProjectCompleted(slug);
-        setPhase({ name: 'done', result });
+        setPhase({ name: 'creating-pr', ctx: p.ctx, buildResult: result });
       } catch (err: any) {
         setPhase({ name: 'error', message: `Failed to build review package: ${err.message}` });
+      }
+    })();
+  }, [phase]);
+
+  // ─── Creating PR → Done transition ───────────────────────────────
+
+  useEffect(() => {
+    if (phase.name !== 'creating-pr') return;
+
+    (async () => {
+      try {
+        const p = phase as Extract<SubmitPhase, { name: 'creating-pr' }>;
+        const { buildResult } = p;
+
+        // Try to create the PR; gracefully fall back if it fails
+        let prResult: PrResult | null = null;
+        try {
+          const { submitPullRequest } = await import('../actions/submit-pr.js');
+          prResult = await submitPullRequest(buildResult);
+          markProjectCompleted(buildResult.slug);
+        } catch (prErr: any) {
+          // PR creation failed — still mark as done with manual instructions
+          console.error(`  PR creation failed: ${prErr.message}`);
+        }
+
+        setPhase({ name: 'done', result: buildResult, prResult });
+      } catch (err: any) {
+        setPhase({ name: 'error', message: `PR creation failed: ${err.message}` });
       }
     })();
   }, [phase]);
@@ -133,8 +162,7 @@ export default function Submit({ args }: Props) {
 
   useEffect(() => {
     if (phase.name === 'done') {
-      // Small delay so the user sees the done screen before Ink exits
-      const timer = setTimeout(() => exit(), 500);
+      const timer = setTimeout(() => exit(), 2000);  // Longer delay so user can see PR URL
       return () => clearTimeout(timer);
     }
   }, [phase, exit]);
@@ -213,10 +241,10 @@ export default function Submit({ args }: Props) {
   if (phase.name === 'building') {
     return (
       <Box flexDirection="column" paddingX={2}>
-        <StepIndicator steps={3} current={3} labels={{ 1: 'Auth', 2: 'Meta', 3: 'Build' }} />
+        <StepIndicator steps={4} current={3} labels={{ 1: 'Auth', 2: 'Meta', 3: 'Build', 4: 'PR' }} />
         <Box marginY={1} />
         <Text>
-          {'  '}<Spinner type="dots" />{' '}<Text dimColor>Step 3/3:</Text> Building review package...
+          {'  '}<Spinner type="dots" />{' '}<Text dimColor>Step 3/4:</Text> Building review package...
         </Text>
         <Box marginY={1}>
           <Text dimColor>    Packaging project files, generating diffs, and preparing metadata...</Text>
@@ -225,8 +253,25 @@ export default function Submit({ args }: Props) {
     );
   }
 
+  if (phase.name === 'creating-pr') {
+    return (
+      <Box flexDirection="column" paddingX={2}>
+        <StepIndicator steps={4} current={4} labels={{ 1: 'Auth', 2: 'Meta', 3: 'Build', 4: 'PR' }} />
+        <Box marginY={1} />
+        <Text>
+          {'  '}<Spinner type="dots" />{' '}<Text dimColor>Step 4/4:</Text> Creating Pull Request...
+        </Text>
+        <Box marginY={1}>
+          <Text dimColor>
+            {'    '}Forking repository, copying review package, committing, and opening PR...
+          </Text>
+        </Box>
+      </Box>
+    );
+  }
+
   if (phase.name === 'done') {
-    return <DoneScreen result={phase.result} />;
+    return <DoneScreen result={phase.result} prResult={phase.prResult} />;
   }
 
   return null;
@@ -312,53 +357,78 @@ function MetadataForm({
 
 // ─── Done Screen ────────────────────────────────────────────────────
 
-function DoneScreen({ result }: { result: BuildResult }) {
+function DoneScreen({ result, prResult }: { result: BuildResult; prResult: PrResult | null }) {
   const inMonorepo = isInsideMonorepo();
 
-  return (
-    <Box flexDirection="column" paddingX={2}>
-      <Text color="green">{'  '}✓ Submission prepared successfully!</Text>
-      <Box marginY={1} />
+  const children: React.ReactNode[] = [];
 
-      {inMonorepo ? (
-        <Box flexDirection="column">
-          <Text dimColor>  Since you are inside the 100xsystems repository:</Text>
-          <Box marginY={1} />
-          <Text>{'  '}→ Create a git branch and commit:</Text>
-          <Box marginLeft={4}>
-            <Text dimColor>git checkout -b submission/{result.slug}/{result.reviewDirName}</Text>
-            <Text dimColor>git add submissions/{result.slug}/{result.reviewDirName}</Text>
-            <Text dimColor>git commit -m &ldquo;submission: {result.slug} by {result.user}&rdquo;</Text>
-            <Text dimColor>git push origin submission/{result.slug}/{result.reviewDirName}</Text>
-          </Box>
-          <Box marginY={1} />
-          <Text>{'  '}→ Then create a Pull Request to 100xsystems:</Text>
-          <Box marginLeft={4}>
-            <Text color="cyan">  https://github.com/aryanbatras/100xsystems/compare</Text>
-          </Box>
-          <Box marginY={1} />
-          <Text>{'  '}→ Or use the GitHub CLI:</Text>
-          <Box marginLeft={4}>
-            <Text dimColor>gh pr create --title &ldquo;[{result.slug}] Submission by {result.user}&rdquo; --body &ldquo;...&rdquo;</Text>
-          </Box>
+  if (prResult) {
+    // PR was created successfully
+    children.push(<Text key="h" color="green">{'  '}✓ Pull Request created successfully!</Text>);
+    children.push(<Box key="sp0" marginY={1} />);
+    children.push(
+      <Text key="pr-link">
+        {'  '}→ <Text color="cyan" bold>{prResult.prUrl}</Text>
+      </Text>
+    );
+    children.push(<Box key="sp1" marginY={1} />);
+    children.push(
+      <Text key="pr-note" dimColor>
+        {'  '}A reviewer will review your submission. Track the PR for updates.
+      </Text>
+    );
+  } else {
+    // PR creation failed or unavailable — show manual instructions
+    children.push(<Text key="h2" color="green">{'  '}✓ Review package built successfully!</Text>);
+    children.push(<Box key="sp2" marginY={1} />);
+
+    if (inMonorepo) {
+      children.push(
+        <Text key="manual1" dimColor>{'  '}PR automation requires authentication with GitHub.</Text>
+      );
+      children.push(<Box key="sp3" marginY={1} />);
+      children.push(
+        <Text key="manual2">{'  '}Create a manual PR from your fork:</Text>
+      );
+      children.push(<Box key="sp4" marginY={1} />);
+      children.push(
+        <Box key="manual-cmds" marginLeft={4} flexDirection="column">
+          <Text dimColor>git checkout -b submission/{result.slug}/{result.reviewDirName}</Text>
+          <Text dimColor>git add submissions/{result.slug}/{result.reviewDirName}</Text>
+          <Text dimColor>git commit -m &ldquo;submission: {result.slug} by {result.user}&rdquo;</Text>
+          <Text dimColor>git push origin submission/{result.slug}/{result.reviewDirName}</Text>
         </Box>
-      ) : (
-        <Text dimColor>  To submit, push this repository or create a PR manually.</Text>
-      )}
+      );
+      children.push(<Box key="sp5" marginY={1} />);
+      children.push(
+        <Text key="manual-pr">{'  '}Then create a PR at:</Text>
+      );
+      children.push(
+        <Text key="manual-pr-link" color="cyan">
+          {'  '}https://github.com/100xsystems/submissions/compare
+        </Text>
+      );
+    } else {
+      children.push(
+        <Text key="manual3" dimColor>
+          {'  '}To submit, push your repository and create a PR to 100xsystems/submissions.
+        </Text>
+      );
+    }
+  }
 
-      <Box marginY={1} />
-      <Box flexDirection="column">
-        <Text dimColor>  Submission details:</Text>
-        <Text>{'  '}System: <Text bold>{result.slug}</Text></Text>
-        <Text>{'  '}Author: <Text bold>{result.user}</Text></Text>
-        <Text>{'  '}Language: <Text bold>{result.metadata.language}</Text></Text>
-        <Text>{'  '}Repository: <Text bold>{result.metadata.repositoryUrl}</Text></Text>
-      </Box>
-      <Box marginY={1} />
-      <Text dimColor>  A reviewer will review your submission.</Text>
-      <Text dimColor>  Track the PR status for updates.</Text>
-    </Box>
-  );
+  // Submission details
+  children.push(<Box key="sp6" marginY={1} />);
+  children.push(<Text key="details-h" dimColor>{'  '}Submission details:</Text>);
+  children.push(<Text key="d1">{'  '}System: <Text bold>{result.slug}</Text></Text>);
+  children.push(<Text key="d2">{'  '}Author: <Text bold>{result.user}</Text></Text>);
+  children.push(<Text key="d3">{'  '}Language: <Text bold>{result.metadata.language}</Text></Text>);
+  children.push(<Text key="d4">{'  '}Repository: <Text bold>{result.metadata.repositoryUrl}</Text></Text>);
+  if (prResult?.prNumber) {
+    children.push(<Text key="d5">{'  '}PR: <Text bold>#{prResult.prNumber}</Text></Text>);
+  }
+
+  return <Box flexDirection="column" paddingX={2}>{children}</Box>;
 }
 
 // ─── Step Indicator ─────────────────────────────────────────────────

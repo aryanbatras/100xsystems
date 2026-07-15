@@ -1,0 +1,239 @@
+# Certificate Generation Workflow
+#
+# When a submission PR is merged with the "verified" label, this workflow
+# generates a completion certificate and stores it as a static page
+# accessible at https://100xsystems.dev/certificates/{pr-number}/
+#
+# Architecture: Backend-free certificate system using GitHub Actions +
+# Next.js static site generation.
+
+name: issue-certificate
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  certificate:
+    if: >
+      github.event.pull_request.merged == true &&
+      contains(github.event.pull_request.labels.*.name, 'verified')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read Submission Metadata
+        id: metadata
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          # Find the metadata.json from the merged PR
+          # PR merges create a commit hash we can search
+          MERGE_COMMIT="${{ github.event.pull_request.merge_commit_sha }}"
+          
+          # Find the submission directory for this PR
+          SUBMISSION_DIR=$(git diff --name-only $MERGE_COMMIT..$MERGE_COMMIT~1 \
+            -- submissions/ | head -1 | xargs dirname 2>/dev/null || echo "")
+          
+          if [ -z "$SUBMISSION_DIR" ]; then
+            # Try finding by searching for the PR number in metadata files
+            SUBMISSION_DIR=$(find submissions/ -name "metadata.json" -exec grep -l \
+              "prUrl.*$PR_NUMBER" {} \; | head -1 | xargs dirname 2>/dev/null || echo "")
+          fi
+          
+          if [ -z "$SUBMISSION_DIR" ]; then
+            echo "Could not find submission directory. Skipping certificate."
+            exit 0
+          fi
+          
+          echo "submission_dir=$SUBMISSION_DIR" >> $GITHUB_OUTPUT
+          
+          # Parse metadata
+          METADATA_FILE="$SUBMISSION_DIR/metadata.json"
+          if [ -f "$METADATA_FILE" ]; then
+            echo "system=$(jq -r '.system // "unknown"' $METADATA_FILE)" >> $GITHUB_OUTPUT
+            echo "author=$(jq -r '.author // "unknown"' $METADATA_FILE)" >> $GITHUB_OUTPUT
+            echo "language=$(jq -r '.language // "unknown"' $METADATA_FILE)" >> $GITHUB_OUTPUT
+            echo "repository=$(jq -r '.repositoryUrl // ""' $METADATA_FILE)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate Certificate HTML
+        if: steps.metadata.outputs.submission_dir != ''
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          SYSTEM="${{ steps.metadata.outputs.system }}"
+          AUTHOR="${{ steps.metadata.outputs.author }}"
+          LANGUAGE="${{ steps.metadata.outputs.language }}"
+          REPO="${{ steps.metadata.outputs.repository }}"
+          DATE="$(date +'%B %d, %Y')"
+          PR_URL="${{ github.event.pull_request.html_url }}"
+          
+          # Store certificates in docs/ for GitHub Pages hosting
+          CERT_DIR="docs/certificates/${PR_NUMBER}"
+          mkdir -p "$CERT_DIR"
+          
+          cat > "$CERT_DIR/index.html" << CERTEOF
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate of Completion - ${SYSTEM} - 100xSystems</title>
+  <meta name="description" content="Verified implementation of the ${SYSTEM} system by ${AUTHOR}">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0B0F19;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .certificate {
+      max-width: 800px;
+      width: 100%;
+      background: linear-gradient(135deg, #1a1f2e 0%, #0f1525 100%);
+      border: 1px solid #2a2f3e;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .certificate::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #00F2FE 0%, #4FACFE 100%);
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      font-size: 0.625rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      background: linear-gradient(135deg, #00F2FE, #4FACFE);
+      color: #0B0F19;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .subtitle {
+      font-size: 1rem;
+      color: #6B7280;
+      margin-bottom: 2.5rem;
+      line-height: 1.6;
+    }
+    .details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .detail-label {
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #6B7280;
+      margin-bottom: 0.25rem;
+    }
+    .detail-value {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .detail-value a {
+      color: #00F2FE;
+      text-decoration: none;
+    }
+    .detail-value a:hover { text-decoration: underline; }
+    .footer {
+      font-size: 0.75rem;
+      color: #4B5563;
+      border-top: 1px solid #1f2937;
+      padding-top: 1.5rem;
+      margin-top: 1rem;
+    }
+    .verify-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: linear-gradient(135deg, #00F2FE, #4FACFE);
+      color: #0B0F19;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .verify-link:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+  <div class="certificate">
+    <div class="badge">100xSystems</div>
+    <h1>Certificate of Completion</h1>
+    <p class="subtitle">
+      This certifies that the following system implementation has passed community review
+      and been verified as a complete, well-documented engineering project.
+    </p>
+    <div class="details">
+      <div>
+        <div class="detail-label">System</div>
+        <div class="detail-value">${SYSTEM}</div>
+      </div>
+      <div>
+        <div class="detail-label">Author</div>
+        <div class="detail-value">${AUTHOR}</div>
+      </div>
+      <div>
+        <div class="detail-label">Language</div>
+        <div class="detail-value">${LANGUAGE}</div>
+      </div>
+      <div>
+        <div class="detail-label">Repository</div>
+        <div class="detail-value"><a href="${REPO}" target="_blank">${REPO}</a></div>
+      </div>
+      <div>
+        <div class="detail-label">Completed</div>
+        <div class="detail-value">${DATE}</div>
+      </div>
+      <div>
+        <div class="detail-label">Review PR</div>
+        <div class="detail-value"><a href="${PR_URL}" target="_blank">#${PR_NUMBER}</a></div>
+      </div>
+    </div>
+    <a href="${PR_URL}" target="_blank" class="verify-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Verify on GitHub
+    </a>
+    <div class="footer">
+      100xSystems &mdash; Engineering education through real system building.
+      This certificate represents a verified community-reviewed implementation.
+    </div>
+  </div>
+</body>
+</html>
+CERTEOF
+          echo "Certificate generated at docs/certificates/${PR_NUMBER}/index.html"
+
+      - name: Commit Certificate
+        if: steps.metadata.outputs.submission_dir != ''
+        run: |
+          git config user.name "100xSystems Bot"
+          git config user.email "bot@100xsystems.dev"
+          git add docs/certificates/
+          git commit -m "certificate: PR #${{ github.event.pull_request.number }} (${{ steps.metadata.outputs.system }} by ${{ steps.metadata.outputs.author }})"
+          git push origin HEAD:main

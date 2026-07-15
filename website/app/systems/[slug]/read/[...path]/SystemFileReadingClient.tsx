@@ -23,9 +23,26 @@ import { ReadingToolbar } from '@/components/reading/ReadingToolbar';
 
 import { MobileNav, SidebarNav } from '@/presentation/__components';
 import type { MobileNavItem, SidebarNavItem } from '@/presentation/__components';
-import type { SystemMeta, SystemFileEntry } from '@/lib/mdx';
+import type { SystemMeta, SystemFileEntry, TrackMeta, ModuleMeta } from '@/lib/mdx';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+
+interface KbItemData {
+  slug: string;
+  title: string;
+  description: string;
+  domain: string;
+}
+
+interface LanguageTrackOption {
+  trackSlug: string;
+  trackTitle: string;
+  language: string;
+  lessonSlug: string;
+  lessonTitle: string;
+  pathSegments: string[];
+  isCurrent: boolean;
+}
 
 interface SystemFileReadingClientProps {
   system: SystemMeta;
@@ -34,6 +51,10 @@ interface SystemFileReadingClientProps {
   prevFile: { slug: string; title: string } | null;
   nextFile: { slug: string; title: string } | null;
   folderTag: string;
+  currentTrack?: TrackMeta | null;
+  currentModule?: ModuleMeta | null;
+  kbItems?: KbItemData[];
+  languageTracks?: LanguageTrackOption[];
 }
 
 const difficultyStyles: Record<string, string> = {
@@ -237,7 +258,167 @@ function CopyButton({ content }: { content: string }) {
   );
 }
 
-function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile, folderTag }: SystemFileReadingClientProps) {
+// ─── Knowledge Base Related Section ───────────────────────────────
+
+function KbRelatedSection({ items }: { items: KbItemData[] }) {
+  if (items.length === 0) return null;
+
+  return (
+    <div>
+      <span className="text-xs font-bold uppercase tracking-[0.15em] text-fg-muted mb-5 block">
+        Related
+      </span>
+      <div className="flex flex-col space-y-2">
+        {items.map((item) => (
+          <a
+            key={`${item.domain}-${item.slug}`}
+            href={`/${item.domain}/read/${item.slug}`}
+            className="group block py-2.5 px-2 -mx-2 transition-all duration-150 hover:bg-accent hover:text-white rounded-sm"
+          >
+            <div className="flex items-start gap-2">
+              <DomainBadge domain={item.domain} />
+              <div className="flex-1 min-w-0">
+                <span className="text-sm font-semibold text-fg group-hover:text-white transition-colors leading-snug block">
+                  {item.title}
+                </span>
+                {item.description && (
+                  <span className="text-[11px] text-fg-secondary group-hover:text-white/70 transition-colors leading-relaxed block mt-0.5 line-clamp-2">
+                    {item.description}
+                  </span>
+                )}
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DomainBadge({ domain }: { domain: string }) {
+  const styles: Record<string, string> = {
+    principles: 'bg-purple-100 text-purple-700',
+    patterns: 'bg-blue-100 text-blue-700',
+    tools: 'bg-green-100 text-green-700',
+    technologies: 'bg-orange-100 text-orange-700',
+  };
+  return (
+    <span className={`shrink-0 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 mt-0.5 ${styles[domain] || 'bg-gray-100 text-gray-700'}`}>
+      {domain.slice(0, 4)}
+    </span>
+  );
+}
+
+// ─── Language Switcher ────────────────────────────────────────────
+
+const languageLogos: Record<string, string> = {
+  typescript: '/assets/icons/typescript.svg',
+  javascript: '/assets/icons/javascript.svg',
+  python: '/assets/icons/python.svg',
+  go: '/assets/icons/go.svg',
+  rust: '/assets/icons/rust.svg',
+  java: '/assets/icons/java.svg',
+  spring: '/assets/icons/spring.svg',
+  'spring-boot': '/assets/icons/spring.svg',
+};
+
+function LanguageSwitcher({
+  options,
+  currentLessonTitle,
+  systemSlug,
+}: {
+  options: LanguageTrackOption[];
+  currentLessonTitle: string;
+  systemSlug: string;
+}) {
+  if (options.length <= 1) return null;
+
+  return (
+    <div className="mb-10 border border-gray-100 bg-white">
+      <div className="px-5 py-3 border-b border-gray-50">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-fg-muted">
+          Also available in
+        </span>
+      </div>
+      <div className="flex items-stretch divide-x divide-gray-50">
+        {options.map((opt) => {
+          const langSlug = opt.language.toLowerCase() || opt.trackSlug.replace('track-', '');
+          const logo = languageLogos[langSlug];
+
+          if (opt.isCurrent) {
+            return (
+              <div
+                key={opt.trackSlug}
+                className="flex-1 flex items-center gap-2.5 px-4 py-3 bg-accent text-white min-w-0"
+              >
+                {logo && (
+                  <img
+                    src={logo}
+                    alt=""
+                    className="w-5 h-5 object-contain shrink-0 brightness-0 invert"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
+                )}
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs font-bold truncate block">{opt.trackTitle}</span>
+                  <span className="text-[10px] text-white/70 truncate block">{currentLessonTitle}</span>
+                </div>
+                <span className="text-[9px] font-bold uppercase tracking-wider text-white/50 shrink-0">
+                  Current
+                </span>
+              </div>
+            );
+          }
+
+          const href = `/systems/${systemSlug}/read/${opt.pathSegments.join('/')}`;
+
+          return (
+            <Link
+              key={opt.trackSlug}
+              href={href}
+              className="flex-1 flex items-center gap-2.5 px-4 py-3 transition-all duration-200 hover:bg-accent hover:text-white group min-w-0"
+            >
+              {logo && (
+                <img
+                  src={logo}
+                  alt=""
+                  className="w-5 h-5 object-contain shrink-0 group-hover:brightness-0 group-hover:invert transition-all duration-200"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
+              )}
+              <div className="flex-1 min-w-0">
+                <span className={cn(
+                  'text-xs font-bold truncate block transition-colors duration-200',
+                  'text-fg group-hover:text-white',
+                )}>
+                  {opt.trackTitle}
+                </span>
+                <span className="text-[10px] text-fg-muted group-hover:text-white/70 truncate block transition-colors duration-200">
+                  {opt.lessonTitle}
+                </span>
+              </div>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="shrink-0 text-fg-muted group-hover:text-white/70 transition-colors duration-200"
+              >
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile, folderTag, currentTrack, currentModule, kbItems, languageTracks }: SystemFileReadingClientProps) {
   const { settings } = useReadingSettings();
   const router = useRouter();
 
@@ -367,19 +548,25 @@ function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile, 
         />
       )}
 
-      {headings.length > 0 && (
-        <aside className="fixed right-0 top-0 h-screen z-30 hidden xl:block w-72 bg-white">
-          <div className="h-full overflow-y-auto pr-8 pl-6 pt-10">
-            <LessonOutline
-              headings={headings}
-              activeId={activeHeading}
-              onSelect={(id) => {
-                ScrollSmoother.get()?.scrollTo(`#${id}`, true, 'top top');
-              }}
-            />
-          </div>
-        </aside>
-      )}
+      {/* Right Sidebar — Lesson Outline + Knowledge Base References */}
+      <aside className="fixed right-0 top-0 h-screen z-30 hidden xl:block w-72 bg-white">
+        <div className="h-full overflow-y-auto pr-8 pl-6 pt-10 pb-20">
+          {headings.length > 0 && (
+            <div className="mb-10">
+              <LessonOutline
+                headings={headings}
+                activeId={activeHeading}
+                onSelect={(id) => {
+                  ScrollSmoother.get()?.scrollTo(`#${id}`, true, 'top top');
+                }}
+              />
+            </div>
+          )}
+
+          {/* Related Knowledge Base Items */}
+          <KbRelatedSection items={kbItems || []} />
+        </div>
+      </aside>
 
       <div id="smooth-wrapper" className="relative z-10">
         <div id="smooth-content">
@@ -428,6 +615,12 @@ function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile, 
                   <a href={`/systems/${system.slug}`} className="text-xs text-fg-muted font-medium hidden sm:inline hover:text-accent transition-colors">{system.title}</a>
                   <span className="text-xs text-fg-muted hidden sm:inline">/</span>
                   <span className="text-[10px] text-fg-muted uppercase font-medium hidden sm:inline hover:text-accent transition-colors">{folderTag}</span>
+                  {currentModule && (
+                    <>
+                      <span className="text-xs text-fg-muted hidden sm:inline">/</span>
+                      <span className="text-[10px] text-fg-muted uppercase font-medium hidden sm:inline">{currentModule.title}</span>
+                    </>
+                  )}
                   <span className="text-xs text-fg-muted hidden sm:inline">/</span>
                   <span className="text-xs text-fg font-medium hidden sm:inline">{file.title}</span>
                 </div>
@@ -447,6 +640,13 @@ function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile, 
                 </div>
               </div>
 
+              {/* Multi-Language Comparison Switcher */}
+              <LanguageSwitcher
+                options={languageTracks || []}
+                currentLessonTitle={file.title}
+                systemSlug={system.slug}
+              />
+
               <div className="mb-8">
                 <div className="flex items-center gap-2 mb-3">
                   {file.frontmatter.difficulty && (
@@ -460,6 +660,12 @@ function SystemFileReadingContent({ system, file, allFiles, prevFile, nextFile, 
                     <>
                       <span className="text-[10px] text-fg-muted">·</span>
                       <span className="text-[10px] font-medium text-fg-muted uppercase tracking-wider">{folderTag}</span>
+                    </>
+                  )}
+                  {currentModule && (
+                    <>
+                      <span className="text-[10px] text-fg-muted">·</span>
+                      <span className="text-[10px] font-medium text-fg-muted uppercase tracking-wider">{currentModule.title}</span>
                     </>
                   )}
                 </div>
