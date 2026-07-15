@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Text } from '../ui/index.js';
 import zod from 'zod';
-import fs from 'fs';
-import path from 'path';
 import { getAllSystems, getSystemMeta } from '../reader/system-reader.js';
+import { loadProgress, detectInProgressProjects } from '../actions/progress.js';
+import type { ProgressData, ProgressEntry } from '../reader/index.js';
 
 export const args = zod.tuple([
   zod.string().optional().describe('Optional system slug to show detailed progress'),
@@ -13,67 +13,6 @@ type Props = {
   args: zod.infer<typeof args>;
 };
 
-interface ProgressEntry {
-  status: 'not-started' | 'in-progress' | 'completed';
-  startedAt?: string;
-  completedAt?: string;
-  projectDir?: string;
-  language?: string;
-}
-
-interface ProgressData {
-  systems: Record<string, ProgressEntry>;
-}
-
-const PROGRESS_FILE = (): string => path.join(
-  path.resolve(process.env.HOME || process.env.USERPROFILE || '~', '.100x'),
-  'progress.json'
-);
-
-function loadProgress(): ProgressData {
-  try {
-    if (!fs.existsSync(PROGRESS_FILE())) return { systems: {} };
-    return JSON.parse(fs.readFileSync(PROGRESS_FILE(), 'utf-8'));
-  } catch {
-    return { systems: {} };
-  }
-}
-
-function detectInProgressProjects(): ProgressData {
-  const progress = loadProgress();
-  const home = process.env.HOME || process.env.USERPROFILE || '~';
-  const dirs = [process.cwd(), path.join(home, 'projects'), path.join(home, 'code'), path.join(home, 'Documents')];
-  for (const dir of dirs) {
-    try { scanDir(dir, progress, 3); } catch { /* skip */ }
-  }
-  return progress;
-}
-
-function scanDir(dir: string, progress: ProgressData, depth: number): void {
-  if (depth <= 0) return;
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
-  for (const entry of entries) {
-    if (!entry.isDirectory() || entry.name.startsWith('.') || entry.name === 'node_modules') continue;
-    const fullPath = path.join(dir, entry.name);
-    const configPath = path.join(fullPath, '.100x.json');
-    if (fs.existsSync(configPath)) {
-      try {
-        const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-        if (config.system && !progress.systems[config.system]) {
-          progress.systems[config.system] = {
-            status: 'in-progress' as const,
-            startedAt: config.createdAt || new Date().toISOString(),
-            projectDir: fullPath,
-            language: config.language,
-          };
-        }
-      } catch { /* skip */ }
-    } else {
-      scanDir(fullPath, progress, depth - 1);
-    }
-  }
-}
-
 export default function Progress({ args }: Props) {
   const [systemSlug] = args;
   const [progressData, setProgressData] = useState<ProgressData | null>(null);
@@ -81,7 +20,8 @@ export default function Progress({ args }: Props) {
 
   useEffect(() => {
     try {
-      const data = detectInProgressProjects();
+      detectInProgressProjects();
+      const data = loadProgress();
       setProgressData(data);
     } catch (err: any) {
       setError(err.message);
@@ -153,9 +93,9 @@ export default function Progress({ args }: Props) {
   }
 
   // All systems view
-  const completedSlugs = entries.filter(([, e]: [string, ProgressEntry]) => e.status === 'completed').map(([s]: [string, ProgressEntry]) => s);
-  const inProgressSlugs = entries.filter(([, e]: [string, ProgressEntry]) => e.status === 'in-progress').map(([s]: [string, ProgressEntry]) => s);
-  const notStarted = allSystems.map((s: { slug: string }) => s.slug).filter((slug: string) => !completedSlugs.includes(slug) && !inProgressSlugs.includes(slug));
+  const completedSlugs: string[] = entries.filter(([, e]) => e.status === 'completed').map(([s]) => s);
+  const inProgressSlugs: string[] = entries.filter(([, e]) => e.status === 'in-progress').map(([s]) => s);
+  const notStarted: string[] = allSystems.map((s) => s.slug).filter((slug) => !completedSlugs.includes(slug) && !inProgressSlugs.includes(slug));
 
   const total = allSystems.length;
   const pct = total > 0 ? Math.round((completedSlugs.length / total) * 100) : 0;
@@ -168,7 +108,7 @@ export default function Progress({ args }: Props) {
       {completedSlugs.length > 0 && (
         <Box flexDirection="column">
           <Text color="green">{'  '}✓ Completed</Text>
-          {completedSlugs.map((slug: string) => {
+          {completedSlugs.map((slug) => {
             const system = getSystemMeta(slug);
             const entry = progressData.systems[slug];
             const date = entry?.completedAt ? new Date(entry.completedAt).toLocaleDateString() : '';
@@ -180,7 +120,7 @@ export default function Progress({ args }: Props) {
       {inProgressSlugs.length > 0 && (
         <Box flexDirection="column" marginTop={1}>
           <Text color="yellow">{'  '}⟳ In Progress</Text>
-          {inProgressSlugs.map((slug: string) => {
+          {inProgressSlugs.map((slug) => {
             const system = getSystemMeta(slug);
             const entry = progressData.systems[slug];
             return (
@@ -196,7 +136,7 @@ export default function Progress({ args }: Props) {
       {notStarted.length > 0 && (
         <Box flexDirection="column" marginTop={1}>
           <Text dimColor>{'  '}○ Not Started</Text>
-          {notStarted.map((slug: string) => {
+          {notStarted.map((slug) => {
             const system = getSystemMeta(slug);
             return <Text key={slug}>{'    '}<Text dimColor>○ {system?.title || slug}</Text></Text>;
           })}

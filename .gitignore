@@ -22,3 +22,5 @@ website/storybook-static/**
 website/supabase/
 
 .mimocode/**
+
+_test-smoke/

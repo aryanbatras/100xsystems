@@ -6,8 +6,6 @@ import { getSystemMeta } from '../reader/system-reader.js';
 import { readProjectConfig } from '../scaffold/index.js';
 import { SUBMISSIONS_DIR } from '../reader/index.js';
 import { runValidation } from './validate.js';
-import type { ValidationResult } from './validate.js';
-export type { ValidationResult };
 
 // ─── Types ──────────────────────────────────────────────────────────
 
@@ -44,17 +42,6 @@ export function readSubmitConfig(projectDir: string, systemSlug?: string): Proje
 
   const slug = systemSlug || (config.system as string);
   return { config, slug, projectDir };
-}
-
-/**
- * Run validation checks on the project.
- * Returns validation results for the Pastel command to display.
- */
-export async function validateProject(
-  projectDir: string,
-  config: Record<string, any>
-): Promise<ValidationResult[]> {
-  return await runValidation(projectDir, config);
 }
 
 /**

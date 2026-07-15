@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
@@ -13,32 +12,11 @@ export interface ValidationResult {
   category: 'documentation' | 'structure' | 'code' | 'git';
 }
 
-// ─── Command ────────────────────────────────────────────────────────
-
-/**
- * `100x validate` — Check documentation and structure completeness
- * of the current implementation project.
- *
- * Returns the ValidationResult[] array so callers can inspect results.
- */
-export async function validateCommand(): Promise<ValidationResult[]> {
-  const projectDir = process.cwd();
-  const config = readProjectConfig(projectDir);
-
-  if (!config) {
-    console.log(chalk.yellow('\n  No .100x.json found in the current directory.'));
-    console.log(chalk.dim('  Run `100x init <system>` first to scaffold a project.'));
-    return [];
-  }
-
-  return await runValidation(projectDir, config);
-}
+// ─── Public API (data-only — Pastel commands handle Ink display) ───
 
 /**
  * Run validation checks and return results.
- * Callers can either:
- *   - Call `validateCommand()` directly (standalone use — prints output + returns results)
- *   - Call `runValidation()` and display results themselves (integrated use like submit)
+ * Callers render display themselves (no console.log side effects).
  */
 export async function runValidation(
   projectDir: string,
@@ -64,49 +42,12 @@ export async function runValidation(
     return order[a.status] - order[b.status];
   });
 
-  console.log(chalk.bold(`\n  100xSystems — Validating "${config.systemTitle || config.system}"\n`));
-
-  // Print results grouped by category
-  const categories = ['documentation', 'structure', 'git'] as const;
-  for (const category of categories) {
-    const catResults = results.filter((r) => r.category === category);
-    if (catResults.length === 0) continue;
-
-    const categoryLabel = category.charAt(0).toUpperCase() + category.slice(1);
-    console.log(`  ${chalk.bold(categoryLabel)}`);
-
-    for (const result of catResults) {
-      const icon = result.status === 'pass' ? chalk.green('✓') :
-        result.status === 'warn' ? chalk.yellow('⚠') : chalk.red('✗');
-      console.log(`  ${icon} ${result.message}`);
-    }
-    console.log();
-  }
-
-  // Summary
-  const passCount = results.filter((r) => r.status === 'pass').length;
-  const warnCount = results.filter((r) => r.status === 'warn').length;
-  const failCount = results.filter((r) => r.status === 'fail').length;
-
-  console.log(`  ${chalk.bold('─'.repeat(40))}`);
-  console.log(`  ${chalk.bold('Validation Results:')}`);
-  console.log(`  ${chalk.green(`${passCount} passed`)}` +
-    (warnCount > 0 ? `, ${chalk.yellow(`${warnCount} warnings`)}` : '') +
-    (failCount > 0 ? `, ${chalk.red(`${failCount} failed`)}` : '')
-  );
-
-  if (failCount === 0) {
-    console.log(chalk.green('\n  Your project is ready for submission!\n'));
-  } else if (failCount > 0) {
-    console.log(chalk.yellow(`\n  ${failCount} check(s) failed. Complete the missing items before submitting.\n`));
-  }
-
   return results;
 }
 
 // ─── Checks ─────────────────────────────────────────────────────────
 
-function checkDocumentation(projectDir: string): ValidationResult[] {
+export function checkDocumentation(projectDir: string): ValidationResult[] {
   const results: ValidationResult[] = [];
 
   // README.md
@@ -176,7 +117,7 @@ function checkDocumentation(projectDir: string): ValidationResult[] {
   return results;
 }
 
-function checkStructure(projectDir: string): ValidationResult[] {
+export function checkStructure(projectDir: string): ValidationResult[] {
   const results: ValidationResult[] = [];
 
   // .100x.json

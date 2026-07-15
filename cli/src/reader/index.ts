@@ -4,11 +4,21 @@ import path from 'path';
 // ─── Paths ──────────────────────────────────────────────────────────
 
 /**
- * Find the repo root by walking up from the current working directory
- * looking for the curriculum/ directory. This works whether the user
- * runs from inside the repo or from a subdirectory of it.
+ * Find the repo root by checking:
+ *   1. CURRICULUM_PATH env var (overrides everything — for running outside repo)
+ *   2. Walk up from cwd looking for curriculum/ directory
+ *   3. Fallback: check if parent of cwd has curriculum/
  */
 function findRootDir(): string {
+  // Allow override via env var so users can scaffold projects from anywhere
+  const envPath = process.env.CURRICULUM_PATH;
+  if (envPath) {
+    const resolved = path.resolve(envPath);
+    if (fs.existsSync(resolved)) {
+      return resolved;
+    }
+  }
+
   let dir = path.resolve(process.cwd());
   for (let i = 0; i < 20; i++) {
     if (fs.existsSync(path.join(dir, 'curriculum'))) {

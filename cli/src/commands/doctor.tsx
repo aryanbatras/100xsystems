@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Text } from '../ui/index.js';
 import zod from 'zod';
-import { execSync } from 'child_process';
+import { execaSync } from 'execa';
 
 export const args = zod.tuple([
   zod.string().optional().describe('Optional system slug to show relevant tools only'),
@@ -56,14 +56,8 @@ const SYSTEM_TOOLS: Record<string, string[]> = {
 
 function checkTool(tool: ToolCheck): CheckResult {
   try {
-    const output = execSync(tool.command, {
-      timeout: 10000,
-      stdio: 'pipe',
-      shell: true as any,
-      cwd: process.cwd(),
-      env: process.env as any,
-    }).toString().trim();
-    const version = output.split('\n')[0].trim();
+    const result = execaSync(tool.command, { shell: true, timeout: 10000 });
+    const version = result.stdout.split('\n')[0].trim() || result.stderr.split('\n')[0].trim();
     return { name: tool.name, found: true, version, required: tool.required, ok: true };
   } catch {
     return { name: tool.name, found: false, required: tool.required, ok: false };

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Text, useApp } from 'ink';
+import Spinner from 'ink-spinner';
 import { TextInput, ConfirmInput, ValidationSummary } from '../ui/index.js';
 import SelectInput from 'ink-select-input';
 import zod from 'zod';
 import {
   readSubmitConfig,
-  validateProject,
   authenticateGitHub,
   detectGitRemote,
   buildReviewPackage,
@@ -13,7 +13,9 @@ import {
   markProjectCompleted,
   isInsideMonorepo,
 } from '../actions/submit.js';
-import type { ValidationResult, SubmitAnswers, BuildResult } from '../actions/submit.js';
+import type { SubmitAnswers, BuildResult } from '../actions/submit.js';
+import { runValidation } from '../actions/validate.js';
+import type { ValidationResult } from '../actions/validate.js';
 
 export const args = zod.tuple([
   zod.string().optional().describe('Optional system slug (auto-detected from .100x.json)'),
@@ -62,7 +64,7 @@ export default function Submit({ args }: Props) {
       const ctx: SharedContext = { config, slug, projectDir, systemTitle };
 
       // Run validation, then go straight to confirm
-      const results = await validateProject(projectDir, config);
+      const results = await runValidation(projectDir, config);
       setPhase({ name: 'confirm', ctx, results });
     })();
   }, [phase]);
@@ -156,7 +158,9 @@ export default function Submit({ args }: Props) {
   if (phase.name === 'loading') {
     return (
       <Box flexDirection="column" paddingX={2}>
-        <Text dimColor>  Loading...</Text>
+        <Text>
+          {'  '}<Spinner type="dots" />{' '}<Text dimColor>Loading project configuration...</Text>
+        </Text>
       </Box>
     );
   }
@@ -180,9 +184,13 @@ export default function Submit({ args }: Props) {
   if (phase.name === 'auth') {
     return (
       <Box flexDirection="column" paddingX={2}>
+        <StepIndicator steps={3} current={1} labels={{ 1: 'Auth', 2: 'Meta', 3: 'Build' }} />
+        <Box marginY={1} />
         <Text>
-          {'  '}<Text dimColor>Step 1/3:</Text> Authenticating with GitHub...
+          {'  '}<Spinner type="dots" />{' '}<Text dimColor>Step 1/3:</Text> Authenticating with GitHub...
         </Text>
+        <Box marginY={1} />
+        <Text dimColor>    A browser window will open for GitHub authorization.</Text>
       </Box>
     );
   }
@@ -205,9 +213,14 @@ export default function Submit({ args }: Props) {
   if (phase.name === 'building') {
     return (
       <Box flexDirection="column" paddingX={2}>
+        <StepIndicator steps={3} current={3} labels={{ 1: 'Auth', 2: 'Meta', 3: 'Build' }} />
+        <Box marginY={1} />
         <Text>
-          {'  '}<Text dimColor>Step 3/3:</Text> Building review package...
+          {'  '}<Spinner type="dots" />{' '}<Text dimColor>Step 3/3:</Text> Building review package...
         </Text>
+        <Box marginY={1}>
+          <Text dimColor>    Packaging project files, generating diffs, and preparing metadata...</Text>
+        </Box>
       </Box>
     );
   }
@@ -347,3 +360,48 @@ function DoneScreen({ result }: { result: BuildResult }) {
     </Box>
   );
 }
+
+// ─── Step Indicator ─────────────────────────────────────────────────
+
+function StepIndicator({ steps, current, labels }: {
+  steps: number;
+  current: number;
+  labels: Record<number, string>;
+}) {
+  const circles = Array.from({ length: steps }, (_, i) => {
+    const num = i + 1;
+    if (num < current) {
+      return <Text key={num} color="green">  ●  </Text>;
+    }
+    if (num === current) {
+      return <Text key={num} color="cyan">  ◉  </Text>;
+    }
+    return <Text key={num} color="gray">  ○  </Text>;
+  });
+
+  return (
+    <Box flexDirection="column" paddingX={2}>
+      <Box flexDirection="row" alignItems="center">
+        {circles.map((circle, i) => (
+          <React.Fragment key={i}>
+            {circle}
+            {i < steps - 1 && <Text dimColor>━━━</Text>}
+          </React.Fragment>
+        ))}
+      </Box>
+      <Box flexDirection="row" marginLeft={1}>
+        {Array.from({ length: steps }, (_, i) => {
+          const num = i + 1;
+          return (
+            <Box key={num} width={num < steps ? 9 : 8}>
+              <Text dimColor={num !== current} color={num === current ? 'cyan' : undefined}>
+                {labels[num] || ''}
+              </Text>
+            </Box>
+          );
+        })}
+      </Box>
+    </Box>
+  );
+}
+
