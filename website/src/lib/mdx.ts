@@ -195,176 +195,6 @@ export function getKnowledgeItem(domain: KnowledgeDomain, slug: string): Knowled
   return getKnowledgeItems(domain).find((item) => item.slug === slug) || null;
 }
 
-// ─── Dependency Graph ─────────────────────────────────────────────
-
-export interface DependencyNode {
-  id: string;
-  type: 'system' | 'principle' | 'pattern' | 'tool' | 'technology';
-  title: string;
-  description: string;
-  difficulty: string;
-  href: string;
-  /** Number of lessons in this system (0 for KB items) */
-  lessonCount: number;
-  // D3 force simulation properties (mutated at runtime)
-  x?: number;
-  y?: number;
-  fx?: number | null;
-  fy?: number | null;
-  vx?: number;
-  vy?: number;
-}
-
-export interface DependencyEdge {
-  source: string;
-  target: string;
-  /** How many references justify this edge — stronger = thicker line */
-  weight: number;
-  label?: string;
-}
-
-export interface DependencyGraph {
-  nodes: DependencyNode[];
-  edges: DependencyEdge[];
-  stats: {
-    systemCount: number;
-    kbItemCount: number;
-    edgeCount: number;
-  };
-}
-
-/**
- * Build a full dependency graph across all systems and knowledge base entries.
- *
- * Sources:
- *   - `prerequisites` in lesson frontmatter → links to other systems
- *   - `knowledge_refs` in lesson frontmatter → links to KB items
- *   - System `order` field → implicit prerequisite ordering
- */
-export function getDependencyGraph(): DependencyGraph {
-  const systems = getAllSystems();
-  const nodesMap = new Map<string, DependencyNode>();
-  const edgeMap = new Map<string, DependencyEdge>();
-
-  // Add system nodes
-  for (const sys of systems) {
-    const lessons = getAllSystemLessons(sys.slug);
-    nodesMap.set(sys.slug, {
-      id: sys.slug,
-      type: 'system',
-      title: sys.title,
-      description: sys.description,
-      difficulty: sys.difficulty,
-      href: `/systems/${sys.slug}`,
-      lessonCount: lessons.length,
-    });
-
-    // Collect all prerequisites and knowledge_refs from this system's lessons
-    const allPrereqs = new Set<string>();
-    const allRefs = new Set<string>();
-
-    for (const lesson of lessons) {
-      if (lesson.prerequisites) {
-        for (const prereq of lesson.prerequisites) {
-          allPrereqs.add(prereq);
-        }
-      }
-      if (lesson.knowledgeRefs) {
-        for (const ref of lesson.knowledgeRefs) {
-          allRefs.add(ref);
-        }
-      }
-    }
-
-    // Add edges for prerequisites (targeting other systems)
-    for (const prereq of allPrereqs) {
-      // Check if the prerequisite slug matches a system slug
-      const targetSystem = systems.find((s) => s.slug === prereq);
-      if (targetSystem) {
-        const edgeKey = `${prereq}→${sys.slug}`;
-        const existing = edgeMap.get(edgeKey);
-        if (existing) {
-          existing.weight++;
-        } else {
-          edgeMap.set(edgeKey, {
-            source: prereq,
-            target: sys.slug,
-            weight: 1,
-            label: 'prerequisite',
-          });
-        }
-      }
-    }
-
-    // Add edges for knowledge_refs (targeting KB items)
-    for (const ref of allRefs) {
-      // Resolve the KB item to get its domain
-      const domains = ['principles', 'patterns', 'tools', 'technologies'] as const;
-      for (const domain of domains) {
-        const item = getKnowledgeItem(domain, ref);
-        if (item) {
-          const kbId = `${domain}:${ref}`;
-          if (!nodesMap.has(kbId)) {
-            nodesMap.set(kbId, {
-              id: kbId,
-              type: domain === 'principles' ? 'principle'
-                : domain === 'patterns' ? 'pattern'
-                : domain === 'tools' ? 'tool'
-                : 'technology',
-              title: item.title,
-              description: item.description,
-              difficulty: item.difficulty,
-              href: `/${domain}/read/${ref}`,
-              lessonCount: 0,
-            });
-          }
-
-          const edgeKey = `${sys.slug}→${kbId}`;
-          const existing = edgeMap.get(edgeKey);
-          if (existing) {
-            existing.weight++;
-          } else {
-            edgeMap.set(edgeKey, {
-              source: sys.slug,
-              target: kbId,
-              weight: 1,
-              label: 'references',
-            });
-          }
-          break;
-        }
-      }
-    }
-  }
-
-  // Add implicit order-based edges (lower order → higher order)
-  const sorted = [...systems].sort((a, b) => a.order - b.order);
-  for (let i = 0; i < sorted.length - 1; i++) {
-    const edgeKey = `${sorted[i].slug}→${sorted[i + 1].slug}`;
-    if (!edgeMap.has(edgeKey)) {
-      edgeMap.set(edgeKey, {
-        source: sorted[i].slug,
-        target: sorted[i + 1].slug,
-        weight: 1,
-        label: 'sequential',
-      });
-    }
-  }
-
-  const nodes = Array.from(nodesMap.values());
-  const edges = Array.from(edgeMap.values());
-
-  return {
-    nodes,
-    edges,
-    stats: {
-      systemCount: systems.length,
-      kbItemCount: nodes.length - systems.length,
-      edgeCount: edges.length,
-    },
-  };
-}
-
 // ─── System Reading (NEW: Lesson/Track/Module) ──────────────────────
 
 export function getAllSystemSlugs(): string[] {
@@ -699,31 +529,38 @@ export function getSystemDirectoryContents(systemSlug: string, pathSegments: str
 
 export function getAllSystemFiles(systemSlug: string): Array<{ slug: string; title: string; order: number; pathSegments: string[] }> {
   const result: Array<{ slug: string; title: string; order: number; pathSegments: string[] }> = [];
+  const seenSlugs = new Set<string>();
 
   // Add lessons from tracks
   const lessons = getAllSystemLessons(systemSlug);
   for (const lesson of lessons) {
+    seenSlugs.add(lesson.slug);
     result.push({ slug: lesson.slug, title: lesson.title, order: lesson.order, pathSegments: lesson.pathSegments });
   }
 
-  // Add files from old folder_tag structure
-  function walk(dir: string, pathSegments: string[]) {
+  // Add files from old folder_tag structure (skip track-* directories to avoid duplicates)
+  function walk(dir: string, pathSegments: string[], isTopLevel?: boolean) {
     if (!fs.existsSync(dir)) return;
     try {
       const items = fs.readdirSync(dir).filter((name) => !name.startsWith('.'));
       items.forEach((name) => {
         const fullPath = path.join(dir, name);
         if (isDirectory(fullPath)) {
+          // Skip track-* directories at the top level (they're handled by getAllSystemLessons)
+          if (isTopLevel && name.startsWith('track-')) return;
           walk(fullPath, [...pathSegments, name]);
         } else if (name.endsWith('.md') && name !== 'index.md') {
           try {
             const raw = fs.readFileSync(fullPath, 'utf-8');
             const { data } = matter(raw);
+            const slug = fileToSlug(name);
+            // Skip if this slug was already added by the lesson reader
+            if (seenSlugs.has(slug)) return;
             result.push({
-              slug: fileToSlug(name),
-              title: data.title || slugToDisplayName(fileToSlug(name)),
+              slug,
+              title: data.title || slugToDisplayName(slug),
               order: getOrderFromFile(name, data.order),
-              pathSegments: [...pathSegments, fileToSlug(name)],
+              pathSegments: [...pathSegments, slug],
             });
           } catch {}
         }
@@ -731,7 +568,7 @@ export function getAllSystemFiles(systemSlug: string): Array<{ slug: string; tit
     } catch {}
   }
 
-  walk(path.join(SYSTEMS_DIR, systemSlug), []);
+  walk(path.join(SYSTEMS_DIR, systemSlug), [], true);
   result.sort((a, b) => a.order - b.order);
   return result;
 }

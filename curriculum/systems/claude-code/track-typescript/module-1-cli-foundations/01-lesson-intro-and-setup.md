@@ -33,24 +33,39 @@ Welcome to building **Claude Code** — an AI-powered coding agent that operates
 
 ## What We're Building
 
-An AI coding agent has three core layers:
+An AI coding agent has three core layers, visualized below:
 
-```
-┌─────────────────────────────────────┐
-│           CLI Interface             │
-│  (stdin/stdout, interactive mode)   │
-├─────────────────────────────────────┤
-│         Agent Loop Engine            │
-│  Think → Act → Observe → Repeat      │
-├─────────────────────────────────────┤
-│         Tool Execution System        │
-│  read_file, write_file, execute,     │
-│  search, web, reasoning              │
-├─────────────────────────────────────┤
-│         LLM Integration              │
-│  Streaming API, context window,      │
-│  token management, retry logic       │
-└─────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph CLI["CLI Layer"]
+        A[stdin/stdout] --> B[Interactive Mode]
+    end
+
+    subgraph Agent["Agent Loop"]
+        C[Think] --> D[Act]
+        D --> E[Observe]
+        E --> C
+    end
+
+    subgraph Tools["Tools"]
+        F[read/write] --> H[execute]
+        H --> I[search]
+    end
+
+    subgraph LLM["LLM Layer"]
+        J[Streaming API] --> K[Context Window]
+        K --> L[Token Mgmt]
+        L --> M[Retry Logic]
+    end
+
+    CLI --> Agent
+    Agent --> Tools
+    Agent --> LLM
+
+    style CLI fill:#eef2ff,stroke:#6366f1,stroke-width:2px
+    style Agent fill:#faf5ff,stroke:#a855f7,stroke-width:2px
+    style Tools fill:#f0fdf4,stroke:#22c55e,stroke-width:2px
+    style LLM fill:#fef3c7,stroke:#f59e0b,stroke-width:2px
 ```
 
 ## Project Structure
