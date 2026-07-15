@@ -8,24 +8,40 @@ export interface ScaffoldOptions {
   systemSlug: string;
   systemTitle: string;
   language?: 'typescript' | 'java';
+  author?: string;
   specification?: string;
 }
 
 /**
  * Scaffold a new implementation project for a system.
+ * Creates a complete review package structure:
+ *
+ *   .100x.json           — Project config
+ *   README.md            — Project overview
+ *   design/
+ *     decisions.md       — Engineering Decision Log
+ *     architecture.md    — Architecture explanation
+ *     tradeoffs.md       — Trade-offs analysis
+ *   specification/
+ *     SPECIFICATION.md   — System specification (from curriculum)
+ *   verification/
+ *     checklist.md       — Self-assessment checklist
+ *   src/                 — Code (from language template)
  */
 export function scaffoldProject(options: ScaffoldOptions): string[] {
-  const { targetDir, systemSlug, systemTitle, language } = options;
+  const { targetDir, systemSlug, systemTitle, language, author } = options;
   const created: string[] = [];
 
   // Create target directory
   fs.mkdirSync(targetDir, { recursive: true });
 
-  // Create .100x.json config file
+  // ─── .100x.json ─────────────────────────────────────────────────
+
   const config = {
     system: systemSlug,
     systemTitle,
     language: language || 'typescript',
+    author: author || '',
     version: '0.1.0',
     createdAt: new Date().toISOString(),
   };
@@ -35,24 +51,54 @@ export function scaffoldProject(options: ScaffoldOptions): string[] {
   );
   created.push('.100x.json');
 
-  // Copy language-specific template files
-  if (language && language !== 'typescript') {
-    copyTemplateFiles(language, targetDir, created);
-  } else {
-    // Default to TypeScript
-    copyTemplateFiles('typescript', targetDir, created);
+  // ─── Review Package Templates ───────────────────────────────────
+
+  const reviewTemplates = [
+    { src: 'review-package/README.md', dest: 'README.md' },
+    { src: 'review-package/design/decisions.md', dest: 'design/decisions.md' },
+    { src: 'review-package/design/architecture.md', dest: 'design/architecture.md' },
+    { src: 'review-package/design/tradeoffs.md', dest: 'design/tradeoffs.md' },
+    { src: 'review-package/verification/checklist.md', dest: 'verification/checklist.md' },
+  ];
+
+  for (const tpl of reviewTemplates) {
+    const tplPath = path.join(TEMPLATE_DIR, tpl.src);
+    if (!fs.existsSync(tplPath)) continue;
+
+    const destPath = path.join(targetDir, tpl.dest);
+    fs.mkdirSync(path.dirname(destPath), { recursive: true });
+
+    let content = fs.readFileSync(tplPath, 'utf-8');
+    // Replace template variables
+    content = content
+      .replace(/\{\{systemTitle\}\}/g, systemTitle)
+      .replace(/\{\{systemSlug\}\}/g, systemSlug)
+      .replace(/\{\{language\}\}/g, language || 'typescript')
+      .replace(/\{\{author\}\}/g, author || 'your-github-username')
+      .replace(/\{\{repositoryUrl\}\}/g, '');
+
+    fs.writeFileSync(destPath, content);
+    created.push(tpl.dest);
   }
 
-  // Copy specification if provided
+  // ─── Specification ──────────────────────────────────────────────
+
   if (options.specification) {
-    fs.writeFileSync(path.join(targetDir, 'SPECIFICATION.md'), options.specification);
-    created.push('SPECIFICATION.md');
+    const specDir = path.join(targetDir, 'specification');
+    fs.mkdirSync(specDir, { recursive: true });
+    fs.writeFileSync(path.join(specDir, 'SPECIFICATION.md'), options.specification);
+    created.push('specification/SPECIFICATION.md');
   }
+
+  // ─── Language Templates ─────────────────────────────────────────
+
+  const lang = language || 'typescript';
+  copyLanguageTemplate(lang, targetDir, created);
 
   return created;
 }
 
-function copyTemplateFiles(language: string, targetDir: string, created: string[]) {
+function copyLanguageTemplate(language: string, targetDir: string, created: string[]) {
   const langTemplateDir = path.join(TEMPLATE_DIR, language);
   if (!fs.existsSync(langTemplateDir)) return;
 
@@ -69,12 +115,6 @@ function copyTemplateFiles(language: string, targetDir: string, created: string[
         walk(fullPath, relPath);
       } else {
         const content = fs.readFileSync(fullPath, 'utf-8');
-        // Skip package.json — we'll generate our own
-        if (item === 'package.json' || item === 'pom.xml') {
-          fs.writeFileSync(targetPath, content);
-          created.push(relPath);
-          return;
-        }
         fs.writeFileSync(targetPath, content);
         created.push(relPath);
       }

@@ -1,0 +1,19 @@
+# 100xSystems — Submissions Directory
+#
+# Auto-generated review packages (created by `100x submit`) are gitignored.
+# Only the directory structure, configuration, and index are tracked.
+#
+# To add a new system directory for submissions:
+#   mkdir -p submissions/<system-name>
+#   touch submissions/<system-name>/.gitkeep
+
+# ─── Ignore auto-generated review packages ──────────────────────
+# These are timestamped directories created by `100x submit`:
+#   submissions/<system>/<author>-<language>-<timestamp>/
+#
+# The pattern only matches children of system directories (no leading dot),
+# so .github/ CI infrastructure is automatically preserved.
+[!.]*/*
+
+# ─── But keep .gitkeep files so the directory structure is tracked ─
+![!.]*/.gitkeep

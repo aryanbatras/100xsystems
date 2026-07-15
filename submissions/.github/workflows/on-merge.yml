@@ -1,0 +1,92 @@
+# GitHub Actions: Certificate Generation
+#
+# Triggers when a submission PR is merged into the submissions/ directory.
+# Generates a certificate PDF and creates a verification record.
+#
+# To use this workflow:
+#   1. Ensure this file is in .github/workflows/ of your repository
+#   2. The workflow runs automatically when a PR is merged
+#   3. Certificate is available as a workflow artifact
+
+name: Generate Certificate
+
+on:
+  pull_request:
+    types: [closed]
+    paths:
+      - 'submissions/**'
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  generate-certificate:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm install puppeteer
+
+      - name: Extract submission metadata
+        id: metadata
+        run: |
+          PR_BODY="${{ github.event.pull_request.body }}"
+
+          # Try to extract from PR body JSON
+          SYSTEM=$(echo "$PR_BODY" | grep -oP '"system":\s*"\K[^"]+' || echo "unknown")
+          AUTHOR=$(echo "$PR_BODY" | grep -oP '"author":\s*"\K[^"]+' || echo "${{ github.event.pull_request.user.login }}")
+          LANGUAGE=$(echo "$PR_BODY" | grep -oP '"language":\s*"\K[^"]+' || echo "unknown")
+          REPO_URL=$(echo "$PR_BODY" | grep -oP '"repositoryUrl":\s*"\K[^"]+' || echo "")
+
+          # Fallback: try to extract from changed files
+          if [ "$SYSTEM" = "unknown" ]; then
+            CHANGED_FILES=$(jq -r '.files[].filename' <<< '${{ toJSON(github.event.pull_request) }}' 2>/dev/null || echo "")
+            SYSTEM=$(echo "$CHANGED_FILES" | grep -oP 'submissions/\K[^/]+' | head -1 || echo "unknown")
+          fi
+
+          echo "system=$SYSTEM" >> $GITHUB_OUTPUT
+          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
+          echo "language=$LANGUAGE" >> $GITHUB_OUTPUT
+          echo "repo_url=$REPO_URL" >> $GITHUB_OUTPUT
+          echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+          echo "merge_sha=${{ github.event.pull_request.merge_commit_sha }}" >> $GITHUB_OUTPUT
+
+      - name: Generate certificate
+        id: certificate
+        run: |
+          node .github/scripts/generate-certificate.js \
+            --system "${{ steps.metadata.outputs.system }}" \
+            --author "${{ steps.metadata.outputs.author }}" \
+            --language "${{ steps.metadata.outputs.language }}" \
+            --repo "${{ steps.metadata.outputs.repo_url }}" \
+            --pr "${{ steps.metadata.outputs.pr_number }}" \
+            --sha "${{ steps.metadata.outputs.merge_sha }}"
+
+      - name: Upload certificate artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: certificate-${{ steps.metadata.outputs.system }}-${{ steps.metadata.outputs.author }}
+          path: certificate.pdf
+
+      - name: Commit certificate metadata
+        run: |
+          git config user.name "100x Systems Bot"
+          git config user.email "bot@100xsystems.dev"
+
+          mkdir -p certificates/${{ steps.metadata.outputs.system }}
+          cp certificate-meta.json certificates/${{ steps.metadata.outputs.system }}/${{ steps.metadata.outputs.author }}.json
+
+          git add certificates/
+          git commit -m "cert: ${{ steps.metadata.outputs.system }} by ${{ steps.metadata.outputs.author }}" || echo "No changes to commit"
+          git push || echo "Push failed — manual commit needed"

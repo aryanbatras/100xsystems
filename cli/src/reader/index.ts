@@ -35,6 +35,7 @@ function getRootDir(): string {
 export const CURRICULUM_DIR = () => path.join(getRootDir(), 'curriculum');
 export const SYSTEMS_DIR = () => path.join(CURRICULUM_DIR(), 'systems');
 export const KNOWLEDGE_BASE_DIR = () => path.join(CURRICULUM_DIR(), 'knowledge-base');
+export const SUBMISSIONS_DIR = () => path.join(getRootDir(), 'submissions');
 
 // ─── Helpers ────────────────────────────────────────────────────────
 
@@ -77,7 +78,6 @@ function parseYamlBlock(yaml: string): Record<string, any> {
   const result: Record<string, any> = {};
   const lines = yaml.split('\n');
 
-  // First pass: detect structure and group lines
   let currentKey = '';
   let currentArray: any[] = [];
   let inArray = false;
@@ -92,9 +92,7 @@ function parseYamlBlock(yaml: string): Record<string, any> {
     const indent = line.search(/\S/);
     const isTopLevel = indent === 0;
 
-    // If we were in an array or object, check if this line ends it
     if (isTopLevel && currentKey && (inArray || inObject)) {
-      // Flush accumulated
       if (inObject && objectBuf.length > 0) {
         result[currentKey] = parseYamlBlock(objectBuf.join('\n'));
         objectBuf = [];
@@ -108,11 +106,8 @@ function parseYamlBlock(yaml: string): Record<string, any> {
       currentKey = '';
     }
 
-    // Array item
     if (trimmed.startsWith('- ') || trimmed.startsWith('-')) {
       if (!inArray) {
-        // Need to determine the key. It was on a previous line without a value.
-        // Find it by looking at the previous top-level key
         for (let j = i - 1; j >= 0; j--) {
           const prevLine = lines[j];
           if (prevLine.search(/\S/) === 0) {
@@ -128,18 +123,15 @@ function parseYamlBlock(yaml: string): Record<string, any> {
 
       const itemStr = trimmed.replace(/^- /, '').trim();
 
-      // Check if item is an inline value or the start of an object
       const nextLine = i + 1 < lines.length ? lines[i + 1] : '';
       const nextIndent = nextLine ? nextLine.search(/\S/) : 0;
 
       if (nextLine && nextIndent > indent + 2) {
-        // This is an object start — collect sub-lines
         const subLines: string[] = [];
         let j = i + 1;
         while (j < lines.length) {
           const sl = lines[j];
           if (sl.search(/\S/) <= indent) break;
-          // Remove the extra 2-space indent from array nesting
           subLines.push(sl.slice(2));
           j++;
         }
@@ -147,16 +139,13 @@ function parseYamlBlock(yaml: string): Record<string, any> {
         currentArray.push(obj);
         i = j - 1;
       } else {
-        // Simple array value
         currentArray.push(parseValue(itemStr));
       }
       continue;
     }
 
-    // Key-value pair at current indentation level
     const colonIdx = line.indexOf(':');
     if (colonIdx === -1) {
-      // Might be part of a multi-line string or we just skip it
       if (inObject && currentKey) {
         objectBuf.push(line);
       }
@@ -167,21 +156,18 @@ function parseYamlBlock(yaml: string): Record<string, any> {
       line.slice(0, colonIdx).trim() : trimmed.slice(0, trimmed.indexOf(':')).trim();
     let value = line.slice(colonIdx + 1).trim();
 
-    // Handle inline arrays
     if (value.startsWith('[') && value.endsWith(']')) {
       result[key] = value.slice(1, -1).split(',').map((s) => parseValue(s.trim()));
       continue;
     }
 
     if (value === '') {
-      // This might start an object or array. Store key and continue.
       currentKey = key;
       inObject = true;
       objectBuf = [];
       continue;
     }
 
-    // If we're in an object context, accumulate
     if (inObject && currentKey) {
       objectBuf.push(line);
     } else {
@@ -189,7 +175,6 @@ function parseYamlBlock(yaml: string): Record<string, any> {
     }
   }
 
-  // Flush any remaining context
   if (inObject && currentKey && objectBuf.length > 0) {
     result[currentKey] = parseYamlBlock(objectBuf.join('\n'));
   }
@@ -202,7 +187,6 @@ function parseYamlBlock(yaml: string): Record<string, any> {
 
 function parseValue(value: string): any {
   const t = value.trim();
-  // Remove surrounding quotes
   if ((t.startsWith('"') && t.endsWith('"')) || (t.startsWith("'") && t.endsWith("'"))) {
     return t.slice(1, -1);
   }
@@ -293,4 +277,47 @@ export interface SpecData {
   title: string;
   version: string;
   checks: SpecCheck[];
+}
+
+export interface ResourceLink {
+  title: string;
+  url: string;
+  type: 'article' | 'video' | 'paper' | 'blog' | 'documentation' | 'tool';
+  description?: string;
+}
+
+export interface ResourceCategory {
+  name: string;
+  items: ResourceLink[];
+}
+
+export interface SystemResources {
+  system: string;
+  categories: ResourceCategory[];
+}
+
+export interface ProgressEntry {
+  status: 'not-started' | 'in-progress' | 'completed';
+  startedAt?: string;
+  completedAt?: string;
+  projectDir?: string;
+  language?: string;
+}
+
+export interface ProgressData {
+  systems: Record<string, ProgressEntry>;
+}
+
+export interface SubmissionMetadata {
+  system: string;
+  systemTitle: string;
+  author: string;
+  language: string;
+  repositoryUrl: string;
+  difficulty: string;
+  tags: string[];
+  submittedAt: string;
+  prUrl?: string;
+  status: 'pending' | 'in-review' | 'changes-requested' | 'accepted' | 'rejected';
+  reviewers?: string[];
 }
