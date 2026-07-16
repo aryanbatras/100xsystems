@@ -12,4 +12,4 @@ export { ValidationReport, ValidationSummary } from './ValidationReport.js';
 export { QuizApp } from './Quiz.js';
 export { ProgressBar } from './ProgressBar.js';
 export { TextInput } from './TextInput.js';
-export { Dashboard } from './Dashboard.js';
+export { default as SelectInput } from './SelectInput.js';

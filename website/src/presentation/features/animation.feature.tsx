@@ -25,37 +25,37 @@ const CubeHover = () => {
       <div className={cubeHoverStyles.cube}>
         <div className={`${cubeHoverStyles.face} ${cubeHoverStyles.front}`}>
           <div className={cubeHoverStyles.faceContent}>
-            <img src="/100xsystemsonlytitle.png" alt="100x Systems" className={cubeHoverStyles.logo} />
+            <img src="/100xsystemsonlytitle.png" alt="100xsystems Systems" className={cubeHoverStyles.logo} />
             <span className={cubeHoverStyles.techText}></span>
           </div>
         </div>
         <div className={`${cubeHoverStyles.face} ${cubeHoverStyles.back}`}>
           <div className={cubeHoverStyles.faceContent}>
-            <img src="/100xsystemsonlytitle.png" alt="100x Systems" className={cubeHoverStyles.logo} />
+            <img src="/100xsystemsonlytitle.png" alt="100xsystems Systems" className={cubeHoverStyles.logo} />
             <span className={cubeHoverStyles.techText}></span>
           </div>
         </div>
         <div className={`${cubeHoverStyles.face} ${cubeHoverStyles.right}`}>
           <div className={cubeHoverStyles.faceContent}>
-            <img src="/100xsystemsonlytitle.png" alt="100x Systems" className={cubeHoverStyles.logo} />
+            <img src="/100xsystemsonlytitle.png" alt="100xsystems Systems" className={cubeHoverStyles.logo} />
             <span className={cubeHoverStyles.techText}></span>
           </div>
         </div>
         <div className={`${cubeHoverStyles.face} ${cubeHoverStyles.left}`}>
           <div className={cubeHoverStyles.faceContent}>
-            <img src="/100xsystemsonlytitle.png" alt="100x Systems" className={cubeHoverStyles.logo} />
+            <img src="/100xsystemsonlytitle.png" alt="100xsystems Systems" className={cubeHoverStyles.logo} />
             <span className={cubeHoverStyles.techText}></span>
           </div>
         </div>
         <div className={`${cubeHoverStyles.face} ${cubeHoverStyles.top}`}>
           <div className={cubeHoverStyles.faceContent}>
-            <img src="/100xsystemsonlytitle.png" alt="100x Systems" className={cubeHoverStyles.logo} />
+            <img src="/100xsystemsonlytitle.png" alt="100xsystems Systems" className={cubeHoverStyles.logo} />
             <span className={cubeHoverStyles.techText}></span>
           </div>
         </div>
         <div className={`${cubeHoverStyles.face} ${cubeHoverStyles.bottom}`}>
           <div className={cubeHoverStyles.faceContent}>
-            <img src="/100xsystemsonlytitle.png" alt="100x Systems" className={cubeHoverStyles.logo} />
+            <img src="/100xsystemsonlytitle.png" alt="100xsystems Systems" className={cubeHoverStyles.logo} />
             <span className={cubeHoverStyles.techText}></span>
           </div>
         </div>

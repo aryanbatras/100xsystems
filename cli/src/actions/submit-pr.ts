@@ -72,7 +72,7 @@ export async function submitPullRequest(result: BuildResult): Promise<PrResult> 
   if (!fs.existsSync(reviewDir)) {
     throw new Error(
       `Review package not found at ${reviewDir}.\n` +
-      `  Run \`100x submit\` again to build the review package first.`
+      `  Run \`100xsystems submit\` again to build the review package first.`
     );
   }
 

@@ -177,8 +177,8 @@ export function initSystem(scaffold: SystemScaffold): ContributeResult {
   if (fs.existsSync(systemDir) && fs.readdirSync(systemDir).length > 0) {
     throw new Error(
       `System "${scaffold.slug}" already exists at ${systemDir}.\n` +
-      `  Use \`100x contribute track\` to add a language track, or\n` +
-      `  Use \`100x contribute lesson\` to add a lesson to an existing system.`
+      `  Use \`100xsystems contribute track\` to add a language track, or\n` +
+      `  Use \`100xsystems contribute lesson\` to add a lesson to an existing system.`
     );
   }
 

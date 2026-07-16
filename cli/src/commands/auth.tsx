@@ -42,7 +42,7 @@ export default function Auth({ args }: Props) {
       setOutput(
         <Box flexDirection="column" paddingX={2}>
           <Text color="yellow">  Not authenticated.</Text>
-          <Text dimColor>  Run 100x submit to authenticate.</Text>
+          <Text dimColor>  Run 100xsystems submit to authenticate.</Text>
         </Box>
       );
     }

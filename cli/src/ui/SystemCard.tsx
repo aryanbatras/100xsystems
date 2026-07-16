@@ -8,7 +8,7 @@ interface SystemCardProps {
 
 /**
  * A card that displays a system's title, description, difficulty, and tags.
- * Used in the `100x list` command output.
+ * Used in the `100xsystems list` command output.
  */
 export function SystemCard({ system }: SystemCardProps) {
   const difficultyColor = system.difficulty === 'Advanced' ? 'red'
@@ -29,10 +29,10 @@ export function SystemCard({ system }: SystemCardProps) {
       </Box>
       <Box marginTop={1}>
         <Text>
-          <Text color="cyan">100x list {system.slug}</Text>
+          <Text color="cyan">100xsystems list {system.slug}</Text>
           <Text dimColor>  → see sections</Text>
           <Text>{'\n'}</Text>
-          <Text color="cyan">100x init {system.slug}</Text>
+          <Text color="cyan">100xsystems init {system.slug}</Text>
           <Text dimColor>  → start building</Text>
         </Text>
       </Box>

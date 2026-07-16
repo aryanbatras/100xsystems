@@ -22,7 +22,7 @@ export default function List({ args }: Props) {
         setOutput(
           <Box flexDirection="column" paddingX={2}>
             <Text color="red">  System &ldquo;{systemSlug}&rdquo; not found.</Text>
-            <Text dimColor>  Run 100x list to see all available systems.</Text>
+            <Text dimColor>  Run 100xsystems list to see all available systems.</Text>
           </Box>
         );
         return;
@@ -48,17 +48,11 @@ export default function List({ args }: Props) {
                     <Text dimColor>{child.type === 'folder' ? '📁' : '📄'} {child.title}</Text>
                   </Box>
                 ))}
-                {tag.tag === 'quizzes' && (
-                  <Text color="cyan">{'    '}100x quiz {systemSlug}  <Text dimColor>→ take quizzes</Text></Text>
-                )}
-                {tag.tag === 'challenges' && (
-                  <Text color="cyan">{'    '}100x challenge {systemSlug}  <Text dimColor>→ start a challenge</Text></Text>
-                )}
                 {tag.tag === 'specification' && (
-                  <Text color="cyan">{'    '}100x verify  <Text dimColor>→ verify your implementation</Text></Text>
+                  <Text color="cyan">{'    '}100xsystems validate  <Text dimColor>→ check your implementation</Text></Text>
                 )}
                 {tag.tag === 'implementation' && (
-                  <Text color="cyan">{'    '}100x init {systemSlug} --lang &lt;language&gt;  <Text dimColor>→ scaffold project</Text></Text>
+                  <Text color="cyan">{'    '}100xsystems init {systemSlug} --lang &lt;language&gt;  <Text dimColor>→ scaffold project</Text></Text>
                 )}
               </Box>
             ))
@@ -95,9 +89,9 @@ export default function List({ args }: Props) {
                     <Text dimColor>{'  '}{sys.tags.join(' · ')}</Text>
                   )}
                 </Box>
-                <Text color="cyan">{'  '}100x list {sys.slug}</Text>
+                <Text color="cyan">{'  '}100xsystems list {sys.slug}</Text>
                 <Text dimColor>  → see sections</Text>
-                <Text color="cyan">{'  '}100x init {sys.slug}</Text>
+                <Text color="cyan">{'  '}100xsystems init {sys.slug}</Text>
                 <Text dimColor>  → start building</Text>
               </Box>
             );

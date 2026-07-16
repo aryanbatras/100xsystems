@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Text, useApp } from 'ink';
 import Spinner from 'ink-spinner';
 import { TextInput, ConfirmInput, ValidationSummary } from '../ui/index.js';
-import SelectInput from 'ink-select-input';
+import SelectInput from '../ui/SelectInput.js';
 import zod from 'zod';
 import {
   readSubmitConfig,
@@ -17,9 +17,10 @@ import type { SubmitAnswers, BuildResult } from '../actions/submit.js';
 import type { PrResult } from '../actions/submit-pr.js';
 import { runValidation } from '../actions/validate.js';
 import type { ValidationResult } from '../actions/validate.js';
+import { getSystemTracks, getTrackModules } from '../reader/lesson-reader.js';
 
 export const args = zod.tuple([
-  zod.string().optional().describe('Optional system slug (auto-detected from .100x.json)'),
+  zod.string().optional().describe('Optional system slug (auto-detected from 100xsystems.json)'),
 ]);
 
 type Props = {
@@ -57,7 +58,7 @@ export default function Submit({ args }: Props) {
       const projectDir = process.cwd();
       const loaded = readSubmitConfig(projectDir, systemSlug);
       if (!loaded) {
-        setPhase({ name: 'error', message: 'No .100x.json found. Run `100x init <system>` first.' });
+        setPhase({ name: 'error', message: 'No 100xsystems.json found. Run `100x init <system>` first.' });
         return;
       }
 
@@ -65,8 +66,41 @@ export default function Submit({ args }: Props) {
       const systemTitle = (config.systemTitle as string) || slug;
       const ctx: SharedContext = { config, slug, projectDir, systemTitle };
 
-      // Run validation, then go straight to confirm
+      // Run validation
       const results = await runValidation(projectDir, config);
+
+      // Check lesson completeness from .100x.json
+      if (slug) {
+        const progress = config.progress || {};
+        const completed: string[] = progress.completedLessons || [];
+        const currentLesson: string = progress.currentLesson || '';
+        const trackSlug = (config.track as string) || '';
+
+        if (trackSlug) {
+          const modules = getTrackModules(slug, trackSlug);
+          const allLessons = modules.flatMap(m => m.lessons);
+          if (allLessons.length > 0) {
+            const lastLesson = allLessons[allLessons.length - 1];
+            const allCompleted = allLessons.every(l => completed.includes(l.slug));
+            if (!allCompleted && lastLesson) {
+              results.unshift({
+                check: 'completeness',
+                status: 'warn',
+                message: `Not all lessons completed. ${completed.length}/${allLessons.length} done. Complete all lessons before submitting.`,
+                category: 'validation',
+              });
+            }
+          }
+        } else if (currentLesson) {
+          results.unshift({
+            check: 'completeness',
+            status: 'warn',
+            message: 'No track configured. Run `100x init` to set up a track.',
+            category: 'validation',
+          });
+        }
+      }
+
       setPhase({ name: 'confirm', ctx, results });
     })();
   }, [phase]);
@@ -230,7 +264,12 @@ export default function Submit({ args }: Props) {
         <Box marginY={1} />
         <MetadataForm
           defaultRepoUrl={phase.defaultRepoUrl || ''}
-          defaultLanguage={(phase.ctx.config.language as string) || 'typescript'}
+          defaultLanguage={(() => {
+            const trackSlug = (phase.ctx.config.track as string) || '';
+            const tracks = getSystemTracks(phase.ctx.slug);
+            const track = tracks.find(t => t.slug === trackSlug);
+            return track?.language || 'typescript';
+          })()}
           defaultDifficulty="Intermediate"
           onComplete={handleMetadata}
         />

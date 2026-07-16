@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { CommunityPageClient } from './CommunityPageClient';
 
 export const metadata: Metadata = {
-  title: 'Community — 100x Systems',
+  title: 'Community — 100xsystems Systems',
   description: 'See verified community implementations and top reviewers.',
 };
 

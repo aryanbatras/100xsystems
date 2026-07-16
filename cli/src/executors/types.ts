@@ -10,7 +10,7 @@
 // ─── Execution Context ──────────────────────────────────────────────
 
 export interface ExecutorContext {
-  /** Absolute path to the user's project directory (where .100x.json lives) */
+  /** Absolute path to the user's project directory (where 100xsystems.json lives) */
   projectDir: string;
 
   /** Absolute path to the current lesson directory in the curriculum */

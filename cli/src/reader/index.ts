@@ -140,13 +140,13 @@ function parseYamlBlock(yaml: string): Record<string, any> {
       const nextLine = i + 1 < lines.length ? lines[i + 1] : '';
       const nextIndent = nextLine ? nextLine.search(/\S/) : 0;
 
-      if (nextLine && nextIndent > indent + 2) {
-        const subLines: string[] = [];
+      if (nextLine && nextIndent > indent && itemStr.includes(':')) {
+        const subLines: string[] = [itemStr];
         let j = i + 1;
         while (j < lines.length) {
           const sl = lines[j];
           if (sl.search(/\S/) <= indent) break;
-          subLines.push(sl.slice(2));
+          subLines.push(sl.slice(indent + 2));
           j++;
         }
         const obj = parseYamlBlock(subLines.join('\n'));
@@ -316,6 +316,7 @@ export interface ProgressEntry {
   completedAt?: string;
   projectDir?: string;
   language?: string;
+  currentLesson?: string;  // slug of the lesson the user is currently working on
 }
 
 export interface ProgressData {

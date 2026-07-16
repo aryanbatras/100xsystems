@@ -10,10 +10,12 @@
 import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
-import { readProjectConfig } from '../scaffold/index.js';
-import { registry, runLessonValidators } from '../executors/index.js';
+import { readProjectConfig, PROJECT_CONFIG } from '../scaffold/index.js';
+import { runLessonValidators } from '../executors/index.js';
 import type { ExecutorResult } from '../executors/index.js';
 import { CURRICULUM_DIR } from '../reader/index.js';
+import type { SpecCheck } from '../reader/index.js';
+import { getSpec } from '../reader/spec-reader.js';
 
 // ─── Exported Types ─────────────────────────────────────────────────
 
@@ -21,7 +23,7 @@ export interface ValidationResult {
   check: string;
   status: 'pass' | 'warn' | 'fail';
   message: string;
-  category: 'documentation' | 'structure' | 'code' | 'git' | 'validation' | 'test' | 'build' | 'lesson';
+  category: 'documentation' | 'structure' | 'code' | 'git' | 'validation' | 'test' | 'build' | 'lesson' | 'spec';
   details?: string;
 }
 
@@ -30,33 +32,40 @@ export interface ValidationResult {
 /**
  * Run validation checks and return results.
  * Integrates with the executor plugin system to run lesson-specific validators.
+ *
+ * @param projectDir - Absolute path to the project
+ * @param config - Project config from 100xsystems.json
+ * @param lessonSlug - Optional: only run validators for this specific lesson.
+ *                     If not provided, uses currentLesson from progress tracking.
  */
 export async function runValidation(
   projectDir: string,
-  config: Record<string, any>
+  config: Record<string, any>,
+  lessonSlug?: string,
 ): Promise<ValidationResult[]> {
   if (!config) {
     throw new Error('Config is required to run validation. Run `100x init <system>` first.');
   }
 
   const results: ValidationResult[] = [];
+  const systemSlug = (config.system as string) || '';
+  const trackSlug = (config.track as string) || '';
 
-  // Run standard documentation & structure checks
-  results.push(...checkDocumentation(projectDir));
-  results.push(...checkStructure(projectDir));
-
-  try {
-    results.push(...checkGitHistory(projectDir));
-  } catch {
-    // git not available — skip
+  // Determine which lesson to validate
+  let targetLesson = lessonSlug;
+  if (!targetLesson && systemSlug) {
+    // Read from 100xsystems.json progress, not from global progress file
+    const configProgress = config.progress || {};
+    targetLesson = configProgress.currentLesson || '';
   }
 
-  // Run executor-based validators from the curriculum
-  const systemSlug = (config.system as string) || '';
-  const language = (config.language as string) || '';
+  // Minimal project checks — only README.md is required by convention
+  results.push(...checkMinimal(projectDir));
+
   if (systemSlug) {
+    // Run executor-based validators — only for the target lesson
     try {
-      const lessonResults = await runLessonValidatorsFromCurriculum(projectDir, systemSlug, language);
+      const lessonResults = await runLessonValidatorsFromCurriculum(projectDir, systemSlug, trackSlug, targetLesson);
       results.push(...lessonResults);
     } catch (err: any) {
       results.push({
@@ -65,6 +74,14 @@ export async function runValidation(
         message: `Could not run lesson validators: ${err.message}`,
         category: 'lesson',
       });
+    }
+
+    // Run spec-defined checks from SPECIFICATION.md
+    try {
+      const specResults = await runSpecChecksFromCurriculum(projectDir, systemSlug);
+      results.push(...specResults);
+    } catch {
+      // Spec checks are optional — skip gracefully
     }
   }
 
@@ -79,50 +96,73 @@ export async function runValidation(
 // ─── Lesson Validator Integration ───────────────────────────────────
 
 /**
- * Execute all validators defined in the system's lesson frontmatter.
- * Walks the matching track directory looking for lesson.md files with
- * frontmatter validation configs. Filters by the user's language.
+ * Execute validators for a specific lesson in the system's curriculum.
+ * Uses the track slug from 100xsystems.json to find the track directory.
+ * Only runs validators from that single lesson — not all lessons.
  */
 async function runLessonValidatorsFromCurriculum(
   projectDir: string,
   systemSlug: string,
-  language: string
+  trackSlug: string,
+  lessonSlug?: string
 ): Promise<ValidationResult[]> {
   const results: ValidationResult[] = [];
   const systemDir = path.join(CURRICULUM_DIR(), 'systems', systemSlug);
   if (!fs.existsSync(systemDir)) return results;
 
-  // Only run validators from the track matching the user's language
-  const trackPrefix = `track-${language.toLowerCase()}`;
-  const tracks = fs.readdirSync(systemDir).filter((name) => {
-    if (!name.startsWith('track-')) return false;
-    const stat = fs.statSync(path.join(systemDir, name));
-    if (!stat.isDirectory()) return false;
-    return name.toLowerCase() === trackPrefix.toLowerCase();
-  });
+  // Find the track directory by slug
+  const trackDir = path.join(systemDir, trackSlug);
+  if (!fs.existsSync(trackDir)) return results;
 
-  for (const track of tracks) {
-    const trackDir = path.join(systemDir, track);
-    const lessons = findLessonsWithValidators(trackDir);
+  // Find all lessons with validators and locate the target
+  const lessonsWithValidators = findLessonsWithValidators(trackDir);
 
-    for (const lesson of lessons) {
-      const ctx = {
-        projectDir,
-        lessonDir: lesson.dir,
-        workspace: systemSlug,
-      };
+  // If a specific lesson slug is given, only run that lesson's validators
+  const targetLesson = lessonSlug
+    ? lessonsWithValidators.find(l => l.slug === lessonSlug)
+    : null;
 
-      const executorResults = await runLessonValidators(lesson.validators, ctx);
+  const lessonsToRun = targetLesson ? [targetLesson] : [];
 
-      for (const er of executorResults) {
-        results.push({
-          check: er.check,
-          status: er.status as 'pass' | 'warn' | 'fail',
-          message: er.message,
-          category: er.category as any,
-          details: er.details,
-        });
-      }
+  if (lessonsToRun.length === 0 && lessonSlug) {
+    // Lesson slug specified but no validators found for it — try finding by filename
+    const allLessons = findAllLessonFiles(trackDir);
+    const matchingLesson = allLessons.find(l => l.slug === lessonSlug);
+    if (matchingLesson) {
+      results.push({
+        check: 'lesson-lookup',
+        status: 'warn',
+        message: `Lesson "${lessonSlug}" found but has no validators defined in its frontmatter.`,
+        category: 'lesson',
+      });
+    } else {
+      results.push({
+        check: 'lesson-lookup',
+        status: 'warn',
+        message: `Lesson "${lessonSlug}" not found in track ${trackSlug}.`,
+        category: 'lesson',
+      });
+    }
+  }
+
+  // Run validators for the target lesson(s)
+  for (const lesson of lessonsToRun) {
+    const ctx = {
+      projectDir,
+      lessonDir: lesson.dir,
+      workspace: systemSlug,
+    };
+
+    const executorResults = await runLessonValidators(lesson.validators, ctx);
+
+    for (const er of executorResults) {
+      results.push({
+        check: er.check,
+        status: er.status as 'pass' | 'warn' | 'fail',
+        message: er.message,
+        category: er.category as any,
+        details: er.details,
+      });
     }
   }
 
@@ -130,10 +170,56 @@ async function runLessonValidatorsFromCurriculum(
 }
 
 /**
+ * Find ALL lesson files in a track directory (flat list with slugs).
+ */
+function findAllLessonFiles(trackDir: string): Array<{ slug: string; dir: string }> {
+  const lessons: Array<{ slug: string; dir: string }> = [];
+  function walk(dir: string) {
+    if (!fs.existsSync(dir)) return;
+    try {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory() && !entry.name.startsWith('.')) {
+          walk(fullPath);
+        } else if (entry.isFile() && entry.name.endsWith('.md') && !entry.name.startsWith('.')) {
+          const slug = entry.name.replace(/\.md$/, '').replace(/^\d+[-_]/, '');
+          lessons.push({ slug, dir });
+        }
+      }
+    } catch {}
+  }
+  walk(trackDir);
+  return lessons;
+}
+
+/**
+ * Get the name of the current lesson from the directory path.
+ * Returns "Module / Lesson" formatted string, or null if no lesson context.
+ */
+export function getCurrentLessonInfo(lessonDir: string): { moduleName: string; lessonName: string } | null {
+  try {
+    const parts = lessonDir.split(path.sep);
+    const moduleDir = parts[parts.length - 2];
+    const lessonDirName = parts[parts.length - 1];
+    if (!moduleDir || !lessonDirName) return null;
+
+    const moduleName = moduleDir.replace(/^module-\d+-?/, '').replace(/[-_]/g, ' ').trim();
+    const lessonName = lessonDirName.replace(/^\d+-?/, '').replace(/[-_]/g, ' ').trim();
+    return {
+      moduleName: moduleName.charAt(0).toUpperCase() + moduleName.slice(1),
+      lessonName: lessonName.charAt(0).toUpperCase() + lessonName.slice(1),
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Walk a track directory recursively to find lessons with frontmatter validation configs.
  */
-function findLessonsWithValidators(trackDir: string): Array<{ dir: string; validators: any[] }> {
-  const lessons: Array<{ dir: string; validators: any[] }> = [];
+function findLessonsWithValidators(trackDir: string): Array<{ dir: string; slug: string; validators: any[] }> {
+  const lessons: Array<{ dir: string; slug: string; validators: any[] }> = [];
 
   function walk(dir: string) {
     if (!fs.existsSync(dir)) return;
@@ -157,7 +243,8 @@ function findLessonsWithValidators(trackDir: string): Array<{ dir: string; valid
             if (validationMatch) {
               const validators = parseValidationBlock(validationMatch[1]);
               if (validators.length > 0) {
-                lessons.push({ dir, validators });
+                const slug = mdFile.name.replace(/\.md$/, '').replace(/^\d+[-_]/, '');
+                lessons.push({ dir, slug, validators });
               }
             }
           }
@@ -328,12 +415,24 @@ function parseYamlValue(value: string): any {
   return trimmed;
 }
 
-// ─── Standard Checks ────────────────────────────────────────────────
+// ─── Minimal Checks ────────────────────────────────────────────────
 
-export function checkDocumentation(projectDir: string): ValidationResult[] {
+/**
+ * Only checks what lessons define in their frontmatter `validation:`.
+ * The only hardcoded convention is README.md — everything else (design/,
+ * verification/, src/, git history) is not required.
+ * Lesson-defined validators are the primary source of truth.
+ */
+export function checkMinimal(projectDir: string): ValidationResult[] {
   const results: ValidationResult[] = [];
 
-  // README.md
+  // .100x.json — project config (created by init)
+  const configPath = path.join(projectDir, PROJECT_CONFIG);
+  if (fs.existsSync(configPath)) {
+    results.push({ check: 'config', status: 'pass', message: `${PROJECT_CONFIG} project config found`, category: 'structure' });
+  }
+
+  // README.md — minimal required documentation
   const readmePath = path.join(projectDir, 'README.md');
   if (fs.existsSync(readmePath)) {
     const content = fs.readFileSync(readmePath, 'utf-8').trim();
@@ -346,149 +445,116 @@ export function checkDocumentation(projectDir: string): ValidationResult[] {
     results.push({ check: 'readme', status: 'fail', message: 'README.md is missing. Every project needs a readme.', category: 'documentation' });
   }
 
-  // design/decisions.md — Engineering Decision Log
-  const decisionsPath = path.join(projectDir, 'design', 'decisions.md');
-  if (fs.existsSync(decisionsPath)) {
-    const content = fs.readFileSync(decisionsPath, 'utf-8');
-    const hasContext = content.includes('Context') || content.includes('context');
-    const hasDecision = content.includes('Decision') || content.includes('decision') || content.includes('chose');
-    if (hasContext && hasDecision) {
-      results.push({ check: 'decisions', status: 'pass', message: 'design/decisions.md has proper decision log format', category: 'documentation' });
-    } else {
-      results.push({ check: 'decisions', status: 'warn', message: 'design/decisions.md exists but may be incomplete. Add Context, Options, and Decision sections.', category: 'documentation' });
-    }
-  } else {
-    results.push({ check: 'decisions', status: 'fail', message: 'design/decisions.md (Engineering Decision Log) is missing.', category: 'documentation' });
-  }
+  return results;
+}
 
-  // design/architecture.md
-  const archPath = path.join(projectDir, 'design', 'architecture.md');
-  if (fs.existsSync(archPath)) {
-    const content = fs.readFileSync(archPath, 'utf-8');
-    const hasComponents = content.includes('Component') || content.includes('component');
-    if (hasComponents && content.length >= 100) {
-      results.push({ check: 'architecture', status: 'pass', message: 'design/architecture.md describes system architecture', category: 'documentation' });
-    } else {
-      results.push({ check: 'architecture', status: 'warn', message: 'design/architecture.md exists but may be incomplete', category: 'documentation' });
-    }
-  } else {
-    results.push({ check: 'architecture', status: 'fail', message: 'design/architecture.md is missing.', category: 'documentation' });
-  }
+// ─── Spec-Defined Checks (formerly in verify.ts) ──────────────────────
 
-  // design/tradeoffs.md
-  const tradeoffsPath = path.join(projectDir, 'design', 'tradeoffs.md');
-  if (fs.existsSync(tradeoffsPath)) {
-    const content = fs.readFileSync(tradeoffsPath, 'utf-8');
-    const hasTradeoff = content.includes('Trade') || content.includes('Sacrificed') || content.includes('Weakness');
-    if (hasTradeoff && content.length >= 100) {
-      results.push({ check: 'tradeoffs', status: 'pass', message: 'design/tradeoffs.md acknowledges trade-offs', category: 'documentation' });
-    } else {
-      results.push({ check: 'tradeoffs', status: 'warn', message: 'design/tradeoffs.md exists but may be incomplete', category: 'documentation' });
-    }
-  } else {
-    results.push({ check: 'tradeoffs', status: 'warn', message: 'design/tradeoffs.md is missing. Consider adding trade-off analysis.', category: 'documentation' });
-  }
+/**
+ * Execute all spec-defined checks from the system's SPECIFICATION.md.
+ * These check for file existence, doc sections, test passes, etc.
+ */
+async function runSpecChecksFromCurriculum(
+  projectDir: string,
+  systemSlug: string
+): Promise<ValidationResult[]> {
+  const results: ValidationResult[] = [];
+  const spec = getSpec(systemSlug);
+  if (!spec || spec.checks.length === 0) return results;
 
-  // verification/checklist.md
-  const checklistPath = path.join(projectDir, 'verification', 'checklist.md');
-  if (fs.existsSync(checklistPath)) {
-    results.push({ check: 'checklist', status: 'pass', message: 'verification/checklist.md exists', category: 'documentation' });
-  } else {
-    results.push({ check: 'checklist', status: 'warn', message: 'verification/checklist.md is missing. Self-assessment helps reviewers.', category: 'documentation' });
+  for (const check of spec.checks) {
+    const sr = await runSpecCheck(check, projectDir);
+    const label = check.path || check.name || check.command || check.type;
+
+    if (sr.result === 'pass') {
+      results.push({
+        check: `spec-${check.type}`,
+        status: 'pass',
+        message: `${check.type}: ${label}`,
+        category: 'spec',
+      });
+    } else if (sr.result === 'fail') {
+      results.push({
+        check: `spec-${check.type}`,
+        status: 'fail',
+        message: `${check.type}: ${label} — ${sr.hint}`,
+        category: 'spec',
+      });
+    }
   }
 
   return results;
 }
 
-export function checkStructure(projectDir: string): ValidationResult[] {
-  const results: ValidationResult[] = [];
-
-  // .100x.json
-  const configPath = path.join(projectDir, '.100x.json');
-  if (fs.existsSync(configPath)) {
-    results.push({ check: 'config', status: 'pass', message: '.100x.json project config found', category: 'structure' });
+function getFailureHint(check: SpecCheck): string {
+  switch (check.type) {
+    case 'file-exists': return `Create the file at: ${check.path}`;
+    case 'doc-section': return `Add section "${check.name}" to ${check.path}`;
+    case 'doc-contains': return `Ensure "${check.name}" is mentioned in ${check.path}`;
+    case 'file-count-min': return `Expected at least ${check.name} file(s) in ${check.path}`;
+    case 'test-passes': return `Run: ${check.command}`;
+    case 'custom-command': return `Run: ${check.command}`;
+    default: return '';
   }
-
-  // Check for source code directory
-  const srcDir = path.join(projectDir, 'src');
-  if (fs.existsSync(srcDir)) {
-    const srcFiles = fs.readdirSync(srcDir).filter((f: string) => {
-      const fullPath = path.join(srcDir, f);
-      return fs.statSync(fullPath).isFile() && !f.startsWith('.');
-    });
-    if (srcFiles.length > 0) {
-      results.push({ check: 'source', status: 'pass', message: `Source code directory with ${srcFiles.length} file(s)`, category: 'structure' });
-    } else {
-      results.push({ check: 'source', status: 'warn', message: 'src/ directory is empty', category: 'structure' });
-    }
-  } else {
-    // Maybe Java structure
-    const javaDir = path.join(projectDir, 'src', 'main', 'java');
-    if (fs.existsSync(javaDir)) {
-      const javaFiles = fs.readdirSync(javaDir, { recursive: true } as any)
-        .filter((f: any): f is string => typeof f === 'string' && (f as string).endsWith('.java'));
-      if (javaFiles.length > 0) {
-        results.push({ check: 'source', status: 'pass', message: `Java source files found (${javaFiles.length})`, category: 'structure' });
-      } else {
-        results.push({ check: 'source', status: 'warn', message: 'Java source directory exists but is empty', category: 'structure' });
-      }
-    } else {
-      results.push({ check: 'source', status: 'warn', message: 'No source code directory found (src/ or src/main/java/)', category: 'structure' });
-    }
-  }
-
-  // Check for design/ directory
-  const designDir = path.join(projectDir, 'design');
-  if (fs.existsSync(designDir)) {
-    const designFiles = fs.readdirSync(designDir).filter((f: string) => f.endsWith('.md'));
-    results.push({ check: 'design-dir', status: 'pass', message: `design/ directory with ${designFiles.length} file(s)`, category: 'structure' });
-  }
-
-  return results;
 }
 
-function checkGitHistory(projectDir: string): ValidationResult[] {
-  const results: ValidationResult[] = [];
-  const gitDir = path.join(projectDir, '.git');
-
-  if (!fs.existsSync(gitDir)) {
-    results.push({ check: 'git', status: 'warn', message: 'Not a git repository. Version control is recommended.', category: 'git' });
-    return results;
-  }
-
-  // Check for recent commits
-  try {
-    const commitCount = execSync('git rev-list --count HEAD', {
-      cwd: projectDir,
-      stdio: 'pipe',
-      timeout: 5000,
-    }).toString().trim();
-
-    if (parseInt(commitCount, 10) > 0) {
-      results.push({ check: 'git-commits', status: 'pass', message: `Git repository with ${commitCount} commit(s)`, category: 'git' });
+async function runSpecCheck(check: SpecCheck, projectDir: string): Promise<{ result: 'pass' | 'fail' | 'skip'; hint: string }> {
+  switch (check.type) {
+    case 'file-exists': {
+      if (!check.path) return { result: 'skip', hint: '' };
+      const exists = fs.existsSync(path.join(projectDir, check.path));
+      return exists
+        ? { result: 'pass', hint: '' }
+        : { result: 'fail', hint: getFailureHint(check) };
     }
-  } catch {
-    results.push({ check: 'git-commits', status: 'warn', message: 'No commits yet. Make your first commit.', category: 'git' });
-  }
-
-  // Check if documentation is up-to-date with code changes
-  try {
-    const lastDocUpdate = execSync(
-      'git log -1 --format="%at" -- design/ README.md 2>/dev/null || echo "0"',
-      { cwd: projectDir, stdio: 'pipe', timeout: 5000 }
-    ).toString().trim();
-
-    const lastCodeUpdate = execSync(
-      'git log -1 --format="%at" -- src/ 2>/dev/null || echo "0"',
-      { cwd: projectDir, stdio: 'pipe', timeout: 5000 }
-    ).toString().trim();
-
-    if (lastDocUpdate && lastCodeUpdate && parseInt(lastCodeUpdate) > parseInt(lastDocUpdate)) {
-      results.push({ check: 'doc-sync', status: 'warn', message: 'Source code was updated more recently than documentation. Consider updating docs.', category: 'git' });
+    case 'doc-section': {
+      if (!check.path || !check.name) return { result: 'skip', hint: '' };
+      const fullPath = path.join(projectDir, check.path);
+      if (!fs.existsSync(fullPath)) return { result: 'fail', hint: getFailureHint(check) };
+      try {
+        const content = fs.readFileSync(fullPath, 'utf-8');
+        const pattern = new RegExp(`^##+\\s+${escapeRegex(check.name)}`, 'm');
+        return pattern.test(content)
+          ? { result: 'pass', hint: '' }
+          : { result: 'fail', hint: getFailureHint(check) };
+      } catch { return { result: 'fail', hint: '' }; }
     }
-  } catch {
-    // Ignore — git might not be available
+    case 'doc-contains': {
+      if (!check.path || !check.name) return { result: 'skip', hint: '' };
+      const fp = path.join(projectDir, check.path);
+      if (!fs.existsSync(fp)) return { result: 'fail', hint: getFailureHint(check) };
+      try {
+        const lower = fs.readFileSync(fp, 'utf-8').toLowerCase();
+        return lower.includes(check.name.toLowerCase())
+          ? { result: 'pass', hint: '' }
+          : { result: 'fail', hint: getFailureHint(check) };
+      } catch { return { result: 'fail', hint: '' }; }
+    }
+    case 'file-count-min': {
+      if (!check.path) return { result: 'skip', hint: '' };
+      const fp2 = path.join(projectDir, check.path);
+      if (!fs.existsSync(fp2)) return { result: 'fail', hint: getFailureHint(check) };
+      try {
+        const count = fs.readdirSync(fp2).filter((f) => !f.startsWith('.')).length;
+        const min = parseInt(check.name || '1', 10) || 1;
+        return count >= min
+          ? { result: 'pass', hint: '' }
+          : { result: 'fail', hint: getFailureHint(check) };
+      } catch { return { result: 'fail', hint: '' }; }
+    }
+    case 'test-passes':
+    case 'custom-command': {
+      if (!check.command) return { result: 'skip', hint: '' };
+      try {
+        execSync(check.command, { cwd: projectDir, stdio: 'pipe', timeout: 60000 });
+        return { result: 'pass', hint: '' };
+      } catch { return { result: 'fail', hint: getFailureHint(check) }; }
+    }
+    default:
+      return { result: 'skip', hint: '' };
   }
+}
 
-  return results;
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

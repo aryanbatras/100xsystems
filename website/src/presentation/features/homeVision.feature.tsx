@@ -56,7 +56,7 @@ export function HomeVision() {
             <p className={visionStyles.cardText}>
               A full ecosystem of tools and platforms for engineers who think in systems.
               Build Your X System leads the way. More products follow.
-              Each one serves the same mission — make engineers 100x better.
+              Each one serves the same mission — make engineers 100xsystems better.
             </p>
           </motion.div>
 

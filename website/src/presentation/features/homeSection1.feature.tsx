@@ -10,7 +10,7 @@ export function HomeSection1() {
         <div className={sec1Styles.rubikVideoTitle}>
           <img
             src="/100xsystemsonlytitle.webp"
-            alt="100x Systems"
+            alt="100xsystems Systems"
             className={sec1Styles.titleLogo}
           />
         </div>

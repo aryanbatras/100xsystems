@@ -1,24 +1,33 @@
+/**
+ * ## Init Command
+ *
+ * Scaffolds a new project for a system.
+ *
+ * With slug:  100xsystems init <slug> [options]  → direct scaffolding
+ * Without:    100xsystems init                     → interactive wizard
+ *
+ * @packageDocumentation
+ */
+
 import React, { useState, useEffect } from 'react';
-import { Box, Text } from '../ui/index.js';
+import { Box, Text } from 'ink';
+import SelectInput from '../ui/SelectInput.js';
 import zod from 'zod';
 import { option } from 'pastel';
 import path from 'path';
 import fs from 'fs';
-import { systemExists, getSystemMeta } from '../reader/system-reader.js';
-import { SYSTEMS_DIR } from '../reader/index.js';
+import { execSync } from 'child_process';
+import { getAllSystems, systemExists, getSystemMeta } from '../reader/system-reader.js';
+import { getSystemTracks } from '../reader/lesson-reader.js';
 import { scaffoldProject } from '../scaffold/index.js';
-import { getSpec } from '../reader/spec-reader.js';
 import { getCachedUser } from '../auth/index.js';
 import { markInProgress } from '../actions/progress.js';
 
 export const args = zod.tuple([
-  zod.string().describe('System slug (e.g., claude-code)'),
+  zod.string().optional().describe('Optional system slug (e.g., claude-code). Omit for interactive selection.'),
 ]);
 
 export const options = zod.object({
-  lang: zod.enum(['typescript', 'java']).optional().describe(
-    option({ description: 'Programming language (typescript, java)', alias: 'l' }),
-  ),
   output: zod.string().optional().describe(
     option({ description: 'Output directory', alias: 'o' }),
   ),
@@ -32,136 +41,256 @@ type Props = {
   options: zod.infer<typeof options>;
 };
 
+// ─── Wizard Phases ──────────────────────────────────────────────────
+
+type InitPhase =
+  | { name: 'loading' }
+  | { name: 'pick-system' }
+  | { name: 'pick-track'; systemSlug: string; systemTitle: string; tracks: Array<{ slug: string; title: string; language: string }> }
+  | { name: 'confirm'; systemSlug: string; systemTitle: string; trackSlug: string; trackTitle: string; language: string }
+  | { name: 'scaffolding'; systemSlug: string; systemTitle: string; trackSlug: string; trackTitle: string; language: string; outputDir: string }
+  | { name: 'done'; systemSlug: string; systemTitle: string; trackSlug: string; outputDir: string; created: string[] }
+  | { name: 'error'; message: string };
+
+// ─── Main Component ─────────────────────────────────────────────────
+
 export default function Init({ args, options }: Props) {
   const [systemSlug] = args;
-  const [elements, setElements] = useState<React.ReactNode>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [phase, setPhase] = useState<InitPhase>({ name: 'loading' });
 
   useEffect(() => {
-    (async () => {
-      // Validate system
+    // Check dependencies first
+    const missing = checkDependencies();
+    if (missing.length > 0) {
+      setPhase({ name: 'error', message: `Missing dependencies: ${missing.join(', ')}. Install them and try again.` });
+      return;
+    }
+
+    if (systemSlug) {
+      // Direct mode — check if system has tracks, then scaffold
       if (!systemExists(systemSlug)) {
-        setError(`System "${systemSlug}" not found. Run 100x list to see all available systems.`);
+        setPhase({ name: 'error', message: `System "${systemSlug}" not found.` });
         return;
       }
-
-      const system = getSystemMeta(systemSlug)!;
-      const outputDir = options.output || `./${systemSlug}-implementation`;
-      const targetDir = path.resolve(process.cwd(), outputDir);
-
-      // Check if directory already exists
-      if (fs.existsSync(targetDir) && fs.readdirSync(targetDir).length > 0) {
-        setError(`Directory "${outputDir}" already exists and is not empty. Use --output to specify a different path.`);
+      const tracks = getSystemTracks(systemSlug);
+      if (tracks.length === 0) {
+        setPhase({ name: 'error', message: `No tracks found for system "${systemSlug}".` });
         return;
       }
+      // Use first track by default in direct mode
+      const track = tracks[0];
+      doScaffold(systemSlug, track.slug, track.language, options.output, options.author, setPhase);
+    } else {
+      // Interactive mode — start with system picker
+      setPhase({ name: 'pick-system' });
+    }
+  }, []);
 
-      // Read specification
-      const spec = getSpec(systemSlug);
-      let specContent = '';
-      if (spec) {
-        specContent = `# ${spec.title}\n\nVersion: ${spec.version}\n\n`;
-        if (spec.checks.length > 0) {
-          specContent += '## Verification Checks\n\n';
-          for (const check of spec.checks) {
-            specContent += `- ${check.type}: ${check.path || check.name || check.command || '(see spec details)'}\n`;
-          }
-        }
-      }
+  // ─── Phase renders ─────────────────────────────────────────────
 
-      const lang = options.lang || 'typescript';
-      const cachedUser = getCachedUser();
-      const author = options.author || cachedUser?.login || '';
-      const systemTitle = system.title;
-
-      // Scaffold the project
-      try {
-        const created = scaffoldProject({
-          targetDir,
-          systemSlug,
-          systemTitle,
-          language: lang as 'typescript' | 'java',
-          author,
-          specification: specContent,
-        });
-
-        // Track progress
-        markInProgress(systemSlug, targetDir, lang);
-
-        // Build Ink JSX output
-        const docs = created.filter((f: string) => f.startsWith('design/') || f.startsWith('verification/') || f.startsWith('specification/') || f === 'README.md');
-        const code = created.filter((f: string) => f.startsWith('src/') || f.startsWith('pom.xml') || f.startsWith('package.json') || f.startsWith('tsconfig.json'));
-        const configs = created.filter((f: string) => f.startsWith('.') || f.startsWith('build'));
-
-        const children: React.ReactNode[] = [];
-
-        children.push(<Text bold key="header">{'  '}100xSystems — Initializing &ldquo;{systemTitle}&rdquo;</Text>);
-        children.push(<Box marginY={1} key="sp1" />);
-        children.push(<Text key="sys" dimColor>{'  '}System:   {systemTitle}</Text>);
-        children.push(<Text key="out" dimColor>{'  '}Output:   {outputDir}</Text>);
-        children.push(<Text key="lang" dimColor>{'  '}Language: {lang}</Text>);
-        if (author) children.push(<Text key="auth" dimColor>{'  '}Author:   {author}</Text>);
-        children.push(<Box marginY={1} key="sp2" />);
-        children.push(<Text color="green" key="success">{'  '}✓ Project created successfully!</Text>);
-        children.push(<Box marginY={1} key="sp3" />);
-
-        if (docs.length > 0) {
-          children.push(<Text key="docs-h" dimColor>{'  '}Documentation:</Text>);
-          for (const file of docs) children.push(<Text key={`doc-${file}`}>{'    '}📝 {file}</Text>);
-          children.push(<Box marginY={1} key="sp4" />);
-        }
-
-        if (code.length > 0) {
-          children.push(<Text key="code-h" dimColor>{'  '}Code:</Text>);
-          for (const file of code) children.push(<Text key={`code-${file}`}>{'    '}📄 {file}</Text>);
-          children.push(<Box marginY={1} key="sp5" />);
-        }
-
-        if (configs.length > 0) {
-          children.push(<Text key="cfg-h" dimColor>{'  '}Config:</Text>);
-          for (const file of configs) children.push(<Text key={`cfg-${file}`}>{'    '}⚙️  {file}</Text>);
-          children.push(<Box marginY={1} key="sp6" />);
-        }
-
-        children.push(<Text bold key="next">Next steps:</Text>);
-        children.push(<Text key="ns1" color="cyan">{'  '}cd {outputDir}</Text>);
-        children.push(<Text key="ns2" color="cyan">{'  '}100x validate  <Text dimColor>→ check document completeness</Text></Text>);
-        children.push(<Text key="ns3" color="cyan">{'  '}100x verify    <Text dimColor>→ check against specification</Text></Text>);
-        children.push(<Box marginY={1} key="sp7" />);
-
-        // Check for quizzes/challenges
-        const quizDir = path.join(SYSTEMS_DIR(), systemSlug, 'quizzes');
-        const challengeDir = path.join(SYSTEMS_DIR(), systemSlug, 'challenges');
-        const hasQuizzes = fs.existsSync(quizDir) && fs.readdirSync(quizDir).some(f => f.endsWith('.md'));
-        const hasChallenges = fs.existsSync(challengeDir) && fs.readdirSync(challengeDir).some(f => f.endsWith('.md'));
-
-        if (hasQuizzes || hasChallenges) {
-          children.push(<Text key="also" dimColor>Also try:</Text>);
-          if (hasQuizzes) children.push(<Text key="quiz" color="cyan">{'  '}100x quiz {systemSlug}  <Text dimColor>→ take quizzes</Text></Text>);
-          if (hasChallenges) children.push(<Text key="chal" color="cyan">{'  '}100x challenge {systemSlug}  <Text dimColor>→ start a challenge</Text></Text>);
-          children.push(<Box marginY={1} key="sp8" />);
-        }
-
-        children.push(<Text key="submit-hint" dimColor>When you&rsquo;re ready to submit your implementation:</Text>);
-        children.push(<Text key="submit-cmd" dimColor>{'  '}→ Run 100x submit to prepare your review package</Text>);
-
-        setElements(<Box flexDirection="column" paddingX={2}>{children}</Box>);
-      } catch (err: any) {
-        setError(`Failed to create project: ${err.message}`);
-      }
-    })();
-  }, [systemSlug]);
-
-  if (error) {
+  if (phase.name === 'loading') {
     return (
       <Box flexDirection="column" paddingX={2}>
-        <Text color="red">  {error}</Text>
+        <Text dimColor>  Initializing...</Text>
       </Box>
     );
   }
 
-  return (
-    <Box flexDirection="column" paddingX={2} paddingY={1}>
-      {elements || <Text dimColor>  Initializing...</Text>}
-    </Box>
-  );
+  if (phase.name === 'pick-system') {
+    const systems = getAllSystems();
+    if (systems.length === 0) {
+      return (
+        <Box flexDirection="column" paddingX={2}>
+          <Text color="yellow">  No systems found in curriculum.</Text>
+          <Text dimColor>  Ensure the curriculum/ directory exists with system folders.</Text>
+        </Box>
+      );
+    }
+
+    return (
+      <Box flexDirection="column" paddingX={2}>
+        <Text bold color="cyan">{'  '}⚡ Choose a System</Text>
+        <Box marginY={1} />
+        <Text dimColor>{'  '}Select which system you want to build:</Text>
+        <Box marginY={1} />
+        <Box marginLeft={2}>
+          <SelectInput
+            items={systems.map(s => ({
+              label: `  ${s.title}${s.difficulty ? `  — ${s.difficulty}` : ''}${s.tags.length > 0 ? `  (${s.tags.slice(0, 3).join(', ')})` : ''}`,
+              value: s.slug,
+            }))}
+            onSelect={(item) => {
+              const system = getSystemMeta(item.value)!;
+              const tracks = getSystemTracks(item.value);
+              if (tracks.length > 1) {
+                setPhase({ name: 'pick-track', systemSlug: item.value, systemTitle: system.title, tracks: tracks.map(t => ({ slug: t.slug, title: t.title, language: t.language })) });
+              } else if (tracks.length === 1) {
+                const track = tracks[0];
+                setPhase({ name: 'confirm', systemSlug: item.value, systemTitle: system.title, trackSlug: track.slug, trackTitle: track.title, language: track.language });
+              } else {
+                setPhase({ name: 'error', message: `No tracks found for system "${item.value}".` });
+              }
+            }}
+          />
+        </Box>
+      </Box>
+    );
+  }
+
+  if (phase.name === 'pick-track') {
+    return (
+      <Box flexDirection="column" paddingX={2}>
+        <Text bold color="cyan">{'  '}⚡ Choose a Track</Text>
+        <Box marginY={1} />
+        <Text dimColor>{'  '}Which track for <Text bold>{phase.systemTitle}</Text>?</Text>
+        <Box marginY={1} />
+        <Box marginLeft={2}>
+          <SelectInput
+            items={phase.tracks.map((t) => ({
+              label: `  ${t.title}`,
+              value: t.slug,
+            }))}
+            onSelect={(item) => {
+              const track = phase.tracks.find(t => t.slug === item.value);
+              setPhase({ name: 'confirm', systemSlug: phase.systemSlug, systemTitle: phase.systemTitle, trackSlug: item.value, trackTitle: track?.title || item.value, language: track?.language || '' });
+            }}
+          />
+        </Box>
+      </Box>
+    );
+  }
+
+  if (phase.name === 'confirm') {
+    return (
+      <Box flexDirection="column" paddingX={2}>
+        <Text bold color="green">{'  '}⚡ Ready to Scaffold</Text>
+        <Box marginY={1} />
+        <Box flexDirection="column" marginLeft={2}>
+          <Text>System: <Text bold>{phase.systemTitle}</Text></Text>
+          <Text>Track:  <Text bold>{phase.trackTitle}</Text></Text>
+          <Text>Output: <Text bold>./{phase.systemSlug}-implementation</Text></Text>
+        </Box>
+        <Box marginY={1} />
+        <Box marginLeft={2}>
+          <SelectInput
+            items={[
+              { label: '  ✅ Yes, scaffold it!', value: 'yes' },
+              { label: '  ❌ Cancel', value: 'no' },
+            ]}
+            onSelect={(item) => {
+              if (item.value === 'yes') {
+                setPhase({ name: 'scaffolding', systemSlug: phase.systemSlug, systemTitle: phase.systemTitle, trackSlug: phase.trackSlug, trackTitle: phase.trackTitle, language: phase.language, outputDir: `./${phase.systemSlug}-implementation` });
+              } else {
+                setPhase({ name: 'error', message: 'Scaffolding cancelled.' });
+              }
+            }}
+          />
+        </Box>
+      </Box>
+    );
+  }
+
+  if (phase.name === 'scaffolding') {
+    doScaffold(phase.systemSlug, phase.trackSlug, phase.language, undefined, undefined, setPhase);
+    return (
+      <Box flexDirection="column" paddingX={2}>
+        <Text dimColor>  Scaffolding {phase.systemTitle}...</Text>
+      </Box>
+    );
+  }
+
+  if (phase.name === 'done') {
+    const { systemTitle, trackSlug, outputDir, created } = phase;
+    const code = created.filter((f) => f.startsWith('src/') || f === 'package.json' || f === 'tsconfig.json');
+    const configs = created.filter((f) => f.startsWith('.'));
+
+    const children: React.ReactNode[] = [];
+    children.push(<Text bold key="h">{'  '}100xSystems — &ldquo;{systemTitle}&rdquo; initialized</Text>);
+    children.push(<Box key="sp1" marginY={1} />);
+    children.push(<Text color="green" key="ok">{'  '}✓ Project created successfully!</Text>);
+    children.push(<Box key="sp2" marginY={1} />);
+    children.push(<Text key="track" dimColor>{'  '}Track: {trackSlug}</Text>);
+    children.push(<Box key="sp2b" marginY={1} />);
+
+    if (configs.length > 0) {
+      children.push(<Text key="cfgh" dimColor>{'  '}Config:</Text>);
+      for (const f of configs) children.push(<Text key={`cfg-${f}`}>{'    '}⚙️  {f}</Text>);
+      children.push(<Box key="sp5" marginY={1} />);
+    }
+    if (code.length > 0) {
+      children.push(<Text key="ch" dimColor>{'  '}Code:</Text>);
+      for (const f of code) children.push(<Text key={`c-${f}`}>{'    '}📄 {f}</Text>);
+      children.push(<Box key="sp4" marginY={1} />);
+    }
+
+    children.push(<Text bold key="nx">Next steps:</Text>);
+    children.push(<Text key="ns1" color="cyan">{'  '}cd {outputDir.replace('./', '')}</Text>);
+    children.push(<Text key="ns2" color="cyan">{'  '}100x validate  <Text dimColor>→ pick a lesson and validate</Text></Text>);
+    children.push(<Box key="sp6" marginY={1} />);
+    children.push(<Text key="sub" dimColor>Ready to submit? <Text color="cyan">100x submit</Text> to create a review package</Text>);
+
+    return <Box flexDirection="column" paddingX={2}>{children}</Box>;
+  }
+
+  if (phase.name === 'error') {
+    return (
+      <Box flexDirection="column" paddingX={2}>
+        <Text color={phase.message === 'Scaffolding cancelled.' ? 'yellow' : 'red'}>  {phase.message}</Text>
+      </Box>
+    );
+  }
+
+  return null;
+}
+
+// ─── Scaffolding Logic (shared with direct mode) ────────────────────
+
+function checkDependencies(): string[] {
+  const missing: string[] = [];
+  try { execSync('node --version', { stdio: 'pipe', timeout: 3000 }); } catch { missing.push('Node.js'); }
+  try { execSync('npm --version', { stdio: 'pipe', timeout: 3000 }); } catch { missing.push('npm'); }
+  try { execSync('git --version', { stdio: 'pipe', timeout: 3000 }); } catch { missing.push('Git'); }
+  return missing;
+}
+
+async function doScaffold(
+  systemSlug: string,
+  trackSlug: string,
+  language: string,
+  outputOverride: string | undefined,
+  authorOverride: string | undefined,
+  setPhase: (phase: InitPhase) => void,
+): Promise<void> {
+  if (!systemExists(systemSlug)) {
+    setPhase({ name: 'error', message: `System "${systemSlug}" not found.` });
+    return;
+  }
+
+  const system = getSystemMeta(systemSlug)!;
+  const outputDir = outputOverride || `./${systemSlug}-implementation`;
+  const targetDir = path.resolve(process.cwd(), outputDir);
+
+  if (fs.existsSync(targetDir) && fs.readdirSync(targetDir).length > 0) {
+    setPhase({ name: 'error', message: `Directory "${outputDir}" already exists. Use --output to specify a different path.` });
+    return;
+  }
+
+  const cachedUser = getCachedUser();
+  const author = authorOverride || cachedUser?.login || '';
+
+  try {
+    const created = scaffoldProject({
+      targetDir,
+      systemSlug,
+      systemTitle: system.title,
+      trackSlug,
+      language,
+      author,
+    });
+
+    markInProgress(systemSlug, targetDir, trackSlug);
+    setPhase({ name: 'done', systemSlug, systemTitle: system.title, trackSlug, outputDir, created });
+  } catch (err: any) {
+    setPhase({ name: 'error', message: `Failed to create project: ${err.message}` });
+  }
 }

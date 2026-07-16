@@ -351,7 +351,7 @@ export function CommunityPageClient({ data }: CommunityPageClientProps) {
                 <ol className="space-y-3">
                   {[
                     'Build a system from the curriculum',
-                    'Run 100x submit to create a PR with your review package',
+                    'Run 100xsystems submit to create a PR with your review package',
                     'A community reviewer checks your work',
                     'Once verified, your submission appears here',
                   ].map((step, i) => (

@@ -7,93 +7,60 @@ export interface ScaffoldOptions {
   targetDir: string;
   systemSlug: string;
   systemTitle: string;
-  language?: 'typescript' | 'java';
+  trackSlug: string;
+  language: string;
   author?: string;
   specification?: string;
 }
 
+export const PROJECT_CONFIG = '100xsystems.json';
+
 /**
  * Scaffold a new implementation project for a system.
- * Creates a complete review package structure:
+ * Creates:
  *
- *   .100x.json           — Project config
+ *   100xsystems.json     — Project config (track, progress, metadata)
  *   README.md            — Project overview
- *   design/
- *     decisions.md       — Engineering Decision Log
- *     architecture.md    — Architecture explanation
- *     tradeoffs.md       — Trade-offs analysis
- *   specification/
- *     SPECIFICATION.md   — System specification (from curriculum)
- *   verification/
- *     checklist.md       — Self-assessment checklist
  *   src/                 — Code (from language template)
  */
 export function scaffoldProject(options: ScaffoldOptions): string[] {
-  const { targetDir, systemSlug, systemTitle, language, author } = options;
+  const { targetDir, systemSlug, systemTitle, trackSlug, author } = options;
   const created: string[] = [];
 
   // Create target directory
   fs.mkdirSync(targetDir, { recursive: true });
 
-  // ─── .100x.json ─────────────────────────────────────────────────
+  // ─── 100xsystems.json ───────────────────────────────────────────
 
   const config = {
+    _project: '100xsystems',
+    _description: 'This file is managed by the 100xSystems CLI (https://github.com/100xsystems/100xsystems). It tracks your learning progress through systems engineering curriculum. Do not edit manually — use 100xsystems commands instead.',
     system: systemSlug,
     systemTitle,
-    language: language || 'typescript',
+    track: trackSlug,
     author: author || '',
     version: '0.1.0',
     createdAt: new Date().toISOString(),
+    progress: {
+      completedLessons: [] as string[],
+      currentLesson: '',
+    },
   };
   fs.writeFileSync(
-    path.join(targetDir, '.100x.json'),
+    path.join(targetDir, PROJECT_CONFIG),
     JSON.stringify(config, null, 2) + '\n',
   );
-  created.push('.100x.json');
+  created.push(PROJECT_CONFIG);
 
-  // ─── Review Package Templates ───────────────────────────────────
+  // ─── README ─────────────────────────────────────────────────────
 
-  const reviewTemplates = [
-    { src: 'review-package/README.md', dest: 'README.md' },
-    { src: 'review-package/design/decisions.md', dest: 'design/decisions.md' },
-    { src: 'review-package/design/architecture.md', dest: 'design/architecture.md' },
-    { src: 'review-package/design/tradeoffs.md', dest: 'design/tradeoffs.md' },
-    { src: 'review-package/verification/checklist.md', dest: 'verification/checklist.md' },
-  ];
-
-  for (const tpl of reviewTemplates) {
-    const tplPath = path.join(TEMPLATE_DIR, tpl.src);
-    if (!fs.existsSync(tplPath)) continue;
-
-    const destPath = path.join(targetDir, tpl.dest);
-    fs.mkdirSync(path.dirname(destPath), { recursive: true });
-
-    let content = fs.readFileSync(tplPath, 'utf-8');
-    // Replace template variables
-    content = content
-      .replace(/\{\{systemTitle\}\}/g, systemTitle)
-      .replace(/\{\{systemSlug\}\}/g, systemSlug)
-      .replace(/\{\{language\}\}/g, language || 'typescript')
-      .replace(/\{\{author\}\}/g, author || 'your-github-username')
-      .replace(/\{\{repositoryUrl\}\}/g, '');
-
-    fs.writeFileSync(destPath, content);
-    created.push(tpl.dest);
-  }
-
-  // ─── Specification ──────────────────────────────────────────────
-
-  if (options.specification) {
-    const specDir = path.join(targetDir, 'specification');
-    fs.mkdirSync(specDir, { recursive: true });
-    fs.writeFileSync(path.join(specDir, 'SPECIFICATION.md'), options.specification);
-    created.push('specification/SPECIFICATION.md');
-  }
+  const readmeContent = `# ${systemTitle}\n\n> System: ${systemSlug} | Track: ${trackSlug}\n\n## Overview\n\n<!-- Describe what you built and your approach -->\n\n## What I Learned\n\n<!-- Key takeaways from this system -->\n`;
+  fs.writeFileSync(path.join(targetDir, 'README.md'), readmeContent);
+  created.push('README.md');
 
   // ─── Language Templates ─────────────────────────────────────────
 
-  const lang = language || 'typescript';
-  copyLanguageTemplate(lang, targetDir, created);
+  copyLanguageTemplate(options.language, targetDir, created);
 
   return created;
 }
@@ -125,12 +92,21 @@ function copyLanguageTemplate(language: string, targetDir: string, created: stri
 }
 
 /**
- * Read the .100x.json config from a project directory.
+ * Read the project config from a project directory.
+ * Looks for 100xsystems.json first, falls back to .100x.json for backward compat.
  */
 export function readProjectConfig(projectDir: string): Record<string, any> | null {
   try {
-    const configPath = path.join(projectDir, '.100x.json');
-    if (!fs.existsSync(configPath)) return null;
-    return JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+    // Try new name first
+    let configPath = path.join(projectDir, PROJECT_CONFIG);
+    if (fs.existsSync(configPath)) {
+      return JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+    }
+    // Fallback to old name
+    configPath = path.join(projectDir, '.100x.json');
+    if (fs.existsSync(configPath)) {
+      return JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+    }
+    return null;
   } catch { return null; }
 }

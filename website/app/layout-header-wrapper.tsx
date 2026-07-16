@@ -12,7 +12,7 @@ interface HeaderWrapperProps {
 
 export function HeaderWrapper({ items, logo }: HeaderWrapperProps) {
   const pathname = usePathname();
-  const isReadingPage = pathname.includes('/read/');
+  const isReadingPage = pathname.includes('/read/') || pathname.startsWith('/cli-docs/');
 
   if (isReadingPage) return null;
 

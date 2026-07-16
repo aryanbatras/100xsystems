@@ -1,157 +1,183 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Text } from '../ui/index.js';
-import zod from 'zod';
-import { getAllSystems, getSystemMeta } from '../reader/system-reader.js';
-import { loadProgress, detectInProgressProjects } from '../actions/progress.js';
-import type { ProgressData, ProgressEntry } from '../reader/index.js';
+/**
+ * ## Progress Command
+ *
+ * Shows per-lesson progress for the current project.
+ * Must be run inside a project directory scaffolded by `100x init`.
+ * Reads .100x.json to show lesson completion and current position.
+ *
+ * @packageDocumentation
+ */
 
-export const args = zod.tuple([
-  zod.string().optional().describe('Optional system slug to show detailed progress'),
-]);
+import React, { useState, useEffect } from 'react';
+import { Box, Text } from 'ink';
+import zod from 'zod';
+import { readProjectConfig, PROJECT_CONFIG } from '../scaffold/index.js';
+import { getSystemMeta } from '../reader/system-reader.js';
+import { getSystemTracks, getTrackModules } from '../reader/lesson-reader.js';
+
+export const args = zod.tuple([]);
 
 type Props = {
   args: zod.infer<typeof args>;
 };
 
-export default function Progress({ args }: Props) {
-  const [systemSlug] = args;
-  const [progressData, setProgressData] = useState<ProgressData | null>(null);
-  const [error, setError] = useState<string | null>(null);
+export default function Progress(_props: Props) {
+  const [output, setOutput] = useState<React.ReactNode>(null);
 
   useEffect(() => {
-    try {
-      detectInProgressProjects();
-      const data = loadProgress();
-      setProgressData(data);
-    } catch (err: any) {
-      setError(err.message);
-    }
-  }, []);
+    const projectDir = process.cwd();
+    const config = readProjectConfig(projectDir);
 
-  if (error) {
-    return (
-      <Box flexDirection="column" paddingX={2}>
-        <Text color="red">  {error}</Text>
-      </Box>
-    );
-  }
-
-  if (!progressData) {
-    return (
-      <Box flexDirection="column" paddingX={2}>
-        <Text dimColor>  Loading progress...</Text>
-      </Box>
-    );
-  }
-
-  const allSystems = getAllSystems();
-  const entries = Object.entries(progressData.systems);
-
-  if (systemSlug) {
-    const system = getSystemMeta(systemSlug);
-    if (!system) {
-      return (
+    if (!config) {
+      setOutput(
         <Box flexDirection="column" paddingX={2}>
-          <Text color="red">  System &ldquo;{systemSlug}&rdquo; not found.</Text>
+          <Text color="yellow">  No {PROJECT_CONFIG} found.</Text>
+          <Text dimColor>  Run <Text color="cyan">100x init &lt;system&gt;</Text> inside a project directory first.</Text>
         </Box>
       );
+      return;
     }
 
-    const entry = progressData.systems[systemSlug];
+    const slug = (config.system as string) || '';
+    const trackSlug = (config.track as string) || '';
+    const title = (config.systemTitle as string) || slug;
+    const progress = config.progress || { completedLessons: [], currentLesson: '' };
 
-    if (!entry || entry.status === 'not-started') {
-      return (
-        <Box flexDirection="column" paddingX={2} paddingY={1}>
-          <Text bold>{'  '}{system.title}</Text>
-          <Text dimColor>{'  '}Status: ○ Not started</Text>
-          <Box marginY={1} />
-          <Text color="cyan">{'  '}100x init {systemSlug}  <Text dimColor>→ start building</Text></Text>
-          <Text color="cyan">{'  '}100x quiz {systemSlug}  <Text dimColor>→ take quizzes</Text></Text>
-          <Text color="cyan">{'  '}100x resources {systemSlug}  <Text dimColor>→ view resources</Text></Text>
+    if (!slug) {
+      setOutput(
+        <Box flexDirection="column" paddingX={2}>
+          <Text color="red">  Invalid {PROJECT_CONFIG}: missing system slug.</Text>
         </Box>
       );
+      return;
     }
 
-    const statusColor = entry.status === 'completed' ? 'green' : 'yellow';
-    const statusIcon = entry.status === 'completed' ? '✓' : '⟳';
-    return (
-      <Box flexDirection="column" paddingX={2} paddingY={1}>
-        <Text bold>{'  '}{system.title}</Text>
-        <Text>{'  '}Status: <Text color={statusColor}>{statusIcon} {entry.status}</Text></Text>
-        {entry.startedAt && <Text dimColor>{'  '}Started: {new Date(entry.startedAt).toLocaleDateString()}</Text>}
-        {entry.completedAt && <Text dimColor>{'  '}Completed: {new Date(entry.completedAt).toLocaleDateString()}</Text>}
-        {entry.projectDir && <Text dimColor>{'  '}Project: {entry.projectDir}</Text>}
-        {entry.language && <Text dimColor>{'  '}Language: {entry.language}</Text>}
-        <Box marginY={1} />
-        <Text color="cyan">{'  '}100x validate  <Text dimColor>→ check document completeness</Text></Text>
-        <Text color="cyan">{'  '}100x verify  <Text dimColor>→ verify against specification</Text></Text>
-        {entry.status !== 'completed' && (
-          <Text color="cyan">{'  '}100x submit {systemSlug}  <Text dimColor>→ submit for review</Text></Text>
-        )}
-      </Box>
-    );
-  }
-
-  // All systems view
-  const completedSlugs: string[] = entries.filter(([, e]) => e.status === 'completed').map(([s]) => s);
-  const inProgressSlugs: string[] = entries.filter(([, e]) => e.status === 'in-progress').map(([s]) => s);
-  const notStarted: string[] = allSystems.map((s) => s.slug).filter((slug) => !completedSlugs.includes(slug) && !inProgressSlugs.includes(slug));
-
-  const total = allSystems.length;
-  const pct = total > 0 ? Math.round((completedSlugs.length / total) * 100) : 0;
+    setOutput(showProjectProgress(slug, title, trackSlug, progress));
+  }, []);
 
   return (
     <Box flexDirection="column" paddingX={2} paddingY={1}>
-      <Text bold>{'  '}100xSystems — Your Progress</Text>
-      <Box marginY={1} />
-
-      {completedSlugs.length > 0 && (
-        <Box flexDirection="column">
-          <Text color="green">{'  '}✓ Completed</Text>
-          {completedSlugs.map((slug) => {
-            const system = getSystemMeta(slug);
-            const entry = progressData.systems[slug];
-            const date = entry?.completedAt ? new Date(entry.completedAt).toLocaleDateString() : '';
-            return <Text key={slug}>{'    '}<Text color="green">●</Text> <Text bold>{system?.title || slug}</Text> <Text dimColor>({date})</Text></Text>;
-          })}
-        </Box>
-      )}
-
-      {inProgressSlugs.length > 0 && (
-        <Box flexDirection="column" marginTop={1}>
-          <Text color="yellow">{'  '}⟳ In Progress</Text>
-          {inProgressSlugs.map((slug) => {
-            const system = getSystemMeta(slug);
-            const entry = progressData.systems[slug];
-            return (
-              <Box key={slug} flexDirection="column">
-                <Text>{'    '}<Text color="yellow">●</Text> <Text bold>{system?.title || slug}</Text></Text>
-                {entry?.projectDir && <Text dimColor>{'      '}{entry.projectDir}</Text>}
-              </Box>
-            );
-          })}
-        </Box>
-      )}
-
-      {notStarted.length > 0 && (
-        <Box flexDirection="column" marginTop={1}>
-          <Text dimColor>{'  '}○ Not Started</Text>
-          {notStarted.map((slug) => {
-            const system = getSystemMeta(slug);
-            return <Text key={slug}>{'    '}<Text dimColor>○ {system?.title || slug}</Text></Text>;
-          })}
-        </Box>
-      )}
-
-      <Box marginY={1} />
-      <Text>{'  '}<Text dimColor>─{'─'.repeat(38)}</Text></Text>
-      <Text bold>{'  '}Progress: {completedSlugs.length}/{total} systems completed ({pct}%)</Text>
-
-      {notStarted.length > 0 && (
-        <Text>
-          {'  '}<Text dimColor>Next:</Text> <Text color="cyan">100x init {notStarted[0]}</Text> <Text dimColor>— {getSystemMeta(notStarted[0])?.title || ''}</Text>
-        </Text>
-      )}
+      {output || <Text dimColor>  Loading progress...</Text>}
     </Box>
   );
+}
+
+// ─── Project-Scoped Progress View ───────────────────────────────────
+
+function showProjectProgress(
+  slug: string,
+  title: string,
+  trackSlug: string,
+  progress: { completedLessons: string[]; currentLesson: string },
+): React.ReactNode {
+  const system = getSystemMeta(slug);
+  const tracks = getSystemTracks(slug);
+  const completed: string[] = progress.completedLessons || [];
+  const currentLesson: string = progress.currentLesson || '';
+
+  const children: React.ReactNode[] = [];
+
+  // ── Header ─────────────────────────────────────────────────────
+  children.push(
+    <Text bold key="h">{'  '}📊 {title} — Progress</Text>
+  );
+  children.push(<Box key="sp0" marginY={1} />);
+
+  // ── Project Info ───────────────────────────────────────────────
+  const totalCompleted = completed.length;
+  const allStatus = totalCompleted > 0 ? 'in-progress' : 'not-started';
+  const statusIcon = allStatus === 'in-progress' ? '▶' : '○';
+  const statusColor = allStatus === 'in-progress' ? 'cyan' : 'dimColor';
+
+  children.push(
+    <Box key="info" flexDirection="column" marginLeft={1}>
+      <Text>
+        <Text bold>System: </Text>{title}
+      </Text>
+      <Text>
+        <Text bold>Track: </Text>{trackSlug}
+      </Text>
+      <Text>
+        <Text bold>Status: </Text>
+        <Text color={statusColor as any}>{statusIcon} {allStatus}</Text>
+      </Text>
+    </Box>
+  );
+  children.push(<Box key="sp1" marginY={1} />);
+
+  // ── Lesson Progress Per Track ──────────────────────────────────
+  if (tracks.length === 0) {
+    children.push(
+      <Text key="no-tracks" dimColor>{'  '}No tracks found for this system.</Text>
+    );
+  } else {
+    // Find the matching track for this project
+    const matchingTrack = tracks.find(t => t.slug === trackSlug) || tracks[0];
+    const modules = getTrackModules(slug, matchingTrack.slug);
+
+    if (modules.length === 0) {
+      children.push(
+        <Text key="no-modules" dimColor>{'  '}No modules found for track <Text bold>{matchingTrack.title}</Text></Text>
+      );
+    } else {
+      const allLessons = modules.flatMap(m => m.lessons);
+      const totalLessons = allLessons.length;
+      const percent = totalLessons > 0 ? Math.round((totalCompleted / totalLessons) * 100) : 0;
+
+      children.push(
+        <Text key="track-h" bold>{'  '}Track: {matchingTrack.title} — {totalCompleted}/{totalLessons} lessons ({percent}%)</Text>
+      );
+      children.push(<Box key="sp2" marginY={1} />);
+
+      for (const mod of modules) {
+        const lessonCount = mod.lessons.length;
+        const modCompleted = mod.lessons.filter(l => completed.includes(l.slug)).length;
+
+        children.push(
+          <Box key={`mod-${mod.slug}`} flexDirection="column" marginLeft={2} marginBottom={1}>
+            <Text bold>{'  '}{mod.title} <Text dimColor>({modCompleted}/{lessonCount})</Text></Text>
+
+            {mod.lessons.map((lesson) => {
+              const isCompleted = completed.includes(lesson.slug);
+              const isCurrent = lesson.slug === currentLesson;
+              const icon = isCompleted ? '✓' : isCurrent ? '▶' : '○';
+              const color = isCompleted ? 'green' : isCurrent ? 'cyan' : 'dimColor';
+              return (
+                <Text key={lesson.slug}>
+                  {'      '}<Text color={color as any}>{icon}</Text> {lesson.title}
+                  {isCurrent && <Text color="cyan">  ← current</Text>}
+                </Text>
+              );
+            })}
+          </Box>
+        );
+      }
+    }
+  }
+
+  // ── Quick Actions ──────────────────────────────────────────────
+  children.push(<Box key="sp3" marginY={1} />);
+  children.push(<Text key="actions-h" bold>{'  '}Actions</Text>);
+
+  if (currentLesson) {
+    children.push(
+      <Text key="act-validate" color="cyan">{'  '}100x validate  <Text dimColor>→ pick a lesson to validate</Text></Text>
+    );
+  } else {
+    children.push(
+      <Text key="act-validate-first" color="cyan">{'  '}100x validate  <Text dimColor>→ start validating</Text></Text>
+    );
+  }
+
+  children.push(
+    <Text key="act-submit" color="cyan">{'  '}100x submit  <Text dimColor>→ submit for review</Text></Text>
+  );
+
+  if (system) {
+    children.push(
+      <Text key="act-docs" color="cyan">{'  '}100x list {slug}  <Text dimColor>→ view system details</Text></Text>
+    );
+  }
+
+  return <Box flexDirection="column">{children}</Box>;
 }

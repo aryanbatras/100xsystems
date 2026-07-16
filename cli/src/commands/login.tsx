@@ -69,7 +69,7 @@ export default function Login({ options }: Props) {
     return (
       <Box flexDirection="column" paddingX={2} paddingY={1}>
         <Text>{'  '}Authenticated as: <Text bold>{phase.user.name} ({phase.user.login})</Text></Text>
-        <Text dimColor>{'  '}Use <Text bold>100x login --force</Text> to re-authenticate.</Text>
+        <Text dimColor>{'  '}Use <Text bold>100xsystems login --force</Text> to re-authenticate.</Text>
       </Box>
     );
   }

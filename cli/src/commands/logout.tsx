@@ -10,7 +10,7 @@ export default function Logout() {
     setOutput(
       <Box flexDirection="column" paddingX={2} paddingY={1}>
         <Text color="yellow">  Authentication cleared.</Text>
-        <Text dimColor>  Run 100x login to authenticate again.</Text>
+        <Text dimColor>  Run 100xsystems login to authenticate again.</Text>
       </Box>
     );
   }, []);

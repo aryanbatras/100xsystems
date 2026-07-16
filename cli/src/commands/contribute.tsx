@@ -79,7 +79,7 @@ export default function Contribute({ args, options }: Props) {
         switch (action) {
           case 'init': {
             if (!systemSlug) {
-              setError('Missing system slug. Usage: 100x contribute init {system}');
+              setError('Missing system slug. Usage: 100xsystems contribute init {system}');
               return;
             }
 
@@ -132,7 +132,7 @@ export default function Contribute({ args, options }: Props) {
 
           case 'track': {
             if (!systemSlug || !thirdArg) {
-              setError('Missing arguments. Usage: 100x contribute track {system} {language}');
+              setError('Missing arguments. Usage: 100xsystems contribute track {system} {language}');
               return;
             }
 
@@ -146,7 +146,7 @@ export default function Contribute({ args, options }: Props) {
 
           case 'lesson': {
             if (!systemSlug) {
-              setError('Missing system slug. Usage: 100x contribute lesson {system}');
+              setError('Missing system slug. Usage: 100xsystems contribute lesson {system}');
               return;
             }
 
@@ -212,7 +212,7 @@ export default function Contribute({ args, options }: Props) {
         <Box marginY={1} />
         {action === 'init' && (
           <Text color="green">
-            {'  '}Tip: Run <Text bold>100x contribute track {systemSlug} java</Text> to add another language track
+            {'  '}Tip: Run <Text bold>100xsystems contribute track {systemSlug} java</Text> to add another language track
           </Text>
         )}
       </Box>

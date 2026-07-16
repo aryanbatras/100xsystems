@@ -50,7 +50,7 @@ export function HomeJourneyVideo() {
           </span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight uppercase leading-[1.1]">
             From beginner to{' '}
-            <span className="text-accent-yellow">100x Engineer</span>
+            <span className="text-accent-yellow">100xsystems Engineer</span>
           </h2>
           <p className="text-lg md:text-xl text-white/80 leading-relaxed max-w-2xl">
             Every engineer&apos;s journey is unique. Cubix walks the path with you — 

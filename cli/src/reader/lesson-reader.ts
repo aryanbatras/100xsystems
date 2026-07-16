@@ -3,7 +3,7 @@
  *
  * Reads the lesson/track/module structure from the curriculum.
  * Parallel to website/src/lib/mdx.ts — keeps the CLI self-contained.
- * Used by `100x learn`, `100x review`, and `100x quiz`.
+ * Used by `100xsystems learn`, `100xsystems review`, and `100xsystems quiz`.
  *
  * @packageDocumentation
  */

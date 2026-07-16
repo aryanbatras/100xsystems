@@ -81,6 +81,7 @@ const headerItems = [
     { id: 'tools', label: 'Tools', href: '/tools', description: 'Essential dev tools' },
     { id: 'technologies', label: 'Technologies', href: '/technologies', description: 'Key technologies & platforms' },
   ]},
+  { id: 'cli-docs', label: 'CLI Docs', href: '/cli-docs' },
   { id: 'search', label: 'Search', href: '/search' },
 
 ];

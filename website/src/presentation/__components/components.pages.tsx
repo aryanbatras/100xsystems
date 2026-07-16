@@ -47,7 +47,7 @@ export function SignUpPage({ className, onSignUp, onSocialSignUp, onLogin }: Sig
         <div className="text-center mb-8">
           <span className="text-2xl font-extrabold text-fg tracking-tight uppercase block mb-2">100X SYSTEMS</span>
           <h1 className="text-lg font-bold text-fg uppercase tracking-wider">Create Your Account</h1>
-          <p className="text-sm text-fg-secondary mt-1">Start your journey to becoming a 100x Engineer</p>
+          <p className="text-sm text-fg-secondary mt-1">Start your journey to becoming a 100xsystems Engineer</p>
         </div>
 
         {/* Social sign-up buttons */}
@@ -704,7 +704,7 @@ export function BlogPage({ className }: BlogPageProps) {
           {[
             { title: 'Building Scalable Microservices', desc: 'Learn the key principles of designing microservices that scale.', cat: 'SYSTEM DESIGN', date: '2024-03-15', readTime: 12 },
             { title: 'Understanding B-Tree Indexing', desc: 'Deep dive into B-tree data structures and database indexing.', cat: 'DSA', date: '2024-03-10', readTime: 8 },
-            { title: 'The 100x Engineer Mindset', desc: 'What separates good engineers from great ones? A framework for growth.', cat: 'CAREER', date: '2024-03-05', readTime: 6 },
+            { title: 'The 100xsystems Engineer Mindset', desc: 'What separates good engineers from great ones? A framework for growth.', cat: 'CAREER', date: '2024-03-05', readTime: 6 },
             { title: 'GraphQL vs REST: A Practical Guide', desc: 'When to use GraphQL vs REST API patterns.', cat: 'TUTORIAL', date: '2024-02-28', readTime: 10 },
             { title: 'Platform Update: March 2024', desc: 'New features, improvements, and what\'s coming next.', cat: 'NEWS', date: '2024-03-01', readTime: 3 },
             { title: 'Mastering System Design Interviews', desc: 'A structured approach to acing your system design interviews.', cat: 'CAREER', date: '2024-02-20', readTime: 15 },
@@ -1716,7 +1716,7 @@ export function HeroPage({ className }: HeroPageProps) {
         <Badge variant="purple" size="sm" className="mb-4">100X SYSTEMS</Badge>
         <h1 className="text-5xl md:text-7xl font-extrabold text-fg tracking-tight leading-[1.05] mb-6 uppercase">
           Transform Into a<br />
-          <span className="text-accent">100x Engineer</span>
+          <span className="text-accent">100xsystems Engineer</span>
         </h1>
         <p className="text-lg text-fg-secondary max-w-2xl mx-auto mb-8 uppercase tracking-wider">
           Depth-first learning. Systems thinking. Real engineering.
@@ -1748,7 +1748,7 @@ export function CtaSection({ className }: CtaSectionProps) {
           Ready to Transform Your Engineering Skills?
         </Heading>
         <Text variant="body-lg" className="text-white/80 mb-8">
-          Join thousands of engineers who are leveling up with 100x Systems.
+          Join thousands of engineers who are leveling up with 100xsystems Systems.
           Start your journey today.
         </Text>
         <div className="flex items-center justify-center gap-4">

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 /**
  * GitHub OAuth Proxy — Vercel Serverless Function
  *
- * Acts as a secure intermediary between the 100x CLI and GitHub's OAuth.
+ * Acts as a secure intermediary between the 100xsystems CLI and GitHub's OAuth.
  * The CLI never sees the client_secret — only this proxy handles it.
  *
  * Flow:

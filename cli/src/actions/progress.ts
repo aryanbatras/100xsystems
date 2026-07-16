@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { getAllSystems, getSystemMeta } from '../reader/system-reader.js';
+import { getTrackModules } from '../reader/lesson-reader.js';
 import type { ProgressData, ProgressEntry } from '../reader/index.js';
 
 const PROGRESS_DIR = () => path.resolve(process.env.HOME || process.env.USERPROFILE || '~', '.100x');
@@ -12,7 +12,7 @@ const PROGRESS_FILE = () => path.join(PROGRESS_DIR(), 'progress.json');
  * Mark a system as in-progress.
  * Called by `100x init` automatically.
  */
-export function markInProgress(systemSlug: string, projectDir: string, language?: string): void {
+export function markInProgress(systemSlug: string, projectDir: string, trackSlug?: string): void {
   const progress = loadProgress();
   const existing = progress.systems[systemSlug];
 
@@ -21,7 +21,7 @@ export function markInProgress(systemSlug: string, projectDir: string, language?
     startedAt: existing?.startedAt || new Date().toISOString(),
     completedAt: existing?.completedAt,
     projectDir,
-    language: language || existing?.language,
+    language: trackSlug || existing?.language,
   };
 
   saveProgress(progress);
@@ -29,7 +29,7 @@ export function markInProgress(systemSlug: string, projectDir: string, language?
 
 /**
  * Mark a system as completed.
- * Called by `100x submit` after successful PR.
+ * Called by `100xsystems submit` after successful PR.
  */
 export function markCompleted(systemSlug: string): void {
   const progress = loadProgress();
@@ -45,31 +45,55 @@ export function markCompleted(systemSlug: string): void {
 }
 
 /**
- * Detect in-progress projects by scanning the file system for .100x.json files.
+ * Update the current lesson for a system.
+ * Called by the validate command after successful validation or manually.
  */
-export function detectInProgressProjects(): void {
+export function updateCurrentLesson(systemSlug: string, lessonSlug: string): void {
   const progress = loadProgress();
-
-  const home = process.env.HOME || process.env.USERPROFILE || '~';
-  const commonDirs = [
-    process.cwd(),
-    path.join(home, 'projects'),
-    path.join(home, 'code'),
-    path.join(home, 'Documents'),
-  ];
-
-  for (const dir of commonDirs) {
-    try {
-      findProjectsInDir(dir, progress, 3);
-    } catch {
-      // Skip directories we can't access
-    }
-  }
-
+  if (!progress.systems[systemSlug]) return;
+  progress.systems[systemSlug] = {
+    ...progress.systems[systemSlug],
+    currentLesson: lessonSlug,
+  };
   saveProgress(progress);
 }
 
-// ─── Internal ───────────────────────────────────────────────────────
+/**
+ * Advance to the next lesson after the current one passes validation.
+ * Returns the slug of the next lesson, or null if already on the last one.
+ */
+export function advanceLesson(systemSlug: string, trackSlug?: string): string | null {
+  const progress = loadProgress();
+  const entry = progress.systems[systemSlug];
+  if (!entry) return null;
+
+  // Use provided trackSlug or fall back to entry.language (which now stores track slug)
+  const track = trackSlug || entry.language || '';
+  if (!track) return null;
+
+  const modules = getTrackModules(systemSlug, track);
+  const allLessons = modules.flatMap(m => m.lessons);
+  if (allLessons.length === 0) return null;
+
+  const currentIdx = allLessons.findIndex(l => l.slug === entry.currentLesson);
+  if (currentIdx === -1) {
+    // Not on any lesson yet — start with the first
+    const first = allLessons[0];
+    updateCurrentLesson(systemSlug, first.slug);
+    return first.slug;
+  }
+
+  if (currentIdx >= allLessons.length - 1) {
+    // Already on the last lesson
+    return null;
+  }
+
+  const next = allLessons[currentIdx + 1];
+  updateCurrentLesson(systemSlug, next.slug);
+  return next.slug;
+}
+
+// ─── Progress File I/O ──────────────────────────────────────────────
 
 export function loadProgress(): ProgressData {
   try {
@@ -93,33 +117,4 @@ function saveProgress(data: ProgressData): void {
   }
 }
 
-function findProjectsInDir(dir: string, progress: ProgressData, maxDepth: number): void {
-  if (maxDepth <= 0) return;
 
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
-  for (const entry of entries) {
-    if (!entry.isDirectory() || entry.name.startsWith('.') || entry.name === 'node_modules') continue;
-
-    const fullPath = path.join(dir, entry.name);
-    const configPath = path.join(fullPath, '.100x.json');
-
-    if (fs.existsSync(configPath)) {
-      try {
-        const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-        const slug = config.system;
-        if (slug && !progress.systems[slug]) {
-          progress.systems[slug] = {
-            status: 'in-progress',
-            startedAt: config.createdAt || new Date().toISOString(),
-            projectDir: fullPath,
-            language: config.language,
-          };
-        }
-      } catch {
-        // Invalid config — skip
-      }
-    } else {
-      findProjectsInDir(fullPath, progress, maxDepth - 1);
-    }
-  }
-}

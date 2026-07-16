@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Box, Text, useApp } from 'ink';
-import SelectInput from 'ink-select-input';
+import SelectInput from './SelectInput.js';
 import { Divider } from './Divider.js';
 import type { QuizData } from '../reader/index.js';
 
