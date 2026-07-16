@@ -19,24 +19,50 @@ import { getSpec } from '../reader/spec-reader.js';
 
 // ─── Exported Types ─────────────────────────────────────────────────
 
+export type ValidationLevel = 1 | 2 | 3;
+
 export interface ValidationResult {
   check: string;
   status: 'pass' | 'warn' | 'fail';
   message: string;
   category: 'documentation' | 'structure' | 'code' | 'git' | 'validation' | 'test' | 'build' | 'lesson' | 'spec';
   details?: string;
+  /** Which validation level produced this result:
+   * Level 1 = Project structure basics (config, README, package.json)
+   * Level 2 = Lesson-defined validators from frontmatter
+   * Level 3 = Spec-defined checks from SPECIFICATION.md
+   */
+  level?: ValidationLevel;
+}
+
+export interface ValidationSummary {
+  results: ValidationResult[];
+  byLevel: {
+    1: { pass: number; warn: number; fail: number; items: ValidationResult[] };
+    2: { pass: number; warn: number; fail: number; items: ValidationResult[] };
+    3: { pass: number; warn: number; fail: number; items: ValidationResult[] };
+  };
+  total: { pass: number; warn: number; fail: number };
+  lessonSlug: string;
+  lessonTitle: string;
+  systemSlug: string;
+  trackSlug: string;
 }
 
 // ─── Public API ─────────────────────────────────────────────────────
 
 /**
  * Run validation checks and return results.
- * Integrates with the executor plugin system to run lesson-specific validators.
+ * Three-level validation architecture:
+ *   Level 1: Project structure — config, README, package.json, src/
+ *   Level 2: Lesson-defined validators from frontmatter (executor-based)
+ *   Level 3: Spec-defined checks from SPECIFICATION.md
  *
  * @param projectDir - Absolute path to the project
  * @param config - Project config from 100xsystems.json
  * @param lessonSlug - Optional: only run validators for this specific lesson.
  *                     If not provided, uses currentLesson from progress tracking.
+ * @returns Flat array of ValidationResult sorted by severity (fail→warn→pass), each tagged with level
  */
 export async function runValidation(
   projectDir: string,
@@ -54,43 +80,98 @@ export async function runValidation(
   // Determine which lesson to validate
   let targetLesson = lessonSlug;
   if (!targetLesson && systemSlug) {
-    // Read from 100xsystems.json progress, not from global progress file
     const configProgress = config.progress || {};
     targetLesson = configProgress.currentLesson || '';
   }
 
-  // Minimal project checks — only README.md is required by convention
-  results.push(...checkMinimal(projectDir));
+  // ── LEVEL 1: Project Structure  ──────────────────────────────────
+  // These are the foundational checks that every project must pass.
+  // They verify the project was properly initialized and has the basic
+  // structure expected by the curriculum.
+  results.push(...checkLevel1(projectDir, systemSlug, trackSlug));
 
+  // ── LEVEL 2: Lesson Validators  ───────────────────────────────────
+  // These come from the `validation:` block in each lesson's frontmatter.
+  // Each lesson defines what it validates — file existence, content,
+  // tests, HTTP endpoints, Dockerfiles, etc.
+  // Only runs validators for the target lesson (or all if no lesson specified).
   if (systemSlug) {
-    // Run executor-based validators — only for the target lesson
     try {
-      const lessonResults = await runLessonValidatorsFromCurriculum(projectDir, systemSlug, trackSlug, targetLesson);
+      const lessonResults = await runLessonValidatorsFromCurriculum(
+        projectDir, systemSlug, trackSlug, targetLesson
+      );
       results.push(...lessonResults);
     } catch (err: any) {
       results.push({
         check: 'executors',
         status: 'warn',
-        message: `Could not run lesson validators: ${err.message}`,
+        message: `Level 2 validator error: ${err.message}`,
         category: 'lesson',
+        details: err.stack,
+        level: 2,
       });
     }
 
-    // Run spec-defined checks from SPECIFICATION.md
+    // ── LEVEL 3: Spec-Defined Checks  ────────────────────────────────
+    // These come from SPECIFICATION.md in the curriculum and verify
+    // that the implementation meets the system specification.
     try {
       const specResults = await runSpecChecksFromCurriculum(projectDir, systemSlug);
       results.push(...specResults);
     } catch {
-      // Spec checks are optional — skip gracefully
+      // Spec checks are optional — skip gracefully if no spec exists
     }
   }
 
+  // Sort: failures first, then warnings, then passes
   results.sort((a, b) => {
     const order: Record<string, number> = { fail: 0, warn: 1, pass: 2 };
     return (order[a.status] ?? 0) - (order[b.status] ?? 0);
   });
 
   return results;
+}
+
+/**
+ * Run all 3 validation levels and return a structured summary.
+ * This is the preferred entry point for the validate command and submit flow.
+ */
+export async function runValidationWithSummary(
+  projectDir: string,
+  config: Record<string, any>,
+  lessonSlug?: string,
+  lessonTitle?: string,
+): Promise<ValidationSummary> {
+  const results = await runValidation(projectDir, config, lessonSlug);
+
+  const byLevel = {
+    1: { pass: 0, warn: 0, fail: 0, items: [] as ValidationResult[] },
+    2: { pass: 0, warn: 0, fail: 0, items: [] as ValidationResult[] },
+    3: { pass: 0, warn: 0, fail: 0, items: [] as ValidationResult[] },
+  };
+  const total = { pass: 0, warn: 0, fail: 0 };
+
+  for (const r of results) {
+    const level = (r.level || 1) as 1 | 2 | 3;
+    const group = byLevel[level];
+    group.items.push(r);
+    if (r.status === 'pass') { group.pass++; total.pass++; }
+    else if (r.status === 'warn') { group.warn++; total.warn++; }
+    else if (r.status === 'fail') { group.fail++; total.fail++; }
+  }
+
+  const systemSlug = (config.system as string) || '';
+  const trackSlug = (config.track as string) || '';
+
+  return {
+    results,
+    byLevel,
+    total,
+    lessonSlug: lessonSlug || config.progress?.currentLesson || '',
+    lessonTitle: lessonTitle || '',
+    systemSlug,
+    trackSlug,
+  };
 }
 
 // ─── Lesson Validator Integration ───────────────────────────────────
@@ -162,6 +243,7 @@ async function runLessonValidatorsFromCurriculum(
         message: er.message,
         category: er.category as any,
         details: er.details,
+        level: 2,
       });
     }
   }
@@ -171,6 +253,9 @@ async function runLessonValidatorsFromCurriculum(
 
 /**
  * Find ALL lesson files in a track directory (flat list with slugs).
+ * Supports both formats:
+ *   1. Folder-based: lesson-name/lesson.md
+ *   2. Flat file:    lesson-name.md
  */
 function findAllLessonFiles(trackDir: string): Array<{ slug: string; dir: string }> {
   const lessons: Array<{ slug: string; dir: string }> = [];
@@ -181,8 +266,19 @@ function findAllLessonFiles(trackDir: string): Array<{ slug: string; dir: string
       for (const entry of entries) {
         const fullPath = path.join(dir, entry.name);
         if (entry.isDirectory() && !entry.name.startsWith('.')) {
-          walk(fullPath);
+          // Check if this directory contains a lesson.md (folder-based lesson)
+          const lessonMdInDir = path.join(fullPath, 'lesson.md');
+          if (fs.existsSync(lessonMdInDir)) {
+            const slug = entry.name.replace(/^\d+[-_]/, '');
+            lessons.push({ slug, dir: fullPath });
+          } else {
+            walk(fullPath);
+          }
         } else if (entry.isFile() && entry.name.endsWith('.md') && !entry.name.startsWith('.')) {
+          // Skip flat .md files if a folder with the same stem exists
+          const stem = entry.name.replace(/\.md$/, '');
+          const folderPath = path.join(dir, stem);
+          if (fs.existsSync(folderPath) && fs.statSync(folderPath).isDirectory()) continue;
           const slug = entry.name.replace(/\.md$/, '').replace(/^\d+[-_]/, '');
           lessons.push({ slug, dir });
         }
@@ -217,6 +313,12 @@ export function getCurrentLessonInfo(lessonDir: string): { moduleName: string; l
 
 /**
  * Walk a track directory recursively to find lessons with frontmatter validation configs.
+ * Supports both formats:
+ *   1. Folder-based: lesson-name/lesson.md (NEW)
+ *   2. Flat file:    lesson-name.md        (legacy)
+ *
+ * For folder-based lessons, the dir is set to the folder path so the
+ * test-runner executor can find test.spec.ts alongside lesson.md.
  */
 function findLessonsWithValidators(trackDir: string): Array<{ dir: string; slug: string; validators: any[] }> {
   const lessons: Array<{ dir: string; slug: string; validators: any[] }> = [];
@@ -227,14 +329,34 @@ function findLessonsWithValidators(trackDir: string): Array<{ dir: string; slug:
     try {
       const entries = fs.readdirSync(dir, { withFileTypes: true });
 
-      const mdFiles = entries.filter(
-        (e) => e.isFile() && e.name.endsWith('.md') && !e.name.startsWith('.')
-      );
+      for (const entry of entries) {
+        if (entry.name.startsWith('.')) continue;
+        const fullPath = path.join(dir, entry.name);
 
-      for (const mdFile of mdFiles) {
-        const mdPath = path.join(dir, mdFile.name);
+        let lessonMdPath: string | null = null;
+
+        if (entry.isDirectory() && entry.name !== 'node_modules') {
+          // Check if this is a folder-based lesson (contains lesson.md)
+          const possibleLessonMd = path.join(fullPath, 'lesson.md');
+          if (fs.existsSync(possibleLessonMd)) {
+            lessonMdPath = possibleLessonMd;
+          } else {
+            // Not a lesson folder — recurse into it
+            walk(fullPath);
+            continue;
+          }
+        } else if (entry.isFile() && entry.name.endsWith('.md')) {
+          // Skip flat .md files if a folder with the same stem exists
+          const stem = entry.name.replace(/\.md$/, '');
+          const folderPath = path.join(dir, stem);
+          if (fs.existsSync(folderPath) && fs.statSync(folderPath).isDirectory()) continue;
+          lessonMdPath = fullPath;
+        }
+
+        if (!lessonMdPath) continue;
+
         try {
-          const content = fs.readFileSync(mdPath, 'utf-8');
+          const content = fs.readFileSync(lessonMdPath, 'utf-8');
           const frontmatterMatch = content.match(/^---\s*\n([\s\S]*?)\n---\s*\n/);
 
           if (frontmatterMatch) {
@@ -243,19 +365,15 @@ function findLessonsWithValidators(trackDir: string): Array<{ dir: string; slug:
             if (validationMatch) {
               const validators = parseValidationBlock(validationMatch[1]);
               if (validators.length > 0) {
-                const slug = mdFile.name.replace(/\.md$/, '').replace(/^\d+[-_]/, '');
-                lessons.push({ dir, slug, validators });
+                // For folder-based lessons, use the folder as dir (where test.spec.ts lives)
+                // For flat files, use the module directory
+                const lessonDir = entry.isDirectory() ? fullPath : dir;
+                const slug = entry.name.replace(/\.md$/, '').replace(/^\d+[-_]/, '');
+                lessons.push({ dir: lessonDir, slug, validators });
               }
             }
           }
         } catch { /* skip unreadable files */ }
-      }
-
-      const subdirs = entries.filter(
-        (e) => e.isDirectory() && !e.name.startsWith('.') && e.name !== 'node_modules'
-      );
-      for (const subdir of subdirs) {
-        walk(path.join(dir, subdir.name));
       }
     } catch { /* skip unreadable directories */ }
   }
@@ -415,21 +533,38 @@ function parseYamlValue(value: string): any {
   return trimmed;
 }
 
-// ─── Minimal Checks ────────────────────────────────────────────────
+// ─── Level 1: Project Structure Checks ─────────────────────────────
 
 /**
- * Only checks what lessons define in their frontmatter `validation:`.
- * The only hardcoded convention is README.md — everything else (design/,
- * verification/, src/, git history) is not required.
- * Lesson-defined validators are the primary source of truth.
+ * LEVEL 1 validation: Project structure basics.
+ * These checks verify the project was properly initialized and has the
+ * fundamental structure expected for any 100xSystems project.
+ *
+ * Checks:
+ * - 100xsystems.json exists and has valid schema
+ * - README.md exists with content
+ * - package.json exists (for TypeScript/Node projects)
+ * - src/ directory exists
+ * - Git repository is initialized
  */
-export function checkMinimal(projectDir: string): ValidationResult[] {
+export function checkLevel1(projectDir: string, systemSlug?: string, trackSlug?: string): ValidationResult[] {
   const results: ValidationResult[] = [];
 
-  // .100x.json — project config (created by init)
+  // 100xsystems.json — project config (created by init)
   const configPath = path.join(projectDir, PROJECT_CONFIG);
   if (fs.existsSync(configPath)) {
-    results.push({ check: 'config', status: 'pass', message: `${PROJECT_CONFIG} project config found`, category: 'structure' });
+    try {
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+      let configOk = true;
+      if (!config.system) { configOk = false; results.push({ check: 'config', status: 'fail', message: `${PROJECT_CONFIG} missing "system" field`, category: 'structure', level: 1 }); }
+      if (!config.track) { configOk = false; results.push({ check: 'config', status: 'fail', message: `${PROJECT_CONFIG} missing "track" field`, category: 'structure', level: 1 }); }
+      if (!config.progress) { configOk = false; results.push({ check: 'config', status: 'fail', message: `${PROJECT_CONFIG} missing "progress" field`, category: 'structure', level: 1 }); }
+      if (configOk) results.push({ check: 'config', status: 'pass', message: `${PROJECT_CONFIG} project config valid`, category: 'structure', level: 1 });
+    } catch {
+      results.push({ check: 'config', status: 'fail', message: `${PROJECT_CONFIG} is not valid JSON`, category: 'structure', level: 1 });
+    }
+  } else {
+    results.push({ check: 'config', status: 'fail', message: `${PROJECT_CONFIG} not found. Run \`100x init <system>\` first.`, category: 'structure', level: 1 });
   }
 
   // README.md — minimal required documentation
@@ -437,12 +572,76 @@ export function checkMinimal(projectDir: string): ValidationResult[] {
   if (fs.existsSync(readmePath)) {
     const content = fs.readFileSync(readmePath, 'utf-8').trim();
     if (content.length >= 50) {
-      results.push({ check: 'readme', status: 'pass', message: 'README.md exists with content', category: 'documentation' });
+      results.push({ check: 'readme', status: 'pass', message: 'README.md exists with content', category: 'documentation', level: 1 });
     } else {
-      results.push({ check: 'readme', status: 'warn', message: 'README.md exists but is minimal. Add a project description.', category: 'documentation' });
+      results.push({ check: 'readme', status: 'warn', message: 'README.md exists but is minimal (< 50 chars). Add a project description.', category: 'documentation', level: 1 });
     }
   } else {
-    results.push({ check: 'readme', status: 'fail', message: 'README.md is missing. Every project needs a readme.', category: 'documentation' });
+    results.push({ check: 'readme', status: 'fail', message: 'README.md is missing. Every project needs a readme.', category: 'documentation', level: 1 });
+  }
+
+  // package.json — check if it exists (standard for JS/TS projects)
+  const pkgPath = path.join(projectDir, 'package.json');
+  if (fs.existsSync(pkgPath)) {
+    try {
+      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+      if (pkg.scripts?.build) {
+        results.push({ check: 'package.json', status: 'pass', message: 'package.json found with build script', category: 'structure', level: 1 });
+      } else {
+        results.push({ check: 'package.json', status: 'warn', message: 'package.json found but missing build script', category: 'structure', level: 1 });
+      }
+    } catch {
+      results.push({ check: 'package.json', status: 'warn', message: 'package.json found but invalid', category: 'structure', level: 1 });
+    }
+  } else {
+    // Non-JS track — check for track-appropriate files
+    if (trackSlug?.includes('spring-boot')) {
+      const pomPath = path.join(projectDir, 'pom.xml');
+      if (fs.existsSync(pomPath)) {
+        results.push({ check: 'pom.xml', status: 'pass', message: 'pom.xml found (Maven project)', category: 'structure', level: 1 });
+      } else {
+        const gradlePath = path.join(projectDir, 'build.gradle');
+        if (fs.existsSync(gradlePath)) {
+          results.push({ check: 'build.gradle', status: 'pass', message: 'build.gradle found (Gradle project)', category: 'structure', level: 1 });
+        }
+      }
+    }
+  }
+
+  // src/ directory — check if it exists
+  const srcDir = path.join(projectDir, 'src');
+  if (fs.existsSync(srcDir)) {
+    const srcItems = fs.readdirSync(srcDir).filter(f => !f.startsWith('.'));
+    if (srcItems.length > 0) {
+      results.push({ check: 'src/', status: 'pass', message: `src/ directory exists with ${srcItems.length} item(s)`, category: 'structure', level: 1 });
+    } else {
+      results.push({ check: 'src/', status: 'warn', message: 'src/ directory exists but is empty', category: 'structure', level: 1 });
+    }
+  } else {
+    results.push({ check: 'src/', status: 'fail', message: 'src/ directory not found. Create your source code in src/', category: 'structure', level: 1 });
+  }
+
+  // Git repository
+  const gitDir = path.join(projectDir, '.git');
+  if (fs.existsSync(gitDir)) {
+    results.push({ check: 'git', status: 'pass', message: 'Git repository initialized', category: 'git', level: 1 });
+  } else {
+    results.push({ check: 'git', status: 'warn', message: 'Not a git repository. Run git init for version control.', category: 'git', level: 1 });
+  }
+
+  // 100xsystems.json config integrity — warn instead of fail since users
+  // may run validation outside the monorepo (e.g., from their project dir)
+  if (systemSlug && trackSlug) {
+    try {
+      const curriculumDir = path.join(CURRICULUM_DIR(), 'systems', systemSlug, trackSlug);
+      if (fs.existsSync(curriculumDir)) {
+        results.push({ check: 'curriculum', status: 'pass', message: `Curriculum found: ${systemSlug}/${trackSlug}`, category: 'structure', level: 1 });
+      } else {
+        results.push({ check: 'curriculum', status: 'warn', message: `Could not verify curriculum path for ${systemSlug}/${trackSlug}. Ensure CURRICULUM_PATH is set if running outside the repo.`, category: 'structure', level: 1 });
+      }
+    } catch {
+      results.push({ check: 'curriculum', status: 'warn', message: `Could not check curriculum path (running outside monorepo?)`, category: 'structure', level: 1 });
+    }
   }
 
   return results;
@@ -472,6 +671,7 @@ async function runSpecChecksFromCurriculum(
         status: 'pass',
         message: `${check.type}: ${label}`,
         category: 'spec',
+        level: 3,
       });
     } else if (sr.result === 'fail') {
       results.push({
@@ -479,6 +679,7 @@ async function runSpecChecksFromCurriculum(
         status: 'fail',
         message: `${check.type}: ${label} — ${sr.hint}`,
         category: 'spec',
+        level: 3,
       });
     }
   }

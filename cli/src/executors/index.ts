@@ -17,3 +17,4 @@ export { RegexExecutor } from './regex.executor.js';
 export { NpmTestExecutor } from './npm-test.executor.js';
 export { CliCommandExecutor } from './cli-command.executor.js';
 export { DockerExecutor } from './docker.executor.js';
+export { TestRunnerExecutor } from './test-runner.executor.js';

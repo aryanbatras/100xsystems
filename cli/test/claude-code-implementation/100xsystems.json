@@ -6,11 +6,12 @@
   "track": "track-typescript",
   "author": "aryanbatras",
   "version": "0.1.0",
-  "createdAt": "2026-07-16T03:43:07.910Z",
+  "createdAt": "2026-07-16T10:47:16.142Z",
   "progress": {
     "completedLessons": [
-      "lesson-intro-and-setup"
+      "lesson-intro-and-setup",
+      "lesson-build-cli-tool"
     ],
-    "currentLesson": "lesson-build-cli-tool"
+    "currentLesson": "lesson-agent-loop"
   }
 }

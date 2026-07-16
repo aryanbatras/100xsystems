@@ -19,7 +19,9 @@ import path from 'path';
 import { execSync } from 'child_process';
 import { ensureAuthenticated } from '../auth/index.js';
 import { SUBMISSIONS_DIR } from '../reader/index.js';
+import { PROJECT_CONFIG } from '../scaffold/index.js';
 import type { BuildResult } from './submit.js';
+import { storePrUrlInProjectConfig } from './submit.js';
 
 // ─── Constants ──────────────────────────────────────────────────────
 
@@ -97,6 +99,10 @@ export async function submitPullRequest(result: BuildResult): Promise<PrResult> 
 
   // 7. Update local metadata with PR URL
   updateLocalMetadata(result, prData.html_url, prData.number);
+
+  // 7b. Store PR URL in the project's 100xsystems.json for permanent audit trail
+  storePrUrlInProjectConfig(result.projectDir, prData.html_url, prData.number);
+  console.error(`  Updated ${PROJECT_CONFIG} with PR URL`);
 
   // 8. Cleanup temp directory
   fs.rmSync(tempDir, { recursive: true, force: true });
@@ -331,7 +337,7 @@ function updateLocalMetadata(result: BuildResult, prUrl: string, prNumber: numbe
   try {
     if (fs.existsSync(metadataPath)) {
       const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf-8'));
-      metadata.prUrl = prUrl;
+      metadata.pullRequestUrl = prUrl;
       metadata.prNumber = prNumber;
       metadata.status = 'pending';
       fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2) + '\n');

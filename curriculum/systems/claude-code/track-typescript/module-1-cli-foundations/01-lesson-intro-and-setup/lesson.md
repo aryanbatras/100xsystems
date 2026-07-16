@@ -14,17 +14,11 @@ knowledge_refs:
   - "tools/docker"
   - "principles/single-responsibility"
 validation:
-  - type: file-exists
-    path: "package.json"
-  - type: file-exists
-    path: "tsconfig.json"
-  - type: file-exists
-    path: "src/index.ts"
-  - type: file-exists
-    path: "src/cli.ts"
-  - type: npm-test
-    script: "build"
-    timeout: 60000
+  - type: test-runner
+    test_file: "test.spec.ts"
+    framework: vitest
+    timeout: 120000
+    expected_passes: 6
 ---
 
 # Introduction & Project Setup

@@ -15,16 +15,11 @@ knowledge_refs:
   - "patterns/adapter"
   - "principles/single-responsibility"
 validation:
-  - type: file-exists
-    path: "src/cli.ts"
-    must_contain: "Command"
-  - type: file-contains
-    path: "src/cli.ts"
-    pattern: "command\\(|\.command\\("
-    description: "Has at least one commander subcommand"
-  - type: npm-test
-    script: "build"
-    timeout: 60000
+  - type: test-runner
+    test_file: "test.spec.ts"
+    framework: vitest
+    timeout: 120000
+    expected_passes: 6
 ---
 
 # Build the CLI Tool

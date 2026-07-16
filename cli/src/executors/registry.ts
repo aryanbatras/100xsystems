@@ -48,6 +48,7 @@ import { RegexExecutor } from './regex.executor.js';
 import { NpmTestExecutor } from './npm-test.executor.js';
 import { CliCommandExecutor } from './cli-command.executor.js';
 import { DockerExecutor } from './docker.executor.js';
+import { TestRunnerExecutor } from './test-runner.executor.js';
 
 registry.register('file-exists', FileExistsExecutor);
 registry.register('http', HttpExecutor);
@@ -56,6 +57,7 @@ registry.register('regex', RegexExecutor);
 registry.register('npm-test', NpmTestExecutor);
 registry.register('cli-command', CliCommandExecutor);
 registry.register('docker', DockerExecutor);
+registry.register('test-runner', TestRunnerExecutor);
 
 // ─── Run All Validators for a Lesson ────────────────────────────────
 

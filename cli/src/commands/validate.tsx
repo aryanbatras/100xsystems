@@ -23,8 +23,8 @@ import fs from 'fs';
 import path from 'path';
 import { readProjectConfig, PROJECT_CONFIG } from '../scaffold/index.js';
 import { runValidation } from '../actions/validate.js';
-import { getSystemTracks, getTrackModules } from '../reader/lesson-reader.js';
 import type { ValidationResult } from '../actions/validate.js';
+import { getSystemTracks, getTrackModules } from '../reader/lesson-reader.js';
 import type { SelectItem } from '../ui/SelectInput.js';
 
 export const args = zod.tuple([]);
@@ -211,6 +211,11 @@ export default function Validate(_props: Props) {
     const warnCount = results.filter(r => r.status === 'warn').length;
     const passCount = results.filter(r => r.status === 'pass').length;
 
+    // Build level breakdown
+    const level1 = results.filter(r => r.level === 1 || !r.level);
+    const level2 = results.filter(r => r.level === 2);
+    const level3 = results.filter(r => r.level === 3);
+
     return (
       <Box flexDirection="column" paddingX={2} paddingY={1}>
         <Box flexDirection="column" marginBottom={1}>
@@ -227,6 +232,37 @@ export default function Validate(_props: Props) {
             </Text>
           </Box>
         </Box>
+
+        {/* Three-Level Breakdown */}
+        <Box flexDirection="column" marginBottom={1} paddingLeft={2}>
+          <Text bold color="white">  Validation Levels</Text>
+          <Box>
+            <Text>{'    '}L1 Structure:</Text>
+            <Text> </Text>
+            <Text color="green">{level1.filter(r => r.status === 'pass').length} ✓</Text>
+            {level1.filter(r => r.status === 'warn').length > 0 && <Text>, <Text color="yellow">{level1.filter(r => r.status === 'warn').length} ⚠</Text></Text>}
+            {level1.filter(r => r.status === 'fail').length > 0 && <Text>, <Text color="red">{level1.filter(r => r.status === 'fail').length} ✗</Text></Text>}
+          </Box>
+          {level2.length > 0 && (
+            <Box>
+              <Text>{'    '}L2 Lesson:</Text>
+              <Text> </Text>
+              <Text color="green">{level2.filter(r => r.status === 'pass').length} ✓</Text>
+              {level2.filter(r => r.status === 'warn').length > 0 && <Text>, <Text color="yellow">{level2.filter(r => r.status === 'warn').length} ⚠</Text></Text>}
+              {level2.filter(r => r.status === 'fail').length > 0 && <Text>, <Text color="red">{level2.filter(r => r.status === 'fail').length} ✗</Text></Text>}
+            </Box>
+          )}
+          {level3.length > 0 && (
+            <Box>
+              <Text>{'    '}L3 Spec:</Text>
+              <Text> </Text>
+              <Text color="green">{level3.filter(r => r.status === 'pass').length} ✓</Text>
+              {level3.filter(r => r.status === 'warn').length > 0 && <Text>, <Text color="yellow">{level3.filter(r => r.status === 'warn').length} ⚠</Text></Text>}
+              {level3.filter(r => r.status === 'fail').length > 0 && <Text>, <Text color="red">{level3.filter(r => r.status === 'fail').length} ✗</Text></Text>}
+            </Box>
+          )}
+        </Box>
+
         <ValidationReport results={results} systemTitle={phase.config.systemTitle || ''} />
       </Box>
     );

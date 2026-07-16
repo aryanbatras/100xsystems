@@ -25,7 +25,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { execa } from 'execa';
+import { execa, execaSync } from 'execa';
 import { type Executor, type ExecutorResult, type ExecutorContext } from './types.js';
 
 export class DockerExecutor implements Executor {
@@ -39,6 +39,8 @@ export class DockerExecutor implements Executor {
         return this.checkDockerfile(params, ctx);
       case 'build':
         return this.checkBuild(params, ctx);
+      case 'run':
+        return this.checkRun(params, ctx);
       case 'compose-file':
         return this.checkComposeFile(params, ctx);
       case 'compose-services':
@@ -49,7 +51,7 @@ export class DockerExecutor implements Executor {
         return {
           check: 'docker',
           status: 'fail',
-          message: `Unknown docker check type: "${check}". Available: dockerfile, build, compose-file, compose-services, container-running`,
+          message: `Unknown docker check type: "${check}". Available: dockerfile, build, run, compose-file, compose-services, container-running`,
           category: 'validation',
         };
     }
@@ -303,6 +305,130 @@ export class DockerExecutor implements Executor {
           message: `Docker Compose file exists`,
           category: 'build',
         };
+      }
+    }
+  }
+
+  /**
+   * Containerized validation: build and run a Docker container with the user's
+   * source code mounted as a volume. The container executes a specified command
+   * and the exit code + output determine pass/fail.
+   *
+   * This provides isolated, reproducible validation that doesn't depend on the
+   * user's host environment (Node version, global packages, etc.).
+   *
+   * @example
+   * validation:
+   *   - type: docker
+   *     check: run
+   *     dockerfile: "Dockerfile.test"     # Dockerfile to build
+   *     command: "npm test"               # Command to run inside container
+   *     tag: "100x-test-runner"           # Image tag
+   *     timeout: 120000                   # Build + run timeout
+   *     expect_exit_code: 0
+   *     mount_source: true                # Mount project src/ as volume (optional)
+   */
+  private async checkRun(params: Record<string, any>, ctx: ExecutorContext): Promise<ExecutorResult> {
+    const dockerfile = (params.dockerfile as string) || 'Dockerfile';
+    const tag = (params.tag as string) || `100x-runner-${Date.now()}`;
+    const command = (params.command as string) || '';
+    const expectExitCode = (params.expect_exit_code as number) ?? 0;
+    const timeout = (params.timeout as number) || 120000;
+    const mountSource = params.mount_source !== false;
+
+    const dockerfilePath = path.resolve(ctx.projectDir, dockerfile);
+    if (!fs.existsSync(dockerfilePath)) {
+      return {
+        check: 'docker:run',
+        status: 'fail',
+        message: `Dockerfile not found for containerized validation: ${dockerfile}`,
+        category: 'build',
+      };
+    }
+
+    if (!command) {
+      return {
+        check: 'docker:run',
+        status: 'fail',
+        message: 'Missing "command" parameter for containerized validation',
+        category: 'validation',
+      };
+    }
+
+    let buildSuccess = false;
+    try {
+      // Step 1: Build the image
+      const buildResult = await execa('docker', ['build', '-f', dockerfile, '-t', tag, ctx.projectDir], {
+        timeout,
+        reject: false,
+        stdio: 'pipe',
+      });
+
+      if (buildResult.exitCode !== 0) {
+        return {
+          check: 'docker:run',
+          status: 'fail',
+          message: `Docker build failed for containerized validation: ${dockerfile}`,
+          details: (buildResult.stderr || buildResult.stdout).slice(0, 500),
+          category: 'build',
+        };
+      }
+      buildSuccess = true;
+
+      // Step 2: Run the container
+      const runArgs = ['run', '--rm'];
+
+      // Optionally mount the source code
+      if (mountSource) {
+        runArgs.push('-v', `${ctx.projectDir}/src:/app/src`);
+      }
+
+      // Use the container's shell (Dockerfile author controls the base image)
+      runArgs.push(tag, '/bin/sh', '-c', command);
+
+      const runResult = await execa('docker', runArgs, {
+        timeout,
+        reject: false,
+        stdio: 'pipe',
+      });
+
+      if (runResult.exitCode === expectExitCode) {
+        return {
+          check: 'docker:run',
+          status: 'pass',
+          message: `Containerized validation passed: "${command}" (exit ${expectExitCode})`,
+          details: runResult.stdout.slice(0, 500),
+          category: 'test',
+        };
+      }
+
+      return {
+        check: 'docker:run',
+        status: 'fail',
+        message: `Containerized validation failed: "${command}" exited ${runResult.exitCode}, expected ${expectExitCode}`,
+        details: (runResult.stderr || runResult.stdout).slice(0, 500),
+        category: 'test',
+      };
+    } catch (err: any) {
+      if (err.isTimeout) {
+        return {
+          check: 'docker:run',
+          status: 'fail',
+          message: `Containerized validation timed out after ${timeout}ms`,
+          category: 'test',
+        };
+      }
+      return {
+        check: 'docker:run',
+        status: 'error',
+        message: `Containerized validation error: ${err.message}`,
+        details: err.stderr?.slice(0, 500),
+        category: 'test',
+      };
+    } finally {
+      // Always clean up the image, even on failure
+      if (buildSuccess) {
+        try { execaSync('docker', ['rmi', '-f', tag], { stdio: 'pipe' }); } catch { /* best effort */ }
       }
     }
   }

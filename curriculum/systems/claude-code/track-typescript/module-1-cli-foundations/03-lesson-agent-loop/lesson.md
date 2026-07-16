@@ -16,16 +16,11 @@ knowledge_refs:
   - "patterns/strategy"
   - "principles/single-responsibility"
 validation:
-  - type: file-exists
-    path: "src/agent/loop.ts"
-  - type: file-exists
-    path: "src/agent/types.ts"
-  - type: file-contains
-    path: "src/agent/loop.ts"
-    contains: "async"
-    description: "Has async agent loop methods"
-  - type: npm-test
-    script: "build"
+  - type: test-runner
+    test_file: "test.spec.ts"
+    framework: vitest
+    timeout: 120000
+    expected_passes: 6
 ---
 
 # The Agent Loop: Think → Act → Observe

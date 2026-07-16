@@ -1,11 +1,16 @@
-# Certificate Generation Workflow
+# ─── Certificate Automation ──────────────────────────────────────────
+# When a submission Pull Request is merged (with label "verified"),
+# this workflow:
+#   1. Finds the merged submission directory
+#   2. Reads metadata.json for author, system, language
+#   3. Generates a SHA256 certificate ID
+#   4. Creates a certificate HTML page with all details
+#   5. Commits the certificate to docs/certificates/{certId}/
+#   6. Posts a congratulatory comment on the PR
 #
-# When a submission PR is merged with the "verified" label, this workflow
-# generates a completion certificate and stores it as a static page
-# accessible at https://100xsystems.dev/certificates/{pr-number}/
-#
-# Architecture: Backend-free certificate system using GitHub Actions +
-# Next.js static site generation.
+# This is the zero-cost certificate system — no backend needed.
+# The certificate is served as a static page on the website:
+#   https://100xsystems.dev/verify/{certId}
 
 name: issue-certificate
 
@@ -16,224 +21,208 @@ on:
 
 jobs:
   certificate:
-    if: >
+    if: |
       github.event.pull_request.merged == true &&
       contains(github.event.pull_request.labels.*.name, 'verified')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Read Submission Metadata
-        id: metadata
+      - name: Write helper scripts
+        run: |
+          # Write metadata generator script (uses heredoc to avoid escaping issues)
+          cat > /tmp/generate-meta.mjs << 'ENDSCRIPT'
+          import fs from 'fs';
+          import crypto from 'crypto';
+
+          const [metaFile, prUrl, prNumber, author] = process.argv.slice(2);
+          const meta = JSON.parse(fs.readFileSync(metaFile, 'utf-8'));
+
+          const certId = crypto.createHash('sha256')
+            .update(`${prUrl}-${metaFile}-${Date.now()}`)
+            .digest('hex')
+            .substring(0, 16);
+
+          const certData = {
+            id: certId,
+            author: meta.author || author,
+            authorUrl: meta.repositoryUrl || '',
+            systemSlug: meta.system || '',
+            systemTitle: meta.systemTitle || meta.system || 'Unknown',
+            difficulty: meta.difficulty || 'Intermediate',
+            language: meta.language || 'Unknown',
+            score: 100,
+            completedAt: new Date().toISOString(),
+            tags: meta.tags || [],
+            prUrl: prUrl,
+            prNumber: parseInt(prNumber, 10),
+          };
+
+          fs.writeFileSync('/tmp/cert-output.json', JSON.stringify(certData, null, 2));
+          console.log(certId);
+          ENDSCRIPT
+
+          # Write HTML generator script
+          cat > /tmp/generate-html.mjs << 'ENDSCRIPT'
+          import fs from 'fs';
+
+          const certId = process.argv[2];
+          const inputData = fs.readFileSync(`docs/certificates/${certId}/metadata.json`, 'utf-8');
+          const data = JSON.parse(inputData);
+
+          const completedDate = new Date(data.completedAt).toLocaleDateString('en-US', {
+            year: 'numeric', month: 'long', day: 'numeric'
+          });
+
+          const tagsHtml = data.tags && data.tags.length > 0
+            ? data.tags.map(t => `<span class="tag">${t}</span>`).join('')
+            : '';
+
+          const html = `<!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Certificate — ${data.systemTitle} — 100xSystems</title>
+            <meta name="description" content="Verified certificate for ${data.author} completing ${data.systemTitle}.">
+            <style>
+              * { margin: 0; padding: 0; box-sizing: border-box; }
+              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f9fafb; display: flex; justify-content: center; padding: 80px 20px; }
+              .certificate { max-width: 700px; width: 100%; background: white; border: 2px solid #e5e7eb; padding: 60px 80px; }
+              .header { text-align: center; margin-bottom: 40px; }
+              .header h1 { font-size: 14px; font-weight: 500; letter-spacing: 0.15em; color: #6b7280; margin-bottom: 8px; text-transform: uppercase; }
+              .header .title { font-size: 24px; font-weight: 300; color: #374151; letter-spacing: 0.05em; }
+              .divider { width: 64px; height: 1px; background: #d1d5db; margin: 24px auto; }
+              .awarded { text-align: center; }
+              .awarded .label { font-size: 10px; font-weight: 500; letter-spacing: 0.15em; color: #9ca3af; margin-bottom: 12px; text-transform: uppercase; }
+              .awarded .name { font-size: 32px; font-weight: 700; color: #111827; margin-bottom: 8px; }
+              .awarded .github { font-size: 12px; color: #9ca3af; margin-bottom: 32px; }
+              .awarded .completed-label { font-size: 11px; color: #9ca3af; margin-bottom: 8px; }
+              .awarded .system { font-size: 20px; font-weight: 600; color: #111827; margin-bottom: 4px; }
+              .awarded .meta { font-size: 13px; color: #9ca3af; margin-bottom: 24px; }
+              .footer { display: flex; justify-content: center; gap: 32px; font-size: 12px; color: #9ca3af; margin-top: 24px; }
+              .footer span { font-family: 'Courier New', monospace; color: #4b5563; }
+              .verify-url { text-align: center; font-size: 10px; color: #d1d5db; margin-top: 24px; font-family: monospace; }
+              .tags { display: flex; justify-content: center; gap: 8px; margin-top: 24px; flex-wrap: wrap; }
+              .tag { font-size: 9px; font-weight: 500; letter-spacing: 0.1em; padding: 2px 8px; background: #f3f4f6; color: #6b7280; text-transform: uppercase; }
+            </style>
+          </head>
+          <body>
+            <div class="certificate">
+              <div class="header">
+                <h1>100X Systems</h1>
+                <p class="title">Certificate of Completion</p>
+              </div>
+              <div class="divider"></div>
+              <div class="awarded">
+                <p class="label">Awarded to</p>
+                <p class="name">${data.author}</p>
+                ${data.authorUrl ? `<p class="github">${data.authorUrl.replace('https://github.com/', '')}</p>` : ''}
+                <p class="completed-label">Has successfully completed</p>
+                <p class="system">${data.systemTitle}</p>
+                <p class="meta">${data.difficulty} · ${data.language}</p>
+                <div class="divider"></div>
+                <p class="completed-label">Completed ${completedDate}</p>
+              </div>
+              ${tagsHtml ? `<div class="tags">${tagsHtml}</div>` : ''}
+              <div class="footer">
+                <span>Code: ${data.id}</span>
+                <a href="${data.prUrl}" style="color: #6366f1; text-decoration: none; font-weight: 600;">View PR #${data.prNumber}</a>
+              </div>
+              <p class="verify-url">100xsystems.dev/verify/${data.id}</p>
+            </div>
+          </body>
+          </html>`;
+
+          fs.writeFileSync(`docs/certificates/${certId}/index.html`, html);
+          console.log(`Certificate ${certId} generated`);
+          ENDSCRIPT
+
+          echo "Helper scripts written to /tmp/"
+
+      - name: Process merged submission
+        id: process
         run: |
           PR_NUMBER="${{ github.event.pull_request.number }}"
-          # Find the metadata.json from the merged PR
-          # PR merges create a commit hash we can search
-          MERGE_COMMIT="${{ github.event.pull_request.merge_commit_sha }}"
-          
-          # Find the submission directory for this PR
-          SUBMISSION_DIR=$(git diff --name-only $MERGE_COMMIT..$MERGE_COMMIT~1 \
-            -- submissions/ | head -1 | xargs dirname 2>/dev/null || echo "")
-          
-          if [ -z "$SUBMISSION_DIR" ]; then
-            # Try finding by searching for the PR number in metadata files
-            SUBMISSION_DIR=$(find submissions/ -name "metadata.json" -exec grep -l \
-              "prUrl.*$PR_NUMBER" {} \; | head -1 | xargs dirname 2>/dev/null || echo "")
-          fi
-          
-          if [ -z "$SUBMISSION_DIR" ]; then
-            echo "Could not find submission directory. Skipping certificate."
+          echo "PR #${PR_NUMBER} merged"
+
+          # Find the submission directory added in this PR
+          NEW_DIR=$(git diff --name-only HEAD~1 2>/dev/null | grep '^submissions/' | head -1 | cut -d'/' -f1-3 || echo "")
+
+          if [ -z "$NEW_DIR" ]; then
+            echo "No submission found in this PR — skipping certificate generation"
             exit 0
           fi
-          
-          echo "submission_dir=$SUBMISSION_DIR" >> $GITHUB_OUTPUT
-          
-          # Parse metadata
-          METADATA_FILE="$SUBMISSION_DIR/metadata.json"
-          if [ -f "$METADATA_FILE" ]; then
-            echo "system=$(jq -r '.system // "unknown"' $METADATA_FILE)" >> $GITHUB_OUTPUT
-            echo "author=$(jq -r '.author // "unknown"' $METADATA_FILE)" >> $GITHUB_OUTPUT
-            echo "language=$(jq -r '.language // "unknown"' $METADATA_FILE)" >> $GITHUB_OUTPUT
-            echo "repository=$(jq -r '.repositoryUrl // ""' $METADATA_FILE)" >> $GITHUB_OUTPUT
-          fi
 
-      - name: Generate Certificate HTML
-        if: steps.metadata.outputs.submission_dir != ''
+          echo "new_dir=${NEW_DIR}" >> $GITHUB_OUTPUT
+          echo "Found submission: ${NEW_DIR}"
+
+      - name: Generate certificate metadata
+        if: steps.process.outputs.new_dir != ''
+        id: metadata
         run: |
-          PR_NUMBER="${{ github.event.pull_request.number }}"
-          SYSTEM="${{ steps.metadata.outputs.system }}"
-          AUTHOR="${{ steps.metadata.outputs.author }}"
-          LANGUAGE="${{ steps.metadata.outputs.language }}"
-          REPO="${{ steps.metadata.outputs.repository }}"
-          DATE="$(date +'%B %d, %Y')"
+          NEW_DIR="${{ steps.process.outputs.new_dir }}"
+          META_FILE="${NEW_DIR}/metadata.json"
           PR_URL="${{ github.event.pull_request.html_url }}"
-          
-          # Store certificates in docs/ for GitHub Pages hosting
-          CERT_DIR="docs/certificates/${PR_NUMBER}"
-          mkdir -p "$CERT_DIR"
-          
-          cat > "$CERT_DIR/index.html" << CERTEOF
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Certificate of Completion - ${SYSTEM} - 100xSystems</title>
-  <meta name="description" content="Verified implementation of the ${SYSTEM} system by ${AUTHOR}">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #0B0F19;
-      color: #fff;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
-    .certificate {
-      max-width: 800px;
-      width: 100%;
-      background: linear-gradient(135deg, #1a1f2e 0%, #0f1525 100%);
-      border: 1px solid #2a2f3e;
-      padding: 3rem;
-      position: relative;
-      overflow: hidden;
-    }
-    .certificate::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #00F2FE 0%, #4FACFE 100%);
-    }
-    .badge {
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      font-size: 0.625rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      background: linear-gradient(135deg, #00F2FE, #4FACFE);
-      color: #0B0F19;
-      margin-bottom: 2rem;
-    }
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      margin-bottom: 1rem;
-    }
-    .subtitle {
-      font-size: 1rem;
-      color: #6B7280;
-      margin-bottom: 2.5rem;
-      line-height: 1.6;
-    }
-    .details {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
-    }
-    .detail-label {
-      font-size: 0.625rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: #6B7280;
-      margin-bottom: 0.25rem;
-    }
-    .detail-value {
-      font-size: 1rem;
-      font-weight: 600;
-    }
-    .detail-value a {
-      color: #00F2FE;
-      text-decoration: none;
-    }
-    .detail-value a:hover { text-decoration: underline; }
-    .footer {
-      font-size: 0.75rem;
-      color: #4B5563;
-      border-top: 1px solid #1f2937;
-      padding-top: 1.5rem;
-      margin-top: 1rem;
-    }
-    .verify-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      background: linear-gradient(135deg, #00F2FE, #4FACFE);
-      color: #0B0F19;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-    .verify-link:hover { opacity: 0.9; }
-  </style>
-</head>
-<body>
-  <div class="certificate">
-    <div class="badge">100xSystems</div>
-    <h1>Certificate of Completion</h1>
-    <p class="subtitle">
-      This certifies that the following system implementation has passed community review
-      and been verified as a complete, well-documented engineering project.
-    </p>
-    <div class="details">
-      <div>
-        <div class="detail-label">System</div>
-        <div class="detail-value">${SYSTEM}</div>
-      </div>
-      <div>
-        <div class="detail-label">Author</div>
-        <div class="detail-value">${AUTHOR}</div>
-      </div>
-      <div>
-        <div class="detail-label">Language</div>
-        <div class="detail-value">${LANGUAGE}</div>
-      </div>
-      <div>
-        <div class="detail-label">Repository</div>
-        <div class="detail-value"><a href="${REPO}" target="_blank">${REPO}</a></div>
-      </div>
-      <div>
-        <div class="detail-label">Completed</div>
-        <div class="detail-value">${DATE}</div>
-      </div>
-      <div>
-        <div class="detail-label">Review PR</div>
-        <div class="detail-value"><a href="${PR_URL}" target="_blank">#${PR_NUMBER}</a></div>
-      </div>
-    </div>
-    <a href="${PR_URL}" target="_blank" class="verify-link">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      Verify on GitHub
-    </a>
-    <div class="footer">
-      100xSystems &mdash; Engineering education through real system building.
-      This certificate represents a verified community-reviewed implementation.
-    </div>
-  </div>
-</body>
-</html>
-CERTEOF
-          echo "Certificate generated at docs/certificates/${PR_NUMBER}/index.html"
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          AUTHOR="${{ github.event.pull_request.user.login }}"
 
-      - name: Commit Certificate
-        if: steps.metadata.outputs.submission_dir != ''
+          # Generate certificate + create directory
+          CERT_ID=$(node /tmp/generate-meta.mjs "${META_FILE}" "${PR_URL}" "${PR_NUMBER}" "${AUTHOR}")
+          echo "cert_id=${CERT_ID}" >> $GITHUB_OUTPUT
+
+          mkdir -p "docs/certificates/${CERT_ID}"
+          cp /tmp/cert-output.json "docs/certificates/${CERT_ID}/metadata.json"
+
+          # Update original metadata with certificate info
+          node -e "
+            const fs = require('fs');
+            const meta = JSON.parse(fs.readFileSync('${META_FILE}', 'utf-8'));
+            meta.certificateId = '${CERT_ID}';
+            meta.pullRequestUrl = '${PR_URL}';
+            meta.prNumber = ${PR_NUMBER};
+            meta.status = 'verified';
+            meta.verifiedAt = new Date().toISOString();
+            fs.writeFileSync('${META_FILE}', JSON.stringify(meta, null, 2) + '\n');
+          "
+
+          echo "Certificate ID: ${CERT_ID}"
+
+      - name: Generate certificate HTML
+        if: steps.metadata.outputs.cert_id != ''
         run: |
-          git config user.name "100xSystems Bot"
-          git config user.email "bot@100xsystems.dev"
-          git add docs/certificates/
-          git commit -m "certificate: PR #${{ github.event.pull_request.number }} (${{ steps.metadata.outputs.system }} by ${{ steps.metadata.outputs.author }})"
-          git push origin HEAD:main
+          node /tmp/generate-html.mjs "${{ steps.metadata.outputs.cert_id }}"
+
+      - name: Commit certificate
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "certificate: PR #${{ github.event.pull_request.number }} [skip ci]"
+          file_pattern: 'docs/certificates/* submissions/*/metadata.json'
+          commit_user_name: '100xSystems Bot'
+          commit_user_email: 'bot@100xsystems.dev'
+
+      - name: Post congratulatory comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const certId = '${{ steps.metadata.outputs.cert_id }}';
+            const prNumber = ${{ github.event.pull_request.number }};
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: `🎉 **Congratulations! Your submission has been verified!**\n\n` +
+                    `A certificate of completion has been issued:\n\n` +
+                    `🔗 **Verify Certificate:** https://100xsystems.dev/verify/${certId}\n\n` +
+                    `---\n` +
+                    `_This certificate proves that your implementation passed community review._\n` +
+                    `_Share it on LinkedIn, GitHub, or your portfolio!_`
+            });
