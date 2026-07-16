@@ -16,6 +16,23 @@
       ],
       "submittedAt": "2026-07-16T04:04:11.164Z",
       "status": "pending"
+    },
+    {
+      "system": "claude-code",
+      "systemTitle": "Claude Code",
+      "author": "aryanbatras",
+      "language": "typescript",
+      "repositoryUrl": "https://github.com/aryanbatras/100xsystems",
+      "difficulty": "Intermediate",
+      "tags": [
+        "AI",
+        "Agent",
+        "CLI",
+        "Terminal",
+        "LLM"
+      ],
+      "submittedAt": "2026-07-16T04:17:30.970Z",
+      "status": "pending"
     }
   ]
 }

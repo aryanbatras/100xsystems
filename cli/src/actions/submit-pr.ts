@@ -23,7 +23,7 @@ import type { BuildResult } from './submit.js';
 
 // ─── Constants ──────────────────────────────────────────────────────
 
-const UPSTREAM_OWNER = '100xsystems';
+const UPSTREAM_OWNER = process.env.SUBMISSIONS_OWNER || 'aryanbatras';
 const UPSTREAM_REPO = 'submissions';
 const UPSTREAM_BRANCH = 'main';
 const GITHUB_API = 'https://api.github.com';
